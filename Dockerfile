@@ -10,8 +10,8 @@ RUN apt-get update
 
 # ==================== install deps ===================
 RUN apt-get -y install python3
-# https://ubuntu.com/tutorials/install-jre#2-installing-openjdk-jre
-RUN apt-get -y install default-jre
+# https://askubuntu.com/a/1139285/1348774
+RUN apt-get -y install openjdk-8-jdk
 # ====================================================
 # run
 # run the command
