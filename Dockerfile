@@ -26,18 +26,13 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
     vim \
     locales 
 
-# Set the locale
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8     
 # set java tools env variable to
 # encode by utf8
 ENV JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
-ENV MY_ENV_VAR=HELLOWORLD
 # ====================================================
 # run gradlew
-WORKDIR /ApkTool
-RUN ./gradlew
+#WORKDIR /ApkTool
+#RUN ./gradlew
 
 # run the command
-CMD ["python3", "./server/app.py"]
+CMD /runner.sh
