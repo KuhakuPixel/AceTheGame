@@ -1,7 +1,5 @@
 #!/bin/bash
 PROJECT_ROOT_DIR=$(pwd)
-SMALI_TO_INJECT_DIR="smali_to_inject"
-GENERATED_SMALI_DIR="./smali/smali/com/example"
 # =================================================
 echo "Generating temp APK"
 # build apk via gradlew
@@ -20,14 +18,21 @@ cd "${PROJECT_ROOT_DIR}"
 
 
 # =================================================
+TEMP_GENERATED_SMALI_FOLDER="/tmp/temp_smali"
+GENERATED_SMALI_DIR="${TEMP_GENERATED_SMALI_FOLDER}/smali/com/example"
+SMALI_TO_INJECT_DIR="smali_to_inject"
+
 echo "decompiling temp APK"
 # decode without resources and 
 # put the smali results in smali folder
 # also force them using -f
-apktool d apk_source/hello-libs/app/build/outputs/apk/debug/app-debug.apk -r -f -o ./smali
+apktool d apk_source/hello-libs/app/build/outputs/apk/debug/app-debug.apk -r -f -o ${TEMP_GENERATED_SMALI_FOLDER}
 
 echo "Copying smali for injection"
 # put the smali for injection
 cp ${GENERATED_SMALI_DIR} ${SMALI_TO_INJECT_DIR} -r
+
+echo "Cleaning up temp directories at ${TEMP_GENERATED_SMALI_FOLDER}"
+rm -rf ${TEMP_GENERATED_SMALI_FOLDER}
 
 echo "Done!!!"
