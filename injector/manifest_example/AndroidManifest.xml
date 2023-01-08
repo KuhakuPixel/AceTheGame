@@ -1,0 +1,20 @@
+
+<!-- main activity seems to be AndroidLauncher -->
+<!-- it is shown in the manifest actually, just search for it -->
+<?xml version="1.0" encoding="utf-8" standalone="no"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:dist="http://schemas.android.com/apk/distribution" android:compileSdkVersion="31" android:compileSdkVersionCodename="12" android:installLocation="auto" android:targetSandboxVersion="2" package="com.shatteredpixel.shatteredpixeldungeon.indev" platformBuildVersionCode="31" platformBuildVersionName="12">
+    <dist:module dist:instant="true"/>
+    <uses-feature android:glEsVersion="0x00020000"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <supports-screens android:largeScreens="true" android:normalScreens="true" android:smallScreens="true" android:xlargeScreens="true"/>
+    <application android:allowBackup="true" android:backupAgent="com.shatteredpixel.shatteredpixeldungeon.android.AndroidBackupHandler" android:debuggable="true" android:icon="@mipmap/ic_launcher" android:label="Shattered Pixel Dungeon" android:resizeableActivity="true" android:scrollIndicatorPaddingLeft="true" android:theme="@android:style/Theme.Black.NoTitleBar">
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" android:exported="true" android:name="com.shatteredpixel.shatteredpixeldungeon.android.AndroidLauncher" android:screenOrientation="nosensor">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.shatteredpixel.shatteredpixeldungeon.android.AndroidMissingNativesHandler"/>
+    </application>
+</manifest>
