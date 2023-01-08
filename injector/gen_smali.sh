@@ -1,10 +1,20 @@
 #!/bin/bash
-
+PROJECT_ROOT_DIR=$(pwd)
 # =================================================
 # build apk via gradlew
 # https://stackoverflow.com/questions/24398041/build-android-studio-app-via-command-line
 # https://developer.android.com/studio/build/building-cmdline
-./apk_source/gradlew assembleDebug
+
+# have go to the directory of gradlew
+# first because it needs build.gradle and 
+# etc in the directory of where this command
+# runs, cannot just do
+# ./apk_source/hello-libs/gradlew assembleDebug
+cd ./apk_source/hello-libs/
+./gradlew assembleDebug
+# go back
+cd "${PROJECT_ROOT_DIR}"
+
 
 # =================================================
 # decode without resources and 
