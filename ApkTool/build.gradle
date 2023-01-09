@@ -16,10 +16,6 @@ import java.nio.charset.StandardCharsets
  *  limitations under the License.
  */
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'ISO-8859-1'
-}
-
 buildscript {
     ext {
         depends = [
