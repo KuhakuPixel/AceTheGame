@@ -19,7 +19,7 @@
     .line 7
     const-string v0, "AceTheGame"
 
-    const-string v1, "Code Is injected"
+    const-string v1, "Code Is injected :D"
 
     invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
 
