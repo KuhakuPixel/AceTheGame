@@ -1,4 +1,10 @@
 #!/bin/bash
+# =====================================================
+# brief: 	
+# 	for auto generating a smali from java program
+# 	that can be injected into an apk 
+#
+# =====================================================
 PROJECT_ROOT_DIR=$(pwd)
 # =================================================
 echo "Generating temp APK"
@@ -20,7 +26,7 @@ cd "${PROJECT_ROOT_DIR}"
 # =================================================
 TEMP_GENERATED_SMALI_FOLDER="/tmp/temp_smali"
 GENERATED_SMALI_DIR="${TEMP_GENERATED_SMALI_FOLDER}/smali/com/example"
-SMALI_TO_INJECT_DIR="smali_to_inject"
+SMALI_TO_INJECT_DIR="./smali_to_inject"
 
 echo "decompiling temp APK"
 # decode without resources and 
@@ -35,4 +41,5 @@ cp ${GENERATED_SMALI_DIR} ${SMALI_TO_INJECT_DIR} -r
 echo "Cleaning up temp directories at ${TEMP_GENERATED_SMALI_FOLDER}"
 rm -rf ${TEMP_GENERATED_SMALI_FOLDER}
 
-echo "Done!!!"
+echo "Smali For injection generated at ${SMALI_TO_INJECT_DIR}"
+
