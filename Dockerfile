@@ -4,7 +4,10 @@ MAINTAINER KuhakuPixel <Nicholaspixels@gmail.com>
 
 # copy all the files to the container
 COPY . .
-# compile main
-RUN javac ./server/Main.java
+# build ApkTool
+WORKDIR /ApkTool/
+RUN ./gradlew
 
-CMD ["java","./server/Main"]
+# run server
+WORKDIR /server/
+CMD ["java","./Main.java"]
