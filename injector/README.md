@@ -1,5 +1,5 @@
-# AceTheGame
-Tools for injecting ace engine
+# Injector 
+Tools for injecting ace engine's library
 to an android apk/game
 ## 
 
