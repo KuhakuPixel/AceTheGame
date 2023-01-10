@@ -34,14 +34,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         TextView tv = new TextView(this);
         String val = calc_something();
-        tv.setText( "Thissss  calculation took " + measureTicks() + " ticks" );
+        //tv.setText( "Thissss  calculation took " + measureTicks() + " ticks" );
         // some sums
         Injector.Init();
         setContentView(tv);
     }
-    public native long  measureTicks();
+    //public native long  measureTicks();
     static {
-        System.loadLibrary("hello-libs");
+
+        System.loadLibrary("lib_ACE");
     }
 
 }

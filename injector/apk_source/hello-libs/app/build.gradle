@@ -12,9 +12,12 @@ android {
         targetSdkVersion 33
         versionCode = 1
         versionName = '1.0'
+	// we need to specify the cmake options
+	// inside defaultConfig, not,
+	// https://stackoverflow.com/questions/64829357/specify-targets-in-externalnativebuild-of-the-build-gradle-file-no-signature-o
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_STL=c++_static'
+                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23", "-DANDROID_BUILD=True"
             }
         }
     }
@@ -28,7 +31,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path 'src/main/cpp/CMakeLists.txt'
+            path "../../../../ACE/engine/CMakeLists.txt"
         }
     }
     namespace 'com.example.hellolibs'
