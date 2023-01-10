@@ -1,4 +1,7 @@
 
+- port ace engine to this repo, so that it can be built
+  automatically, learn android ndk? 
+================================================================
 learning smali (java assembly?) is important because 
 I need to learn how to patch/ reverse engineer an apk
 using apktool
@@ -25,6 +28,5 @@ using apktool
 - learn multi repo management tool no git submodule of course
 - import apktool 
 - create finder of main activity
-
 
 
