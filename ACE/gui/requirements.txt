@@ -1,0 +1,15 @@
+-e git+ssh://git@github.com/KuhakuPixel/ACE.git@388b2fce2212a7ec63f79fee4899c241aec72012#egg=ACEG&subdirectory=gui
+attrs==22.1.0
+exceptiongroup==1.0.4
+iniconfig==1.1.1
+packaging==21.3
+pexpect==4.8.0
+pluggy==1.0.0
+ptyprocess==0.7.0
+pyparsing==3.0.9
+PySide6==6.4.0.1
+PySide6-Addons==6.4.0.1
+PySide6-Essentials==6.4.0.1
+pytest==7.2.0
+shiboken6==6.4.0.1
+tomli==2.0.1

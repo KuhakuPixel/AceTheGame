@@ -1,0 +1,14 @@
+R"(
+ACE Engine, a game hacking tools for linux and android
+
+Copyright (C) 2022 AceEngineSoftware@gmail.com
+Author: Kuhaku Pixel (https://github.com/KuhakuPixel)
+
+For update news, feature request and discussion regarding 
+Ace Engine
+Discord Server: https://discord.com/invite/MhrFwpYm
+================= IMPORTANT ==============================
+before using this software type `license` command and enter
+to view the license of the software.
+
+)"
