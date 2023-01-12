@@ -1,6 +1,5 @@
 # Set the minimum version of CMake that can be used To find the cmake version
 # run $ cmake --version
-# TODO: add options 'ANDROID_BUILD=ON' to fix 
 #  	error when compiling tests
 cmake_minimum_required(VERSION 3.12)
 
@@ -16,13 +15,13 @@ endmacro()
 set (PROJECT_NAME "ACE")
 project(${PROJECT_NAME})
 # ====================================== build options ============
-option(ANDROID_BUILD "set to true if building for android" FALSE)
 option(BUILD_OPTIONS "display the specified build options" FALSE)
 # =================================================================
 
 # =================================== if android build ============
-if (ANDROID_BUILD)
-	add_compile_definitions(ANDROID_BUILD)
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-To-Write-Platform-Checks
+# https://stackoverflow.com/questions/9160335/os-specific-instructions-in-cmake-how-to
+if (ANDROID)
 	message("android platform level : ${ANDROID_PLATFORM_LEVEL}")
 	# ensure that process_vm_readv and process_vm_writev
 	# is available because it is only added in API level 23
@@ -30,7 +29,7 @@ if (ANDROID_BUILD)
 	# bionic status: 
 	# https://android.googlesource.com/platform/bionic/+/master/docs/status.md
 	if (${ANDROID_PLATFORM_LEVEL} LESS 23)
-		message(FATAL_ERROR "ANDROID_PLATFORM needs to be at least 23 but 
+		message(WARNING "ANDROID_PLATFORM needs to be at least 23 but 
 		${ANDROID_PLATFORM_LEVEL} is passed")
 
 		message(FATAL_ERROR "You need to set -DANDROID_PLATFORM to at 

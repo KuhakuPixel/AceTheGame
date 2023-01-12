@@ -18,7 +18,7 @@ const std::string ACE_global::platform_endianness_str =
     E_endian_to_str_map.at(platform_endianness);
 
 const bool ACE_global::is_android_build =
-#ifdef ANDROID_BUILD
+#ifdef __ANDROID__
     true;
 #else
     false;

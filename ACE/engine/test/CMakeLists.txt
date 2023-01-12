@@ -16,12 +16,12 @@ add_executable(${PROJECT_NAME} test_main.cpp maps.cpp file_utils.cpp
 
 		       
 
-if(ANDROID_BUILD)
+if(ANDROID)
 	# we need to link to log library
 	# because catch2 framework uses <android/log.h>
 	# https://stackoverflow.com/a/4629747/14073678
 	# https://stackoverflow.com/a/4629747/14073678
-	message("Android Build=${ANDROID_BUILD}")
+	message("Android Build=${ANDROID}")
 	target_link_libraries(${PROJECT_NAME} lib_ACE  log)
 else()
 	target_link_libraries(${PROJECT_NAME} lib_ACE)
