@@ -68,7 +68,14 @@ add_library(lib_ACE STATIC src/maps.cpp src/file_utils.cpp src/error.cpp
 	src/main_cmd_handler.cpp src/loaded_mem_info.cpp src/scan_utils.cpp src/thread_continuous.cpp src/freeze.cpp
 	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp)
 
-target_link_libraries(lib_ACE PRIVATE common_flag)
+
+if(ANDROID)
+	# link with main android library
+	target_link_libraries(lib_ACE PRIVATE common_flag android)
+else()
+	target_link_libraries(lib_ACE PRIVATE common_flag)
+
+endif()
 
 # ================================================================================
 # for unit testing the the file's utils copy necessary files into the build
@@ -100,11 +107,11 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 # strip binary for release build
 # thanks https://stackoverflow.com/a/71236302/14073678
 message("strip ${CMAKE_STRIP}")
-add_custom_command(
-  TARGET "${PROJECT_NAME}" POST_BUILD
-  COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
-  ARGS --strip-all "${PROJECT_NAME}"
-)
+#add_custom_command(
+#  TARGET "${PROJECT_NAME}" POST_BUILD
+#  COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
+#  ARGS --strip-all "${PROJECT_NAME}"
+#)
 # link against the library and add compile's options defined in common_flag
 target_link_libraries(${PROJECT_NAME} PRIVATE common_flag)
 target_link_libraries(${PROJECT_NAME} PRIVATE lib_ACE)

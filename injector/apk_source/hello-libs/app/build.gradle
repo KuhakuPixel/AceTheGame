@@ -17,7 +17,7 @@ android {
 	// https://stackoverflow.com/questions/64829357/specify-targets-in-externalnativebuild-of-the-build-gradle-file-no-signature-o
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23", "-DANDROID_BUILD=True"
+                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23"
             }
         }
     }
