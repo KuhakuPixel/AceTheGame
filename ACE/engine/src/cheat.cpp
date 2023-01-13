@@ -473,6 +473,8 @@ void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
   cheat_config.num_type = E_num_type::INT;
   cheat_config.pid = pid;
 
+  // TODO: make this a normal function
+  // so we can use this by giving string input to it
   auto on_input =
 
       [pid, &scanner_ptr, &cheat_config, freezer_ptr,
