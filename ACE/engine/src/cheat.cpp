@@ -144,7 +144,7 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
       [&]() {
         scanner->clear_current_scan_result();
         cheat_config->initial_scan_done = false;
-        printf("resetting all scan\n");
+        frontend_print("resetting all scan\n");
       }
 
   );
@@ -359,7 +359,7 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
 
       [&]() -> void {
         //
-        printf("attached_ok\n");
+        frontend_print("attached_ok\n");
       }
 
   );
@@ -556,7 +556,7 @@ template <typename T> void run_cheater_mode(int pid, E_num_type num_type) {
 void cheater_mode(int pid, E_num_type num_type) {
 
   std::string num_type_str = E_num_type_to_str_map.at(num_type);
-  printf("set type to %s\n", num_type_str.c_str());
+  frontend_print("set type to %s\n", num_type_str.c_str());
   // ==============================================================
   // TODO: add test for multiple types
   switch (num_type) {

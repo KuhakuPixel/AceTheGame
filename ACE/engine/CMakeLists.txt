@@ -71,7 +71,7 @@ add_library(lib_ACE SHARED src/maps.cpp src/file_utils.cpp src/error.cpp
 
 if(ANDROID)
 	# link with main android library
-	target_link_libraries(lib_ACE PRIVATE common_flag android)
+	target_link_libraries(lib_ACE PRIVATE common_flag android log)
 else()
 	target_link_libraries(lib_ACE PRIVATE common_flag)
 

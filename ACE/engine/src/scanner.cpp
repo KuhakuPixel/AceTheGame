@@ -124,7 +124,7 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
        * this memory is retrieved from
        * */
 
-      // printf("load at %p until %p\n", i, i + expected_load_size);
+      // frontend_print("load at %p until %p\n", i, i + expected_load_size);
       errno = 0;
       actual_load_size = this->process_rw->read_mem_new(
           i, expected_load_size, mem_buff, scan_prop.read_mem_method);
@@ -136,7 +136,7 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
         // snprintf(err_buff, sizeof(err_buff),
         //          "error read at %p with readsize %zu: %d (%s)", i,
         //          expected_load_size, errno, strerror(errno));
-        // printf("WARN: %s\n", err_buff);
+        // frontend_print("WARN: %s\n", err_buff);
         // throw std::runtime_error(err_buff);
         continue;
       }
@@ -160,9 +160,9 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
       }
       /*
       if (actual_load_size != expected_load_size) {
-        printf("=============== err =========\n");
-        printf("expected_load_size: %zu bytes\n", expected_load_size);
-        printf("actual_load_size: %zu bytes\n", actual_load_size);
+        frontend_print("=============== err =========\n");
+        frontend_print("expected_load_size: %zu bytes\n", expected_load_size);
+        frontend_print("actual_load_size: %zu bytes\n", actual_load_size);
       }
       */
       if (actual_load_size == 0)
@@ -213,7 +213,7 @@ void ACE_scanner<T>::_filter_from_cmp_val(Scan_Utils::E_filter_type filter_type,
     // non existent region)
     scan_prop.read_mem_method =
         Scan_Utils::E_read_mem_method::with_process_vm_readv;
-    // printf("start %p, end %p\n", scan_prop.addr_start, scan_prop.addr_end);
+    // frontend_print("start %p, end %p\n", scan_prop.addr_start, scan_prop.addr_end);
 
     // ============================================
     this->read_chunk_and_add_matches(
@@ -312,7 +312,7 @@ void ACE_scanner<T>::initial_scan_multiple(
   // before and after a scan
   this->current_scan_result.clear();
   for (size_t i = 0; i < segments_to_scan.size(); i++) {
-    //  printf("scanning %zu/%zu (%s) -> %llu bytes\n", i + 1,
+    //  frontend_print("scanning %zu/%zu (%s) -> %llu bytes\n", i + 1,
     //         segments_to_scan.size(),
     //         segments_to_scan[i].mem_type_str.c_str(),
     //         segments_to_scan[i].address_end -
@@ -321,7 +321,7 @@ void ACE_scanner<T>::initial_scan_multiple(
 
     frontend_mark_progress(i + 1, segments_to_scan.size());
 
-    // printf("%s\n", segments_to_scan[i].get_displayable_str().c_str());
+    // frontend_print("%s\n", segments_to_scan[i].get_displayable_str().c_str());
 
     this->append_initial_scan((byte *)segments_to_scan[i].address_start,
                               (byte *)segments_to_scan[i].address_end,
@@ -352,7 +352,7 @@ void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
 
         // error on write
         if (errno != 0 && ret_val == -1) {
-          printf("Error while writting matches at %p: %s\n", (byte *)addr,
+          frontend_print("Error while writting matches at %p: %s\n", (byte *)addr,
                  strerror(errno));
         }
       }

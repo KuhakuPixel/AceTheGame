@@ -2,6 +2,25 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+void frontend_print(const char *fmt, ...) {
+
+  char buffer[10000];
+  // put args to bufer
+  va_list args;
+  va_start(args, fmt);
+  vsnprintf(buffer, sizeof(buffer), fmt, args);
+  va_end(args);
+  // print message
+  printf("%s", buffer);
+  // also print to logcat for android
+#ifdef __ANDROID__
+  __android_log_print(ANDROID_LOG_DEBUG, "[ACE Engine]", "%s", buffer);
+#endif
+}
+
 void frontend_mark_task_fail(const char *fmt, ...) {
   char buffer[10000];
   // put args to bufer
