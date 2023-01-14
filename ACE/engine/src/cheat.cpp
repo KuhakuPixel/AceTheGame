@@ -3,6 +3,7 @@
 #include "../third_party/CLI11.hpp"
 #include "ACE_global.hpp"
 #include "ace_type.hpp"
+#include "cheat_cmd_handler.hpp"
 #include "error.hpp"
 #include "freeze.hpp"
 #include "input.hpp"
@@ -458,6 +459,68 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
 }
 
 template <typename T>
+E_loop_statement
+cheater_mode_on_each_input(int pid, ACE_scanner<T> *scanner_ptr,
+                           freezer<T> *freezer_ptr, proc_rw<T> *process_rw,
+                           struct cheat_mode_config cheat_config,
+                           std::string input_str) {
+
+  // before running a command,
+  // check if process [pid] is still running
+
+  if (!proc_is_running(pid)) {
+    frontend_mark_task_fail("Process %d doesn't exist anymore\n", pid);
+    return E_loop_statement::break_;
+  }
+
+  // run command input
+  E_loop_statement cheater_on_line_ret_code;
+
+  int ptrace_attach_ret = 0;
+  int ptrace_deattach_ret = 0;
+  if (cheat_config.pause_while_scan) {
+    // do operation paused with ptrace
+    CALL_WHILE_PTRACE_ATTACHED(
+        pid,
+
+        {
+          cheater_on_line_ret_code = cheater_on_line<T>(
+              scanner_ptr, input_str, freezer_ptr, process_rw, &cheat_config);
+        },
+
+        &ptrace_attach_ret,
+
+        &ptrace_deattach_ret,
+
+        true
+
+    );
+
+    // check if any ptrace attach of deattach failed
+    if (ptrace_attach_ret == -1) {
+      frontend_mark_task_fail("Fail to attach, exiting cheater mode\n");
+      return E_loop_statement::break_;
+    }
+
+    if (ptrace_deattach_ret == -1) {
+      frontend_mark_task_fail("Fail to deattach, exiting cheater mode\n");
+      return E_loop_statement::break_;
+    }
+  }
+
+  else {
+    // just run command without any pause
+    // on the target process
+    // simple right :D ?
+    cheater_on_line_ret_code = cheater_on_line<T>(
+        scanner_ptr, input_str, freezer_ptr, process_rw, &cheat_config);
+  }
+
+  // else return value of cheater_on_line
+  return cheater_on_line_ret_code;
+}
+
+template <typename T>
 void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
                        freezer<T> *freezer_ptr, proc_rw<T> *process_rw) {
 
@@ -471,71 +534,12 @@ void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
   cheat_config.initial_scan_done = false;
   cheat_config.pid = pid;
 
-  // TODO: make this a normal function
-  // so we can use this by giving string input to it
   auto on_input =
 
       [pid, &scanner_ptr, &cheat_config, freezer_ptr,
        process_rw](std::string input_str) -> E_loop_statement {
-    /*
-     * we wrap the function call when the cheater mode receives an input
-     * around a lambda because we need to do operation while being
-     * attached to the process
-     * */
-
-    // before running a command,
-    // check if process [pid] is still running
-
-    if (!proc_is_running(pid)) {
-      frontend_mark_task_fail("Process %d doesn't exist anymore\n", pid);
-      return E_loop_statement::break_;
-    }
-
-    // run command input
-    E_loop_statement cheater_on_line_ret_code;
-
-    int ptrace_attach_ret = 0;
-    int ptrace_deattach_ret = 0;
-    if (cheat_config.pause_while_scan) {
-      // do operation paused with ptrace
-      CALL_WHILE_PTRACE_ATTACHED(
-          pid,
-
-          {
-            cheater_on_line_ret_code = cheater_on_line<T>(
-                scanner_ptr, input_str, freezer_ptr, process_rw, &cheat_config);
-          },
-
-          &ptrace_attach_ret,
-
-          &ptrace_deattach_ret,
-
-          true
-
-      );
-
-      // check if any ptrace attach of deattach failed
-      if (ptrace_attach_ret == -1) {
-        frontend_mark_task_fail("Fail to attach, exiting cheater mode\n");
-        return E_loop_statement::break_;
-      }
-
-      if (ptrace_deattach_ret == -1) {
-        frontend_mark_task_fail("Fail to deattach, exiting cheater mode\n");
-        return E_loop_statement::break_;
-      }
-    }
-
-    else {
-      // just run command without any pause
-      // on the target process
-      // simple right :D ?
-      cheater_on_line_ret_code = cheater_on_line<T>(
-          scanner_ptr, input_str, freezer_ptr, process_rw, &cheat_config);
-    }
-
-    // else return value of cheater_on_line
-    return cheater_on_line_ret_code;
+    return cheater_mode_on_each_input(pid, scanner_ptr, freezer_ptr, process_rw,
+                                      cheat_config, input_str);
   };
 
   run_input_loop(on_input, "CHEATER");
@@ -547,6 +551,8 @@ template <typename T> void run_cheater_mode(int pid) {
   freezer<T> freeze_manager = freezer<T>(pid);
   proc_rw<T> process_rw = proc_rw<T>(pid);
   // run cheater_mode
+  // TODO: maybe add another struct called
+  // cheater_module_config which has a scanner, a freezer and a proc_rw
   cheater_mode_loop<T>(pid, &scanner, &freeze_manager, &process_rw);
 }
 
