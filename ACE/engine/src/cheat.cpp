@@ -209,7 +209,7 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
 
   // ================ readat command ===============================
 
-  //TODO: maybe add support for reading different number types?
+  // TODO: maybe add support for reading different number types?
   CLI::App *read_arr_cmd =
       app.add_subcommand("read_arr", "read an array of bytes ");
 
@@ -459,8 +459,7 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
 
 template <typename T>
 void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
-                       E_num_type num_type, freezer<T> *freezer_ptr,
-                       proc_rw<T> *process_rw) {
+                       freezer<T> *freezer_ptr, proc_rw<T> *process_rw) {
 
   // tell frontend cheater mode is entered succsessfully
   if (ACE_global::use_gui_protocol)
@@ -470,7 +469,6 @@ void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
   // to be used in this session
   struct cheat_mode_config cheat_config;
   cheat_config.initial_scan_done = false;
-  cheat_config.num_type = E_num_type::INT;
   cheat_config.pid = pid;
 
   // TODO: make this a normal function
@@ -543,13 +541,13 @@ void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
   run_input_loop(on_input, "CHEATER");
 }
 
-template <typename T> void run_cheater_mode(int pid, E_num_type num_type) {
+template <typename T> void run_cheater_mode(int pid) {
 
   ACE_scanner<T> scanner = ACE_scanner<T>(pid);
   freezer<T> freeze_manager = freezer<T>(pid);
   proc_rw<T> process_rw = proc_rw<T>(pid);
   // run cheater_mode
-  cheater_mode_loop<T>(pid, &scanner, num_type, &freeze_manager, &process_rw);
+  cheater_mode_loop<T>(pid, &scanner, &freeze_manager, &process_rw);
 }
 
 // ================================================
@@ -562,26 +560,26 @@ void cheater_mode(int pid, E_num_type num_type) {
   switch (num_type) {
 
   case E_num_type::INT: {
-    run_cheater_mode<int>(pid, num_type);
+    run_cheater_mode<int>(pid);
     break;
   }
 
   case E_num_type::LONG: {
-    run_cheater_mode<long>(pid, num_type);
+    run_cheater_mode<long>(pid);
     break;
   }
 
   case E_num_type::SHORT: {
-    run_cheater_mode<short>(pid, num_type);
+    run_cheater_mode<short>(pid);
     break;
   }
   case E_num_type::BYTE: {
-    run_cheater_mode<byte>(pid, num_type);
+    run_cheater_mode<byte>(pid);
     break;
   }
 
   case E_num_type::FLOAT: {
-    run_cheater_mode<float>(pid, num_type);
+    run_cheater_mode<float>(pid);
     break;
   }
   }
