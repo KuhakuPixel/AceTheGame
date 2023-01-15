@@ -17,7 +17,7 @@ template <typename T> struct engine_module {
 template <typename T>
 E_loop_statement
 cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
-                           struct cheat_mode_config cheat_config,
+                           struct cheat_mode_config *cheat_config,
                            std::string input_str);
 
 template <typename T>
