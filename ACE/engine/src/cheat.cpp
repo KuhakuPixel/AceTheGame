@@ -466,7 +466,7 @@ E_loop_statement cheater_on_line(engine_module<T> engine_module,
 template <typename T>
 E_loop_statement
 cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
-                           struct cheat_mode_config cheat_config,
+                           struct cheat_mode_config *cheat_config,
                            std::string input_str) {
 
   // before running a command,
@@ -482,14 +482,14 @@ cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
 
   int ptrace_attach_ret = 0;
   int ptrace_deattach_ret = 0;
-  if (cheat_config.pause_while_scan) {
+  if (cheat_config->pause_while_scan) {
     // do operation paused with ptrace
     CALL_WHILE_PTRACE_ATTACHED(
         pid,
 
         {
           cheater_on_line_ret_code =
-              cheater_on_line<T>(engine_module, &cheat_config, input_str);
+              cheater_on_line<T>(engine_module, cheat_config, input_str);
         },
 
         &ptrace_attach_ret,
@@ -517,7 +517,7 @@ cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
     // on the target process
     // simple right :D ?
     cheater_on_line_ret_code =
-        cheater_on_line<T>(engine_module, &cheat_config, input_str);
+        cheater_on_line<T>(engine_module, cheat_config, input_str);
   }
 
   // else return value of cheater_on_line
@@ -540,7 +540,7 @@ void cheater_mode_loop(int pid, engine_module<T> engine_module) {
   auto on_input =
 
       [&](std::string input_str) -> E_loop_statement {
-    return cheater_mode_on_each_input(pid, engine_module, cheat_config,
+    return cheater_mode_on_each_input(pid, engine_module, &cheat_config,
                                       input_str);
   };
 
