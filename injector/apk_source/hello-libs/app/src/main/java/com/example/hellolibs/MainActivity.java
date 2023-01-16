@@ -37,17 +37,11 @@ public class MainActivity extends AppCompatActivity {
 		TextView tv = new TextView(this);
 		String val = calc_something();
 		// tv.setText( "Thissss calculation took " + measureTicks() + " ticks" );
-		tv.setText("string from jni: " + stringFromJNI());
-		// some sums
+		// Simulate apk injection, this java code
+		// will be used to generate the smali code
+		// needed for injection
 		Injector.Init();
+		//
 		setContentView(tv);
 	}
-
-	public native String stringFromJNI();
-
-	static {
-
-		System.loadLibrary("lib_ACE");
-	}
-
 }

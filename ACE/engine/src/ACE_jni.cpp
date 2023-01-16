@@ -8,11 +8,13 @@
 #include "scanner.hpp"
 #include <unistd.h>
 
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_example_hellolibs_MainActivity_stringFromJNI(JNIEnv *env,
-                                                      jobject self) {
-  std::string hello = "Hello from JNI.";
-
+/*
+ * function for initializing the ACE engine
+ * when used by injector's java to be injected to another apk
+ *
+ * this should start a communication service (IPC) so that
+ * */
+void ACE_jni_init() {
   // scan self
   int pid = getpid();
   // initialize module
@@ -32,6 +34,14 @@ Java_com_example_hellolibs_MainActivity_stringFromJNI(JNIEnv *env,
 
   cheater_mode_on_each_input<int>(pid, engine_module, &cheat_config,
                                   "scan = 666");
+}
+
+// =================================== JNI exports for init
+// ======================
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_example_utils_InjectorCore_AceInit(JNIEnv *env, jobject self) {
+  std::string hello = "Hello from JNI.";
+  ACE_jni_init();
   return env->NewStringUTF(hello.c_str());
 }
 #endif
