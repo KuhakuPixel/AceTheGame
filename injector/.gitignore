@@ -1,0 +1,4 @@
+
+# ignore every content of generated code for
+# injection
+./code_to_inject/
