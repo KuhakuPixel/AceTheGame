@@ -26,6 +26,7 @@ cd "${PROJECT_ROOT_DIR}"
 # =================================================
 TEMP_GENERATED_SMALI_FOLDER="/tmp/temp_smali"
 GENERATED_SMALI_DIR="${TEMP_GENERATED_SMALI_FOLDER}/smali/com/example"
+GENERATED_NATIVE_LIB_DIR="${TEMP_GENERATED_SMALI_FOLDER}/lib"
 SMALI_TO_INJECT_DIR="./smali_to_inject"
 
 echo "decompiling temp APK"
@@ -34,9 +35,13 @@ echo "decompiling temp APK"
 # also force them using -f
 apktool d apk_source/hello-libs/app/build/outputs/apk/debug/app-debug.apk -r -f -o ${TEMP_GENERATED_SMALI_FOLDER}
 
-echo "Copying smali for injection"
+echo "Copying smali"
 # put the smali for injection
 cp ${GENERATED_SMALI_DIR} ${SMALI_TO_INJECT_DIR} -r
+
+echo "Copying native libraries"
+# put native lib if any
+cp "${GENERATED_NATIVE_LIB_DIR}" "${SMALI_TO_INJECT_DIR}/lib" -r
 
 echo "Cleaning up temp directories at ${TEMP_GENERATED_SMALI_FOLDER}"
 rm -rf ${TEMP_GENERATED_SMALI_FOLDER}
