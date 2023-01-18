@@ -1,4 +1,7 @@
 
+- maybe include all of decompiled smali code for injection?
+  in `./gen_smali.py`
+
 - port ace engine to this repo, so that it can be built
   automatically, learn android ndk? 
 ================================================================
