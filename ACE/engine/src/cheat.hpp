@@ -8,9 +8,25 @@
 #include <string>
 #include <vector>
 
+template <typename T> struct engine_module {
+  ACE_scanner<T> *scanner_ptr;
+  freezer<T> *freezer_ptr;
+  proc_rw<T> *process_rw;
+};
+
 template <typename T>
-E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
-                                 cheat_mode_config *cheat_config);
+E_loop_statement
+cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
+                           struct cheat_mode_config *cheat_config,
+                           std::string input_str);
+
+template <typename T>
+void cheater_mode_loop(int pid, engine_module<T> engine_module);
+
+template <typename T>
+E_loop_statement cheater_on_line(engine_module<T> engine_module,
+                                 cheat_mode_config *cheat_config,
+                                 std::string input_str);
 
 /*
  * mode to scan and write to all segments of process in [segments_to_scan]

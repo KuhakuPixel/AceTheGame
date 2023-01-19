@@ -1,5 +1,8 @@
 #pragma once
+#include <functional>
 #include <stdlib.h>
+
+void frontend_print(const char *fmt, ...);
 
 /*
  * mark a task has failed

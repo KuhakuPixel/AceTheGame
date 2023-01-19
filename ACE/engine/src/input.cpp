@@ -49,7 +49,7 @@ void run_input_loop(std::function<E_loop_statement(std::string)> on_input,
     else {
       char input_buff[200];
 
-      printf("%s", input_display);
+      frontend_print("%s", input_display);
       if (fgets(input_buff, 199, stdin) == NULL)
         error_exit("fgets cannot read anything\n");
 

@@ -28,16 +28,16 @@ void process_map_cmd_handler(int pid, bool ps_map_list_all) {
     // by default only show special region
     if (!m_seg.is_special_region && !ps_map_list_all)
       continue;
-    printf("%s", m_seg.get_displayable_str().c_str());
+    frontend_print("%s", m_seg.get_displayable_str().c_str());
     // count special region
     if (m_seg.is_special_region)
       special_mapping_count++;
   }
 
-  printf("------------------------------------\n");
-  printf("Found total of %zu mappings\n", proc_maps_file.size());
-  printf("With %zu special region mapping\n", special_mapping_count);
-  printf("------------------------------------\n");
+  frontend_print("------------------------------------\n");
+  frontend_print("Found total of %zu mappings\n", proc_maps_file.size());
+  frontend_print("With %zu special region mapping\n", special_mapping_count);
+  frontend_print("------------------------------------\n");
 }
 
 void list_processes_cmd_handler(bool ps_ls_reverse) {
@@ -61,7 +61,7 @@ void list_processes_cmd_handler(bool ps_ls_reverse) {
   );
   // display each of processes
   for (size_t i = 0; i < processes_infos.size(); i++) {
-    printf("%d %s\n", processes_infos[i].pid,
+    frontend_print("%d %s\n", processes_infos[i].pid,
            processes_infos[i].proc_name.c_str());
   }
 }
@@ -71,38 +71,38 @@ void clear_cmd_handler() {
   // clear using escape code for unix based system
   // that is posix
   // https://stackoverflow.com/a/17271636/14073678
-  printf("\033[H\033[J");
+  frontend_print("\033[H\033[J");
 }
 
 void version_cmd_handler() {
 
-  printf("======================================\n");
-  printf("ACE Engine %d.%d.%d\n",
+  frontend_print("======================================\n");
+  frontend_print("ACE Engine %d.%d.%d\n",
 
          ACE_global::major_version, ACE_global::minor_version,
          ACE_global::patch_level);
 
-  printf("compile time:  %s  %s\n", __DATE__, __TIME__);
-  printf("Compiler : %s %s\n", ACE_global::cpp_compiler_name.c_str(),
+  frontend_print("compile time:  %s  %s\n", __DATE__, __TIME__);
+  frontend_print("Compiler : %s %s\n", ACE_global::cpp_compiler_name.c_str(),
          ACE_global::cpp_compiler_version.c_str());
-  printf("Endianness: %s\n", ACE_global::platform_endianness_str.c_str());
-  printf("======================================\n");
-  printf("build options: \n\n\n");
+  frontend_print("Endianness: %s\n", ACE_global::platform_endianness_str.c_str());
+  frontend_print("======================================\n");
+  frontend_print("build options: \n\n\n");
 
   if (ACE_global::is_android_build)
-    printf("built for android\n");
+    frontend_print("built for android\n");
   else
-    printf("built for linux desktop\n");
+    frontend_print("built for linux desktop\n");
 
-  printf("Features included (+) or not (-): \n");
+  frontend_print("Features included (+) or not (-): \n");
 
-  printf("%c use \"/proc/<pid>/mem\"\n",
+  frontend_print("%c use \"/proc/<pid>/mem\"\n",
          ACE_global::use_proc_pid_mem ? '+' : '-');
 
-  printf("%c use process_vm_readv and process_vm_writev\n",
+  frontend_print("%c use process_vm_readv and process_vm_writev\n",
          ACE_global::use_proc_vm_read_writev ? '+' : '-');
 
-  printf("======================================\n");
+  frontend_print("======================================\n");
 }
 
 void quit_cmd_handler() { exit(EXIT_SUCCESS); };
@@ -115,17 +115,17 @@ void cheater_cmd_handler(int pid, E_num_type num_type) {
     return;
   }
 
-  printf("attaching to process %d \n", pid);
+  frontend_print("attaching to process %d \n", pid);
   cheater_mode(pid, num_type);
 }
 
 void aslr_cmd_handler(bool aslr_set_val) { aslr_set(aslr_set_val); }
 
-void gui_protocol_cmd_handler() { printf("gui_protocol_ok\n"); }
+void gui_protocol_cmd_handler() { frontend_print("gui_protocol_ok\n"); }
 // ======================================================
-void display_intro() { printf("%s", ACE_global::intro_display); }
+void display_intro() { frontend_print("%s", ACE_global::intro_display); }
 
 void license_cmd_handler() {
-  printf("%s\n", ACE_global::license);
+  frontend_print("%s\n", ACE_global::license);
 }
-void credit_cmd_handler() { printf("%s\n", ACE_global::engine_credits); }
+void credit_cmd_handler() { frontend_print("%s\n", ACE_global::engine_credits); }

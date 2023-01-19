@@ -3,6 +3,7 @@
 #include "../third_party/CLI11.hpp"
 #include "ACE_global.hpp"
 #include "ace_type.hpp"
+#include "cheat_cmd_handler.hpp"
 #include "error.hpp"
 #include "freeze.hpp"
 #include "input.hpp"
@@ -17,11 +18,16 @@
 #include <unistd.h>
 
 template <typename T>
-E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
-                                 freezer<T> *freezer_ptr,
-                                 proc_rw<T> *process_rw,
-                                 cheat_mode_config *cheat_config) {
+E_loop_statement cheater_on_line(engine_module<T> engine_module,
+                                 cheat_mode_config *cheat_config,
+                                 std::string input_str) {
 
+  // for short alias so functions wont have to use "engine_module.something"
+  // to access an engine module
+  ACE_scanner<T> *scanner = engine_module.scanner_ptr;
+  freezer<T> *freezer_ptr = engine_module.freezer_ptr;
+  proc_rw<T> *process_rw = engine_module.process_rw;
+  //
   struct cheat_mode_args<T> cheat_args = cheat_mode_args<T>();
 
   /*
@@ -144,7 +150,7 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
       [&]() {
         scanner->clear_current_scan_result();
         cheat_config->initial_scan_done = false;
-        printf("resetting all scan\n");
+        frontend_print("resetting all scan\n");
       }
 
   );
@@ -209,7 +215,7 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
 
   // ================ readat command ===============================
 
-  //TODO: maybe add support for reading different number types?
+  // TODO: maybe add support for reading different number types?
   CLI::App *read_arr_cmd =
       app.add_subcommand("read_arr", "read an array of bytes ");
 
@@ -359,7 +365,7 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
 
       [&]() -> void {
         //
-        printf("attached_ok\n");
+        frontend_print("attached_ok\n");
       }
 
   );
@@ -458,9 +464,68 @@ E_loop_statement cheater_on_line(ACE_scanner<T> *scanner, std::string input_str,
 }
 
 template <typename T>
-void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
-                       E_num_type num_type, freezer<T> *freezer_ptr,
-                       proc_rw<T> *process_rw) {
+E_loop_statement
+cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
+                           struct cheat_mode_config *cheat_config,
+                           std::string input_str) {
+
+  // before running a command,
+  // check if process [pid] is still running
+
+  if (!proc_is_running(pid)) {
+    frontend_mark_task_fail("Process %d doesn't exist anymore\n", pid);
+    return E_loop_statement::break_;
+  }
+
+  // run command input
+  E_loop_statement cheater_on_line_ret_code;
+
+  int ptrace_attach_ret = 0;
+  int ptrace_deattach_ret = 0;
+  if (cheat_config->pause_while_scan) {
+    // do operation paused with ptrace
+    CALL_WHILE_PTRACE_ATTACHED(
+        pid,
+
+        {
+          cheater_on_line_ret_code =
+              cheater_on_line<T>(engine_module, cheat_config, input_str);
+        },
+
+        &ptrace_attach_ret,
+
+        &ptrace_deattach_ret,
+
+        true
+
+    );
+
+    // check if any ptrace attach of deattach failed
+    if (ptrace_attach_ret == -1) {
+      frontend_mark_task_fail("Fail to attach, exiting cheater mode\n");
+      return E_loop_statement::break_;
+    }
+
+    if (ptrace_deattach_ret == -1) {
+      frontend_mark_task_fail("Fail to deattach, exiting cheater mode\n");
+      return E_loop_statement::break_;
+    }
+  }
+
+  else {
+    // just run command without any pause
+    // on the target process
+    // simple right :D ?
+    cheater_on_line_ret_code =
+        cheater_on_line<T>(engine_module, cheat_config, input_str);
+  }
+
+  // else return value of cheater_on_line
+  return cheater_on_line_ret_code;
+}
+
+template <typename T>
+void cheater_mode_loop(int pid, engine_module<T> engine_module) {
 
   // tell frontend cheater mode is entered succsessfully
   if (ACE_global::use_gui_protocol)
@@ -470,116 +535,65 @@ void cheater_mode_loop(int pid, ACE_scanner<T> *scanner_ptr,
   // to be used in this session
   struct cheat_mode_config cheat_config;
   cheat_config.initial_scan_done = false;
-  cheat_config.num_type = E_num_type::INT;
   cheat_config.pid = pid;
 
   auto on_input =
 
-      [pid, &scanner_ptr, &cheat_config, freezer_ptr,
-       process_rw](std::string input_str) -> E_loop_statement {
-    /*
-     * we wrap the function call when the cheater mode receives an input
-     * around a lambda because we need to do operation while being
-     * attached to the process
-     * */
-
-    // before running a command,
-    // check if process [pid] is still running
-
-    if (!proc_is_running(pid)) {
-      frontend_mark_task_fail("Process %d doesn't exist anymore\n", pid);
-      return E_loop_statement::break_;
-    }
-
-    // run command input
-    E_loop_statement cheater_on_line_ret_code;
-
-    int ptrace_attach_ret = 0;
-    int ptrace_deattach_ret = 0;
-    if (cheat_config.pause_while_scan) {
-      // do operation paused with ptrace
-      CALL_WHILE_PTRACE_ATTACHED(
-          pid,
-
-          {
-            cheater_on_line_ret_code = cheater_on_line<T>(
-                scanner_ptr, input_str, freezer_ptr, process_rw, &cheat_config);
-          },
-
-          &ptrace_attach_ret,
-
-          &ptrace_deattach_ret,
-
-          true
-
-      );
-
-      // check if any ptrace attach of deattach failed
-      if (ptrace_attach_ret == -1) {
-        frontend_mark_task_fail("Fail to attach, exiting cheater mode\n");
-        return E_loop_statement::break_;
-      }
-
-      if (ptrace_deattach_ret == -1) {
-        frontend_mark_task_fail("Fail to deattach, exiting cheater mode\n");
-        return E_loop_statement::break_;
-      }
-    }
-
-    else {
-      // just run command without any pause
-      // on the target process
-      // simple right :D ?
-      cheater_on_line_ret_code = cheater_on_line<T>(
-          scanner_ptr, input_str, freezer_ptr, process_rw, &cheat_config);
-    }
-
-    // else return value of cheater_on_line
-    return cheater_on_line_ret_code;
+      [&](std::string input_str) -> E_loop_statement {
+    return cheater_mode_on_each_input(pid, engine_module, &cheat_config,
+                                      input_str);
   };
 
   run_input_loop(on_input, "CHEATER");
 }
 
-template <typename T> void run_cheater_mode(int pid, E_num_type num_type) {
+template <typename T> void run_cheater_mode(int pid) {
 
+  //
   ACE_scanner<T> scanner = ACE_scanner<T>(pid);
   freezer<T> freeze_manager = freezer<T>(pid);
   proc_rw<T> process_rw = proc_rw<T>(pid);
+  //
+  engine_module<T> engine_module;
+  engine_module.scanner_ptr = &scanner;
+  engine_module.freezer_ptr = &freeze_manager;
+  engine_module.process_rw = &process_rw;
   // run cheater_mode
-  cheater_mode_loop<T>(pid, &scanner, num_type, &freeze_manager, &process_rw);
+  // TODO: maybe add another struct called
+  // cheater_module_config which has a scanner, a freezer and a proc_rw
+  cheater_mode_loop<T>(pid, engine_module);
 }
 
 // ================================================
 void cheater_mode(int pid, E_num_type num_type) {
 
   std::string num_type_str = E_num_type_to_str_map.at(num_type);
-  printf("set type to %s\n", num_type_str.c_str());
+  frontend_print("set type to %s\n", num_type_str.c_str());
   // ==============================================================
   // TODO: add test for multiple types
   switch (num_type) {
 
   case E_num_type::INT: {
-    run_cheater_mode<int>(pid, num_type);
+    run_cheater_mode<int>(pid);
     break;
   }
 
   case E_num_type::LONG: {
-    run_cheater_mode<long>(pid, num_type);
+    run_cheater_mode<long>(pid);
     break;
   }
 
   case E_num_type::SHORT: {
-    run_cheater_mode<short>(pid, num_type);
+    run_cheater_mode<short>(pid);
     break;
   }
   case E_num_type::BYTE: {
-    run_cheater_mode<byte>(pid, num_type);
+    run_cheater_mode<byte>(pid);
     break;
   }
 
   case E_num_type::FLOAT: {
-    run_cheater_mode<float>(pid, num_type);
+    run_cheater_mode<float>(pid);
     break;
   }
   }

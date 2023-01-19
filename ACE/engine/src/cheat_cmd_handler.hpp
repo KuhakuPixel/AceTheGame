@@ -15,7 +15,6 @@
 
 struct cheat_mode_config {
   bool initial_scan_done = false;
-  E_num_type num_type = E_num_type::INT;
   int pid = -1;
   bool scan_all_region = false;
   bool pause_while_scan = false;

@@ -61,17 +61,17 @@ target_compile_options(common_flag INTERFACE -Wall -Werror
 	 		-fno-rtti)
 
 
-add_library(lib_ACE STATIC src/maps.cpp src/file_utils.cpp src/error.cpp
+add_library(lib_ACE SHARED src/maps.cpp src/file_utils.cpp src/error.cpp
 	src/str_utils.cpp src/proc_stat.cpp src/scanner.cpp src/ACE_global.cpp src/ptrace.cpp
 	src/input.cpp src/cheat.cpp src/cheat_cmd_handler.cpp src/ace_type.cpp src/simulated_memory.cpp
 	src/common.cpp src/proc_rw.cpp src/proc_create.cpp src/endian.cpp src/aslr_edit.cpp 
 	src/main_cmd_handler.cpp src/loaded_mem_info.cpp src/scan_utils.cpp src/thread_continuous.cpp src/freeze.cpp
-	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp)
+	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp src/ACE_jni.cpp)
 
 
 if(ANDROID)
 	# link with main android library
-	target_link_libraries(lib_ACE PRIVATE common_flag android)
+	target_link_libraries(lib_ACE PRIVATE common_flag android log)
 else()
 	target_link_libraries(lib_ACE PRIVATE common_flag)
 

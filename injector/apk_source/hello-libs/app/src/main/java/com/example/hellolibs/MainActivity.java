@@ -20,29 +20,28 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.util.Log;
 import com.example.utils.Injector;
+
 /*
  * Simple Java UI to trigger jni function. It is exactly same as Java code
  * in hello-jni.
  */
 public class MainActivity extends AppCompatActivity {
 
-    String calc_something() {
-        return "difwiew";
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        TextView tv = new TextView(this);
-        String val = calc_something();
-        //tv.setText( "Thissss  calculation took " + measureTicks() + " ticks" );
-        // some sums
-        Injector.Init();
-        setContentView(tv);
-    }
-    //public native long  measureTicks();
-    static {
+	String calc_something() {
+		return "difwiew";
+	}
 
-        System.loadLibrary("lib_ACE");
-    }
-
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		TextView tv = new TextView(this);
+		String val = calc_something();
+		// tv.setText( "Thissss calculation took " + measureTicks() + " ticks" );
+		// Simulate apk injection, this java code
+		// will be used to generate the smali code
+		// needed for injection
+		Injector.Init();
+		//
+		setContentView(tv);
+	}
 }
