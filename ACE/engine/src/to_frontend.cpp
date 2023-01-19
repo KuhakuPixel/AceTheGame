@@ -6,11 +6,7 @@
 #include <android/log.h>
 #endif
 
-/*
- * output for the frontend
- * */
 std::string frontend_output_buff = "";
-
 std::string frontend_pop_output() {
   std::string tmp = frontend_output_buff;
   frontend_output_buff = "";
