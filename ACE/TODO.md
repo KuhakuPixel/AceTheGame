@@ -4,6 +4,8 @@
 
 ## Refactor
 
+should i make a class for the frontend?
+
 ## Cores
 - reserve memory for scan matches 's storage (a std vector)
   so that first time doing a scan in the program

@@ -1,6 +1,20 @@
 #pragma once
 #include <functional>
 #include <stdlib.h>
+#include <string>
+
+/*
+ * return current frontend output 
+ * made by frontend_print
+ * and clear it out 
+ * */
+std::string frontend_pop_output();
+
+/*
+ * return current frontend output buffer
+ * without clearing it
+ * */
+std::string frontend_peek_output();
 
 void frontend_print(const char *fmt, ...);
 
