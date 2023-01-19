@@ -1,12 +1,14 @@
 #include "to_frontend.hpp"
 #include <stdarg.h>
 #include <stdio.h>
+#include <zmq.hpp>
 
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
 
 std::string frontend_output_buff = "";
+
 std::string frontend_pop_output() {
   std::string tmp = frontend_output_buff;
   frontend_output_buff = "";
