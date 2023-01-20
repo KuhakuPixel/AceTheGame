@@ -38,6 +38,7 @@ public:
 
   // servers
   static const std::string engine_server_binded_address;
+  static const std::string engine_client_binded_address;
 
 private:
   // Disallow creating an instance of this object
