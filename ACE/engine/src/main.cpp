@@ -217,6 +217,41 @@ void display_icon() {
   // clang-format on
 }
 
+E_loop_statement main_mode_on_each_input(std::string input_str) {
+
+  CLI::App app;
+  initialize_main_commands_new(&app);
+  // special instruction
+  if (input_str == "q" || input_str == "quit") {
+    return E_loop_statement::break_;
+  }
+  // ============== reset options ======================
+  struct main_mode_options resetted_options = main_mode_options();
+  current_options = resetted_options;
+
+  // ==================================================
+  // ======================== split and make args =================
+  std::vector<std::string> args = {""};
+  std::vector<std::string> splitted_strs = str_split(input_str, " ");
+  args.insert(args.end(), splitted_strs.begin(), splitted_strs.end());
+  size_t c_str_arr_length = 0;
+  char **c_str_arr = str_vector_to_c_str_arr_new(args, &c_str_arr_length);
+
+  // ===============================================================
+  //
+
+  // parse inputs
+  try {
+    (app).parse(c_str_arr_length, c_str_arr);
+    str_arr_free(c_str_arr, c_str_arr_length);
+  } catch (const CLI::ParseError &e) {
+    (app).exit(e);
+    str_arr_free(c_str_arr, c_str_arr_length);
+    //
+  };
+
+  return E_loop_statement::continue_;
+}
 void ace_main() {
 
   // display_icon();
@@ -229,45 +264,8 @@ void ace_main() {
 
   display_intro();
 
-  CLI::App app;
-  initialize_main_commands_new(&app);
-
-  auto on_input = [&app](std::string input_str) -> E_loop_statement {
-    // special instruction
-    if (input_str == "q" || input_str == "quit") {
-      return E_loop_statement::break_;
-    }
-    // ============== reset options ======================
-    struct main_mode_options resetted_options = main_mode_options();
-    current_options = resetted_options;
-
-    // ==================================================
-    // ======================== split and make args =================
-    std::vector<std::string> args = {""};
-    std::vector<std::string> splitted_strs = str_split(input_str, " ");
-    args.insert(args.end(), splitted_strs.begin(), splitted_strs.end());
-    size_t c_str_arr_length = 0;
-    char **c_str_arr = str_vector_to_c_str_arr_new(args, &c_str_arr_length);
-
-    // ===============================================================
-    //
-
-    // parse inputs
-    try {
-      (app).parse(c_str_arr_length, c_str_arr);
-      str_arr_free(c_str_arr, c_str_arr_length);
-    } catch (const CLI::ParseError &e) {
-      (app).exit(e);
-      str_arr_free(c_str_arr, c_str_arr_length);
-      //
-    };
-
-    return E_loop_statement::continue_;
-  };
-
   // now we run the input loop
-  //  ==================================================================
-  run_input_loop(on_input, "ACE");
+  run_input_loop(main_mode_on_each_input, "ACE");
 }
 
 int main(int argc, char **argv) {
