@@ -90,4 +90,9 @@ const std::string ACE_global::cpp_compiler_version =
     ACE_global::ver_string(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
 #endif
 
-const std::string ACE_global::engine_server_binded_address = "tcp://*:5555";
+const std::string ACE_global::engine_server_binded_address =
+#ifdef __ANDROID__
+    "ipc:///data/local/tmp/ACE_engine_routing.ipc";
+#else
+    "ipc:///tmp/ACE_engine_routing.ipc";
+#endif

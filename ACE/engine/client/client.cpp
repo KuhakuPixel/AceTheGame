@@ -15,7 +15,7 @@ int main() {
   zmq::socket_t socket(context, zmq::socket_type::req);
 
   std::cout << "Connecting to ACE engine server..." << std::endl;
-  socket.connect("tcp://localhost:5555");
+  socket.connect(ACE_global::engine_server_binded_address);
 
   auto on_input = [&](std::string input_str) -> E_loop_statement {
     // dont allow empty input
