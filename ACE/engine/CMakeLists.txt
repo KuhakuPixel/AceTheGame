@@ -61,19 +61,26 @@ target_compile_options(common_flag INTERFACE -Wall -Werror
 	 		-fno-rtti)
 
 
-add_library(lib_ACE SHARED src/maps.cpp src/file_utils.cpp src/error.cpp
+set(lib_ACE_src 
+	src/maps.cpp src/file_utils.cpp src/error.cpp
 	src/str_utils.cpp src/proc_stat.cpp src/scanner.cpp src/ACE_global.cpp src/ptrace.cpp
 	src/input.cpp src/cheat.cpp src/cheat_cmd_handler.cpp src/ace_type.cpp src/simulated_memory.cpp
 	src/common.cpp src/proc_rw.cpp src/proc_create.cpp src/endian.cpp src/aslr_edit.cpp 
 	src/main_cmd_handler.cpp src/loaded_mem_info.cpp src/scan_utils.cpp src/thread_continuous.cpp src/freeze.cpp
-	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp src/ACE_jni.cpp src/server.cpp)
+	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp src/ACE_jni.cpp src/server.cpp
+)
 
+add_library(lib_ACE SHARED ${lib_ACE_src})
+add_library(lib_ACE-static STATIC ${lib_ACE_src})
 
+# ============= link ace's library with dependencies
 if(ANDROID)
 	# link with main android library
 	target_link_libraries(lib_ACE PRIVATE common_flag android log cppzmq-static)
+	target_link_libraries(lib_ACE-static PRIVATE common_flag android log cppzmq-static)
 else()
 	target_link_libraries(lib_ACE PRIVATE common_flag cppzmq-static)
+	target_link_libraries(lib_ACE-static PRIVATE common_flag cppzmq-static)
 
 endif()
 
@@ -119,7 +126,7 @@ message("strip ${CMAKE_STRIP}")
 #)
 # link against the library and add compile's options defined in common_flag
 target_link_libraries(${PROJECT_NAME} PRIVATE common_flag)
-target_link_libraries(${PROJECT_NAME} PRIVATE lib_ACE)
+target_link_libraries(${PROJECT_NAME} PRIVATE lib_ACE-static)
 
 if(BUILD_OPTIONS)
 	message("build options: ")
