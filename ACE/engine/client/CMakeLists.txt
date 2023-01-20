@@ -12,6 +12,6 @@ add_executable(
 #TODO: maybe link statically in the future
 target_link_libraries(
 	${PROJECT_NAME}
-	PRIVATE cppzmq-static lib_ACE
+	PRIVATE cppzmq-static lib_ACE-static
 )
 
