@@ -1,11 +1,13 @@
 #include "ACE_jni.hpp"
-#include <string>
 
 #ifdef __ANDROID__
 #include "cheat.hpp"
 #include "freeze.hpp"
 #include "proc_rw.hpp"
 #include "scanner.hpp"
+#include "server.hpp"
+#include "to_frontend.hpp"
+#include <string>
 #include <unistd.h>
 
 /*
@@ -32,8 +34,23 @@ void ACE_jni_init() {
   cheat_config.initial_scan_done = false;
   cheat_config.pid = pid;
 
-  cheater_mode_on_each_input<int>(pid, engine_module, &cheat_config,
-                                  "scan = 666");
+  auto on_input_received =
+
+      [&](std::string input_str) -> std::string {
+    // reset output  buffer
+    frontend_output_buff = "";
+    // run input_str command
+    cheater_mode_on_each_input<int>(pid, engine_module, &cheat_config,
+                                    input_str);
+    // get its output
+    std::string out = frontend_pop_output();
+    return out;
+  };
+
+  // start server
+  server _server =
+      server(ACE_global::engine_server_binded_address, on_input_received);
+  _server.start();
 }
 
 // =================================== JNI exports for init
