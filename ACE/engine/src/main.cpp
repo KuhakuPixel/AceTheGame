@@ -1,8 +1,9 @@
-#include "ACE_global.hpp"
 #include "../third_party/CLI11.hpp"
+#include "ACE_global.hpp"
 #include "input.hpp"
 #include "main_cmd_handler.hpp"
 #include "str_utils.hpp"
+#include "to_frontend.hpp"
 #include <functional>
 #include <map>
 #include <stdbool.h>
@@ -11,7 +12,6 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
-#include "to_frontend.hpp"
 
 struct main_mode_options {
 
@@ -34,9 +34,7 @@ struct main_mode_options {
 // global state
 struct main_mode_options current_options;
 
-CLI::App *initialize_main_commands_new() {
-
-  CLI::App *app = new CLI::App("App Description");
+CLI::App *initialize_main_commands_new(CLI::App *app) {
 
   app->footer(
       "Use \"<Subcommands> --help\" for more info about that subcommand\n");
@@ -223,14 +221,16 @@ void ace_main() {
 
   // display_icon();
   if (getuid() != 0) {
-    frontend_print("Device not rooted, without root most feautres will be broken\n");
+    frontend_print(
+        "Device not rooted, without root most feautres will be broken\n");
   } else {
     frontend_print("You are rooted, all feautres will work\n");
   }
 
   display_intro();
 
-  CLI::App *app = initialize_main_commands_new();
+  CLI::App app;
+  initialize_main_commands_new(&app);
 
   auto on_input = [&app](std::string input_str) -> E_loop_statement {
     // special instruction
@@ -254,10 +254,10 @@ void ace_main() {
 
     // parse inputs
     try {
-      (app)->parse(c_str_arr_length, c_str_arr);
+      (app).parse(c_str_arr_length, c_str_arr);
       str_arr_free(c_str_arr, c_str_arr_length);
     } catch (const CLI::ParseError &e) {
-      (app)->exit(e);
+      (app).exit(e);
       str_arr_free(c_str_arr, c_str_arr_length);
       //
     };
@@ -268,9 +268,8 @@ void ace_main() {
   // now we run the input loop
   //  ==================================================================
   run_input_loop(on_input, "ACE");
-  // free resources
-  delete app;
 }
+
 int main(int argc, char **argv) {
   /* parse args passed to program*/
   CLI::App main_app{"ACE Engine, a game hacking tools for linux and android\n"
