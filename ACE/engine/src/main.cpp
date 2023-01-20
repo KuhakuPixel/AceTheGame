@@ -2,6 +2,7 @@
 #include "ACE_global.hpp"
 #include "input.hpp"
 #include "main_cmd_handler.hpp"
+#include "server.hpp"
 #include "str_utils.hpp"
 #include "to_frontend.hpp"
 #include <functional>
@@ -19,6 +20,7 @@ struct main_mode_options {
   bool ps_map_list_all;
   bool ps_ls_reverse;
   bool aslr_set_val;
+  bool start_server;
 
   E_num_type cheater_num_type;
 
@@ -28,6 +30,7 @@ struct main_mode_options {
     this->ps_ls_reverse = false;
     this->aslr_set_val = false;
     this->cheater_num_type = E_num_type::INT;
+    this->start_server = false;
   }
 };
 
@@ -268,6 +271,23 @@ void ace_main() {
   run_input_loop(main_mode_on_each_input, "ACE");
 }
 
+void on_start_server() {
+  // TODO: fix when entering cheater mode
+  auto on_input_received =
+
+      [](std::string input_str) -> std::string {
+    // reset output  buffer
+    frontend_output_buff = "";
+    // run input_str command
+    main_mode_on_each_input(input_str);
+    // get its output
+    std::string out = frontend_pop_output();
+    return out;
+  };
+  server _server =
+      server(ACE_global::engine_server_binded_address, on_input_received);
+  _server.start();
+}
 int main(int argc, char **argv) {
   /* parse args passed to program*/
   CLI::App main_app{"ACE Engine, a game hacking tools for linux and android\n"
@@ -278,7 +298,13 @@ int main(int argc, char **argv) {
                       "enable engine's gui protocol\n"
                       "for communication via stdin\n");
 
+  main_app.add_flag("--start-server", current_options.start_server,
+                    "enable ACE engine server\n");
+
   CLI11_PARSE(main_app, argc, argv);
+  if (current_options.start_server) {
+    on_start_server();
+  }
   ace_main();
 
   return 0;
