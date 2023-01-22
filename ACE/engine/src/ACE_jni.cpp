@@ -17,6 +17,7 @@
  *
  * this should start a communication service (IPC) so that
  * */
+
 void ACE_jni_init() {
   // scan self
   int pid = getpid();
@@ -48,19 +49,10 @@ void ACE_jni_init() {
     return out;
   };
 
-  // start the server in another thread to prevent
-  // blocking the main apk loop
-  thread_continuous server_thread = thread_continuous(
-
-      [&]() {
-        // start server
-        server _server =
-            server(ACE_global::engine_server_binded_address, on_input_received);
-        _server.start();
-      }
-
-  );
-  server_thread.start();
+  // start server
+  server _server =
+      server(ACE_global::engine_server_binded_address, on_input_received);
+  _server.start();
 }
 
 // =================================== JNI exports for init
