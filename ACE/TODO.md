@@ -7,6 +7,9 @@
 should i make a class for the frontend?
 
 ## Cores
+- allow to change scan for value type in cheater mode
+  (only allow at the beggining of the scan with the scan command)
+  
 - reserve memory for scan matches 's storage (a std vector)
   so that first time doing a scan in the program
   wouldn't be very slow , for some reason
