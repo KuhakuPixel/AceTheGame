@@ -213,7 +213,8 @@ void ACE_scanner<T>::_filter_from_cmp_val(Scan_Utils::E_filter_type filter_type,
     // non existent region)
     scan_prop.read_mem_method =
         Scan_Utils::E_read_mem_method::with_process_vm_readv;
-    // frontend_print("start %p, end %p\n", scan_prop.addr_start, scan_prop.addr_end);
+    // frontend_print("start %p, end %p\n", scan_prop.addr_start,
+    // scan_prop.addr_end);
 
     // ============================================
     this->read_chunk_and_add_matches(
@@ -265,12 +266,18 @@ void ACE_scanner<T>::append_initial_scan(byte *addr_start, byte *addr_end,
   chunk_scan_prop<T> scan_prop;
   scan_prop.addr_start = addr_start;
   scan_prop.addr_end = addr_end;
+#ifdef __ANDROID__
+  // For Android, process_vm_readv
+  scan_prop.read_mem_method =
+      Scan_Utils::E_read_mem_method::with_process_vm_readv;
+#else
   // for first scan only, we have to read from proc pid mem
   // because process_vm_readv is too slow for large read
   // but process_vm_readv provide much better error handling
   // than proc pid mem (TODO: find out why)
   scan_prop.read_mem_method =
       Scan_Utils::E_read_mem_method::with_proc_pid_mem_file;
+#endif
   // cannot compare against self
   // because this is an initial scan and
   // we haven't got a match result yet
@@ -321,7 +328,8 @@ void ACE_scanner<T>::initial_scan_multiple(
 
     frontend_mark_progress(i + 1, segments_to_scan.size());
 
-    // frontend_print("%s\n", segments_to_scan[i].get_displayable_str().c_str());
+    // frontend_print("%s\n",
+    // segments_to_scan[i].get_displayable_str().c_str());
 
     this->append_initial_scan((byte *)segments_to_scan[i].address_start,
                               (byte *)segments_to_scan[i].address_end,
@@ -352,8 +360,8 @@ void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
 
         // error on write
         if (errno != 0 && ret_val == -1) {
-          frontend_print("Error while writting matches at %p: %s\n", (byte *)addr,
-                 strerror(errno));
+          frontend_print("Error while writting matches at %p: %s\n",
+                         (byte *)addr, strerror(errno));
         }
       }
 

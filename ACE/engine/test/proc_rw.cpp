@@ -5,6 +5,17 @@
 #include <sys/signal.h> // for SIGKILL
 #include <unistd.h>     // for kill
 
+/*
+ * reading mem method used for testing process_rw.read_mem_new
+ * it varies depending on different platform
+ * */
+Scan_Utils::E_read_mem_method read_mem_method =
+#ifdef __ANDROID__
+    Scan_Utils::E_read_mem_method::with_process_vm_readv;
+#else
+    Scan_Utils::E_read_mem_method::with_proc_pid_mem_file;
+#endif
+
 TEST_CASE("proc_read", "[proc_rw]") {
 
   // set value
@@ -78,9 +89,8 @@ TEST_CASE("read_mem_new", "[proc_rw]") {
 
   // get value from tracee and asserts
   int read_buff[1000];
-
-  ssize_t read_length =
-      process_rw.read_mem_new((byte *)&arr[0], sizeof(arr), (byte *)read_buff);
+  ssize_t read_length = process_rw.read_mem_new(
+      (byte *)&arr[0], sizeof(arr), (byte *)read_buff, read_mem_method);
 
   // assertions
   REQUIRE(sizeof(arr) == read_length);
@@ -112,8 +122,8 @@ TEST_CASE("read_mem_new_short", "[proc_rw]") {
   // get value from tracee and asserts
   short read_buff[1000];
 
-  ssize_t read_length =
-      process_rw.read_mem_new((byte *)&arr[0], sizeof(arr), (byte *)read_buff);
+  ssize_t read_length = process_rw.read_mem_new(
+      (byte *)&arr[0], sizeof(arr), (byte *)read_buff, read_mem_method);
 
   // assertions
   REQUIRE(sizeof(arr) == read_length);

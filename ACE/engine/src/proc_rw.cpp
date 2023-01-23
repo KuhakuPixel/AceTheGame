@@ -81,6 +81,10 @@ process_vm_readv_new(int pid, const byte *target_address, size_t size,
 template <typename T> proc_rw<T>::proc_rw(int pid) {
 
   proc_rw<T>::proc_pid = pid;
+#ifndef __ANDROID__
+  /*
+   * for linux desktop, we can use proc/pid/mem
+   * */
   // ========== get file descriptor of /proc/<pid>/mem ===========
   char path_to_proc_mem[200];
   snprintf(path_to_proc_mem, 199, "/proc/%d/mem", pid);
@@ -100,6 +104,7 @@ template <typename T> proc_rw<T>::proc_rw(int pid) {
   // so we need to open with read and write requests
   // https://man7.org/linux/man-pages/man2/open.2.html
   proc_rw<T>::proc_pid_mem_fd = open(path_to_proc_mem, O_RDWR);
+#endif
 }
 template <typename T>
 ssize_t
