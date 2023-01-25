@@ -6,6 +6,7 @@
 #include "../src/ACE_global.hpp"
 #include "../src/input.hpp"
 #include <iostream>
+#include <stdio.h>
 #include <string>
 #include <zmq.hpp>
 
@@ -14,8 +15,9 @@ int main() {
   zmq::context_t context(1);
   zmq::socket_t socket(context, zmq::socket_type::req);
 
-  std::cout << "Connecting to ACE engine server..." << std::endl;
+  printf("Connecting to ACE engine server ...\n");
   socket.connect(ACE_global::engine_client_binded_address);
+  printf("done\n");
 
   auto on_input = [&](std::string input_str) -> E_loop_statement {
     // dont allow empty input
@@ -34,20 +36,5 @@ int main() {
   };
 
   run_input_loop(on_input, "Engine Server");
-
-  /*
-  //  Do 10 requests, waiting each time for a response
-  for (int request_nbr = 0; request_nbr != 10; request_nbr++) {
-    zmq::message_t request(5);
-    memcpy(request.data(), "SHITT", 5);
-    std::cout << "Sending SHITT " << request_nbr << "..." << std::endl;
-    socket.send(request, zmq::send_flags::none);
-
-    //  Get the reply.
-    zmq::message_t reply;
-    socket.recv(reply, zmq::recv_flags::none);
-    std::cout << "Received World " << request_nbr << std::endl;
-  }
-  */
   return 0;
 }
