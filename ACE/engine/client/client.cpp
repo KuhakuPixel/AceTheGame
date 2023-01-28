@@ -30,7 +30,10 @@ int main() {
 
     //  Get and print the reply.
     zmq::message_t reply;
-    socket.recv(reply, zmq::recv_flags::none);
+    auto receive_res = socket.recv(reply, zmq::recv_flags::none);
+    if (!receive_res) {
+      printf("Warning: Failed to receive message\n");
+    }
     printf("\n%s\n", reply.to_string().c_str());
     return E_loop_statement::continue_;
   };
