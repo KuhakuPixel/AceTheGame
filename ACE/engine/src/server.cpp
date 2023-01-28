@@ -24,7 +24,10 @@ void server::start() {
     zmq::message_t request;
 
     //  Wait for next request from client
-    socket.recv(request, zmq::recv_flags::none);
+    auto receive_res = socket.recv(request, zmq::recv_flags::none);
+    if (!receive_res) {
+      printf("Warning: Failed to receive message\n");
+    }
 
     //  Do some 'work' and get an output string
     std::string request_str = request.to_string();
