@@ -15,8 +15,10 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
     apt-get -y --no-install-recommends install \
 	aapt\
 	adb\ 
-	# for jar signer and zip align
-	openjdk-11-jdk-headless\
+	# for  signing and zip align
+	apksigner\
+	zipalign\
+	# 
 	apktool 
 
 # change workdir
