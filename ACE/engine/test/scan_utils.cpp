@@ -177,6 +177,22 @@ TEST_CASE("Scan_Utils::value_compare", "[scanner]") {
 
   REQUIRE(false == Scan_Utils::value_compare(
                        6, Scan_Utils::E_filter_type::not_equal, 6));
+
+  //
+  REQUIRE(true ==
+          Scan_Utils::value_compare(4, Scan_Utils::E_filter_type::unknown, 5));
+
+  REQUIRE(true ==
+          Scan_Utils::value_compare(5, Scan_Utils::E_filter_type::unknown, 4));
+
+  REQUIRE(true == Scan_Utils::value_compare(
+                      -1, Scan_Utils::E_filter_type::unknown, -1));
+
+  REQUIRE(true ==
+          Scan_Utils::value_compare(-1, Scan_Utils::E_filter_type::unknown, 4));
+
+  REQUIRE(true ==
+          Scan_Utils::value_compare(4, Scan_Utils::E_filter_type::unknown, -1));
 }
 
 TEST_CASE("Scan_Utils::value_compare_decimal", "[scan_utils]") {
@@ -239,6 +255,22 @@ TEST_CASE("Scan_Utils::value_compare_decimal", "[scan_utils]") {
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
                       x, Scan_Utils::E_filter_type::not_equal, 0.11));
+
+  //
+  REQUIRE(true == Scan_Utils::value_compare<float>(
+                      4.0, Scan_Utils::E_filter_type::unknown, 5.3));
+
+  REQUIRE(true == Scan_Utils::value_compare<float>(
+                      5.1, Scan_Utils::E_filter_type::unknown, 4.4));
+
+  REQUIRE(true == Scan_Utils::value_compare<float>(
+                      -1.3, Scan_Utils::E_filter_type::unknown, -1.3));
+
+  REQUIRE(true == Scan_Utils::value_compare<float>(
+                      -1.3, Scan_Utils::E_filter_type::unknown, 4.5));
+
+  REQUIRE(true == Scan_Utils::value_compare<float>(
+                      4.2, Scan_Utils::E_filter_type::unknown, -1.1));
 }
 
 TEST_CASE("Scan_Utils::get_last_chunk_read_idx0",

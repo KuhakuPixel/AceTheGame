@@ -18,6 +18,7 @@ enum class E_filter_type {
   greater_equal,
   less_equal,
   not_equal,
+  unknown,
 };
 
 /*
@@ -54,6 +55,8 @@ static const std::unordered_map<std::string, Scan_Utils::E_filter_type>
         {">=", Scan_Utils::E_filter_type::greater_equal},
         {"<=", Scan_Utils::E_filter_type::less_equal},
         {"!=", Scan_Utils::E_filter_type::not_equal},
+        // For unknown, all comparasion must be true
+        {"?", Scan_Utils::E_filter_type::unknown},
 
 };
 
@@ -138,6 +141,11 @@ inline bool value_compare(T compare_from, Scan_Utils::E_filter_type filter_type,
       return true;
 
     break;
+
+  case Scan_Utils::E_filter_type::unknown:
+    return true;
+
+    break;
   }
   return false;
 }
@@ -207,6 +215,11 @@ inline bool value_compare(float compare_from,
         compare_to - compare_from > epsilon ||
         // is equal
         fabs(compare_from - compare_to) < epsilon;
+
+    break;
+
+  case Scan_Utils::E_filter_type::unknown:
+    return true;
 
     break;
 
