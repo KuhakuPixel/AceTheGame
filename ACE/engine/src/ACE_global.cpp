@@ -89,3 +89,6 @@ const std::string ACE_global::cpp_compiler_version =
 #else
     ACE_global::ver_string(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
 #endif
+
+const std::string ACE_global::engine_server_binded_address = "tcp://*:56666";
+const std::string ACE_global::engine_client_binded_address = "tcp://127.0.0.1:56666";

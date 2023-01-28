@@ -1,8 +1,10 @@
-#include "ACE_global.hpp"
 #include "../third_party/CLI11.hpp"
+#include "ACE_global.hpp"
 #include "input.hpp"
 #include "main_cmd_handler.hpp"
+#include "server.hpp"
 #include "str_utils.hpp"
+#include "to_frontend.hpp"
 #include <functional>
 #include <map>
 #include <stdbool.h>
@@ -11,7 +13,6 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
-#include "to_frontend.hpp"
 
 struct main_mode_options {
 
@@ -19,6 +20,7 @@ struct main_mode_options {
   bool ps_map_list_all;
   bool ps_ls_reverse;
   bool aslr_set_val;
+  bool start_server;
 
   E_num_type cheater_num_type;
 
@@ -28,15 +30,14 @@ struct main_mode_options {
     this->ps_ls_reverse = false;
     this->aslr_set_val = false;
     this->cheater_num_type = E_num_type::INT;
+    this->start_server = false;
   }
 };
 
 // global state
 struct main_mode_options current_options;
 
-CLI::App *initialize_main_commands_new() {
-
-  CLI::App *app = new CLI::App("App Description");
+CLI::App *initialize_main_commands_new(CLI::App *app) {
 
   app->footer(
       "Use \"<Subcommands> --help\" for more info about that subcommand\n");
@@ -219,57 +220,73 @@ void display_icon() {
   // clang-format on
 }
 
+E_loop_statement main_mode_on_each_input(std::string input_str) {
+
+  CLI::App app;
+  initialize_main_commands_new(&app);
+  // special instruction
+  if (input_str == "q" || input_str == "quit") {
+    return E_loop_statement::break_;
+  }
+  // ============== reset options ======================
+  struct main_mode_options resetted_options = main_mode_options();
+  current_options = resetted_options;
+
+  // ==================================================
+  // ======================== split and make args =================
+  std::vector<std::string> args = {""};
+  std::vector<std::string> splitted_strs = str_split(input_str, " ");
+  args.insert(args.end(), splitted_strs.begin(), splitted_strs.end());
+  size_t c_str_arr_length = 0;
+  char **c_str_arr = str_vector_to_c_str_arr_new(args, &c_str_arr_length);
+
+  // ===============================================================
+  //
+
+  // parse inputs
+  try {
+    (app).parse(c_str_arr_length, c_str_arr);
+    str_arr_free(c_str_arr, c_str_arr_length);
+  } catch (const CLI::ParseError &e) {
+    (app).exit(e);
+    str_arr_free(c_str_arr, c_str_arr_length);
+    //
+  };
+
+  return E_loop_statement::continue_;
+}
 void ace_main() {
 
   // display_icon();
   if (getuid() != 0) {
-    frontend_print("Device not rooted, without root most feautres will be broken\n");
+    frontend_print(
+        "Device not rooted, without root most feautres will be broken\n");
   } else {
     frontend_print("You are rooted, all feautres will work\n");
   }
 
   display_intro();
 
-  CLI::App *app = initialize_main_commands_new();
-
-  auto on_input = [&app](std::string input_str) -> E_loop_statement {
-    // special instruction
-    if (input_str == "q" || input_str == "quit") {
-      return E_loop_statement::break_;
-    }
-    // ============== reset options ======================
-    struct main_mode_options resetted_options = main_mode_options();
-    current_options = resetted_options;
-
-    // ==================================================
-    // ======================== split and make args =================
-    std::vector<std::string> args = {""};
-    std::vector<std::string> splitted_strs = str_split(input_str, " ");
-    args.insert(args.end(), splitted_strs.begin(), splitted_strs.end());
-    size_t c_str_arr_length = 0;
-    char **c_str_arr = str_vector_to_c_str_arr_new(args, &c_str_arr_length);
-
-    // ===============================================================
-    //
-
-    // parse inputs
-    try {
-      (app)->parse(c_str_arr_length, c_str_arr);
-      str_arr_free(c_str_arr, c_str_arr_length);
-    } catch (const CLI::ParseError &e) {
-      (app)->exit(e);
-      str_arr_free(c_str_arr, c_str_arr_length);
-      //
-    };
-
-    return E_loop_statement::continue_;
-  };
-
   // now we run the input loop
-  //  ==================================================================
-  run_input_loop(on_input, "ACE");
-  // free resources
-  delete app;
+  run_input_loop(main_mode_on_each_input, "ACE");
+}
+
+void on_start_server() {
+  // TODO: fix when entering cheater mode
+  auto on_input_received =
+
+      [](std::string input_str) -> std::string {
+    // reset output  buffer
+    frontend_output_buff = "";
+    // run input_str command
+    main_mode_on_each_input(input_str);
+    // get its output
+    std::string out = frontend_pop_output();
+    return out;
+  };
+  server _server =
+      server(ACE_global::engine_server_binded_address, on_input_received);
+  _server.start();
 }
 int main(int argc, char **argv) {
   /* parse args passed to program*/
@@ -281,7 +298,13 @@ int main(int argc, char **argv) {
                       "enable engine's gui protocol\n"
                       "for communication via stdin\n");
 
+  main_app.add_flag("--start-server", current_options.start_server,
+                    "enable ACE engine server\n");
+
   CLI11_PARSE(main_app, argc, argv);
+  if (current_options.start_server) {
+    on_start_server();
+  }
   ace_main();
 
   return 0;

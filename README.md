@@ -1,7 +1,8 @@
-# ApkToolServer
+# AceTheGame
 
-- server for injecting code into an apk
+ A cheat engine like program for android without root
 
+## Build instruction
 after build with 
 ```
 ./build.sh
