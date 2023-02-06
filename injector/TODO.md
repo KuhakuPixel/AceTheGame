@@ -1,4 +1,9 @@
 
+- use objection without modification if possible
+  to automatically inject `lib_ACE` to an apk
+- build a server with flask probably so
+  that the injector has a gui
+===============================================================
 - maybe include all of decompiled smali code for injection?
   in `./gen_smali.py`
 
