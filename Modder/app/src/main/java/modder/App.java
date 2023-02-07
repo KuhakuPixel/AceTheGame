@@ -11,12 +11,33 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import java.util.Optional;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class App {
     public String getGreeting() {
         return "Hello World!";
+    }
+
+    public static void ShowAlert(String title, String errHeader, String errMsg) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(errHeader);
+        alert.setContentText(errMsg);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent()) {
+
+            if (result.get() == ButtonType.OK) {
+                System.out.println("Pressed OK.");
+            }
+
+        }
     }
 
     // workaround for java 11 since app built with
@@ -29,6 +50,37 @@ public class App {
         @Override
         public void start(Stage primaryStage) {
 
+            if (!Util.DoesCommandExist("adb")) {
+                ShowAlert("Adb Command doesn't exist", "", "Command \"adb\" not found in PATH");
+                return;
+            }
+
+            // ====================================================
+            List<String> output = new ArrayList<String>();
+
+            // test if adb shell can be connected by echoing in
+            // the shell and check the output
+            output = Util.RunCommand("adb", "shell echo test");
+            if (output.size() >= 1) {
+                if (!output.get(0).equals("test")) {
+                    System.out.println();
+
+                    ShowAlert("Adb Shell Error", "",
+                            String.format("Error connecting to adb shell: \"%s\" ", output.get(0)));
+                    return;
+                }
+
+            } else {
+                ShowAlert("Adb Shell Error", "", "Error connecting to adb shell: Empty Output");
+                return;
+
+            }
+
+            // everything looks okay
+            output = Util.RunCommand("adb", "shell pm list packages");
+            output.forEach(s -> System.out.println(s));
+
+            // ========================== init gui =================
             //
             StackPane root = new StackPane();
             Scene scene = new Scene(root, width, height);
@@ -68,15 +120,6 @@ public class App {
             System.out.println("ACE doesn't exist");
 
         }
-
-        if (Util.DoesCommandExist("adb")) {
-            System.out.println("adb exist");
-        } else {
-            System.out.println("adb doesn't exist");
-
-        }
-        List<String> output = Util.RunCommand("gdb", "--help");
-        output.forEach(s -> System.out.println(s));
 
         //
         System.out.println(new App().getGreeting());
