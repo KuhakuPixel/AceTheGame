@@ -5,6 +5,9 @@ package modder;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 class TestUtil {
     @Test
@@ -59,6 +62,29 @@ class TestUtil {
                 null,
 
                 Util.ArrayConcat(null, null));
+
+    }
+
+    @Test
+    void RunCommand() {
+        List<String> output = new ArrayList<String>();
+
+        // test RunCommand on echo command, because it is one of command
+        // which ouput can be controlled
+        output = Util.RunCommand("echo", "hello");
+        assertIterableEquals(Arrays.asList("hello"), output);
+
+        output = Util.RunCommand("echo", "hello world");
+        assertIterableEquals(Arrays.asList("hello world"), output);
+
+        output = Util.RunCommand("echo", "hello and goodbye world");
+        assertIterableEquals(Arrays.asList("hello and goodbye world"), output);
+
+        output = Util.RunCommand("echo", "hello\nworld");
+        assertIterableEquals(Arrays.asList("hello", "world"), output);
+
+        output = Util.RunCommand("echo", "hello\nworld\nbye");
+        assertIterableEquals(Arrays.asList("hello", "world", "bye"), output);
 
     }
 }

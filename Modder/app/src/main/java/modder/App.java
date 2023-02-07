@@ -12,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
@@ -23,6 +25,7 @@ public class App {
     public static class RealApp extends Application {
         final int width = 587;
         final int height = 612;
+
         @Override
         public void start(Stage primaryStage) {
 
@@ -72,6 +75,9 @@ public class App {
             System.out.println("adb doesn't exist");
 
         }
+        List<String> output = Util.RunCommand("gdb", "--help");
+        output.forEach(s -> System.out.println(s));
+
         //
         System.out.println(new App().getGreeting());
         Application.launch(RealApp.class);

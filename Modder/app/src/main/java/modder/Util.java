@@ -4,7 +4,11 @@
 package modder;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
 
@@ -53,10 +57,40 @@ public class Util {
 
     }
 
-    public static String RunCommand(String command, String args) {
+    public static List<String> RunCommand(String command, String args) {
         String[] args_arr = args.split(" ");
-        return "";
+        // add commands name and arguments
+        String[] commands = { command };
+        commands = Util.ArrayConcat(commands, args_arr);
+        //
+        Runtime runtime = Runtime.getRuntime();
+
+        List<String> commands_out = new ArrayList<String>();
+        try {
+            Process process = runtime.exec(commands);
+
+            try {
+                process.waitFor();
+            } catch (InterruptedException interruptedException) {
+                return commands_out;
+
+            }
+            // get output from process
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String outBuff = "";
+
+            while ((outBuff = stdIn.readLine()) != null)
+                commands_out.add(outBuff);
+
+            return commands_out;
+        }
+
+        catch (IOException e) {
+
+            return commands_out;
+        }
 
     }
-
 }
