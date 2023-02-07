@@ -4,8 +4,20 @@
 package modder;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Util {
+
+    public static <T> T[] ArrayConcat(T[] a, T[] b) {
+        if (a == null || b == null)
+            return null;
+        // allocate enough space for both a and b
+        T[] combined = Arrays.copyOf(a, a.length + b.length);
+        //
+        int destPos = a.length;
+        System.arraycopy(b, 0, combined, destPos, b.length);
+        return combined;
+    }
 
     public static boolean DoesCommandExist(String command) {
         // TODO: add log warning when exception
@@ -38,6 +50,12 @@ public class Util {
             // System.out.println("false, IO exception");
             return false;
         }
+
+    }
+
+    public static String RunCommand(String command, String args) {
+        String[] args_arr = args.split(" ");
+        return "";
 
     }
 

@@ -18,4 +18,47 @@ class TestUtil {
         assertEquals(false, Util.DoesCommandExist("3490t433ocworo3i40ehfh"));
         assertEquals(false, Util.DoesCommandExist("93u09u904utoidwwht4j39"));
     }
+
+    @Test
+    void ArrayConcat() {
+
+        assertArrayEquals(
+
+                new String[] { "hello", "world" },
+
+                Util.ArrayConcat(new String[] { "hello" }, new String[] { "world" }));
+
+        assertArrayEquals(
+
+                new String[] { "hello", "world", "goodbye" },
+
+                Util.ArrayConcat(new String[] { "hello", "world" }, new String[] { "goodbye" }));
+
+        assertArrayEquals(
+
+                new String[] { "hello", "world", "goodbye", "nice", "good" },
+
+                Util.ArrayConcat(new String[] { "hello", "world" }, new String[] { "goodbye", "nice", "good" }));
+
+        // when empty
+        assertArrayEquals(
+
+                new String[] {},
+
+                Util.ArrayConcat(new String[] {}, new String[] {}));
+
+        assertArrayEquals(
+
+                new Integer[] {},
+
+                Util.ArrayConcat(new Integer[] {}, new Integer[] {}));
+        // when NULL
+
+        assertArrayEquals(
+
+                null,
+
+                Util.ArrayConcat(null, null));
+
+    }
 }
