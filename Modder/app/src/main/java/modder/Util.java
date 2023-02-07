@@ -84,6 +84,9 @@ public class Util {
             while ((outBuff = stdIn.readLine()) != null)
                 commands_out.add(outBuff);
 
+            while ((outBuff = stdErr.readLine()) != null)
+                commands_out.add(outBuff);
+
             return commands_out;
         }
 
