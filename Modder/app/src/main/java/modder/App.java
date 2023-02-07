@@ -46,6 +46,23 @@ public class App {
     }
 
     public static void main(String[] args) {
+        // Some testing
+        if(Util.DoesCommandExist("gdb")){
+            System.out.println("gdb exist");
+        }
+        else{
+            System.out.println("gdb doesn't exist");
+
+        }
+
+        if(Util.DoesCommandExist("ACE")){
+            System.out.println("ACE exist");
+        }
+        else{
+            System.out.println("ACE doesn't exist");
+
+        }
+        //
         System.out.println(new App().getGreeting());
         Application.launch(RealApp.class);
 
