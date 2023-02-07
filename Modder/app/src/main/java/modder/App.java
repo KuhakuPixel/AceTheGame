@@ -11,10 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import java.util.Optional;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -22,22 +18,6 @@ import java.util.ArrayList;
 public class App {
     public String getGreeting() {
         return "Hello World!";
-    }
-
-    public static void ShowAlert(String title, String errHeader, String errMsg) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(errHeader);
-        alert.setContentText(errMsg);
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent()) {
-
-            if (result.get() == ButtonType.OK) {
-                System.out.println("Pressed OK.");
-            }
-
-        }
     }
 
     // workaround for java 11 since app built with
@@ -51,7 +31,7 @@ public class App {
         public void start(Stage primaryStage) {
 
             if (!Util.DoesCommandExist("adb")) {
-                ShowAlert("Adb Command doesn't exist", "", "Command \"adb\" not found in PATH");
+                GuiUtil.ShowAlert("Adb Command doesn't exist", "", "Command \"adb\" not found in PATH");
                 return;
             }
 
@@ -65,13 +45,15 @@ public class App {
                 if (!output.get(0).equals("test")) {
                     System.out.println();
 
-                    ShowAlert("Adb Shell Error", "",
-                            String.format("Error connecting to adb shell: \"%s\" ", output.get(0)));
+                    GuiUtil.ShowAlert("Adb Shell Error",
+                            String.format("Error connecting to adb shell: \"%s\" ", output.get(0)),
+
+                            "Have you connected android device to your computer?");
                     return;
                 }
 
             } else {
-                ShowAlert("Adb Shell Error", "", "Error connecting to adb shell: Empty Output");
+                GuiUtil.ShowAlert("Adb Shell Error", "", "Error connecting to adb shell: Empty Output");
                 return;
 
             }
