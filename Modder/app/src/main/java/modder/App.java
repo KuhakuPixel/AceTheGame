@@ -21,22 +21,27 @@ public class App {
     // "gradle build", will be missing javaFX lib
     // https://stackoverflow.com/questions/59771324/error-javafx-runtime-components-are-missing-and-are-required-to-run-this-appli
     public static class RealApp extends Application {
+        final int width = 587;
+        final int height = 612;
         @Override
         public void start(Stage primaryStage) {
+
+            //
+            StackPane root = new StackPane();
+            Scene scene = new Scene(root, width, height);
+            // ============== set button ================
             Button btn = new Button();
-            btn.setText("Say 'Hello World'");
+            btn.setText("Get Size");
             btn.setOnAction(new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent event) {
-                    System.out.println("Hello World!");
+                    System.out.println("width: " + scene.getWidth() + " height: " + scene.getHeight());
                 }
             });
 
-            StackPane root = new StackPane();
             root.getChildren().add(btn);
-
-            Scene scene = new Scene(root, 300, 250);
+            // ==========================================
 
             primaryStage.setTitle("Hello World!");
             primaryStage.setScene(scene);
@@ -47,19 +52,24 @@ public class App {
 
     public static void main(String[] args) {
         // Some testing
-        if(Util.DoesCommandExist("gdb")){
+        if (Util.DoesCommandExist("gdb")) {
             System.out.println("gdb exist");
-        }
-        else{
+        } else {
             System.out.println("gdb doesn't exist");
 
         }
 
-        if(Util.DoesCommandExist("ACE")){
+        if (Util.DoesCommandExist("ACE")) {
             System.out.println("ACE exist");
-        }
-        else{
+        } else {
             System.out.println("ACE doesn't exist");
+
+        }
+
+        if (Util.DoesCommandExist("adb")) {
+            System.out.println("adb exist");
+        } else {
+            System.out.println("adb doesn't exist");
 
         }
         //
