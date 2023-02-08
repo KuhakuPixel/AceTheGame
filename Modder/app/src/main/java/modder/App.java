@@ -82,8 +82,20 @@ public class App {
 
             primaryStage.setTitle("Hello World!");
             primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
+            // primaryStage.setFullScreen(true);
             primaryStage.show();
         }
+
+    }
+
+    public static void cliInit() {
+        AdbShell adbShell = new AdbShell();
+        AdbShell.Output out = adbShell.Run("pm list packages");
+        if (out.error != AdbShell.Error.ok) {
+            System.out.println("can't connect to adb shell:");
+        }
+        out.strings.forEach(s -> System.out.println(s));
 
     }
 
@@ -103,9 +115,10 @@ public class App {
 
         }
 
-        //
-        System.out.println(new App().getGreeting());
-        Application.launch(RealApp.class);
+        // gui
+        // Application.launch(RealApp.class);
+        // cli app
+        cliInit();
 
     }
 }
