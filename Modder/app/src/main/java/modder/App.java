@@ -94,8 +94,20 @@ public class App {
         AdbShell.Output out = adbShell.Run("pm list packages");
         if (out.error != AdbShell.Error.ok) {
             System.out.println("can't connect to adb shell:");
+            out.strings.forEach(s -> System.out.println(s));
+            return;
         }
-        out.strings.forEach(s -> System.out.println(s));
+        // output will look like
+        // package:com.android.offfice
+        // package:com.vivo.appstore
+        // "package:" should be trimmed for better view
+        for (int i = 0; i < out.strings.size(); i++) {
+            // use the caret symbol '^'
+            // to match the beggining of the pattern
+            String new_str = out.strings.get(i).replaceFirst("^package:", "");
+            System.out.printf("%d %s\n", i, new_str);
+        }
+        System.out.printf("Found %d packages\n", out.strings.size());
 
     }
 
