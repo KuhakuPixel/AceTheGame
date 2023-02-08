@@ -15,6 +15,46 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.ArrayList;
 
+// 
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Spec;
+
+@Command(name = "Modder", subcommands = {
+        CommandLine.HelpCommand.class }, description = "Utilities for hacking android apk")
+class ModderMainCmd {
+    @Spec
+    CommandSpec spec;
+
+    @Command(name = "listApk", description = "List installed apks")
+    void ListApk() {
+
+        AdbShell adbShell = new AdbShell();
+        AdbShell.Output out = adbShell.Run("pm list packages");
+        if (out.error != AdbShell.Error.ok) {
+            System.out.println("can't connect to adb shell:");
+            out.strings.forEach(s -> System.out.println(s));
+            return;
+        }
+        // output will look like
+        // package:com.android.offfice
+        // package:com.vivo.appstore
+        // "package:" should be trimmed for better view
+        for (int i = 0; i < out.strings.size(); i++) {
+            // use the caret symbol '^'
+            // to match the beggining of the pattern
+            String new_str = out.strings.get(i).replaceFirst("^package:", "");
+            System.out.printf("%d %s\n", i, new_str);
+        }
+        System.out.printf("Found %d packages\n", out.strings.size());
+
+    }
+
+}
+
+//
 public class App {
     public String getGreeting() {
         return "Hello World!";
@@ -89,48 +129,28 @@ public class App {
 
     }
 
-    public static void cliInit() {
-        AdbShell adbShell = new AdbShell();
-        AdbShell.Output out = adbShell.Run("pm list packages");
-        if (out.error != AdbShell.Error.ok) {
-            System.out.println("can't connect to adb shell:");
-            out.strings.forEach(s -> System.out.println(s));
-            return;
-        }
-        // output will look like
-        // package:com.android.offfice
-        // package:com.vivo.appstore
-        // "package:" should be trimmed for better view
-        for (int i = 0; i < out.strings.size(); i++) {
-            // use the caret symbol '^'
-            // to match the beggining of the pattern
-            String new_str = out.strings.get(i).replaceFirst("^package:", "");
-            System.out.printf("%d %s\n", i, new_str);
-        }
-        System.out.printf("Found %d packages\n", out.strings.size());
+    public static void cliInit(String[] args) {
+        /* */
+        //CommandLine::setSubcommandsCaseInsensitive(true);
+        //
+        int exitCode = new CommandLine(new ModderMainCmd()).execute(args);
+        System.exit(exitCode);
 
     }
 
     public static void main(String[] args) {
         // Some testing
-        if (Util.DoesCommandExist("gdb")) {
-            System.out.println("gdb exist");
+        if (Util.DoesCommandExist("adb")) {
+            System.out.println("adb exist");
         } else {
-            System.out.println("gdb doesn't exist");
-
-        }
-
-        if (Util.DoesCommandExist("ACE")) {
-            System.out.println("ACE exist");
-        } else {
-            System.out.println("ACE doesn't exist");
+            System.out.println("adb doesn't exist");
 
         }
 
         // gui
         // Application.launch(RealApp.class);
         // cli app
-        cliInit();
+        cliInit(args);
 
     }
 }
