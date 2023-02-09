@@ -100,9 +100,10 @@ public class Adb {
         return out;
     }
 
-    public Output DownloadApk(String path_to_apk) {
+    public Output DownloadApk(String path_to_apk, String downloadDir) {
 
-        Output out = Run("pull " + path_to_apk);
+	String cmd = String.format("pull %s %s",path_to_apk, downloadDir);
+        Output out = Run(cmd);
         if (out.error != Adb.Error.ok) {
             return out;
         }

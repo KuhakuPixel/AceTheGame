@@ -25,6 +25,12 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
+
+    // libs for io operations 
+    // https://stackoverflow.com/a/23678498/14073678
+    // installation:
+    // https://stackoverflow.com/a/31496709/14073678
+    implementation 'commons-io:commons-io:2.11.0'
 }
 
 javafx {
