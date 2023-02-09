@@ -7,6 +7,8 @@
 should i make a class for the frontend?
 
 ## Cores
+- fix  `input.cpp`'s  `linenoise::Readline` not taking input on
+  my old android device 
 - allow to change scan for value type in cheater mode
   (only allow at the beggining of the scan with the scan command)
   
