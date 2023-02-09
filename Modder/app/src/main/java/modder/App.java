@@ -28,14 +28,19 @@ class ModderMainCmd {
     @Spec
     CommandSpec spec;
 
+    void ShowAdbShellError(Adb.Output out) {
+        System.out.println("can't connect to adb shell:");
+        out.strings.forEach(s -> System.out.println(s));
+
+    }
+
     @Command(name = "listApk", description = "List installed apks")
     void ListApk() {
 
-        AdbShell adbShell = new AdbShell();
-        AdbShell.Output out = adbShell.Run("pm list packages");
-        if (out.error != AdbShell.Error.ok) {
-            System.out.println("can't connect to adb shell:");
-            out.strings.forEach(s -> System.out.println(s));
+        Adb adb = new Adb();
+        Adb.Output out = adb.ListApk();
+        if (out.error != Adb.Error.ok) {
+            ShowAdbShellError(out);
             return;
         }
         // output will look like
@@ -49,6 +54,51 @@ class ModderMainCmd {
             System.out.printf("%d %s\n", i, new_str);
         }
         System.out.printf("Found %d packages\n", out.strings.size());
+
+    }
+
+    @Command(name = "download", description = "Download an apk from device")
+    void Download(
+
+            @Parameters(paramLabel = "packageName", description = "Package to download") String package_name
+
+    ) {
+
+        Adb adb = new Adb();
+        // check if [package_name] exists
+        Adb.Output out = adb.ListApk();
+        if (out.error != Adb.Error.ok) {
+            ShowAdbShellError(out);
+            return;
+        }
+
+        if (!out.strings.contains(package_name)) {
+            System.out.printf("package %s doesn't exist in the device\n", package_name);
+            System.out.println("use listApk command to list installed packages");
+            return;
+
+        }
+        out = adb.GetApkPathAtDevice(package_name);
+        if (out.error != Adb.Error.ok) {
+            ShowAdbShellError(out);
+            return;
+        }
+        // TODO: add print method for Adb.Output
+        // we need to loop when downloading the app
+        // in case the apk is splitted apks (have multiple paths)
+        System.out.println("Downloading apks ...");
+        for (int i = 0; i < out.strings.size(); i++) {
+
+            String apkPath = out.strings.get(i);
+            System.out.printf("Downloading apk at %s\n", apkPath);
+            Adb.Output downloadOut = adb.DownloadApk(apkPath);
+            if (downloadOut.error != Adb.Error.ok) {
+                ShowAdbShellError(out);
+                return;
+            }
+            downloadOut.strings.forEach(System.out::println);
+            System.out.printf("installed %d/%d\n", i + 1, out.strings.size());
+        }
 
     }
 
@@ -131,7 +181,7 @@ public class App {
 
     public static void cliInit(String[] args) {
         /* */
-        //CommandLine::setSubcommandsCaseInsensitive(true);
+        // CommandLine::setSubcommandsCaseInsensitive(true);
         //
         int exitCode = new CommandLine(new ModderMainCmd()).execute(args);
         System.exit(exitCode);
