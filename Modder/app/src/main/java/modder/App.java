@@ -90,14 +90,14 @@ class ModderMainCmd {
         for (int i = 0; i < out.strings.size(); i++) {
 
             String apkPath = out.strings.get(i);
-            System.out.printf("Downloading apk at %s\n", apkPath);
+            System.out.printf("Downloading apk (%d/%d) at %s", i + 1, out.strings.size(), apkPath);
             Adb.Output downloadOut = adb.DownloadApk(apkPath);
             if (downloadOut.error != Adb.Error.ok) {
                 ShowAdbShellError(out);
                 return;
             }
             downloadOut.strings.forEach(System.out::println);
-            System.out.printf("installed %d/%d\n", i + 1, out.strings.size());
+            System.out.printf("...done\n");
         }
 
     }
