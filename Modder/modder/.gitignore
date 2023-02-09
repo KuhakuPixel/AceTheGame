@@ -23,3 +23,8 @@ gradle-app.setting
 
 # Ignore Gradle build output directory
 build
+
+# vscode
+.classpath
+.settings/
+bin/
