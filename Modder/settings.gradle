@@ -9,3 +9,4 @@
 
 rootProject.name = 'Modder'
 include('modder')
+include('Apktool')

@@ -7,3 +7,6 @@
 [submodule "injector/src/objection"]
 	path = injector/src/objection
 	url = git@github.com:KuhakuPixel/objection.git
+[submodule "Modder/Apktool"]
+	path = Modder/Apktool
+	url = git@github.com:KuhakuPixel/Apktool.git
