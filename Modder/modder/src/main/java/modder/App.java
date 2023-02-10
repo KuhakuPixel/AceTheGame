@@ -64,7 +64,7 @@ class ModderMainCmd {
 	/*
 	 * Download apk from device specified by [package_name]
 	 * and put it in a folder with the same name as [package_name]
-	 * */ 
+	 */
 	@Command(name = "download", description = "Download an apk from device")
 	void Download(
 

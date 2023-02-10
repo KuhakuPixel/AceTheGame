@@ -9,4 +9,7 @@
 
 rootProject.name = 'Modder'
 include('modder')
-include('Apktool')
+// import Apktool
+// https://stackoverflow.com/questions/35606790/how-to-add-a-dependency-to-another-project-properly-using-gradle
+include ":Apktool"
+project(":Apktool").projectDir = new File("./Apktool")
