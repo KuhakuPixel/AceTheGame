@@ -38,7 +38,7 @@ dependencies {
     //implementation project(":Apktool:brut.apktool:apktool-cli")
     //implementation project("Apktool:apktool-cli")
     //implementation group: 'org.apktool', name: 'apktool-cli', version: '2.7.0'
-    implementation 'org.apktool:apktool-lib:2.6.0'
+    implementation 'org.apktool:apktool-lib:2.6.1'
 
 }
 

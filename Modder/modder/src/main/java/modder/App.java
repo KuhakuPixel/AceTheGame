@@ -61,6 +61,15 @@ class ModderMainCmd {
 
 	}
 
+	@Command(name = "decompile", description = "Decompile an apk")
+	void Decompile(
+
+			@Parameters(paramLabel = "ApkFilePath", description = "Path to apk") String apkPath
+
+	) {
+		ApkToolWrap.Decompile(apkPath);
+	}
+
 	/*
 	 * Download apk from device specified by [package_name]
 	 * and put it in a folder with the same name as [package_name]
