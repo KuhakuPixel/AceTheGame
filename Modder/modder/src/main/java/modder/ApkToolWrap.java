@@ -1,10 +1,6 @@
 package modder;
-//import brut.*;
 
-import org.apache.commons.cli.*;
-//import brut.androlib.*;
-//import brut.apktool;
-//import brut.directory.*;
+// apktool stuff 
 import brut.common.BrutException;
 import brut.androlib.*;
 import brut.androlib.err.CantFindFrameworkResException;
@@ -15,6 +11,7 @@ import brut.common.BrutException;
 import brut.directory.DirectoryException;
 import brut.util.AaptManager;
 import brut.util.OSDetection;
+//
 import java.io.File;
 import java.io.IOException;
 
