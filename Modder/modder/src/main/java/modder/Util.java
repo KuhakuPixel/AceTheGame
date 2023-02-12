@@ -41,41 +41,32 @@ public class Util {
     }
 
     public static List<String> RunCommand(String command, String args) {
-        String[] args_arr = args.split(" ");
+        List<String> args_arr = Arrays.asList(args.split(" "));
         // add commands name and arguments
-        String[] commands = { command };
-        commands = Util.ArrayConcat(commands, args_arr);
+        List<String> commands = new ArrayList<String>(Arrays.asList(command));
+        commands.addAll(args_arr);
         //
-        Runtime runtime = Runtime.getRuntime();
 
-        List<String> commands_out = new ArrayList<String>();
+        List<String> procOutput = new ArrayList<String>();
+        ProcessBuilder procBuilder = new ProcessBuilder(commands);
+
+        procBuilder.redirectErrorStream(true);
         try {
-            Process process = runtime.exec(commands);
-
-            try {
-                process.waitFor();
-            } catch (InterruptedException interruptedException) {
-                return commands_out;
-
+            Process proc = procBuilder.start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            String outLine;
+            // take all output
+            while (true) {
+                outLine = bufferedReader.readLine();
+                if (outLine == null)
+                    break;
+                procOutput.add(outLine);
             }
-            // get output from process
-            BufferedReader stdIn = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            return procOutput;
+        } catch (IOException e) {
+            // thrown when command doesn't exist
+            return procOutput;
 
-            BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String outBuff = "";
-
-            while ((outBuff = stdIn.readLine()) != null)
-                commands_out.add(outBuff);
-
-            while ((outBuff = stdErr.readLine()) != null)
-                commands_out.add(outBuff);
-
-            return commands_out;
-        }
-
-        catch (IOException e) {
-
-            return commands_out;
         }
 
     }
