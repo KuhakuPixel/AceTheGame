@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class ApkToolWrap {
 
-	public static void _Decompile(String apkPathName, String outDirName) {
+	public static void Decompile(String apkPathName, String outDirName) {
 		//
 		File apkFile = new File(apkPathName);
 		File outDir = new File(outDirName);
@@ -61,10 +61,5 @@ public class ApkToolWrap {
 			} catch (IOException ignored) {
 			}
 		}
-	}
-
-	public static void Decompile(String apkPathName) {
-		String outDirName = apkPathName + ".decompiled";
-		_Decompile(apkPathName, outDirName);
 	}
 }

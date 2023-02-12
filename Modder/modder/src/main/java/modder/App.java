@@ -64,10 +64,48 @@ class ModderMainCmd {
 	@Command(name = "decompile", description = "Decompile an apk")
 	void Decompile(
 
-			@Parameters(paramLabel = "ApkFilePath", description = "Path to apk") String apkPath
+			@Parameters(paramLabel = "ApkFilePath", description = "Path to apk file or a directory containing apks")
+
+			String apkPathStr
 
 	) {
-		ApkToolWrap.Decompile(apkPath);
+		File apkPath = new File(apkPathStr);
+		if (!apkPath.exists()) {
+			System.out.printf("file or directory \"%s\" not found\n", apkPathStr);
+			return;
+		}
+
+		// shouldn't happen, but just in case
+		if (!apkPath.isFile() && !apkPath.isDirectory()) {
+			System.out.printf("%s is neither a file nor a directory\n", apkPathStr);
+			return;
+		}
+		// TODO: maybe put file in separate folder from apk?
+
+		if (apkPath.isDirectory()) {
+			System.out.printf("%s is a directory\n", apkPathStr);
+			/*
+			 * collect all files in directory
+			 * and decompile each apk file
+			 */
+			File[] apkPathFiles = apkPath.listFiles();
+			for (int i = 0; i < apkPathFiles.length; i++) {
+				if (apkPathFiles[i].isFile()) {
+					String currentApkFileStr = apkPathFiles[i].toString();
+					System.out.printf("Decompiling %s\n", currentApkFileStr);
+					ApkToolWrap.Decompile(currentApkFileStr, currentApkFileStr + ".decompiled");
+				}
+			}
+			return;
+		}
+
+		if (apkPath.isFile()) {
+			System.out.printf("%s is a file\n", apkPathStr);
+			System.out.printf("Decompiling %s\n", apkPathStr);
+			ApkToolWrap.Decompile(apkPathStr, apkPathStr + ".decompiled");
+			return;
+		}
+
 	}
 
 	/*
