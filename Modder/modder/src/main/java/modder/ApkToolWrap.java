@@ -23,7 +23,7 @@ public class ApkToolWrap {
 		File outDir = new File(outDirName);
 		ApkDecoder decoder = new ApkDecoder();
 		try {
-			decoder.setDecodeSources(ApkDecoder.DECODE_SOURCES_NONE);
+			decoder.setDecodeResources(ApkDecoder.DECODE_RESOURCES_NONE);
 			decoder.setOutDir(outDir);
 			decoder.setApkFile(apkFile);
 		} catch (AndrolibException e) {
