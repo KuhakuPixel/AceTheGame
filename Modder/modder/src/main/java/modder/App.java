@@ -80,6 +80,8 @@ class ModderMainCmd {
 			System.out.printf("%s is neither a file nor a directory\n", apkPathStr);
 			return;
 		}
+		File decompiledParentFolder = new File(apkPath.toString() + ".decompiled");
+
 		// TODO: maybe put file in separate folder from apk?
 
 		if (apkPath.isDirectory()) {
@@ -91,9 +93,19 @@ class ModderMainCmd {
 			File[] apkPathFiles = apkPath.listFiles();
 			for (int i = 0; i < apkPathFiles.length; i++) {
 				if (apkPathFiles[i].isFile()) {
+					// get name
 					String currentApkFileStr = apkPathFiles[i].toString();
+					String apkName = apkPathFiles[i].getName();
+					// create output folder ([apkName].decompiled)
+					File outFolder = new File(decompiledParentFolder.toString(),
+							apkName + ".decompiled");
+					//
+
+					System.out.printf("Putting decompilation at %s\n",
+							outFolder.toString());
+
 					System.out.printf("Decompiling %s\n", currentApkFileStr);
-					ApkToolWrap.Decompile(currentApkFileStr, currentApkFileStr + ".decompiled");
+					ApkToolWrap.Decompile(currentApkFileStr, outFolder.toString());
 				}
 			}
 			return;
