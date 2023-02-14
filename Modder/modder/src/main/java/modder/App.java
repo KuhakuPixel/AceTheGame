@@ -129,7 +129,8 @@ class ModderMainCmd {
 
 	) {
 
-		// =================== check if folder exist ==================
+		// =================== check if folder exist and follows
+		// convention==================
 		File decompiledFolder = new File(decompiledFolderStr);
 		if (!decompiledFolder.exists()) {
 			System.out.printf("file or directory \"%s\" not found\n", decompiledFolderStr);
@@ -140,9 +141,16 @@ class ModderMainCmd {
 			System.out.printf("%s is expected to be a directory\n", decompiledFolderStr);
 			return;
 		}
+
+		if (!decompiledFolderStr.endsWith(".decompiled/") && !decompiledFolderStr.endsWith(".decompiled")) {
+			System.out.printf("Warning: folder %s doesn't end with .decompiled\n", decompiledFolderStr);
+			return;
+
+		}
 		// ==========================================================
 		// by convention, only pickup folder that contains ".decompiled"
 		File[] files = decompiledFolder.listFiles();
+		File recompiledParentFolder = new File(decompiledFolder.toString() + ".recompiled");
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) {
 				System.out.printf("Warning: found an unknown file %s\n", files[i].toString());
@@ -155,8 +163,14 @@ class ModderMainCmd {
 				return;
 
 			}
-			// everything looks good, recompile the thing
-			System.out.printf("recompiling apk %s\n", dirStr);
+			// ======== everything looks good, recompile the thing ===========
+			// make path for recompiled apk
+			String apkName = files[i].getName();
+			File outFile = new File(recompiledParentFolder, apkName + ".apk");
+			//
+			System.out.printf("recompiling apk %s as %s\n", dirStr, outFile.toString());
+			ApkToolWrap.Recompile(dirStr, outFile.toString());
+
 		}
 	}
 

@@ -62,4 +62,22 @@ public class ApkToolWrap {
 			}
 		}
 	}
+
+	public static void Recompile(String decompiledFolderStr, String apkOutFileStr) {
+
+		File outFile = new File(apkOutFileStr);
+		BuildOptions buildOptions = new BuildOptions();
+
+		buildOptions.forceBuildAll = true;
+		buildOptions.verbose = true;
+
+		// try and build apk
+		try {
+			new Androlib(buildOptions).build(new File(decompiledFolderStr), outFile);
+		} catch (BrutException ex) {
+			System.err.println(ex.getMessage());
+			System.exit(1);
+		}
+	}
+
 }
