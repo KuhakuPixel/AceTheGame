@@ -120,6 +120,46 @@ class ModderMainCmd {
 
 	}
 
+	@Command(name = "recompile", description = "recompile apks")
+	void Recompile(
+
+			@Parameters(paramLabel = "decompiledFolder", description = "Folder to decompiled apks")
+
+			String decompiledFolderStr
+
+	) {
+
+		// =================== check if folder exist ==================
+		File decompiledFolder = new File(decompiledFolderStr);
+		if (!decompiledFolder.exists()) {
+			System.out.printf("file or directory \"%s\" not found\n", decompiledFolderStr);
+			return;
+		}
+
+		if (!decompiledFolder.isDirectory()) {
+			System.out.printf("%s is expected to be a directory\n", decompiledFolderStr);
+			return;
+		}
+		// ==========================================================
+		// by convention, only pickup folder that contains ".decompiled"
+		File[] files = decompiledFolder.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isFile()) {
+				System.out.printf("Warning: found an unknown file %s\n", files[i].toString());
+				return;
+			}
+			// only try to decompile folder that ends with ".decompiled"
+			String dirStr = files[i].toString();
+			if (!dirStr.endsWith(".decompiled")) {
+				System.out.printf("Warning: found an unknown folder %s\n", dirStr);
+				return;
+
+			}
+			// everything looks good, recompile the thing
+			System.out.printf("recompiling apk %s\n", dirStr);
+		}
+	}
+
 	/*
 	 * Download apk from device specified by [package_name]
 	 * and put it in a folder with the same name as [package_name]
