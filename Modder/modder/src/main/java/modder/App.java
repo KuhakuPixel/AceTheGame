@@ -64,6 +64,22 @@ class ModderMainCmd {
 
 	}
 
+	@Command(name = "apkInfo", description = "information about apk")
+	void ApkInfo(
+
+			@Parameters(paramLabel = "apkPath", description = "path to apk")
+
+			String apkPathStr
+
+	) {
+
+		File apkPath = new File(apkPathStr);
+		List<String> output = Aapt.RunCmd(String.format("dump badging %s", apkPath.getAbsolutePath()));
+
+		output.forEach(System.out::println);
+
+	}
+
 	/*
 	 *
 	 * for decompilation and recompilation output directory
