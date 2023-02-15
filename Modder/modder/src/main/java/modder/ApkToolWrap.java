@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class ApkToolWrap {
 
-	public static void _Decompile(String apkPathName, String outDirName) {
+	public static void Decompile(String apkPathName, String outDirName) {
 		//
 		File apkFile = new File(apkPathName);
 		File outDir = new File(outDirName);
@@ -63,8 +63,21 @@ public class ApkToolWrap {
 		}
 	}
 
-	public static void Decompile(String apkPathName) {
-		String outDirName = apkPathName + ".decompiled";
-		_Decompile(apkPathName, outDirName);
+	public static void Recompile(String decompiledFolderStr, String apkOutFileStr) {
+
+		File outFile = new File(apkOutFileStr);
+		BuildOptions buildOptions = new BuildOptions();
+
+		buildOptions.forceBuildAll = true;
+		buildOptions.verbose = true;
+
+		// try and build apk
+		try {
+			new Androlib(buildOptions).build(new File(decompiledFolderStr), outFile);
+		} catch (BrutException ex) {
+			System.err.println(ex.getMessage());
+			System.exit(1);
+		}
 	}
+
 }
