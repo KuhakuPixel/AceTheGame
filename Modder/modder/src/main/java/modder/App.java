@@ -78,47 +78,34 @@ class ModderMainCmd {
 			return;
 		}
 
-		// shouldn't happen, but just in case
-		if (!apkPath.isFile() && !apkPath.isDirectory()) {
-			System.out.printf("%s is neither a file nor a directory\n", apkPathStr);
+		// only accept an apk file in a directory
+		if (!apkPath.isDirectory()) {
+			System.out.printf("%s is expected to be directory containing apks\n", apkPathStr);
 			return;
 		}
 		File decompiledParentFolder = new File(apkPath.toString() + DECOMPILED_DIR_EXT);
 
-		// TODO: maybe put file in separate folder from apk?
+		/*
+		 * collect all files in directory
+		 * and decompile each apk file
+		 */
+		File[] apkPathFiles = apkPath.listFiles();
+		for (int i = 0; i < apkPathFiles.length; i++) {
+			if (apkPathFiles[i].isFile()) {
+				// get name
+				String currentApkFileStr = apkPathFiles[i].toString();
+				String apkName = apkPathFiles[i].getName();
+				// create output folder ([apkName].decompiled)
+				File outFolder = new File(decompiledParentFolder.toString(),
+						apkName + DECOMPILED_DIR_EXT);
+				//
 
-		if (apkPath.isDirectory()) {
-			System.out.printf("%s is a directory\n", apkPathStr);
-			/*
-			 * collect all files in directory
-			 * and decompile each apk file
-			 */
-			File[] apkPathFiles = apkPath.listFiles();
-			for (int i = 0; i < apkPathFiles.length; i++) {
-				if (apkPathFiles[i].isFile()) {
-					// get name
-					String currentApkFileStr = apkPathFiles[i].toString();
-					String apkName = apkPathFiles[i].getName();
-					// create output folder ([apkName].decompiled)
-					File outFolder = new File(decompiledParentFolder.toString(),
-							apkName + DECOMPILED_DIR_EXT);
-					//
+				System.out.printf("Putting decompilation at %s\n",
+						outFolder.toString());
 
-					System.out.printf("Putting decompilation at %s\n",
-							outFolder.toString());
-
-					System.out.printf("Decompiling %s\n", currentApkFileStr);
-					ApkToolWrap.Decompile(currentApkFileStr, outFolder.toString());
-				}
+				System.out.printf("Decompiling %s\n", currentApkFileStr);
+				ApkToolWrap.Decompile(currentApkFileStr, outFolder.toString());
 			}
-			return;
-		}
-
-		if (apkPath.isFile()) {
-			System.out.printf("%s is a file\n", apkPathStr);
-			System.out.printf("Decompiling %s\n", apkPathStr);
-			ApkToolWrap.Decompile(apkPathStr, apkPathStr + DECOMPILED_DIR_EXT);
-			return;
 		}
 
 	}
