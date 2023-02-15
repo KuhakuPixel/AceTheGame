@@ -32,6 +32,9 @@ class ModderMainCmd {
 	@Spec
 	CommandSpec spec;
 
+	final String DECOMPILED_DIR_EXT = ".decompiled";
+	final String RECOMPILED_DIR_EXT = ".recompiled";
+
 	void ShowAdbShellError(Adb.Output out) {
 		System.out.println("can't connect to adb shell:");
 		out.strings.forEach(s -> System.out.println(s));
@@ -80,7 +83,7 @@ class ModderMainCmd {
 			System.out.printf("%s is neither a file nor a directory\n", apkPathStr);
 			return;
 		}
-		File decompiledParentFolder = new File(apkPath.toString() + ".decompiled");
+		File decompiledParentFolder = new File(apkPath.toString() + DECOMPILED_DIR_EXT);
 
 		// TODO: maybe put file in separate folder from apk?
 
@@ -98,7 +101,7 @@ class ModderMainCmd {
 					String apkName = apkPathFiles[i].getName();
 					// create output folder ([apkName].decompiled)
 					File outFolder = new File(decompiledParentFolder.toString(),
-							apkName + ".decompiled");
+							apkName + DECOMPILED_DIR_EXT);
 					//
 
 					System.out.printf("Putting decompilation at %s\n",
@@ -114,7 +117,7 @@ class ModderMainCmd {
 		if (apkPath.isFile()) {
 			System.out.printf("%s is a file\n", apkPathStr);
 			System.out.printf("Decompiling %s\n", apkPathStr);
-			ApkToolWrap.Decompile(apkPathStr, apkPathStr + ".decompiled");
+			ApkToolWrap.Decompile(apkPathStr, apkPathStr + DECOMPILED_DIR_EXT);
 			return;
 		}
 
@@ -156,23 +159,23 @@ class ModderMainCmd {
 		 * 
 		 */
 
-		if (!decompiledFolder.toString().endsWith(".decompiled")) {
+		if (!decompiledFolder.toString().endsWith(DECOMPILED_DIR_EXT)) {
 			System.out.printf("Warning: folder %s doesn't end with .decompiled\n", decompiledFolderStr);
 			return;
 
 		}
 		// ==========================================================
-		// by convention, only pickup folder that contains ".decompiled"
+		// by convention, only pickup folder that contains DECOMPILED_DIR_EXT
 		File[] files = decompiledFolder.listFiles();
-		File recompiledParentFolder = new File(decompiledFolder.toString() + ".recompiled");
+		File recompiledParentFolder = new File(decompiledFolder.toString() + RECOMPILED_DIR_EXT);
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) {
 				System.out.printf("Warning: found an unknown file %s\n", files[i].toString());
 				return;
 			}
-			// only try to decompile folder that ends with ".decompiled"
+			// only try to decompile folder that ends with DECOMPILED_DIR_EXT
 			String dirStr = files[i].toString();
-			if (!dirStr.endsWith(".decompiled")) {
+			if (!dirStr.endsWith(DECOMPILED_DIR_EXT)) {
 				System.out.printf("Warning: found an unknown folder %s\n", dirStr);
 				return;
 
