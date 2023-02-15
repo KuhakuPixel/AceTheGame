@@ -142,7 +142,21 @@ class ModderMainCmd {
 			return;
 		}
 
-		if (!decompiledFolderStr.endsWith(".decompiled/") && !decompiledFolderStr.endsWith(".decompiled")) {
+		/*
+		 * when checking if a folder ends with a extension,
+		 * File.toString().endsWith() should be used, instead of checking
+		 * the users argument directly,
+		 *
+		 * since the folder path that user gives may or may not contains '/' at the end
+		 * making the check if it ends with a certain extension more difficult
+		 *
+		 * if the argument is passed to File object first then converted with
+		 * "toString()"
+		 * it is guaranteed that it doesn't contain '/'
+		 * 
+		 */
+
+		if (!decompiledFolder.toString().endsWith(".decompiled")) {
 			System.out.printf("Warning: folder %s doesn't end with .decompiled\n", decompiledFolderStr);
 			return;
 
