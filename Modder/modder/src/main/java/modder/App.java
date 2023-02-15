@@ -171,13 +171,13 @@ class ModderMainCmd {
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) {
 				System.out.printf("Warning: found an unknown file %s\n", files[i].toString());
-				return;
+				continue;
 			}
 			// only try to decompile folder that ends with DECOMPILED_DIR_EXT
 			String dirStr = files[i].toString();
 			if (!dirStr.endsWith(DECOMPILED_DIR_EXT)) {
 				System.out.printf("Warning: found an unknown folder %s\n", dirStr);
-				return;
+				continue;
 
 			}
 			// ======== everything looks good, recompile the thing ===========
