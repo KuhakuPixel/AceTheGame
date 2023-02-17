@@ -8,82 +8,94 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.apache.commons.lang3.SystemUtils;
 
 class TestUtil {
-    @Test
-    void DoesCommandExist() {
-        // commands that should exit on windows and unix like OS
-        assertEquals(true, Util.DoesCommandExist("ping"));
-        // some random command that will never exist
-        assertEquals(false, Util.DoesCommandExist("wioiofj902jnci43b199u"));
-        assertEquals(false, Util.DoesCommandExist("u3902u9hbrnodooej2hwioehfwejof"));
-        assertEquals(false, Util.DoesCommandExist("3490t433ocworo3i40ehfh"));
-        assertEquals(false, Util.DoesCommandExist("93u09u904utoidwwht4j39"));
-    }
+	@Test
+	void DoesCommandExist() {
+		// commands that should exit on windows and unix like OS
+		assertEquals(true, Util.DoesCommandExist("ping"));
+		// some random command that will never exist
+		assertEquals(false, Util.DoesCommandExist("wioiofj902jnci43b199u"));
+		assertEquals(false, Util.DoesCommandExist("u3902u9hbrnodooej2hwioehfwejof"));
+		assertEquals(false, Util.DoesCommandExist("3490t433ocworo3i40ehfh"));
+		assertEquals(false, Util.DoesCommandExist("93u09u904utoidwwht4j39"));
+	}
 
-    @Test
-    void ArrayConcat() {
+	@Test
+	void ArrayConcat() {
 
-        assertArrayEquals(
+		assertArrayEquals(
 
-                new String[] { "hello", "world" },
+				new String[] { "hello", "world" },
 
-                Util.ArrayConcat(new String[] { "hello" }, new String[] { "world" }));
+				Util.ArrayConcat(new String[] { "hello" }, new String[] { "world" }));
 
-        assertArrayEquals(
+		assertArrayEquals(
 
-                new String[] { "hello", "world", "goodbye" },
+				new String[] { "hello", "world", "goodbye" },
 
-                Util.ArrayConcat(new String[] { "hello", "world" }, new String[] { "goodbye" }));
+				Util.ArrayConcat(new String[] { "hello", "world" }, new String[] { "goodbye" }));
 
-        assertArrayEquals(
+		assertArrayEquals(
 
-                new String[] { "hello", "world", "goodbye", "nice", "good" },
+				new String[] { "hello", "world", "goodbye", "nice", "good" },
 
-                Util.ArrayConcat(new String[] { "hello", "world" }, new String[] { "goodbye", "nice", "good" }));
+				Util.ArrayConcat(new String[] { "hello", "world" },
+						new String[] { "goodbye", "nice", "good" }));
 
-        // when empty
-        assertArrayEquals(
+		// when empty
+		assertArrayEquals(
 
-                new String[] {},
+				new String[] {},
 
-                Util.ArrayConcat(new String[] {}, new String[] {}));
+				Util.ArrayConcat(new String[] {}, new String[] {}));
 
-        assertArrayEquals(
+		assertArrayEquals(
 
-                new Integer[] {},
+				new Integer[] {},
 
-                Util.ArrayConcat(new Integer[] {}, new Integer[] {}));
-        // when NULL
+				Util.ArrayConcat(new Integer[] {}, new Integer[] {}));
+		// when NULL
 
-        assertArrayEquals(
+		assertArrayEquals(
 
-                null,
+				null,
 
-                Util.ArrayConcat(null, null));
+				Util.ArrayConcat(null, null));
 
-    }
+	}
 
-    @Test
-    void RunCommand() {
-        List<String> output = new ArrayList<String>();
+	@Test
+	void RunCommand() {
 
-        // test RunCommand on echo command, because it is one of command
-        // which ouput can be controlled
-        //output = Util.RunCommand("echo", "hello");
-        //assertIterableEquals(Arrays.asList("hello"), output);
+		// test RunCommand on echo command, because it is one of command
+		// which ouput can be controlled
 
-        //output = Util.RunCommand("echo", "hello world");
-        //assertIterableEquals(Arrays.asList("hello world"), output);
+		// only run this test on unix like system
+		// because windows's echo command seems to be built in to the shell
+		// not a binary, so it can't executed it on windows
+		if (SystemUtils.IS_OS_UNIX) {
+			List<String> output = new ArrayList<String>();
+			output = Util.RunCommand("echo", "hello");
+			assertIterableEquals(Arrays.asList("hello"), output);
 
-        //output = Util.RunCommand("echo", "hello and goodbye world");
-        //assertIterableEquals(Arrays.asList("hello and goodbye world"), output);
+			output = Util.RunCommand("echo", "hello world");
+			assertIterableEquals(Arrays.asList("hello world"), output);
 
-        //output = Util.RunCommand("echo", "hello\nworld");
-        //assertIterableEquals(Arrays.asList("hello", "world"), output);
+			output = Util.RunCommand("echo", "hello and goodbye world");
+			assertIterableEquals(Arrays.asList("hello and goodbye world"), output);
 
-        //output = Util.RunCommand("echo", "hello\nworld\nbye");
-        //assertIterableEquals(Arrays.asList("hello", "world", "bye"), output);
+			output = Util.RunCommand("echo", "hello\nworld");
+			assertIterableEquals(Arrays.asList("hello", "world"), output);
 
-    }
+			output = Util.RunCommand("echo", "hello\nworld\nbye");
+			assertIterableEquals(Arrays.asList("hello", "world", "bye"), output);
+
+			// check if it can also run binary from absolute path
+			output = Util.RunCommand("/usr/bin/echo", "hello\nworld\nbye");
+			assertIterableEquals(Arrays.asList("hello", "world", "bye"), output);
+		}
+
+	}
 }

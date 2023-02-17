@@ -64,6 +64,39 @@ class ModderMainCmd {
 
 	}
 
+	@Command(name = "apkInfo", description = "information about apk")
+	void ApkInfo(
+
+			@Parameters(paramLabel = "apkPath", description = "path to apk")
+
+			String apkPathStr
+
+	) {
+
+		File apkPath = new File(apkPathStr);
+		List<String> output = Aapt.RunCmd(String.format("dump badging %s", apkPath.getAbsolutePath()));
+
+		output.forEach(System.out::println);
+
+	}
+
+	/*
+	 *
+	 * for decompilation and recompilation output directory
+	 * we have to pass the path to a File object first
+	 * and then use toString, to make sure the path doesn't contain '/'
+	 *
+	 * if the output Folder from user contains '/'
+	 * then the output will not be put in the same directory as
+	 * apk folder or decompiled apk folder because
+	 *
+	 * ussualy an output for decompilation and recompilation are
+	 * "[apkDir]+ApkMod.DECOMPILED_DIR_EXT" or
+	 * "[decompiledApkDir]+ApkMod.RECOMPILED_DIR_EXT"
+	 * so the output will be put inside [apkDir] or [decompiledApkDir]
+	 * as .decompiled or .recompiled
+	 * 
+	 */
 	@Command(name = "decompile", description = "Decompile an apk")
 	void Decompile(
 
@@ -72,55 +105,8 @@ class ModderMainCmd {
 			String apkPathStr
 
 	) {
-		File apkPath = new File(apkPathStr);
-		if (!apkPath.exists()) {
-			System.out.printf("file or directory \"%s\" not found\n", apkPathStr);
-			return;
-		}
-
-		// shouldn't happen, but just in case
-		if (!apkPath.isFile() && !apkPath.isDirectory()) {
-			System.out.printf("%s is neither a file nor a directory\n", apkPathStr);
-			return;
-		}
-		File decompiledParentFolder = new File(apkPath.toString() + DECOMPILED_DIR_EXT);
-
-		// TODO: maybe put file in separate folder from apk?
-
-		if (apkPath.isDirectory()) {
-			System.out.printf("%s is a directory\n", apkPathStr);
-			/*
-			 * collect all files in directory
-			 * and decompile each apk file
-			 */
-			File[] apkPathFiles = apkPath.listFiles();
-			for (int i = 0; i < apkPathFiles.length; i++) {
-				if (apkPathFiles[i].isFile()) {
-					// get name
-					String currentApkFileStr = apkPathFiles[i].toString();
-					String apkName = apkPathFiles[i].getName();
-					// create output folder ([apkName].decompiled)
-					File outFolder = new File(decompiledParentFolder.toString(),
-							apkName + DECOMPILED_DIR_EXT);
-					//
-
-					System.out.printf("Putting decompilation at %s\n",
-							outFolder.toString());
-
-					System.out.printf("Decompiling %s\n", currentApkFileStr);
-					ApkToolWrap.Decompile(currentApkFileStr, outFolder.toString());
-				}
-			}
-			return;
-		}
-
-		if (apkPath.isFile()) {
-			System.out.printf("%s is a file\n", apkPathStr);
-			System.out.printf("Decompiling %s\n", apkPathStr);
-			ApkToolWrap.Decompile(apkPathStr, apkPathStr + DECOMPILED_DIR_EXT);
-			return;
-		}
-
+		File apkDir = new File(apkPathStr);
+		ApkMod.Decompile(apkPathStr, apkDir.toString() + ApkMod.DECOMPILED_DIR_EXT);
 	}
 
 	@Command(name = "recompile", description = "recompile apks")
@@ -132,63 +118,9 @@ class ModderMainCmd {
 
 	) {
 
-		// =================== check if folder exist and follows
-		// convention==================
-		File decompiledFolder = new File(decompiledFolderStr);
-		if (!decompiledFolder.exists()) {
-			System.out.printf("file or directory \"%s\" not found\n", decompiledFolderStr);
-			return;
-		}
+		File decompiledApkDir = new File(decompiledFolderStr);
 
-		if (!decompiledFolder.isDirectory()) {
-			System.out.printf("%s is expected to be a directory\n", decompiledFolderStr);
-			return;
-		}
-
-		/*
-		 * when checking if a folder ends with a extension,
-		 * File.toString().endsWith() should be used, instead of checking
-		 * the users argument directly,
-		 *
-		 * since the folder path that user gives may or may not contains '/' at the end
-		 * making the check if it ends with a certain extension more difficult
-		 *
-		 * if the argument is passed to File object first then converted with
-		 * "toString()"
-		 * it is guaranteed that it doesn't contain '/'
-		 * 
-		 */
-
-		if (!decompiledFolder.toString().endsWith(DECOMPILED_DIR_EXT)) {
-			System.out.printf("Warning: folder %s doesn't end with .decompiled\n", decompiledFolderStr);
-			return;
-
-		}
-		// ==========================================================
-		// by convention, only pickup folder that contains DECOMPILED_DIR_EXT
-		File[] files = decompiledFolder.listFiles();
-		File recompiledParentFolder = new File(decompiledFolder.toString() + RECOMPILED_DIR_EXT);
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile()) {
-				System.out.printf("Warning: found an unknown file %s\n", files[i].toString());
-				continue;
-			}
-			// only try to decompile folder that ends with DECOMPILED_DIR_EXT
-			String dirStr = files[i].toString();
-			if (!dirStr.endsWith(DECOMPILED_DIR_EXT)) {
-				System.out.printf("Warning: found an unknown folder %s\n", dirStr);
-				continue;
-
-			}
-			// ======== everything looks good, recompile the thing ===========
-			// make path for recompiled apk
-			String apkName = files[i].getName();
-			File outFile = new File(recompiledParentFolder, apkName + ".apk");
-			//
-			System.out.printf("recompiling apk %s as %s\n", dirStr, outFile.toString());
-			ApkToolWrap.Recompile(dirStr, outFile.toString());
-
-		}
+		ApkMod.Recompile(decompiledFolderStr, decompiledApkDir.toString() + ApkMod.RECOMPILED_DIR_EXT);
 	}
 
 	/*
