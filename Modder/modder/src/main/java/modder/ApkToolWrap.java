@@ -25,6 +25,9 @@ public class ApkToolWrap {
 		try {
 			decoder.setDecodeResources(ApkDecoder.DECODE_RESOURCES_NONE);
 			decoder.setOutDir(outDir);
+			// force overwritting the [outDirName]  
+			decoder.setForceDelete(true);
+			//
 			decoder.setApkFile(apkFile);
 		} catch (AndrolibException e) {
 		}
