@@ -11,10 +11,10 @@ class TestInjector {
 
         String path = "";
 
-        path = Injector.GetSmaliSubPathFromLaunchableActivity("com.java.simpleapp.MainActivity");
+        path = Patcher.GetSmaliRelativePathFromLaunchableActivity("com.java.simpleapp.MainActivity");
         assertEquals("com/java/simpleapp/MainActivity.smali", path);
 
-        path = Injector.GetSmaliSubPathFromLaunchableActivity("com.java.complexapp.MainActivity");
+        path = Patcher.GetSmaliRelativePathFromLaunchableActivity("com.java.complexapp.MainActivity");
         assertEquals("com/java/complexapp/MainActivity.smali", path);
 
     }

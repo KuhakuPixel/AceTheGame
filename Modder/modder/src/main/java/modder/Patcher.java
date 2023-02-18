@@ -2,23 +2,23 @@ package modder;
 
 import java.io.File;
 
-public class Injector {
+public class Patcher {
 
-	public static String GetSmaliSubPathFromLaunchableActivity(String launchableActivity) {
+	public static String GetSmaliRelativePathFromLaunchableActivity(String launchableActivity) {
 
 		// replace the '.' in launchableActivity class
 		// to a near complete path
-		String subPath = launchableActivity.replace(".", File.separator);
+		String relativePath = launchableActivity.replace(".", File.separator);
 		// don't forget the file extension
-		subPath += ".smali";
-		return subPath;
+		relativePath += ".smali";
+		return relativePath;
 	}
 
 	public static String GetSmaliPathFromLaunchableActivity
 
 	(String launchableActivity, String decompiledApkDirStr) {
 
-		String relativeSmaliFilePath = GetSmaliSubPathFromLaunchableActivity(launchableActivity);
+		String relativeSmaliFilePath = GetSmaliRelativePathFromLaunchableActivity(launchableActivity);
 
 		// when decompiling with apktool
 		// the smali classes in subPath will be contained in
