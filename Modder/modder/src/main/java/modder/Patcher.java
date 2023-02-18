@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
+import org.checkerframework.common.returnsreceiver.qual.This;
+import org.apache.commons.lang3.StringUtils;
 
 public class Patcher {
 
@@ -20,6 +22,8 @@ public class Patcher {
 		if (apkFile.isDirectory()) {
 			throw new IOException("[apkFilePathStr] must be a file not directory");
 		}
+		// make sure to get the absolute path
+		this.apkFilePathStr = apkFile.getAbsolutePath();
 
 		// create a tempdir with name containing its object ID
 		// to ensure that every Patcher object has unique temp folder
@@ -32,6 +36,9 @@ public class Patcher {
 		// https://stackoverflow.com/a/17552395/14073678
 		this.decompiledApkDirStr = tempDir.toAbsolutePath().toString();
 		System.out.printf("Create temp folder at %s\n", decompiledApkDirStr);
+		// =============================== decompile the apk ===========
+		ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr);
+		// =============================================================
 		// add a destructor to cleanup the temp folder after program exit
 		// since deleteOnExit can only delete if its folder is empty
 		// https://stackoverflow.com/a/20280989/14073678
@@ -44,6 +51,7 @@ public class Patcher {
 
 					@Override
 					public void run() {
+
 						try {
 							FileUtils.deleteDirectory(new File(decompiledApkDirStr));
 						} catch (IOException e) {
@@ -67,17 +75,24 @@ public class Patcher {
 		return relativePath;
 	}
 
-	public static String GetSmaliPathFromLaunchableActivity
+	public String GetSmaliPathFromLaunchableActivity() throws RuntimeException {
 
-	(String launchableActivity, String decompiledApkDirStr) {
+		// find launchable activity
+		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
+		// just exit if can't get a launchable activity
+		if (StringUtils.isEmpty(launchableActivity)) {
+			String errMsg = String.format("Cannot find launchable activity from apk %s", apkFilePathStr);
+			throw new RuntimeException(errMsg);
+		}
 
 		String relativeSmaliFilePath = GetSmaliRelativePathFromLaunchableActivity(launchableActivity);
+		//
 
 		// when decompiling with apktool
 		// the smali classes in subPath will be contained in
 		// the folder starting with smali
 		// like smali, smali_classes2, smali_classes3 and ect
-		File decompiledApkDir = new File(decompiledApkDirStr);
+		File decompiledApkDir = new File(this.decompiledApkDirStr);
 		File[] files = decompiledApkDir.listFiles();
 
 		for (int i = 0; i < files.length; i++) {
