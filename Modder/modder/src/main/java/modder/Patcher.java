@@ -1,8 +1,61 @@
 package modder;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.apache.commons.io.FileUtils;
 
 public class Patcher {
+
+	String apkFilePathStr;
+	String decompiledApkDirStr;
+
+	public Patcher(String apkFilePathStr) throws IOException {
+		File apkFile = new File(apkFilePathStr);
+
+		if (!apkFile.exists()) {
+			throw new IOException("[apkFilePathStr] doesn't exist");
+		}
+		if (apkFile.isDirectory()) {
+			throw new IOException("[apkFilePathStr] must be a file not directory");
+		}
+
+		// create a tempdir with name containing its object ID
+		// to ensure that every Patcher object has unique temp folder
+		// hopefully :)
+		// https://stackoverflow.com/questions/909843/how-to-get-the-unique-id-of-an-object-which-overrides-hashcode
+		int objID = System.identityHashCode(this);
+		String tempDirStr = String.format("ModderDecompiledApk.%d", objID);
+		Path tempDir = Files.createTempDirectory(tempDirStr);
+		// make sure we have the absolute path
+		// https://stackoverflow.com/a/17552395/14073678
+		this.decompiledApkDirStr = tempDir.toAbsolutePath().toString();
+		System.out.printf("Create temp folder at %s\n", decompiledApkDirStr);
+		// add a destructor to cleanup the temp folder after program exit
+		// since deleteOnExit can only delete if its folder is empty
+		// https://stackoverflow.com/a/20280989/14073678
+		// the only solution seems to be deleting the temp folder
+		// recursively on shutdown
+		// https://stackoverflow.com/questions/11165253/deleting-a-directory-on-exit-in-java
+		Runtime.getRuntime().addShutdownHook(
+
+				new Thread() {
+
+					@Override
+					public void run() {
+						try {
+							FileUtils.deleteDirectory(new File(decompiledApkDirStr));
+						} catch (IOException e) {
+							System.out.printf("Exception when [Patcher] cleans up temp directory at %s\n",
+									decompiledApkDirStr);
+						}
+
+					}
+				}
+
+		);
+	}
 
 	public static String GetSmaliRelativePathFromLaunchableActivity(String launchableActivity) {
 
