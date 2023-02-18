@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.io.File;
 
 class TestPatcher {
 
@@ -30,12 +31,16 @@ class TestPatcher {
         //
         Patcher patcher = new Patcher(filePath);
         String smaliPath = patcher.GetSmaliPathFromLaunchableActivity();
-        // check the relative path because [GetSmaliPathFromLaunchableActivity] will return
+        // check the relative path because [GetSmaliPathFromLaunchableActivity] will
+        // return
         // absolute path
         // this can be easily determined by using "aapt dump bading [apk]"
-        // then the main activity will be known, 
+        // then the main activity will be known,
         // decompile the apk and find the smali file in the directory
         assertEquals(true, smaliPath.endsWith("/smali_classes3/com/java/simpleapp/MainActivity.smali"));
+        // final check to see if the path actually exist
+        File mainActivitySmaliFile = new File(smaliPath);
+        assertEquals(true, mainActivitySmaliFile.exists());
     }
 
 }
