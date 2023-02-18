@@ -8,6 +8,18 @@ import java.io.IOException;
 
 class TestPatcher {
 
+    @Test
+    void GetSmaliRelativePathFromLaunchableActivity() {
+
+        String path = "";
+
+        path = Patcher.GetSmaliRelativePathFromLaunchableActivity("com.java.simpleapp.MainActivity");
+        assertEquals("com/java/simpleapp/MainActivity.smali", path);
+
+        path = Patcher.GetSmaliRelativePathFromLaunchableActivity("com.java.complexapp.MainActivity");
+        assertEquals("com/java/complexapp/MainActivity.smali", path);
+
+    }
 
     @Test
     void TestConstructor() throws IOException {
