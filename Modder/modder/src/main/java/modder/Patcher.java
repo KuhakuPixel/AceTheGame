@@ -12,6 +12,8 @@ public class Patcher {
 
 	String apkFilePathStr;
 	String decompiledApkDirStr;
+	static final String ARCHS[] = new String[] { "x86_64", "x86", "armeabi-v7a", "arm64-v8a" };
+	static final String NATIVE_LIB_DIR_NAME = "lib";
 
 	public Patcher(String apkFilePathStr) throws IOException {
 		File apkFile = new File(apkFilePathStr);
@@ -114,6 +116,65 @@ public class Patcher {
 		}
 
 		return "";
+	}
+
+	public String GetDecompiledApkDirStr() {
+		return this.decompiledApkDirStr;
+	}
+
+	/*
+	 * Create native lib directory for all architecture
+	 * if they previously doesn't exist
+	 */
+	public void CreateNativeLibDir() {
+		// check first if apk already has a native lib
+		File apkNativeLibDir = new File(this.decompiledApkDirStr, NATIVE_LIB_DIR_NAME);
+		// no native lib directory found, make one
+		if (!apkNativeLibDir.exists())
+			apkNativeLibDir.mkdirs();
+
+		// create lib folder for each architecture if doesn't exist
+		for (String arch : Patcher.ARCHS) {
+			File archLibFolder = new File(apkNativeLibDir.getAbsolutePath(), arch);
+			if (!archLibFolder.exists()) {
+				archLibFolder.mkdirs();
+			}
+		}
+	}
+
+	public void AddFileToNativeLibdir(String libFileStr) throws IOException {
+		/* 
+		File libFile = new File(libFileStr);
+		if (!libFile.exists()) {
+			throw new IOException(String.format("[pathToLibStr] doesn't exist", libFileStr));
+		}
+
+		if (!libFile.isFile()) {
+			throw new IOException(String.format("[pathToLibStr] is not a file", libFileStr));
+		}
+		this.CreateNativeLibDir();
+
+		for (String arch : Patcher.ARCHS) {
+			File archLibFolder = new File(apkNativeLibDir.getAbsolutePath(), arch);
+			if (!archLibFolder.exists()) {
+				archLibFolder.mkdirs();
+
+			}
+			// file should be added to /[decompiledApkDirStr]/lib/[arch]/libraryName
+			File addedLibFile = new File(archLibFolder.getAbsolutePath(), libFile.getName());
+			// lib file already exist, cannot add anymore
+			if (addedLibFile.exists()) {
+				String errMsg = String.format("Cannot add native library because %s already exist at directory %s",
+						libFileStr,
+						archLibFolder.getAbsolutePath());
+				throw new IOException(errMsg);
+			}
+			// copy the lib file
+			Files.copy(libFile.toPath(), addedLibFile.toPath());
+
+		}
+		*/
+
 	}
 
 }

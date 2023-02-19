@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.io.File;
 
 class TestPatcher {
+    //
+    ClassLoader classLoader = getClass().getClassLoader();
+    // https://stackoverflow.com/a/43415602/14073678
+    final String testApkPathStr = classLoader.getResource("apk_example/app-debug.apk").getFile();
 
     @Test
     void LaunchableActivityToSmaliRelativePath() {
@@ -25,11 +29,7 @@ class TestPatcher {
     @Test
     void GetEntrySmaliPath() throws IOException {
         //
-        ClassLoader classLoader = getClass().getClassLoader();
-        // https://stackoverflow.com/a/43415602/14073678
-        String filePath = classLoader.getResource("apk_example/app-debug.apk").getFile();
-        //
-        Patcher patcher = new Patcher(filePath);
+        Patcher patcher = new Patcher(testApkPathStr);
         String smaliPath = patcher.GetEntrySmaliPath();
         // check the relative path because [GetEntrySmaliPath] will
         // return
@@ -41,6 +41,24 @@ class TestPatcher {
         // final check to see if the path actually exist
         File mainActivitySmaliFile = new File(smaliPath);
         assertEquals(true, mainActivitySmaliFile.exists());
+    }
+
+    @Test
+    void CreateNativeLibDir() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+        String decompiledDirStr = patcher.GetDecompiledApkDirStr();
+
+        File nativeLibDir = new File(decompiledDirStr, Patcher.NATIVE_LIB_DIR_NAME);
+        assertEquals(false, nativeLibDir.exists());
+        patcher.CreateNativeLibDir();
+        assertEquals(true, nativeLibDir.exists());
+        // check if directory for every arch has been created in
+        // native lib directory
+        for (String arch : Patcher.ARCHS) {
+            File archLibDir = new File(nativeLibDir.getAbsolutePath(), arch);
+            assertEquals(true, archLibDir.exists());
+        }
+
     }
 
 }
