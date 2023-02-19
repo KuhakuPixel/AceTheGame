@@ -12,6 +12,7 @@ class TestPatcher {
     ClassLoader classLoader = getClass().getClassLoader();
     // https://stackoverflow.com/a/43415602/14073678
     final String testApkPathStr = classLoader.getResource("apk_example/app-debug.apk").getFile();
+    final String testLibFile = classLoader.getResource("test_file/lib_fakeLib.so").getFile();
 
     @Test
     void LaunchableActivityToSmaliRelativePath() {
@@ -57,6 +58,27 @@ class TestPatcher {
         for (String arch : Patcher.ARCHS) {
             File archLibDir = new File(nativeLibDir.getAbsolutePath(), arch);
             assertEquals(true, archLibDir.exists());
+        }
+
+    }
+
+    @Test
+    void AddFileToNativeLibDir() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+        String decompiledDirStr = patcher.GetDecompiledApkDirStr();
+
+        File nativeLibDir = new File(decompiledDirStr, Patcher.NATIVE_LIB_DIR_NAME);
+        assertEquals(false, nativeLibDir.exists());
+        patcher.AddFileToNativeLibDir(testLibFile);
+        assertEquals(true, nativeLibDir.exists());
+
+        // check if directory for every arch has the file
+        // that is added
+        String addedFileName = new File(testLibFile).getName();
+        for (String arch : Patcher.ARCHS) {
+            File archLibDir = new File(nativeLibDir.getAbsolutePath(), arch);
+            File addedFile = new File(archLibDir.getAbsolutePath(), addedFileName);
+            assertEquals(true, addedFile.exists());
         }
 
     }

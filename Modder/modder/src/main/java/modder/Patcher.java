@@ -125,8 +125,10 @@ public class Patcher {
 	/*
 	 * Create native lib directory for all architecture
 	 * if they previously doesn't exist
+	 * 
+	 * returns path to that native library
 	 */
-	public void CreateNativeLibDir() {
+	public String CreateNativeLibDir() {
 		// check first if apk already has a native lib
 		File apkNativeLibDir = new File(this.decompiledApkDirStr, NATIVE_LIB_DIR_NAME);
 		// no native lib directory found, make one
@@ -140,28 +142,28 @@ public class Patcher {
 				archLibFolder.mkdirs();
 			}
 		}
+		return apkNativeLibDir.getAbsolutePath();
 	}
 
-	public void AddFileToNativeLibdir(String libFileStr) throws IOException {
-		/* 
+	public void AddFileToNativeLibDir(String libFileStr) throws IOException {
+
 		File libFile = new File(libFileStr);
 		if (!libFile.exists()) {
-			throw new IOException(String.format("[pathToLibStr] doesn't exist", libFileStr));
+			throw new IOException(String.format("[pathToLibStr] doesn't exist",
+					libFileStr));
 		}
 
 		if (!libFile.isFile()) {
-			throw new IOException(String.format("[pathToLibStr] is not a file", libFileStr));
+			throw new IOException(String.format("[pathToLibStr] is not a file",
+					libFileStr));
 		}
-		this.CreateNativeLibDir();
+		String apkNativeLibDir = this.CreateNativeLibDir();
 
 		for (String arch : Patcher.ARCHS) {
-			File archLibFolder = new File(apkNativeLibDir.getAbsolutePath(), arch);
-			if (!archLibFolder.exists()) {
-				archLibFolder.mkdirs();
-
-			}
+			File archLibFolder = new File(apkNativeLibDir, arch);
 			// file should be added to /[decompiledApkDirStr]/lib/[arch]/libraryName
-			File addedLibFile = new File(archLibFolder.getAbsolutePath(), libFile.getName());
+			File addedLibFile = new File(archLibFolder.getAbsolutePath(),
+					libFile.getName());
 			// lib file already exist, cannot add anymore
 			if (addedLibFile.exists()) {
 				String errMsg = String.format("Cannot add native library because %s already exist at directory %s",
@@ -173,7 +175,6 @@ public class Patcher {
 			Files.copy(libFile.toPath(), addedLibFile.toPath());
 
 		}
-		*/
 
 	}
 
