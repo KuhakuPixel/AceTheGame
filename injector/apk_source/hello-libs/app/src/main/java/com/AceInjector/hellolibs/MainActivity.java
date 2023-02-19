@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.hellolibs;
+package com.AceInjector.hellolibs;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.util.Log;
-import com.example.utils.Injector;
+
+import com.AceInjector.utils.Injector;
 
 /*
  * Simple Java UI to trigger jni function. It is exactly same as Java code

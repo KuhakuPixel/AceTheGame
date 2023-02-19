@@ -63,4 +63,12 @@ Java_com_example_utils_InjectorCore_AceInit(JNIEnv *env, jobject self) {
   ACE_jni_init();
   return env->NewStringUTF(hello.c_str());
 }
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_AceInjector_utils_InjectorCore_AceInit__(JNIEnv *env, jobject self) {
+  std::string hello = "Hello from JNI.";
+  ACE_jni_init();
+  return env->NewStringUTF(hello.c_str());
+}
+
 #endif

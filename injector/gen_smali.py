@@ -27,7 +27,7 @@ APK_SOURCE_ROOT_DIR = "./apk_source/hello-libs"
 CODE_FOR_INJECT_DIR = "./code_to_inject"
 
 TEMP_DECOMPILED_APK_DIR = "/tmp/temp_decompiled_apk"
-SMALI_RELATIVE_DIR = "smali/com/example"
+SMALI_RELATIVE_DIR = "smali/com/AceInjector"
 
 GENERATED_SMALI_DIR = os.path.join(TEMP_DECOMPILED_APK_DIR, SMALI_RELATIVE_DIR)
 # TODO: need to check if there is an actually native lib

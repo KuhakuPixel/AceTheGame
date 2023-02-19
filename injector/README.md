@@ -69,7 +69,7 @@ https://stackoverflow.com/a/54002115/14073678
    `./gen_smali.py` script and put 
 
    ```
-	invoke-static {}, Lcom/example/utils/Injector;->Init()V
+	invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V
    ```
    at the start of the `onCreate` function
 
