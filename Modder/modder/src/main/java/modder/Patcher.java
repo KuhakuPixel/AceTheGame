@@ -75,7 +75,7 @@ public class Patcher {
 		return relativePath;
 	}
 
-	public String GetSmaliPathFromLaunchableActivity() throws RuntimeException {
+	public String GetEntrySmaliPath() throws RuntimeException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);

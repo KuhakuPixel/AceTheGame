@@ -23,15 +23,15 @@ class TestPatcher {
     }
 
     @Test
-    void TestConstructor() throws IOException {
+    void GetEntrySmaliPath() throws IOException {
         //
         ClassLoader classLoader = getClass().getClassLoader();
         // https://stackoverflow.com/a/43415602/14073678
         String filePath = classLoader.getResource("apk_example/app-debug.apk").getFile();
         //
         Patcher patcher = new Patcher(filePath);
-        String smaliPath = patcher.GetSmaliPathFromLaunchableActivity();
-        // check the relative path because [GetSmaliPathFromLaunchableActivity] will
+        String smaliPath = patcher.GetEntrySmaliPath();
+        // check the relative path because [GetEntrySmaliPath] will
         // return
         // absolute path
         // this can be easily determined by using "aapt dump bading [apk]"
