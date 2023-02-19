@@ -10,14 +10,14 @@ import java.io.File;
 class TestPatcher {
 
     @Test
-    void GetSmaliRelativePathFromLaunchableActivity() {
+    void LaunchableActivityToSmaliRelativePath() {
 
         String path = "";
 
-        path = Patcher.GetSmaliRelativePathFromLaunchableActivity("com.java.simpleapp.MainActivity");
+        path = Patcher.LaunchableActivityToSmaliRelativePath("com.java.simpleapp.MainActivity");
         assertEquals("com/java/simpleapp/MainActivity.smali", path);
 
-        path = Patcher.GetSmaliRelativePathFromLaunchableActivity("com.java.complexapp.MainActivity");
+        path = Patcher.LaunchableActivityToSmaliRelativePath("com.java.complexapp.MainActivity");
         assertEquals("com/java/complexapp/MainActivity.smali", path);
 
     }

@@ -65,7 +65,7 @@ public class Patcher {
 		);
 	}
 
-	public static String GetSmaliRelativePathFromLaunchableActivity(String launchableActivity) {
+	public static String LaunchableActivityToSmaliRelativePath(String launchableActivity) {
 
 		// replace the '.' in launchableActivity class
 		// to a near complete path
@@ -85,7 +85,7 @@ public class Patcher {
 			throw new RuntimeException(errMsg);
 		}
 
-		String relativeSmaliFilePath = GetSmaliRelativePathFromLaunchableActivity(launchableActivity);
+		String relativeSmaliFilePath = LaunchableActivityToSmaliRelativePath(launchableActivity);
 		//
 
 		// when decompiling with apktool
