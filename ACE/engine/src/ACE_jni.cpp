@@ -55,7 +55,10 @@ void ACE_jni_init() {
   _server.start();
 }
 
-// =================================== JNI exports for init
+// =================================== 
+// JNI exports for init function that can be called 
+// in android apk
+// https://github.com/android/ndk-samples/tree/main/hello-libs
 // ======================
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_example_utils_InjectorCore_AceInit(JNIEnv *env, jobject self) {
@@ -65,7 +68,7 @@ Java_com_example_utils_InjectorCore_AceInit(JNIEnv *env, jobject self) {
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_AceInjector_utils_InjectorCore_AceInit__(JNIEnv *env, jobject self) {
+Java_com_AceInjector_utils_InjectorCore_AceInit(JNIEnv *env, jobject self) {
   std::string hello = "Hello from JNI.";
   ACE_jni_init();
   return env->NewStringUTF(hello.c_str());
