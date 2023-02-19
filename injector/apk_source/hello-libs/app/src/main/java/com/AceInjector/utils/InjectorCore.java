@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.AceInjector.utils;
 
 public class InjectorCore {
 
