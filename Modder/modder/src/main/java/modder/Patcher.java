@@ -14,12 +14,15 @@ public class Patcher {
 	String decompiledApkDirStr;
 	static final String ARCHS[] = new String[] { "x86_64", "x86", "armeabi-v7a", "arm64-v8a" };
 	static final String NATIVE_LIB_DIR_NAME = "lib";
+	// ===================
 
 	// ======== path to memory scanner engine lib ==============
 	// https://stackoverflow.com/a/43415602/14073678
 	ClassLoader classLoader = getClass().getClassLoader();
 	final String memScannerNativeLibFolder = classLoader.getResource("AceAndroidLib/code_to_inject/lib").getFile();
 	// ==============================================
+	// for attach
+	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
 
 	public Patcher(String apkFilePathStr) throws IOException {
 		File apkFile = new File(apkFilePathStr);
@@ -151,6 +154,22 @@ public class Patcher {
 		return apkNativeLibDir.getAbsolutePath();
 	}
 
+	public interface IterateNativeLibArchDirInterface {
+
+		void onIter(String arch, File archLibFolder) throws IOException;
+	}
+
+	public void IterateNativeLibArchDir(IterateNativeLibArchDirInterface funcInterface) throws IOException {
+		// make sure to create directory for native libs
+		String apkNativeLibDir = this.CreateNativeLibDir();
+		for (String arch : Patcher.ARCHS) {
+			File archLibFolder = new File(apkNativeLibDir, arch);
+			// call callback
+			funcInterface.onIter(arch, archLibFolder);
+
+		}
+	}
+
 	public void AddFileToNativeLibDir(String srcFileStr) throws IOException {
 
 		File srcFile = new File(srcFileStr);
@@ -163,25 +182,27 @@ public class Patcher {
 			throw new IOException(String.format("%s is not a file",
 					srcFileStr));
 		}
-		// make sure to create directory for native libs
-		String apkNativeLibDir = this.CreateNativeLibDir();
 
-		for (String arch : Patcher.ARCHS) {
-			File archLibFolder = new File(apkNativeLibDir, arch);
-			// file should be added to /[decompiledApkDirStr]/lib/[arch]/libraryName
-			File addedFile = new File(archLibFolder.getAbsolutePath(),
-					srcFile.getName());
-			// lib file already exist, cannot add anymore
-			if (addedFile.exists()) {
-				String errMsg = String.format("Cannot add native library because %s already exist at directory %s",
-						srcFileStr,
-						archLibFolder.getAbsolutePath());
-				throw new IOException(errMsg);
-			}
-			// copy the lib file
-			Files.copy(srcFile.toPath(), addedFile.toPath());
+		this.IterateNativeLibArchDir(
 
-		}
+				(String arch, File archLibFolder) -> {
+					// file should be added to /[decompiledApkDirStr]/lib/[arch]/libraryName
+					File addedFile = new File(archLibFolder.getAbsolutePath(),
+							srcFile.getName());
+					// lib file already exist, cannot add anymore
+					if (addedFile.exists()) {
+						String errMsg = String.format(
+								"Cannot add native library because %s already exist at directory %s",
+								srcFileStr,
+								archLibFolder.getAbsolutePath());
+						throw new IOException(errMsg);
+					}
+					// copy the lib file
+					Files.copy(srcFile.toPath(), addedFile.toPath());
+
+				}
+
+		);
 
 	}
 
