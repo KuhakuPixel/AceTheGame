@@ -15,6 +15,12 @@ public class Patcher {
 	static final String ARCHS[] = new String[] { "x86_64", "x86", "armeabi-v7a", "arm64-v8a" };
 	static final String NATIVE_LIB_DIR_NAME = "lib";
 
+	// ======== path to memory scanner engine lib ==============
+	// https://stackoverflow.com/a/43415602/14073678
+	ClassLoader classLoader = getClass().getClassLoader();
+	final String memScannerNativeLibFolder = classLoader.getResource("AceAndroidLib/code_to_inject/lib").getFile();
+	// ==============================================
+
 	public Patcher(String apkFilePathStr) throws IOException {
 		File apkFile = new File(apkFilePathStr);
 
