@@ -75,11 +75,13 @@ class TestPatcher {
         // check if directory for every arch has the file
         // that is added
         String addedFileName = new File(testLibFile).getName();
-        for (String arch : Patcher.ARCHS) {
-            File archLibDir = new File(nativeLibDir.getAbsolutePath(), arch);
-            File addedFile = new File(archLibDir.getAbsolutePath(), addedFileName);
-            assertEquals(true, addedFile.exists());
-        }
+        patcher.IterateNativeLibArchDir(
+                (String arch, File archLibDir) -> {
+                    File addedFile = new File(archLibDir.getAbsolutePath(), addedFileName);
+                    assertEquals(true, addedFile.exists());
+                }
+
+        );
 
     }
 
@@ -92,18 +94,18 @@ class TestPatcher {
 
                 (String arch, File archLibFolder) -> {
                     File memScannerLib = new File(archLibFolder, Patcher.MEM_SCANNER_LIB_NAME);
-                    assertEquals(false,memScannerLib.exists());
+                    assertEquals(false, memScannerLib.exists());
                 }
 
         );
         // add mem scanner lib
         patcher.AddMemScannerLib();
-        // 
+        //
         patcher.IterateNativeLibArchDir(
 
                 (String arch, File archLibFolder) -> {
                     File memScannerLib = new File(archLibFolder, Patcher.MEM_SCANNER_LIB_NAME);
-                    assertEquals(true,memScannerLib.exists());
+                    assertEquals(true, memScannerLib.exists());
                 }
 
         );
