@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
 import org.checkerframework.common.returnsreceiver.qual.This;
 import org.apache.commons.lang3.StringUtils;
+import java.nio.file.Paths;
 
 public class Patcher {
 
@@ -199,6 +200,30 @@ public class Patcher {
 					}
 					// copy the lib file
 					Files.copy(srcFile.toPath(), addedFile.toPath());
+
+				}
+
+		);
+
+	}
+
+	public void AddMemScannerLib() throws IOException {
+
+		this.IterateNativeLibArchDir(
+
+				(String arch, File archLibFolder) -> {
+					File destFile = new File(archLibFolder.getAbsolutePath(), MEM_SCANNER_LIB_NAME);
+					File srcFile = Paths.get(memScannerNativeLibFolder, arch, MEM_SCANNER_LIB_NAME).toFile();
+					// lib file already exist, cannot add anymore
+					if (destFile.exists()) {
+						String errMsg = String.format(
+								"Cannot add native library because %s already exist at directory %s",
+								destFile.getAbsolutePath(),
+								archLibFolder.getAbsolutePath());
+						throw new IOException(errMsg);
+					}
+					// copy the lib file
+					Files.copy(srcFile.toPath(), destFile.toPath());
 
 				}
 

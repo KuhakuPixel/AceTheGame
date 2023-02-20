@@ -83,4 +83,30 @@ class TestPatcher {
 
     }
 
+    @Test
+    void AddMemScannerLib() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+
+        // mem scanner lib shouldnt exist previously
+        patcher.IterateNativeLibArchDir(
+
+                (String arch, File archLibFolder) -> {
+                    File memScannerLib = new File(archLibFolder, Patcher.MEM_SCANNER_LIB_NAME);
+                    assertEquals(false,memScannerLib.exists());
+                }
+
+        );
+        // add mem scanner lib
+        patcher.AddMemScannerLib();
+        // 
+        patcher.IterateNativeLibArchDir(
+
+                (String arch, File archLibFolder) -> {
+                    File memScannerLib = new File(archLibFolder, Patcher.MEM_SCANNER_LIB_NAME);
+                    assertEquals(true,memScannerLib.exists());
+                }
+
+        );
+    }
+
 }
