@@ -3,6 +3,17 @@
  A cheat engine like program for android without root
 
 ## Build instruction
+### clone repo
+#### https
+```
+git clone --recurse-submodules https://github.com/KuhakuPixel/AceTheGame.git
+```
+#### ssh
+```
+git clone --recurse-submodules git@github.com:KuhakuPixel/AceTheGame.git
+```
+
+
 after build with 
 ```
 ./build.sh
