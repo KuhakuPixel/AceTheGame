@@ -15,12 +15,14 @@ public class Patcher {
 	String decompiledApkDirStr;
 	static final String ARCHS[] = new String[] { "x86_64", "x86", "armeabi-v7a", "arm64-v8a" };
 	static final String NATIVE_LIB_DIR_NAME = "lib";
+	final Resource resource = new Resource();
 	// ===================
 
 	// ======== path to memory scanner engine lib ==============
 	// https://stackoverflow.com/a/43415602/14073678
 	ClassLoader classLoader = getClass().getClassLoader();
-	final String memScannerNativeLibFolder = classLoader.getResource("AceAndroidLib/code_to_inject/lib").getFile();
+	// final String memScannerNativeLibFolder =
+	// classLoader.getResource("AceAndroidLib/code_to_inject/lib").getFile();
 	// ==============================================
 	// for attach
 	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
@@ -213,7 +215,9 @@ public class Patcher {
 
 				(String arch, File archLibFolder) -> {
 					File destFile = new File(archLibFolder.getAbsolutePath(), MEM_SCANNER_LIB_NAME);
-					File srcFile = Paths.get(memScannerNativeLibFolder, arch, MEM_SCANNER_LIB_NAME).toFile();
+					String srcFile = Paths.get("/AceAndroidLib/code_to_inject/lib", arch, MEM_SCANNER_LIB_NAME)
+							.toAbsolutePath()
+							.toString();
 					// lib file already exist, cannot add anymore
 					if (destFile.exists()) {
 						String errMsg = String.format(
@@ -223,11 +227,18 @@ public class Patcher {
 						throw new IOException(errMsg);
 					}
 					// copy the lib file
-					Files.copy(srcFile.toPath(), destFile.toPath());
+					resource.CopyResourceFile(srcFile, destFile.toString());
 
 				}
 
 		);
+
+	}
+
+	public void Export(String exportPath) {
+		File exportFile = new File(exportPath);
+		ApkMod.Recompile(this.decompiledApkDirStr, exportFile.getAbsolutePath());
+		System.out.printf("exported to %s\n", exportFile.getAbsolutePath());
 
 	}
 
