@@ -237,7 +237,7 @@ public class Patcher {
 
 	public void Export(String exportPath) {
 		File exportFile = new File(exportPath);
-		ApkMod.Recompile(this.decompiledApkDirStr, exportFile.getAbsolutePath());
+		ApkToolWrap.Recompile(this.decompiledApkDirStr, exportFile.getAbsolutePath());
 		System.out.printf("exported to %s\n", exportFile.getAbsolutePath());
 
 	}
