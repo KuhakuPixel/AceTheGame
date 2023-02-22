@@ -83,7 +83,9 @@ public class Patcher {
 		return relativePath;
 	}
 
-	public String GetEntrySmaliPath() throws RuntimeException {
+	// TODO: find a way to cut down code duplication between this function and
+	// GetEntrySmaliPath
+	public String GetSmaliFolderOfLaunchableActvity() throws RuntimeException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -117,11 +119,32 @@ public class Patcher {
 			File smaliFile = new File(basePathStr, relativeSmaliFilePath);
 			// check if this thing actually exist
 			if (smaliFile.exists())
-				return smaliFile.getAbsolutePath();
+				return basePathStr;
 
 		}
 
 		return "";
+
+	}
+
+	public String GetEntrySmaliPath() throws RuntimeException {
+
+		// find launchable activity
+		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
+		// just exit if can't get a launchable activity
+		if (StringUtils.isEmpty(launchableActivity)) {
+			String errMsg = String.format("Cannot find launchable activity from apk %s", apkFilePathStr);
+			throw new RuntimeException(errMsg);
+		}
+
+		String relativeSmaliFilePath = LaunchableActivityToSmaliRelativePath(launchableActivity);
+		String basePathStr = this.GetSmaliFolderOfLaunchableActvity();
+
+		if (StringUtils.isEmpty(basePathStr))
+			return "";
+
+		String pathToSmali = (new File(basePathStr, relativeSmaliFilePath)).getAbsolutePath();
+		return pathToSmali;
 	}
 
 	public String GetDecompiledApkDirStr() {

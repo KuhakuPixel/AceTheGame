@@ -28,6 +28,23 @@ class TestPatcher {
     }
 
     @Test
+    void GetSmaliFolderOfLaunchableActvity() throws IOException {
+        //
+        Patcher patcher = new Patcher(testApkPathStr);
+        String smaliFolder = patcher.GetSmaliFolderOfLaunchableActvity();
+        // check the relative path because [GetEntrySmaliPath] will
+        // return
+        // absolute path
+        // this can be easily determined by using "aapt dump bading [apk]"
+        // then the main activity will be known,
+        // decompile the apk and find the smali file in the directory
+        assertEquals(true, smaliFolder.endsWith("/smali_classes3"));
+        // final check to see if the path actually exist
+        File smaliFolderFile = new File(smaliFolder);
+        assertEquals(true, smaliFolderFile.exists());
+    }
+
+    @Test
     void GetEntrySmaliPath() throws IOException {
         //
         Patcher patcher = new Patcher(testApkPathStr);
