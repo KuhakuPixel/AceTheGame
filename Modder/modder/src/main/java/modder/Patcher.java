@@ -15,11 +15,17 @@ public class Patcher {
 	static final String ARCHS[] = new String[] { "x86_64", "x86", "armeabi-v7a", "arm64-v8a" };
 	static final String NATIVE_LIB_DIR_NAME = "lib";
 	final Resource resource = new Resource();
-	// ===================
-	final static String MEM_SCANNER_LIB_RESOURCE_DIR = "/AceAndroidLib/code_to_inject/lib";
 	// ======== path to memory scanner engine lib ==============
-	// for attach
+	// native lib
 	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
+	final static String MEM_SCANNER_LIB_RESOURCE_DIR = "/AceAndroidLib/code_to_inject/lib";
+	// smali code
+	final static String MEM_SCANNER_SMALI_DIR_NAME = "AceInjector";
+	final static String MEM_SCANNER_SMALI_BASE_DIR = "/AceAndroidLib/code_to_inject/smali/com";
+	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
+
+			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_DIR_NAME)).getAbsolutePath();
+	// ===================
 
 	public Patcher(String apkFilePathStr) throws IOException {
 		File apkFile = new File(apkFilePathStr);
@@ -249,6 +255,40 @@ public class Patcher {
 				}
 
 		);
+
+	}
+
+	public String GetPackageName() {
+
+		// find launchable activity
+		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
+		// just exit if can't get a launchable activity
+		if (StringUtils.isEmpty(launchableActivity)) {
+			String errMsg = String.format("Cannot find launchable activity from apk %s", apkFilePathStr);
+			throw new RuntimeException(errMsg);
+		}
+
+		// because split takes a regex string
+		// to actually split by '.' we need to escape it first
+		String packageName = launchableActivity.split("\\.")[0];
+		return packageName;
+	}
+
+	public String GetSmaliCodePackageDir() {
+
+		String packageName = GetPackageName();
+		String smaliBaseDir = GetSmaliFolderOfLaunchableActvity();
+
+		File smaliCodePackageDir = new File(smaliBaseDir, packageName);
+		return smaliCodePackageDir.getAbsolutePath();
+	}
+
+	public void AddMemScannerSmaliCode() throws IOException {
+		String smaliCodePackageDir = GetSmaliCodePackageDir();
+
+		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
+		resource.CopyResourceFile(MEM_SCANNER_SMALI_RESOURCE_DIR, destDir);
+		System.out.printf("copying resource to %s\n", destDir);
 
 	}
 

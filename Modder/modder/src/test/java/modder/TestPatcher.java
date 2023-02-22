@@ -128,4 +128,27 @@ class TestPatcher {
         );
     }
 
+    @Test
+    void GetPackageName() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+        assertEquals("com", patcher.GetPackageName());
+    }
+
+    @Test
+    void GetSmaliCodePackageDir() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+        String smaliCodePackageDir = patcher.GetSmaliCodePackageDir();
+		System.out.printf("smali codepackagedir %s\n", smaliCodePackageDir);
+        assertEquals(true, smaliCodePackageDir.endsWith("/smali_classes3/com"));
+    }
+
+    @Test
+    void AddMemScannerSmaliCode() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+        String smaliCodePackageDir = patcher.GetSmaliCodePackageDir();
+        File memScannerSmaliCodeDir = new File(smaliCodePackageDir, Patcher.MEM_SCANNER_SMALI_DIR_NAME);
+        assertEquals(false, memScannerSmaliCodeDir.exists());
+        patcher.AddMemScannerSmaliCode();
+        assertEquals(true, memScannerSmaliCodeDir.exists());
+    }
 }
