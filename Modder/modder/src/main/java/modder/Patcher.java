@@ -294,8 +294,20 @@ public class Patcher {
 
 	}
 
-	public List<String> AddMemScannerConstructorSmaliCode(String launchableSmaliFile) throws IOException {
-		Path entrySmaliPath = new File(this.GetEntrySmaliPath()).toPath();
+	public static int MemScannerFindInjectionLineNum(String launchableSmaliFile) throws IOException {
+		Path entrySmaliPath = new File(launchableSmaliFile).toPath();
+		List<String> fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset());
+		for (int i = 0; i < fileData.size(); i++) {
+			String code = fileData.get(i);
+			if (code.endsWith("constructor <init>()V"))
+				return i;
+
+		}
+		return -1;
+	}
+
+	public static List<String> AddMemScannerConstructorSmaliCode(String launchableSmaliFile) throws IOException {
+		Path entrySmaliPath = new File(launchableSmaliFile).toPath();
 		List<String> fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset());
 
 		return fileData;

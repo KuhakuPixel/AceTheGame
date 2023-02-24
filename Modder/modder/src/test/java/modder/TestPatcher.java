@@ -14,6 +14,7 @@ class TestPatcher {
     // https://stackoverflow.com/a/43415602/14073678
     final String testApkPathStr = classLoader.getResource("apk_example/app-debug.apk").getFile();
     final String testLibFile = classLoader.getResource("test_file/lib_fakeLib.so").getFile();
+    final String testLaunchableSmaliFile = classLoader.getResource("test_file/MainActivity.smali").getFile();
 
     @Test
     void LaunchableActivityToSmaliRelativePath() {
@@ -155,10 +156,14 @@ class TestPatcher {
 
     @Test
     void AddMemScannerConstructorSmaliCode() throws IOException {
-        Patcher patcher = new Patcher(testApkPathStr);
-        final String testLaunchableSmaliFile = classLoader.getResource("test_file/MainActivity.smali").getFile();
-        List<String> data = patcher.AddMemScannerConstructorSmaliCode(testLaunchableSmaliFile);
+        List<String> data = Patcher.AddMemScannerConstructorSmaliCode(testLaunchableSmaliFile);
         // temporary test
         assertEquals(186, data.size());
+    }
+
+    @Test
+    public void MemScannerFindInjectionLineNum() throws IOException {
+        int injectionLine = Patcher.MemScannerFindInjectionLineNum(testLaunchableSmaliFile);
+        assertEquals(12, injectionLine);
     }
 }
