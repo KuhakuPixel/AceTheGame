@@ -129,15 +129,15 @@ class TestPatcher {
     }
 
     @Test
-    void GetPackageName() throws IOException {
+    void GetPackageNameOfLaunchableActivity() throws IOException {
         Patcher patcher = new Patcher(testApkPathStr);
-        assertEquals("com", patcher.GetPackageName());
+        assertEquals("com", patcher.GetPackageNameOfLaunchableActivity());
     }
 
     @Test
-    void GetSmaliCodePackageDir() throws IOException {
+    void GetPackageDirOfLaunchableActivity() throws IOException {
         Patcher patcher = new Patcher(testApkPathStr);
-        String smaliCodePackageDir = patcher.GetSmaliCodePackageDir();
+        String smaliCodePackageDir = patcher.GetPackageDirOfLaunchableActivity();
 		System.out.printf("smali codepackagedir %s\n", smaliCodePackageDir);
         assertEquals(true, smaliCodePackageDir.endsWith("/smali_classes3/com"));
     }
@@ -145,7 +145,7 @@ class TestPatcher {
     @Test
     void AddMemScannerSmaliCode() throws IOException {
         Patcher patcher = new Patcher(testApkPathStr);
-        String smaliCodePackageDir = patcher.GetSmaliCodePackageDir();
+        String smaliCodePackageDir = patcher.GetPackageDirOfLaunchableActivity();
         File memScannerSmaliCodeDir = new File(smaliCodePackageDir, Patcher.MEM_SCANNER_SMALI_DIR_NAME);
         assertEquals(false, memScannerSmaliCodeDir.exists());
         patcher.AddMemScannerSmaliCode();

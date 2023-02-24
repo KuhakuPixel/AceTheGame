@@ -258,7 +258,7 @@ public class Patcher {
 
 	}
 
-	public String GetPackageName() {
+	public String GetPackageNameOfLaunchableActivity() {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -274,9 +274,9 @@ public class Patcher {
 		return packageName;
 	}
 
-	public String GetSmaliCodePackageDir() {
+	public String GetPackageDirOfLaunchableActivity() {
 
-		String packageName = GetPackageName();
+		String packageName = GetPackageNameOfLaunchableActivity();
 		String smaliBaseDir = GetSmaliFolderOfLaunchableActvity();
 
 		File smaliCodePackageDir = new File(smaliBaseDir, packageName);
@@ -284,7 +284,7 @@ public class Patcher {
 	}
 
 	public void AddMemScannerSmaliCode() throws IOException {
-		String smaliCodePackageDir = GetSmaliCodePackageDir();
+		String smaliCodePackageDir = GetPackageDirOfLaunchableActivity();
 
 		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
 		resource.CopyResourceFile(MEM_SCANNER_SMALI_RESOURCE_DIR, destDir);
