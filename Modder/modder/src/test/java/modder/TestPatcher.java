@@ -152,6 +152,8 @@ class TestPatcher {
         assertEquals(false, memScannerSmaliCodeDir.exists());
         patcher.AddMemScannerSmaliCode();
         assertEquals(true, memScannerSmaliCodeDir.exists());
+        // TODO: fix failing test
+        assertEquals(true, memScannerSmaliCodeDir.isDirectory());
     }
 
     @Test

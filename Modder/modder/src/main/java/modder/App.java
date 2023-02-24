@@ -138,7 +138,7 @@ class ModderMainCmd {
 
 		Patcher patcher = new Patcher(apkPathStr);
 		if (attachMemScanner)
-			patcher.AddMemScannerLib();
+			patcher.AddMemScanner();
 
 		patcher.Export(apkPathStr + ".patched");
 

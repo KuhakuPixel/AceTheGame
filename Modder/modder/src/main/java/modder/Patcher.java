@@ -10,6 +10,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.nio.charset.Charset;
 
+// TODO: add a new class to Patcher for specific patch like adding a mem scanner
+// called MemScanner 
 public class Patcher {
 
 	String apkFilePathStr;
@@ -314,6 +316,19 @@ public class Patcher {
 		fileData.add(injectionLine + 1, Patcher.MEM_SCANNER_CONSTRUCTOR_SMALI_CODE);
 		return fileData;
 
+	}
+
+	public void AddMemScanner() throws IOException {
+		this.AddMemScannerLib();
+		this.AddMemScannerSmaliCode();
+
+		// add constructor to start the memory scanner
+		// server to the init function of smali launchable file
+		String entrySmaliPathStr = this.GetEntrySmaliPath();
+		Path entrySmaliPath = Paths.get(entrySmaliPathStr);
+		List<String> modifiedSmaliCode = Patcher.AddMemScannerConstructorSmaliCode(entrySmaliPathStr);
+		// rewrite file
+		Files.write(entrySmaliPath, modifiedSmaliCode);
 	}
 
 	public void Export(String exportPath) {
