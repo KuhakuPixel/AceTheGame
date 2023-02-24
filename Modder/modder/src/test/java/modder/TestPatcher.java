@@ -155,15 +155,30 @@ class TestPatcher {
     }
 
     @Test
-    void AddMemScannerConstructorSmaliCode() throws IOException {
-        List<String> data = Patcher.AddMemScannerConstructorSmaliCode(testLaunchableSmaliFile);
-        // temporary test
-        assertEquals(186, data.size());
-    }
-
-    @Test
     public void MemScannerFindInjectionLineNum() throws IOException {
         int injectionLine = Patcher.MemScannerFindInjectionLineNum(testLaunchableSmaliFile);
         assertEquals(12, injectionLine);
+    }
+
+    @Test
+    void AddMemScannerConstructorSmaliCode() throws IOException {
+        List<String> data = Patcher.AddMemScannerConstructorSmaliCode(testLaunchableSmaliFile);
+        // temporary test
+        // assertEquals(187, data.size());
+
+        int memScannerConstructorCodeLine = -1;
+        int smaliInitConstructorLine = -1;
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).contains(Patcher.MEM_SCANNER_CONSTRUCTOR_SMALI_CODE)) {
+                memScannerConstructorCodeLine = i;
+            }
+
+            if (data.get(i).endsWith("constructor <init>()V")) {
+                smaliInitConstructorLine = i;
+            }
+
+        }
+        // mem scanner constructor code should be added after the init constructor
+        assertEquals(1, memScannerConstructorCodeLine - smaliInitConstructorLine);
     }
 }

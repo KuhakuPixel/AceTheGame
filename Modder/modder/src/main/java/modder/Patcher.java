@@ -27,6 +27,7 @@ public class Patcher {
 	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
 
 			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_DIR_NAME)).getAbsolutePath();
+	final static String MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V";
 	// ===================
 
 	public Patcher(String apkFilePathStr) throws IOException {
@@ -309,7 +310,8 @@ public class Patcher {
 	public static List<String> AddMemScannerConstructorSmaliCode(String launchableSmaliFile) throws IOException {
 		Path entrySmaliPath = new File(launchableSmaliFile).toPath();
 		List<String> fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset());
-
+		int injectionLine = MemScannerFindInjectionLineNum(launchableSmaliFile);
+		fileData.add(injectionLine + 1, Patcher.MEM_SCANNER_CONSTRUCTOR_SMALI_CODE);
 		return fileData;
 
 	}
