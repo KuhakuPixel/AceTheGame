@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.File;
+import java.util.List;
 
 class TestPatcher {
     //
@@ -138,7 +139,7 @@ class TestPatcher {
     void GetPackageDirOfLaunchableActivity() throws IOException {
         Patcher patcher = new Patcher(testApkPathStr);
         String smaliCodePackageDir = patcher.GetPackageDirOfLaunchableActivity();
-		System.out.printf("smali codepackagedir %s\n", smaliCodePackageDir);
+        System.out.printf("smali codepackagedir %s\n", smaliCodePackageDir);
         assertEquals(true, smaliCodePackageDir.endsWith("/smali_classes3/com"));
     }
 
@@ -150,5 +151,14 @@ class TestPatcher {
         assertEquals(false, memScannerSmaliCodeDir.exists());
         patcher.AddMemScannerSmaliCode();
         assertEquals(true, memScannerSmaliCodeDir.exists());
+    }
+
+    @Test
+    void AddMemScannerConstructorSmaliCode() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+        final String testLaunchableSmaliFile = classLoader.getResource("test_file/MainActivity.smali").getFile();
+        List<String> data = patcher.AddMemScannerConstructorSmaliCode(testLaunchableSmaliFile);
+        // temporary test
+        assertEquals(186, data.size());
     }
 }

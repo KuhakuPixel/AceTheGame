@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import java.nio.file.Paths;
+import java.util.List;
+import java.nio.charset.Charset;
 
 public class Patcher {
 
@@ -289,6 +291,14 @@ public class Patcher {
 		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
 		resource.CopyResourceFile(MEM_SCANNER_SMALI_RESOURCE_DIR, destDir);
 		System.out.printf("copying resource to %s\n", destDir);
+
+	}
+
+	public List<String> AddMemScannerConstructorSmaliCode(String launchableSmaliFile) throws IOException {
+		Path entrySmaliPath = new File(this.GetEntrySmaliPath()).toPath();
+		List<String> fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset());
+
+		return fileData;
 
 	}
 
