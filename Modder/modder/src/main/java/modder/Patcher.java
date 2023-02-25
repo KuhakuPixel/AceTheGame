@@ -265,14 +265,16 @@ public class Patcher {
 		// copy the zip code of smali constructor from resources
 		// unextract it in a temp folder and then copy to
 		// the apk
-		String scannerSmaliZipCode = new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).getAbsolutePath();
+		String srcSmaliZipCode = new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).getAbsolutePath();
 		String tempDir = TempManager.CreateTempDirectory("TempSmalifolder").toString();
-		resource.CopyResourceFile(scannerSmaliZipCode, tempDir);
+		//
+		File destSmaliZipCode = new File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME);
+		resource.CopyResourceFile(srcSmaliZipCode, destSmaliZipCode.getAbsolutePath());
 
 		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
 
 		try {
-			ZipFile zipFile = new ZipFile(scannerSmaliZipCode);
+			ZipFile zipFile = new ZipFile(destSmaliZipCode.getAbsolutePath());
 			zipFile.extractAll(destDir);
 			System.out.printf("extracted to %s\n", destDir);
 			zipFile.close();

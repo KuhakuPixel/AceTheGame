@@ -16,13 +16,14 @@ import java.nio.file.Paths;
 */
 public class Resource {
 
-    /* 
+    /*
      * [resourceFile]: path to resource file, must start with '/'
-    */
+     */
     public void CopyResourceFile(String resourceFile, String destFile) throws IOException {
 
         InputStream in = getClass().getResourceAsStream(resourceFile);
         Path outputPath = Paths.get(destFile);
+        System.out.printf("Copying resources file %s to %s\n", resourceFile, destFile);
         Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
 
     }
