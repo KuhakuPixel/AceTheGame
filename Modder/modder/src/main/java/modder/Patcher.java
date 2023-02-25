@@ -49,8 +49,7 @@ public class Patcher {
 		// hopefully :)
 		// https://stackoverflow.com/questions/909843/how-to-get-the-unique-id-of-an-object-which-overrides-hashcode
 		int objID = System.identityHashCode(this);
-		String tempDirStr = String.format("ModderDecompiledApk.%d", objID);
-		Path tempDir = Files.createTempDirectory(tempDirStr);
+		Path tempDir = Files.createTempDirectory("ModderDecompiledApk");
 		// make sure we have the absolute path
 		// https://stackoverflow.com/a/17552395/14073678
 		this.decompiledApkDirStr = tempDir.toAbsolutePath().toString();
