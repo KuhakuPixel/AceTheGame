@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import java.nio.file.Paths;
 import java.util.List;
 import java.nio.charset.Charset;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.ZipFile;
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 
@@ -25,10 +26,11 @@ public class Patcher {
 	final static String MEM_SCANNER_LIB_RESOURCE_DIR = "/AceAndroidLib/code_to_inject/lib";
 	// smali code
 	final static String MEM_SCANNER_SMALI_DIR_NAME = "AceInjector";
+	final static String MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip";
 	final static String MEM_SCANNER_SMALI_BASE_DIR = "/AceAndroidLib/code_to_inject/smali/com";
 	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
 
-			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_DIR_NAME)).getAbsolutePath();
+			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)).getAbsolutePath();
 	final static String MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V";
 	// ===================
 
@@ -257,10 +259,27 @@ public class Patcher {
 	}
 
 	public void AddMemScannerSmaliCode() throws IOException {
+		// path to copy the smali constructor to
 		String smaliCodePackageDir = GetPackageDirOfLaunchableActivity();
 
+		// copy the zip code of smali constructor from resources
+		// unextract it in a temp folder and then copy to
+		// the apk
+		String scannerSmaliZipCode = new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).getAbsolutePath();
+		String tempDir = TempManager.CreateTempDirectory("TempSmalifolder").toString();
+		resource.CopyResourceFile(scannerSmaliZipCode, tempDir);
+
 		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
-		resource.CopyResourceFile(MEM_SCANNER_SMALI_RESOURCE_DIR, destDir);
+
+		try {
+			ZipFile zipFile = new ZipFile(scannerSmaliZipCode);
+			zipFile.extractAll(destDir);
+			System.out.printf("extracted to %s\n", destDir);
+			zipFile.close();
+		} catch (ZipException e) {
+			e.printStackTrace();
+		}
+
 		System.out.printf("copying resource to %s\n", destDir);
 
 	}
