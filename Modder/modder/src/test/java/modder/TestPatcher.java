@@ -13,7 +13,10 @@ class TestPatcher {
     ClassLoader classLoader = getClass().getClassLoader();
     // https://stackoverflow.com/a/43415602/14073678
     final String testApkPathStr = classLoader.getResource("apk_example/app-debug.apk").getFile();
+    //
     final String testApkWithNativeLibPathStr = classLoader.getResource("apk_example/apkWithNativeLib.apk").getFile();
+    final String NATIVE_LIB_TEST_NAME = "lib_test.so";
+    //
     final String testLibFile = classLoader.getResource("test_file/lib_fakeLib.so").getFile();
     final String testLaunchableSmaliFile = classLoader.getResource("test_file/MainActivity.smali").getFile();
 
@@ -86,7 +89,7 @@ class TestPatcher {
     void DoesNativeLibExist() throws IOException {
 
         Patcher patcher = new Patcher(testApkWithNativeLibPathStr);
-        assertEquals(true, patcher.DoesNativeLibExist("lib_test.so"));
+        assertEquals(true, patcher.DoesNativeLibExist(NATIVE_LIB_TEST_NAME));
         assertEquals(false, patcher.DoesNativeLibExist("lib_that_doesnt_exist.so"));
 
     }
@@ -124,6 +127,24 @@ class TestPatcher {
         patcher.AddMemScannerLib();
         //
         assertEquals(true, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
+    }
+
+    @Test
+    void AddMemScannerLib2() throws IOException {
+        Patcher patcher = new Patcher(testApkWithNativeLibPathStr);
+
+        // mem scanner lib shouldnt exist previously
+        assertEquals(false, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
+        // but this should exist
+        assertEquals(true, patcher.DoesNativeLibExist(NATIVE_LIB_TEST_NAME));
+        // add mem scanner lib
+        patcher.AddMemScannerLib();
+        //
+        //
+        assertEquals(true, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
+        // should still exist and not be deleted ...
+        assertEquals(true, patcher.DoesNativeLibExist(NATIVE_LIB_TEST_NAME));
+        assertEquals(false, patcher.DoesNativeLibExist("libthatdoesntexist.so"));
     }
 
     @Test

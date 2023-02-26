@@ -146,6 +146,11 @@ public class Patcher {
 			apkNativeLibDir.mkdirs();
 
 		// create lib folder for each architecture if doesn't exist
+		//TODO: need to check if the apk already have a native lib for architecture
+		// like the apk already has native lib for "armeabi-v7a"
+		// then we shouldn't add a new folder for another arch like arm-64
+		// because the apk will choose the arm-64 one and it may not contains
+		// the needed library from "armeabi-v7a"
 		for (String arch : Patcher.ARCHS) {
 			File archLibFolder = new File(apkNativeLibDir.getAbsolutePath(), arch);
 			if (!archLibFolder.exists()) {
