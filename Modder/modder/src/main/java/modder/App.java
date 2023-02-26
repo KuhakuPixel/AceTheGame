@@ -289,10 +289,18 @@ public class App {
 	}
 
 	public static void cliInit(String[] args) {
-		/* */
-		// CommandLine::setSubcommandsCaseInsensitive(true);
-		//
-		int exitCode = new CommandLine(new ModderMainCmd()).execute(args);
+		CommandLine cli = new CommandLine(new ModderMainCmd());
+
+		// ========== set some options =============
+		// https://picocli.info/
+		// allow case insensitive
+		cli.setSubcommandsCaseInsensitive(true);
+		cli.setOptionsCaseInsensitive(true);
+		// allow abbreviations
+		cli.setAbbreviatedOptionsAllowed(true);
+		cli.setAbbreviatedSubcommandsAllowed(true);
+		// execute
+		int exitCode = cli.execute(args);
 		System.exit(exitCode);
 
 	}
