@@ -15,6 +15,11 @@ class TestPatcher {
     final String testApkPathStr = classLoader.getResource("apk_example/app-debug.apk").getFile();
     //
     final String testApkWithNativeLibPathStr = classLoader.getResource("apk_example/apkWithNativeLib.apk").getFile();
+
+    final String testApkWithOneArchNativeLibPathStr =
+
+            classLoader.getResource("apk_example/apkWith_armeabi-v7a_NativeLib.apk").getFile();
+
     final String NATIVE_LIB_TEST_NAME = "lib_test.so";
     //
     final String testLibFile = classLoader.getResource("test_file/lib_fakeLib.so").getFile();
@@ -64,6 +69,11 @@ class TestPatcher {
             assertEquals(Patcher.ARCHS.length, patcher.GetNativeLibSupportedArchCount());
         }
 
+        {
+            Patcher patcher = new Patcher(testApkWithOneArchNativeLibPathStr);
+            assertEquals(1, patcher.GetNativeLibSupportedArchCount());
+        }
+
     }
 
     @Test
@@ -99,6 +109,16 @@ class TestPatcher {
             assertEquals(true, archLibDir.exists());
         }
 
+    }
+
+    @Test
+    void CreateNativeLibDir2() throws IOException {
+        Patcher patcher = new Patcher(testApkWithOneArchNativeLibPathStr);
+        assertEquals(1, patcher.GetNativeLibSupportedArchCount());
+        patcher.CreateNativeLibDir();
+        // shouldn't try new arch because there is already
+        // an arch that is supported
+        assertEquals(1, patcher.GetNativeLibSupportedArchCount());
     }
 
     @Test
