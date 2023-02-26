@@ -119,25 +119,11 @@ class TestPatcher {
         Patcher patcher = new Patcher(testApkPathStr);
 
         // mem scanner lib shouldnt exist previously
-        patcher.IterateNativeLibArchDir(
-
-                (String arch, File archLibFolder) -> {
-                    File memScannerLib = new File(archLibFolder, Patcher.MEM_SCANNER_LIB_NAME);
-                    assertEquals(false, memScannerLib.exists());
-                }
-
-        );
+        assertEquals(false, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
         // add mem scanner lib
         patcher.AddMemScannerLib();
         //
-        patcher.IterateNativeLibArchDir(
-
-                (String arch, File archLibFolder) -> {
-                    File memScannerLib = new File(archLibFolder, Patcher.MEM_SCANNER_LIB_NAME);
-                    assertEquals(true, memScannerLib.exists());
-                }
-
-        );
+        assertEquals(true, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
     }
 
     @Test
