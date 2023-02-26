@@ -51,6 +51,22 @@ class TestPatcher {
     }
 
     @Test
+    void GetNativeLibSupportedArchCount() throws IOException {
+        //
+        {
+            Patcher patcher = new Patcher(testApkPathStr);
+            assertEquals(0, patcher.GetNativeLibSupportedArchCount());
+        }
+
+        {
+            // should support all arch
+            Patcher patcher = new Patcher(testApkWithNativeLibPathStr);
+            assertEquals(Patcher.ARCHS.length, patcher.GetNativeLibSupportedArchCount());
+        }
+
+    }
+
+    @Test
     void GetEntrySmaliPath() throws IOException {
         //
         Patcher patcher = new Patcher(testApkPathStr);

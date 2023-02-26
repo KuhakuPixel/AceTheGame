@@ -1,6 +1,7 @@
 package modder;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -132,6 +133,25 @@ public class Patcher {
 		return this.decompiledApkDirStr;
 	}
 
+	public int GetNativeLibSupportedArchCount() {
+		File apkNativeLibDir = new File(this.decompiledApkDirStr, NATIVE_LIB_DIR_NAME);
+		if (!apkNativeLibDir.exists())
+			return 0;
+		// check if the apk already have a native lib for some or allarchitecture
+		// if the apk already has native lib for specific arch like "armeabi-v7a"
+		// then we shouldn't add a new folder for another arch like arm-64
+		// because the apk will choose the arm-64 one and it may not contains
+		// the needed library from "armeabi-v7a"
+		String[] archs = apkNativeLibDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
+		return archs.length;
+
+	}
+
 	/*
 	 * Create native lib directory for all architecture
 	 * if they previously doesn't exist
@@ -145,12 +165,21 @@ public class Patcher {
 		if (!apkNativeLibDir.exists())
 			apkNativeLibDir.mkdirs();
 
-		// create lib folder for each architecture if doesn't exist
-		//TODO: need to check if the apk already have a native lib for architecture
-		// like the apk already has native lib for "armeabi-v7a"
+		// check if the apk already have a native lib for some or all architecture
+		// if the apk already has native lib for specific arch like "armeabi-v7a"
 		// then we shouldn't add a new folder for another arch like arm-64
 		// because the apk will choose the arm-64 one and it may not contains
 		// the needed library from "armeabi-v7a"
+		String[] archs = apkNativeLibDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
+		// don't add new arch folder, just return
+		if (archs.length > 0)
+			return apkNativeLibDir.getAbsolutePath();
+		// otherwise add native lib folder for each arch
 		for (String arch : Patcher.ARCHS) {
 			File archLibFolder = new File(apkNativeLibDir.getAbsolutePath(), arch);
 			if (!archLibFolder.exists()) {
