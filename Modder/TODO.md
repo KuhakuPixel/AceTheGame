@@ -1,18 +1,8 @@
 
-- copy smali code to the apk 
-  (need to find the path to where the smali will be put)
-  	- add function to get the launchable activity of 
-	  smali folder
-	- the folder of the smali code can be put inside
+- fix [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2]
+  this seems to happen when the apk has manifest of
+  /manifest/application[@android:extractNativeLibs] to false
+  (happens with splitted apk)
+  https://github.com/iBotPeaches/Apktool/issues/1626
 
-	  which folder can be determined
-	  by the package name of the launchable smali file
-	  ex: 
-	  	'com.java.people`
-		then we can put it in smali_classes1/com/
-
-	  the folder of 'com'
-
-
-- add the injector's entry point instruction
-  to the launchable activity smali file
+- auto signer when patching the apk 
