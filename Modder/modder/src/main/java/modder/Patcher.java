@@ -133,10 +133,11 @@ public class Patcher {
 		return this.decompiledApkDirStr;
 	}
 
-	public int GetNativeLibSupportedArchCount() {
+	public String[] GetNativeLibSupportedArch() {
+
 		File apkNativeLibDir = new File(this.decompiledApkDirStr, NATIVE_LIB_DIR_NAME);
 		if (!apkNativeLibDir.exists())
-			return 0;
+			return new String[] {};
 		// check if the apk already have a native lib for some or allarchitecture
 		// if the apk already has native lib for specific arch like "armeabi-v7a"
 		// then we shouldn't add a new folder for another arch like arm-64
@@ -148,7 +149,12 @@ public class Patcher {
 				return new File(current, name).isDirectory();
 			}
 		});
-		return archs.length;
+		return archs;
+
+	}
+
+	public int GetNativeLibSupportedArchCount() {
+		return GetNativeLibSupportedArch().length;
 
 	}
 
@@ -197,7 +203,8 @@ public class Patcher {
 	public void IterateNativeLibArchDir(IterateNativeLibArchDirInterface funcInterface) throws IOException {
 		// make sure to create directory for native libs
 		String apkNativeLibDir = this.CreateNativeLibDir();
-		for (String arch : Patcher.ARCHS) {
+		String[] supportedArch = GetNativeLibSupportedArch();
+		for (String arch : supportedArch) {
 			File archLibFolder = new File(apkNativeLibDir, arch);
 			// call callback
 			funcInterface.onIter(arch, archLibFolder);
@@ -242,7 +249,7 @@ public class Patcher {
 	}
 
 	public void AddMemScannerLib() throws IOException {
-
+		// TODO: add test for apk that support one arch only
 		this.IterateNativeLibArchDir(
 
 				(String arch, File archLibFolder) -> {
