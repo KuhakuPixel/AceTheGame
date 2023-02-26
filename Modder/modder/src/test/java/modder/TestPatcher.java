@@ -13,6 +13,7 @@ class TestPatcher {
     ClassLoader classLoader = getClass().getClassLoader();
     // https://stackoverflow.com/a/43415602/14073678
     final String testApkPathStr = classLoader.getResource("apk_example/app-debug.apk").getFile();
+    final String testApkWithNativeLibPathStr = classLoader.getResource("apk_example/apkWithNativeLib.apk").getFile();
     final String testLibFile = classLoader.getResource("test_file/lib_fakeLib.so").getFile();
     final String testLaunchableSmaliFile = classLoader.getResource("test_file/MainActivity.smali").getFile();
 
@@ -78,6 +79,15 @@ class TestPatcher {
             File archLibDir = new File(nativeLibDir.getAbsolutePath(), arch);
             assertEquals(true, archLibDir.exists());
         }
+
+    }
+
+    @Test
+    void DoesNativeLibExist() throws IOException {
+
+        Patcher patcher = new Patcher(testApkWithNativeLibPathStr);
+        assertEquals(true, patcher.DoesNativeLibExist("lib_test.so"));
+        assertEquals(false, patcher.DoesNativeLibExist("lib_that_doesnt_exist.so"));
 
     }
 

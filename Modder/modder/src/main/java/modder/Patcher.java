@@ -233,6 +233,28 @@ public class Patcher {
 
 	}
 
+	public boolean DoesNativeLibExist(String libName) throws IOException {
+
+		// need to use wrapper to accsess variable
+		// from inside lambda
+		var wrapper = new Object() {
+			boolean libExistInAllArch = true;
+		};
+
+		this.IterateNativeLibArchDir(
+
+				(String arch, File archLibFolder) -> {
+					File libFile = new File(archLibFolder.getAbsolutePath(), libName);
+					if (!libFile.exists())
+						wrapper.libExistInAllArch = false;
+
+				}
+
+		);
+		return wrapper.libExistInAllArch;
+
+	}
+
 	public String GetPackageNameOfLaunchableActivity() {
 
 		// find launchable activity
