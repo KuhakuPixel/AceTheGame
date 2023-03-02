@@ -128,9 +128,7 @@ class ModderMainCmd {
 	@Command(name = "Patch", description = "recompile apks")
 	void Patch(
 
-			@Parameters(paramLabel = "ApkFilePath", description = "Path to apk file or a directory containing apks") String
-
-			apkPathStr,
+			@Parameters(paramLabel = "ApkFolderPath", description = "Path to directory containing apks") String apkDirStr,
 
 			@Parameters(paramLabel = "attachMemScanner", description = "attach a memory scanner to apk")
 
@@ -138,23 +136,35 @@ class ModderMainCmd {
 
 	) throws IOException {
 
-		Patcher patcher = new Patcher(apkPathStr);
+		// check if the directory exist
+		File apkSrcDir = new File(apkDirStr);
+		Assert.AssertExistAndIsDirectory(apkSrcDir);
+		// copy apk folder so we dont write to the original one
+		File apkDir = new File(apkSrcDir.getAbsolutePath() + ".patched");
+		FileUtils.copyDirectory(apkSrcDir, apkDir);
+
+		// get the base apk for patching
+		File baseApkFile = new File(apkDir.getAbsolutePath(), Patcher.BASE_APK_FILE_NAME);
+		Assert.AssertExistAndIsFile(baseApkFile);
+		// add patch
+		Patcher patcher = new Patcher(baseApkFile.getAbsolutePath());
 		if (attachMemScanner)
 			patcher.AddMemScanner();
 
-		// TODO: should accept folder that has apks as argument
-		// it will only patch 'base.apk' and sign all the apk
-		// this is better solution for split apk
-		// must have extension as ".apk"
-		// because uber signer library cannot recognize file
-		// that doesn'tend with .apk
-		String patchedApkPath = apkPathStr + "-patched.apk";
+		// export
+		// String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
+		String patchedApkPath = baseApkFile.getAbsolutePath();
 		patcher.Export(patchedApkPath);
 		System.out.printf("exported apk to %s\n", patchedApkPath);
-		// sign the apk
-		String[] args = new String[] { "--apks", patchedApkPath, "--allowResign", "--overwrite" };
+		// sign all the apk in the directory
+		File[] files = apkDir.listFiles();
+		for (File f : files) {
+			if (f.isFile()) {
+				String[] args = new String[] { "--apks", f.getAbsolutePath(), "--allowResign", "--overwrite" };
+				SignTool.main(args);
+			}
 
-		SignTool.main(args);
+		}
 
 	}
 
