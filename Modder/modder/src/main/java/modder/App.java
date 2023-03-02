@@ -3,6 +3,7 @@
  * template from https://docs.oracle.com/javase/8/javafx/get-started-tutorial/hello_world.htm
  */
 package modder;
+import at.favre.tools.apksigner.SignTool;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;

@@ -36,6 +36,8 @@ dependencies {
     // 
     implementation 'org.apktool:apktool-lib:2.6.1'
     implementation 'net.lingala.zip4j:zip4j:2.11.3'
+    // auto signer
+    implementation files("./lib/uber-apk-signer-1.3.0.jar")
 
 
    
