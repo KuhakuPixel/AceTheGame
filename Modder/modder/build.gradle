@@ -35,6 +35,9 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     // 
     implementation 'org.apktool:apktool-lib:2.6.1'
+    implementation 'net.lingala.zip4j:zip4j:2.11.3'
+
+
    
 
 }

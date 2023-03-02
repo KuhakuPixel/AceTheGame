@@ -1,17 +1,39 @@
 package modder;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
-import org.checkerframework.common.returnsreceiver.qual.This;
 import org.apache.commons.lang3.StringUtils;
+import java.nio.file.Paths;
+import java.util.List;
+import java.nio.charset.Charset;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.ZipFile;
 
+// TODO: add a new class to Patcher for specific patch like adding a mem scanner
+// called MemScanner 
 public class Patcher {
 
 	String apkFilePathStr;
 	String decompiledApkDirStr;
+	static final String ARCHS[] = new String[] { "x86_64", "x86", "armeabi-v7a", "arm64-v8a" };
+	static final String NATIVE_LIB_DIR_NAME = "lib";
+	final Resource resource = new Resource();
+	// ======== path to memory scanner engine lib ==============
+	// native lib
+	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
+	final static String MEM_SCANNER_LIB_RESOURCE_DIR = "/AceAndroidLib/code_to_inject/lib";
+	// smali code
+	final static String MEM_SCANNER_SMALI_DIR_NAME = "AceInjector";
+	final static String MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip";
+	final static String MEM_SCANNER_SMALI_BASE_DIR = "/AceAndroidLib/code_to_inject/smali/com";
+	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
+
+			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)).getAbsolutePath();
+	final static String MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V";
+	// ===================
 
 	public Patcher(String apkFilePathStr) throws IOException {
 		File apkFile = new File(apkFilePathStr);
@@ -25,44 +47,12 @@ public class Patcher {
 		// make sure to get the absolute path
 		this.apkFilePathStr = apkFile.getAbsolutePath();
 
-		// create a tempdir with name containing its object ID
-		// to ensure that every Patcher object has unique temp folder
-		// hopefully :)
-		// https://stackoverflow.com/questions/909843/how-to-get-the-unique-id-of-an-object-which-overrides-hashcode
-		int objID = System.identityHashCode(this);
-		String tempDirStr = String.format("ModderDecompiledApk.%d", objID);
-		Path tempDir = Files.createTempDirectory(tempDirStr);
+		Path tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk");
 		// make sure we have the absolute path
 		// https://stackoverflow.com/a/17552395/14073678
 		this.decompiledApkDirStr = tempDir.toAbsolutePath().toString();
-		System.out.printf("Create temp folder at %s\n", decompiledApkDirStr);
 		// =============================== decompile the apk ===========
 		ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr);
-		// =============================================================
-		// add a destructor to cleanup the temp folder after program exit
-		// since deleteOnExit can only delete if its folder is empty
-		// https://stackoverflow.com/a/20280989/14073678
-		// the only solution seems to be deleting the temp folder
-		// recursively on shutdown
-		// https://stackoverflow.com/questions/11165253/deleting-a-directory-on-exit-in-java
-		Runtime.getRuntime().addShutdownHook(
-
-				new Thread() {
-
-					@Override
-					public void run() {
-
-						try {
-							FileUtils.deleteDirectory(new File(decompiledApkDirStr));
-						} catch (IOException e) {
-							System.out.printf("Exception when [Patcher] cleans up temp directory at %s\n",
-									decompiledApkDirStr);
-						}
-
-					}
-				}
-
-		);
 	}
 
 	public static String LaunchableActivityToSmaliRelativePath(String launchableActivity) {
@@ -75,7 +65,9 @@ public class Patcher {
 		return relativePath;
 	}
 
-	public String GetEntrySmaliPath() throws RuntimeException {
+	// TODO: find a way to cut down code duplication between this function and
+	// GetEntrySmaliPath
+	public String GetSmaliFolderOfLaunchableActvity() throws RuntimeException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -109,11 +101,293 @@ public class Patcher {
 			File smaliFile = new File(basePathStr, relativeSmaliFilePath);
 			// check if this thing actually exist
 			if (smaliFile.exists())
-				return smaliFile.getAbsolutePath();
+				return basePathStr;
 
 		}
 
 		return "";
+
+	}
+
+	public String GetEntrySmaliPath() throws RuntimeException {
+
+		// find launchable activity
+		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
+		// just exit if can't get a launchable activity
+		if (StringUtils.isEmpty(launchableActivity)) {
+			String errMsg = String.format("Cannot find launchable activity from apk %s", apkFilePathStr);
+			throw new RuntimeException(errMsg);
+		}
+
+		String relativeSmaliFilePath = LaunchableActivityToSmaliRelativePath(launchableActivity);
+		String basePathStr = this.GetSmaliFolderOfLaunchableActvity();
+
+		if (StringUtils.isEmpty(basePathStr))
+			return "";
+
+		String pathToSmali = (new File(basePathStr, relativeSmaliFilePath)).getAbsolutePath();
+		return pathToSmali;
+	}
+
+	public String GetDecompiledApkDirStr() {
+		return this.decompiledApkDirStr;
+	}
+
+	public String[] GetNativeLibSupportedArch() {
+
+		File apkNativeLibDir = new File(this.decompiledApkDirStr, NATIVE_LIB_DIR_NAME);
+		if (!apkNativeLibDir.exists())
+			return new String[] {};
+		// check if the apk already have a native lib for some or allarchitecture
+		// if the apk already has native lib for specific arch like "armeabi-v7a"
+		// then we shouldn't add a new folder for another arch like arm-64
+		// because the apk will choose the arm-64 one and it may not contains
+		// the needed library from "armeabi-v7a"
+		String[] archs = apkNativeLibDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
+		return archs;
+
+	}
+
+	public int GetNativeLibSupportedArchCount() {
+		return GetNativeLibSupportedArch().length;
+
+	}
+
+	/*
+	 * Create native lib directory for all architecture
+	 * if they previously doesn't exist
+	 * 
+	 * returns path to that native library
+	 */
+	public String CreateNativeLibDir() {
+		// check first if apk already has a native lib
+		File apkNativeLibDir = new File(this.decompiledApkDirStr, NATIVE_LIB_DIR_NAME);
+		// no native lib directory found, make one
+		if (!apkNativeLibDir.exists())
+			apkNativeLibDir.mkdirs();
+
+		// check if the apk already have a native lib for some or all architecture
+		// if the apk already has native lib for specific arch like "armeabi-v7a"
+		// then we shouldn't add a new folder for another arch like arm-64
+		// because the apk will choose the arm-64 one and it may not contains
+		// the needed library from "armeabi-v7a"
+		String[] archs = apkNativeLibDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
+		// don't add new arch folder, just return
+		if (archs.length > 0)
+			return apkNativeLibDir.getAbsolutePath();
+		// otherwise add native lib folder for each arch
+		for (String arch : Patcher.ARCHS) {
+			File archLibFolder = new File(apkNativeLibDir.getAbsolutePath(), arch);
+			if (!archLibFolder.exists()) {
+				archLibFolder.mkdirs();
+			}
+		}
+		return apkNativeLibDir.getAbsolutePath();
+	}
+
+	public interface IterateNativeLibArchDirInterface {
+
+		void onIter(String arch, File archLibFolder) throws IOException;
+	}
+
+	public void IterateNativeLibArchDir(IterateNativeLibArchDirInterface funcInterface) throws IOException {
+		// make sure to create directory for native libs
+		String apkNativeLibDir = this.CreateNativeLibDir();
+		String[] supportedArch = GetNativeLibSupportedArch();
+		for (String arch : supportedArch) {
+			File archLibFolder = new File(apkNativeLibDir, arch);
+			// call callback
+			funcInterface.onIter(arch, archLibFolder);
+
+		}
+	}
+
+	public void AddFileToNativeLibDir(String srcFileStr) throws IOException {
+
+		File srcFile = new File(srcFileStr);
+		if (!srcFile.exists()) {
+			throw new IOException(String.format("%s doesn't exist",
+					srcFileStr));
+		}
+
+		if (!srcFile.isFile()) {
+			throw new IOException(String.format("%s is not a file",
+					srcFileStr));
+		}
+
+		this.IterateNativeLibArchDir(
+
+				(String arch, File archLibFolder) -> {
+					// file should be added to /[decompiledApkDirStr]/lib/[arch]/libraryName
+					File addedFile = new File(archLibFolder.getAbsolutePath(),
+							srcFile.getName());
+					// lib file already exist, cannot add anymore
+					if (addedFile.exists()) {
+						String errMsg = String.format(
+								"Cannot add native library because %s already exist at directory %s",
+								srcFileStr,
+								archLibFolder.getAbsolutePath());
+						throw new IOException(errMsg);
+					}
+					// copy the lib file
+					Files.copy(srcFile.toPath(), addedFile.toPath());
+
+				}
+
+		);
+
+	}
+
+	public void AddMemScannerLib() throws IOException {
+		// TODO: add test for apk that support one arch only
+		this.IterateNativeLibArchDir(
+
+				(String arch, File archLibFolder) -> {
+					File destFile = new File(archLibFolder.getAbsolutePath(), MEM_SCANNER_LIB_NAME);
+					String srcFile = Paths.get(MEM_SCANNER_LIB_RESOURCE_DIR, arch, MEM_SCANNER_LIB_NAME)
+							.toAbsolutePath()
+							.toString();
+					// lib file already exist, cannot add anymore
+					if (destFile.exists()) {
+						String errMsg = String.format(
+								"Cannot add native library because %s already exist at directory %s",
+								destFile.getAbsolutePath(),
+								archLibFolder.getAbsolutePath());
+						throw new IOException(errMsg);
+					}
+					// copy the lib file
+					resource.CopyResourceFile(srcFile, destFile.toString());
+
+				}
+
+		);
+
+	}
+
+	public boolean DoesNativeLibExist(String libName) throws IOException {
+
+		// need to use wrapper to accsess variable
+		// from inside lambda
+		var wrapper = new Object() {
+			boolean libExistInAllArch = true;
+		};
+
+		this.IterateNativeLibArchDir(
+
+				(String arch, File archLibFolder) -> {
+					File libFile = new File(archLibFolder.getAbsolutePath(), libName);
+					if (!libFile.exists())
+						wrapper.libExistInAllArch = false;
+
+				}
+
+		);
+		return wrapper.libExistInAllArch;
+
+	}
+
+	public String GetPackageNameOfLaunchableActivity() {
+
+		// find launchable activity
+		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
+		// just exit if can't get a launchable activity
+		if (StringUtils.isEmpty(launchableActivity)) {
+			String errMsg = String.format("Cannot find launchable activity from apk %s", apkFilePathStr);
+			throw new RuntimeException(errMsg);
+		}
+
+		// because split takes a regex string
+		// to actually split by '.' we need to escape it first
+		String packageName = launchableActivity.split("\\.")[0];
+		return packageName;
+	}
+
+	public String GetPackageDirOfLaunchableActivity() {
+
+		String packageName = GetPackageNameOfLaunchableActivity();
+		String smaliBaseDir = GetSmaliFolderOfLaunchableActvity();
+
+		File smaliCodePackageDir = new File(smaliBaseDir, packageName);
+		return smaliCodePackageDir.getAbsolutePath();
+	}
+
+	public void AddMemScannerSmaliCode() throws IOException {
+		// path to copy the smali constructor to
+		String smaliCodePackageDir = GetPackageDirOfLaunchableActivity();
+
+		// copy the zip code of smali constructor from resources
+		// unextract it in a temp folder and then copy to
+		// the apk
+		String srcSmaliZipCode = new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).getAbsolutePath();
+		String tempDir = TempManager.CreateTempDirectory("TempSmalifolder").toString();
+		//
+		File destSmaliZipCode = new File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME);
+		resource.CopyResourceFile(srcSmaliZipCode, destSmaliZipCode.getAbsolutePath());
+
+		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
+
+		try {
+			ZipFile zipFile = new ZipFile(destSmaliZipCode.getAbsolutePath());
+			zipFile.extractAll(destDir);
+			System.out.printf("extracted to %s\n", destDir);
+			zipFile.close();
+		} catch (ZipException e) {
+			e.printStackTrace();
+		}
+
+		System.out.printf("copying resource to %s\n", destDir);
+
+	}
+
+	public static int MemScannerFindInjectionLineNum(String launchableSmaliFile) throws IOException {
+		Path entrySmaliPath = new File(launchableSmaliFile).toPath();
+		List<String> fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset());
+		for (int i = 0; i < fileData.size(); i++) {
+			String code = fileData.get(i);
+			if (code.endsWith("constructor <init>()V"))
+				return i;
+
+		}
+		return -1;
+	}
+
+	public static List<String> AddMemScannerConstructorSmaliCode(String launchableSmaliFile) throws IOException {
+		Path entrySmaliPath = new File(launchableSmaliFile).toPath();
+		List<String> fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset());
+		int injectionLine = MemScannerFindInjectionLineNum(launchableSmaliFile);
+		fileData.add(injectionLine + 1, Patcher.MEM_SCANNER_CONSTRUCTOR_SMALI_CODE);
+		return fileData;
+
+	}
+
+	public void AddMemScanner() throws IOException {
+		this.AddMemScannerLib();
+		this.AddMemScannerSmaliCode();
+
+		// add constructor to start the memory scanner
+		// server to the init function of smali launchable file
+		String entrySmaliPathStr = this.GetEntrySmaliPath();
+		Path entrySmaliPath = Paths.get(entrySmaliPathStr);
+		List<String> modifiedSmaliCode = Patcher.AddMemScannerConstructorSmaliCode(entrySmaliPathStr);
+		// rewrite file
+		Files.write(entrySmaliPath, modifiedSmaliCode);
+	}
+
+	public void Export(String exportPath) {
+		File exportFile = new File(exportPath);
+		ApkToolWrap.Recompile(this.decompiledApkDirStr, exportFile.getAbsolutePath());
+		System.out.printf("exported to %s\n", exportFile.getAbsolutePath());
+
 	}
 
 }

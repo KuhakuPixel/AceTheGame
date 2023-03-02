@@ -123,6 +123,27 @@ class ModderMainCmd {
 		ApkMod.Recompile(decompiledFolderStr, decompiledApkDir.toString() + ApkMod.RECOMPILED_DIR_EXT);
 	}
 
+	@Command(name = "Patch", description = "recompile apks")
+	void Patch(
+
+			@Parameters(paramLabel = "ApkFilePath", description = "Path to apk file or a directory containing apks") String
+
+			apkPathStr,
+
+			@Parameters(paramLabel = "attachMemScanner", description = "attach a memory scanner to apk")
+
+			boolean attachMemScanner
+
+	) throws IOException {
+
+		Patcher patcher = new Patcher(apkPathStr);
+		if (attachMemScanner)
+			patcher.AddMemScanner();
+
+		patcher.Export(apkPathStr + ".patched");
+
+	}
+
 	/*
 	 * Download apk from device specified by [package_name]
 	 * and put it in a folder with the same name as [package_name]
@@ -268,10 +289,18 @@ public class App {
 	}
 
 	public static void cliInit(String[] args) {
-		/* */
-		// CommandLine::setSubcommandsCaseInsensitive(true);
-		//
-		int exitCode = new CommandLine(new ModderMainCmd()).execute(args);
+		CommandLine cli = new CommandLine(new ModderMainCmd());
+
+		// ========== set some options =============
+		// https://picocli.info/
+		// allow case insensitive
+		cli.setSubcommandsCaseInsensitive(true);
+		cli.setOptionsCaseInsensitive(true);
+		// allow abbreviations
+		cli.setAbbreviatedOptionsAllowed(true);
+		cli.setAbbreviatedSubcommandsAllowed(true);
+		// execute
+		int exitCode = cli.execute(args);
 		System.exit(exitCode);
 
 	}
