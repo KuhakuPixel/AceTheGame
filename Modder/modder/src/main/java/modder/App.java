@@ -3,6 +3,7 @@
  * template from https://docs.oracle.com/javase/8/javafx/get-started-tutorial/hello_world.htm
  */
 package modder;
+
 import at.favre.tools.apksigner.SignTool;
 
 import javafx.application.Application;
@@ -141,7 +142,19 @@ class ModderMainCmd {
 		if (attachMemScanner)
 			patcher.AddMemScanner();
 
-		patcher.Export(apkPathStr + ".patched");
+		// TODO: should accept folder that has apks as argument
+		// it will only patch 'base.apk' and sign all the apk
+		// this is better solution for split apk
+		// must have extension as ".apk"
+		// because uber signer library cannot recognize file
+		// that doesn'tend with .apk
+		String patchedApkPath = apkPathStr + "-patched.apk";
+		patcher.Export(patchedApkPath);
+		System.out.printf("exported apk to %s\n", patchedApkPath);
+		// sign the apk
+		String[] args = new String[] { "--apks", patchedApkPath, "--allowResign", "--overwrite" };
+
+		SignTool.main(args);
 
 	}
 
