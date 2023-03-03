@@ -41,11 +41,14 @@ public class Util {
 	}
 
 	public static List<String> RunCommand(String command, List<String> args) {
+		// add first the main command name
+		// and the rest of the args
 		List<String> commands = new ArrayList<String>();
 		commands.add(command);
 		for (String s : args)
 			commands.add(s);
 
+		//
 		List<String> procOutput = new ArrayList<String>();
 		ProcessBuilder procBuilder = new ProcessBuilder(commands);
 

@@ -51,9 +51,13 @@ public class Adb {
      * 
      * 
      */
-    public Output RunShell(List<String> command) {
-        command.add(0, "shell");
-        return Run(command);
+    public Output RunShell(List<String> shellArg) {
+        List<String> commands = new ArrayList<String>();
+        //
+        commands.add("shell");
+        for (String s : shellArg)
+            commands.add(s);
+        return Run(commands);
 
     }
 
