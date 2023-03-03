@@ -15,3 +15,8 @@ target_link_libraries(
 	PRIVATE cppzmq-static lib_ACE-static
 )
 
+# ============================================= install options ========================
+
+install (TARGETS ${PROJECT_NAME}
+    DESTINATION bin)
+# ======================================================================================

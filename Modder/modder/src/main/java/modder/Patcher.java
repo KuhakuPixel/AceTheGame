@@ -20,6 +20,7 @@ public class Patcher {
 	String decompiledApkDirStr;
 	static final String ARCHS[] = new String[] { "x86_64", "x86", "armeabi-v7a", "arm64-v8a" };
 	static final String NATIVE_LIB_DIR_NAME = "lib";
+	static final String BASE_APK_FILE_NAME = "base.apk";
 	final Resource resource = new Resource();
 	// ======== path to memory scanner engine lib ==============
 	// native lib
