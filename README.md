@@ -15,6 +15,11 @@ Disclaimer!!!: this program is still in beta phase
 
 ![](./assets/showcase/flyhack.gif)
 
+### value freezeer
+(freezing the health value)
+
+![](./assets/showcase/freezed_health.gif)
+
 ## Installation
 ### Prerequisite
 - adb program installed and can be run through the command prompt
