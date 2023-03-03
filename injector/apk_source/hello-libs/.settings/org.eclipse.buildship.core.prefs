@@ -1,11 +1,11 @@
-arguments=--init-script /home/kuhakupixel/.config/VSCodium/User/globalStorage/redhat.java/1.14.0/config_linux/org.eclipse.osgi/51/0/.cp/gradle/init/init.gradle --init-script /home/kuhakupixel/.config/VSCodium/User/globalStorage/redhat.java/1.14.0/config_linux/org.eclipse.osgi/51/0/.cp/gradle/protobuf/init.gradle
+arguments=--init-script /home/kuhakupixel/.config/coc/extensions/coc-java-data/server/config_linux/org.eclipse.osgi/51/0/.cp/gradle/init/init.gradle
 auto.sync=false
 build.scans.enabled=false
 connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
 connection.project.dir=
 eclipse.preferences.version=1
 gradle.user.home=
-java.home=/usr/lib/jvm/java-11-openjdk-amd64
+java.home=/usr/lib/jvm/java-17-openjdk-amd64
 jvm.arguments=
 offline.mode=false
 override.workspace.settings=true
