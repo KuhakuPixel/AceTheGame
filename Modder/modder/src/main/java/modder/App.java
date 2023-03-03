@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.File;
 import java.io.IOException;
 
@@ -73,10 +74,9 @@ class ModderMainCmd {
 
 			String apkPathStr
 
-	) {
+	) throws IOException {
 
-		File apkPath = new File(apkPathStr);
-		List<String> output = Aapt.RunCmd(String.format("dump badging %s", apkPath.getAbsolutePath()));
+		List<String> output = Aapt.DumpBadging(apkPathStr);
 
 		output.forEach(System.out::println);
 
@@ -261,7 +261,7 @@ public class App {
 
 			// test if adb shell can be connected by echoing in
 			// the shell and check the output
-			output = Util.RunCommand("adb", "shell echo test");
+			output = Util.RunCommand("adb", Arrays.asList("shell", "echo", "test"));
 			if (output.size() >= 1) {
 				if (!output.get(0).equals("test")) {
 					System.out.println();
@@ -281,7 +281,7 @@ public class App {
 			}
 
 			// everything looks okay
-			output = Util.RunCommand("adb", "shell pm list packages");
+			output = Util.RunCommand("adb", Arrays.asList("shell", "pm", "list", "packages"));
 			output.forEach(s -> System.out.println(s));
 
 			// ========================== init gui =================

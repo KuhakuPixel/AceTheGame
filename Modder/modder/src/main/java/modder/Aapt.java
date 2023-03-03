@@ -8,12 +8,15 @@ import brut.common.BrutException;
 import brut.util.AaptManager;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.File;
+import java.io.IOException;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class Aapt {
 
-	public static List<String> RunCmd(String args) {
+	public static List<String> RunCmd(List<String> args) {
 		List<String> output = new ArrayList<String>();
 		File aaptFile;
 		// get aapt
@@ -28,12 +31,17 @@ public class Aapt {
 		return output;
 	}
 
-	public static String GetLaunchableActivity(String apkPath) {
+	public static List<String> DumpBadging(String apkPath) throws IOException {
+		Assert.AssertExistAndIsFile(new File(apkPath));
+		String apkPathArg = String.format("%s", apkPath);
+		List<String> out = RunCmd(Arrays.asList("dump", "badging", apkPathArg));
+		return out;
+	}
+
+	public static String GetLaunchableActivity(String apkPath) throws IOException {
 		String launchableActivity = "";
 
-		String args = String.format("dump badging %s", apkPath);
-		List<String> out = RunCmd(args);
-
+		List<String> out = DumpBadging(apkPath);
 		for (int i = 0; i < out.size(); i++) {
 			// found a launchable activity
 			// ussually the output is like

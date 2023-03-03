@@ -68,7 +68,7 @@ public class Patcher {
 
 	// TODO: find a way to cut down code duplication between this function and
 	// GetEntrySmaliPath
-	public String GetSmaliFolderOfLaunchableActvity() throws RuntimeException {
+	public String GetSmaliFolderOfLaunchableActvity() throws RuntimeException, IOException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -110,7 +110,7 @@ public class Patcher {
 
 	}
 
-	public String GetEntrySmaliPath() throws RuntimeException {
+	public String GetEntrySmaliPath() throws RuntimeException, IOException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -297,7 +297,7 @@ public class Patcher {
 
 	}
 
-	public String GetPackageNameOfLaunchableActivity() {
+	public String GetPackageNameOfLaunchableActivity() throws IOException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -313,7 +313,7 @@ public class Patcher {
 		return packageName;
 	}
 
-	public String GetPackageDirOfLaunchableActivity() {
+	public String GetPackageDirOfLaunchableActivity() throws IOException {
 
 		String packageName = GetPackageNameOfLaunchableActivity();
 		String smaliBaseDir = GetSmaliFolderOfLaunchableActvity();

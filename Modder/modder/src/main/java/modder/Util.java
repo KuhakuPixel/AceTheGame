@@ -40,12 +40,11 @@ public class Util {
 
 	}
 
-	public static List<String> RunCommand(String command, String args) {
-		List<String> args_arr = Arrays.asList(args.split(" "));
-		// add commands name and arguments
-		List<String> commands = new ArrayList<String>(Arrays.asList(command));
-		commands.addAll(args_arr);
-		//
+	public static List<String> RunCommand(String command, List<String> args) {
+		List<String> commands = new ArrayList<String>();
+		commands.add(command);
+		for (String s : args)
+			commands.add(s);
 
 		List<String> procOutput = new ArrayList<String>();
 		ProcessBuilder procBuilder = new ProcessBuilder(commands);

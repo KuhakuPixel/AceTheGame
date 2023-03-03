@@ -77,23 +77,23 @@ class TestUtil {
 		// not a binary, so it can't executed it on windows
 		if (SystemUtils.IS_OS_UNIX) {
 			List<String> output = new ArrayList<String>();
-			output = Util.RunCommand("echo", "hello");
+			output = Util.RunCommand("echo", Arrays.asList("hello"));
 			assertIterableEquals(Arrays.asList("hello"), output);
 
-			output = Util.RunCommand("echo", "hello world");
+			output = Util.RunCommand("echo", Arrays.asList("hello world"));
 			assertIterableEquals(Arrays.asList("hello world"), output);
 
-			output = Util.RunCommand("echo", "hello and goodbye world");
+			output = Util.RunCommand("echo", Arrays.asList("hello and goodbye world"));
 			assertIterableEquals(Arrays.asList("hello and goodbye world"), output);
 
-			output = Util.RunCommand("echo", "hello\nworld");
+			output = Util.RunCommand("echo", Arrays.asList("hello\nworld"));
 			assertIterableEquals(Arrays.asList("hello", "world"), output);
 
-			output = Util.RunCommand("echo", "hello\nworld\nbye");
+			output = Util.RunCommand("echo", Arrays.asList("hello\nworld\nbye"));
 			assertIterableEquals(Arrays.asList("hello", "world", "bye"), output);
 
 			// check if it can also run binary from absolute path
-			output = Util.RunCommand("/usr/bin/echo", "hello\nworld\nbye");
+			output = Util.RunCommand("/usr/bin/echo", Arrays.asList("hello\nworld\nbye"));
 			assertIterableEquals(Arrays.asList("hello", "world", "bye"), output);
 		}
 
