@@ -33,6 +33,14 @@ public class Resource {
     public static String GetFile(ClassLoader classLoader, String resourceFile) {
 
         try {
+            // need to decode the path, because for some reason,
+            // getResource().getFile replace space with %20
+            // and it will cause File.exist() to fail
+            // what a mess
+
+            // decoding the url seems to fix it
+            // https://stackoverflow.com/questions/31133361/how-to-get-file-from-resources-when-blank-space-is-in-path 
+            // https://stackoverflow.com/a/12125969/14073678
             String filePath = URLDecoder.decode(
                     classLoader.getResource(resourceFile).getFile(),
                     "UTF-8");
