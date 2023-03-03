@@ -1,10 +1,10 @@
 # Good release features
   
 # Features
+- support for changing scan type directly in cheater mode
+  this will ease the interface to another program
 
 ## Refactor
-
-should i make a class for the frontend?
 
 ## Cores
 - fix  `input.cpp`'s  `linenoise::Readline` not taking input on
@@ -23,23 +23,9 @@ should i make a class for the frontend?
   because the memory has been allocated, the std vector
   don't have to allocate for memory again!
 
-- optimize space for storing scan's results
-
-- add support for scanning unknown values
-
-- add scanner test for `E_scan_level::all`
-  for `match_storage.get_val_at_addr`
-  maybe don't use at? because it will be slow
-
-- add test (basically integration tests) 
-  that scan a program from begining to end
-  (some are added with python's pexpectmodule
-   but not that much (ex: still no freezing value test))
-
 - add git submodule to get the ndk folders
 
 - add progress bar for each region scan
-
 
 - Add `auto` type for cheater's mode:
   determine the type of number to scan, based on user's input
