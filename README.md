@@ -1,6 +1,26 @@
-# AceTheGame
+# Ace The Game
 
- A cheat engine like program for android without root
+Game Guardian open source alternative for android
+ 
+that works for non rooted android device! 
+
+Disclaimer!!!: this program is still in beta phase 
+
+## Installation
+### Prerequisite
+adb program installed and can be run through the command prompt
+[adb download](https://developer.android.com/studio/command-line/adb)
+
+## Rooted device
+download the latest release for android
+choose the architecture of your device 
+
+go to the program folder in terminal
+and run
+
+```
+adb push ACE /data/local/tmp
+```
 
 ## Build instruction
 ### clone repo
