@@ -1,8 +1,11 @@
 # Ace The Game
 
-Game Guardian open source alternative for android and linux
- 
-that also works for non rooted android device! 
+- Memory scanner and editor for 
+  android (non-rooted and root) and linux (root)
+
+- Game Guardian open source alternative for android
+
+- Game hacking tools for modifying health, coin and etc
 
 Disclaimer!!!: this program is still in beta phase 
 ## Showcase
