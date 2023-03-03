@@ -135,7 +135,7 @@ endif()
 # ============================================= install options ========================
 
 # Binaries
-install (TARGETS ACE
+install (TARGETS ${PROJECT_NAME}
     DESTINATION bin)
 # ======================================================================================
 
