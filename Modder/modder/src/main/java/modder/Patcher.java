@@ -27,13 +27,13 @@ public class Patcher {
 	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
 	final static String MEM_SCANNER_LIB_RESOURCE_DIR =
 
-			String.join(File.separator, "AceAndroidLib", "code_to_inject", "lib");
+			"/" + String.join(File.separator, "AceAndroidLib", "code_to_inject", "lib");
 	// smali code
 	final static String MEM_SCANNER_SMALI_DIR_NAME = "AceInjector";
 	final static String MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip";
 	final static String MEM_SCANNER_SMALI_BASE_DIR =
 
-			String.join(File.separator, "AceAndroidLib", "code_to_inject", "smali", "com");
+			"/" + String.join(File.separator, "AceAndroidLib", "code_to_inject", "smali", "com");
 	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
 
 			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)).getAbsolutePath();
