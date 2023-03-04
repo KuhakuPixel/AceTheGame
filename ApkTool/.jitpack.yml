@@ -1,5 +1,0 @@
-jdk:
-  - openjdk9
-install:
-  - echo "This is not supported. See iBotPeaches/Apktool#2102"
-  - ./gradlew invalid-command-to-crash-out

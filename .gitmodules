@@ -4,9 +4,6 @@
 [submodule "ACE/engine/third_party/libzmq"]
 	path = ACE/engine/third_party/libzmq
 	url = git@github.com:KuhakuPixel/libzmq.git
-[submodule "injector/src/objection"]
-	path = injector/src/objection
-	url = git@github.com:KuhakuPixel/objection.git
 [submodule "Modder/modder/src/main/resources/AceAndroidLib"]
 	path = Modder/modder/src/main/resources/AceAndroidLib
 	url = git@github.com:KuhakuPixel/AceAndroidLib.git
