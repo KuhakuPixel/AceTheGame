@@ -8,6 +8,10 @@
 - Game hacking tools for modifying health, coin and etc
 
 Disclaimer!!!: this program is still in beta phase 
+
+If you found any BUG, thanks
+report it [here](https://github.com/KuhakuPixel/AceTheGame/issues)
+
 ## Showcase
 ### infinite coin 
 
