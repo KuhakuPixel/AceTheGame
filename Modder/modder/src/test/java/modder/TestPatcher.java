@@ -175,6 +175,7 @@ class TestPatcher {
     void AddMemScannerLib2() throws IOException {
         Patcher patcher = new Patcher(testApkWithNativeLibPathStr);
 
+        System.out.printf("the resource dir is: %s\n",Patcher.MEM_SCANNER_LIB_RESOURCE_DIR);
         // mem scanner lib shouldnt exist previously
         assertEquals(false, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
         // but this should exist
