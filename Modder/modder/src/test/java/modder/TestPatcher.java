@@ -44,7 +44,7 @@ class TestPatcher {
     @Test
     void GetSmaliFolderOfLaunchableActvity() throws IOException {
         //
-        Patcher patcher = new Patcher(testApkPathStr, TempManager.TaskOnExit.none);
+        Patcher patcher = new Patcher(testApkPathStr);
         String smaliFolder = patcher.GetSmaliFolderOfLaunchableActvity();
         // check the relative path because [GetEntrySmaliPath] will
         // return
