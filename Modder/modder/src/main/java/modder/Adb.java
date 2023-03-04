@@ -1,4 +1,3 @@
-
 /* 
  * wrapper for running adb command
 */
@@ -6,6 +5,7 @@ package modder;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Adb {
     public enum Error {
@@ -20,12 +20,12 @@ public class Adb {
 
     }
 
-    public Output Run(String command) {
+    public Output Run(List<String> command) {
         Output out = new Output();
 
         // test if adb shell can be connected by echoing in
         // the shell and check the output
-        out.strings = Util.RunCommand("adb", "shell echo test");
+        out.strings = Util.RunCommand("adb", Arrays.asList("shell", "echo", "test"));
         if (out.strings.size() >= 1) {
             if (!out.strings.get(0).equals("test"))
                 out.error = Error.no_connection;
@@ -51,15 +51,19 @@ public class Adb {
      * 
      * 
      */
-    public Output RunShell(String command) {
-        command = String.format("shell %s", command);
-        return Run(command);
+    public Output RunShell(List<String> shellArg) {
+        List<String> commands = new ArrayList<String>();
+        //
+        commands.add("shell");
+        for (String s : shellArg)
+            commands.add(s);
+        return Run(commands);
 
     }
 
     public Output ListApk() {
 
-        Adb.Output out = RunShell("pm list packages");
+        Adb.Output out = RunShell(Arrays.asList("pm", "list", "packages"));
         if (out.error != Adb.Error.ok) {
             return out;
         }
@@ -76,12 +80,11 @@ public class Adb {
         }
         out.strings = apks;
         return out;
-
     }
 
     public Output GetApkPathAtDevice(String package_name) {
 
-        Adb.Output out = RunShell("pm path " + package_name);
+        Adb.Output out = RunShell(Arrays.asList("pm", "path", package_name));
         if (out.error != Adb.Error.ok) {
             return out;
         }
@@ -102,8 +105,7 @@ public class Adb {
 
     public Output DownloadApk(String path_to_apk, String downloadDir) {
 
-	String cmd = String.format("pull %s %s",path_to_apk, downloadDir);
-        Output out = Run(cmd);
+        Output out = Run(Arrays.asList("pull", path_to_apk, downloadDir));
         if (out.error != Adb.Error.ok) {
             return out;
         }

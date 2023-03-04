@@ -23,37 +23,54 @@ public class Patcher {
 	static final String BASE_APK_FILE_NAME = "base.apk";
 	final Resource resource = new Resource();
 	// ======== path to memory scanner engine lib ==============
+	/* 
+	 * For concatenating resource file/folder path 
+	 * we can't use File's constructor to do that because
+	 * the result will be platform independent
+	 * 
+	 * example: in windows, using File constructor 
+	 *  		and getting the absoulte path string
+	 *			will return full path starting with 'C:'
+
+	 * which is not what expected of 
+	 * `getClass().getResourceAsStream` in `Resource.CopyResourceFile`
+	 * (has to start with '/')
+	*/
 	// native lib
 	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
-	final static String MEM_SCANNER_LIB_RESOURCE_DIR = "/AceAndroidLib/code_to_inject/lib";
+	final static String MEM_SCANNER_LIB_RESOURCE_DIR =
+
+			"/" + String.join("/", "AceAndroidLib", "code_to_inject", "lib");
 	// smali code
 	final static String MEM_SCANNER_SMALI_DIR_NAME = "AceInjector";
+	final static String MEM_SCANNER_SMALI_BASE_DIR =
+
+			"/" + String.join("/", "AceAndroidLib", "code_to_inject", "smali", "com");
 	final static String MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip";
-	final static String MEM_SCANNER_SMALI_BASE_DIR = "/AceAndroidLib/code_to_inject/smali/com";
 	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
 
 			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)).getAbsolutePath();
+
+	final static String MEM_SCANNER_SMALI_CODE_ZIP_PATH = String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME);
 	final static String MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V";
 	// ===================
 
-	public Patcher(String apkFilePathStr) throws IOException {
+	public Patcher(String apkFilePathStr, TempManager.TaskOnExit tempFolderTaskOnExit) throws IOException {
 		File apkFile = new File(apkFilePathStr);
-
-		if (!apkFile.exists()) {
-			throw new IOException("[apkFilePathStr] doesn't exist");
-		}
-		if (apkFile.isDirectory()) {
-			throw new IOException("[apkFilePathStr] must be a file not directory");
-		}
+		Assert.AssertExistAndIsFile(apkFile);
 		// make sure to get the absolute path
 		this.apkFilePathStr = apkFile.getAbsolutePath();
 
-		Path tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk");
+		Path tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", tempFolderTaskOnExit);
 		// make sure we have the absolute path
 		// https://stackoverflow.com/a/17552395/14073678
 		this.decompiledApkDirStr = tempDir.toAbsolutePath().toString();
 		// =============================== decompile the apk ===========
 		ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr);
+	}
+
+	public Patcher(String apkFilePathStr) throws IOException {
+		this(apkFilePathStr, TempManager.TaskOnExit.clean);
 	}
 
 	public static String LaunchableActivityToSmaliRelativePath(String launchableActivity) {
@@ -68,7 +85,7 @@ public class Patcher {
 
 	// TODO: find a way to cut down code duplication between this function and
 	// GetEntrySmaliPath
-	public String GetSmaliFolderOfLaunchableActvity() throws RuntimeException {
+	public String GetSmaliFolderOfLaunchableActvity() throws RuntimeException, IOException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -110,7 +127,7 @@ public class Patcher {
 
 	}
 
-	public String GetEntrySmaliPath() throws RuntimeException {
+	public String GetEntrySmaliPath() throws RuntimeException, IOException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -255,9 +272,11 @@ public class Patcher {
 
 				(String arch, File archLibFolder) -> {
 					File destFile = new File(archLibFolder.getAbsolutePath(), MEM_SCANNER_LIB_NAME);
-					String srcFile = Paths.get(MEM_SCANNER_LIB_RESOURCE_DIR, arch, MEM_SCANNER_LIB_NAME)
-							.toAbsolutePath()
-							.toString();
+					// String srcFile = Paths.get(MEM_SCANNER_LIB_RESOURCE_DIR, arch,
+					// MEM_SCANNER_LIB_NAME)
+					// .toAbsolutePath()
+					// .toString();
+					String srcFile = String.join("/", MEM_SCANNER_LIB_RESOURCE_DIR, arch, MEM_SCANNER_LIB_NAME);
 					// lib file already exist, cannot add anymore
 					if (destFile.exists()) {
 						String errMsg = String.format(
@@ -297,7 +316,7 @@ public class Patcher {
 
 	}
 
-	public String GetPackageNameOfLaunchableActivity() {
+	public String GetPackageNameOfLaunchableActivity() throws IOException {
 
 		// find launchable activity
 		String launchableActivity = Aapt.GetLaunchableActivity(apkFilePathStr);
@@ -313,7 +332,7 @@ public class Patcher {
 		return packageName;
 	}
 
-	public String GetPackageDirOfLaunchableActivity() {
+	public String GetPackageDirOfLaunchableActivity() throws IOException {
 
 		String packageName = GetPackageNameOfLaunchableActivity();
 		String smaliBaseDir = GetSmaliFolderOfLaunchableActvity();
@@ -329,11 +348,10 @@ public class Patcher {
 		// copy the zip code of smali constructor from resources
 		// unextract it in a temp folder and then copy to
 		// the apk
-		String srcSmaliZipCode = new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).getAbsolutePath();
 		String tempDir = TempManager.CreateTempDirectory("TempSmalifolder").toString();
 		//
 		File destSmaliZipCode = new File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME);
-		resource.CopyResourceFile(srcSmaliZipCode, destSmaliZipCode.getAbsolutePath());
+		resource.CopyResourceFile(MEM_SCANNER_SMALI_CODE_ZIP_PATH, destSmaliZipCode.getAbsolutePath());
 
 		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
 

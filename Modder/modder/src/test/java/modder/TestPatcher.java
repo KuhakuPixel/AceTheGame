@@ -29,19 +29,22 @@ class TestPatcher {
     void LaunchableActivityToSmaliRelativePath() {
 
         String path = "";
+        String expectedPath = "";
 
+        expectedPath = String.join(File.separator, "com", "java", "simpleapp", "MainActivity.smali");
         path = Patcher.LaunchableActivityToSmaliRelativePath("com.java.simpleapp.MainActivity");
-        assertEquals("com/java/simpleapp/MainActivity.smali", path);
+        assertEquals(expectedPath, path);
 
+        expectedPath = String.join(File.separator, "com", "java", "complexapp", "MainActivity.smali");
         path = Patcher.LaunchableActivityToSmaliRelativePath("com.java.complexapp.MainActivity");
-        assertEquals("com/java/complexapp/MainActivity.smali", path);
+        assertEquals(expectedPath, path);
 
     }
 
     @Test
     void GetSmaliFolderOfLaunchableActvity() throws IOException {
         //
-        Patcher patcher = new Patcher(testApkPathStr);
+        Patcher patcher = new Patcher(testApkPathStr, TempManager.TaskOnExit.none);
         String smaliFolder = patcher.GetSmaliFolderOfLaunchableActvity();
         // check the relative path because [GetEntrySmaliPath] will
         // return
@@ -49,7 +52,8 @@ class TestPatcher {
         // this can be easily determined by using "aapt dump bading [apk]"
         // then the main activity will be known,
         // decompile the apk and find the smali file in the directory
-        assertEquals(true, smaliFolder.endsWith("/smali_classes3"));
+        String expectedEndingPath = String.join(File.separator, "smali_classes3");
+        assertEquals(true, smaliFolder.endsWith(expectedEndingPath));
         // final check to see if the path actually exist
         File smaliFolderFile = new File(smaliFolder);
         assertEquals(true, smaliFolderFile.exists());
@@ -87,7 +91,9 @@ class TestPatcher {
         // this can be easily determined by using "aapt dump bading [apk]"
         // then the main activity will be known,
         // decompile the apk and find the smali file in the directory
-        assertEquals(true, smaliPath.endsWith("/smali_classes3/com/java/simpleapp/MainActivity.smali"));
+        String expectedEndingPath = String.join(File.separator, "smali_classes3", "com", "java", "simpleapp",
+                "MainActivity.smali");
+        assertEquals(true, smaliPath.endsWith(expectedEndingPath));
         // final check to see if the path actually exist
         File mainActivitySmaliFile = new File(smaliPath);
         assertEquals(true, mainActivitySmaliFile.exists());
@@ -169,6 +175,7 @@ class TestPatcher {
     void AddMemScannerLib2() throws IOException {
         Patcher patcher = new Patcher(testApkWithNativeLibPathStr);
 
+        System.out.printf("the resource dir is: %s\n",Patcher.MEM_SCANNER_LIB_RESOURCE_DIR);
         // mem scanner lib shouldnt exist previously
         assertEquals(false, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
         // but this should exist
@@ -194,7 +201,8 @@ class TestPatcher {
         Patcher patcher = new Patcher(testApkPathStr);
         String smaliCodePackageDir = patcher.GetPackageDirOfLaunchableActivity();
         System.out.printf("smali codepackagedir %s\n", smaliCodePackageDir);
-        assertEquals(true, smaliCodePackageDir.endsWith("/smali_classes3/com"));
+        String expectedEndingPath = String.join(File.separator, "smali_classes3", "com");
+        assertEquals(true, smaliCodePackageDir.endsWith(expectedEndingPath));
     }
 
     @Test
