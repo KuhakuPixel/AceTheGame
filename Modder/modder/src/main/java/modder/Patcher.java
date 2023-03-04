@@ -23,6 +23,19 @@ public class Patcher {
 	static final String BASE_APK_FILE_NAME = "base.apk";
 	final Resource resource = new Resource();
 	// ======== path to memory scanner engine lib ==============
+	/* 
+	 * For concatenating resource file/folder path 
+	 * we can't use File's constructor to do that because
+	 * the result will be platform independent
+	 * 
+	 * example: in windows, using File constructor 
+	 *  		and getting the absoulte path string
+	 *			will return full path starting with 'C:'
+
+	 * which is not what expected of 
+	 * `getClass().getResourceAsStream` in `Resource.CopyResourceFile`
+	 * (has to start with '/')
+	*/
 	// native lib
 	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
 	final static String MEM_SCANNER_LIB_RESOURCE_DIR =
@@ -37,6 +50,8 @@ public class Patcher {
 	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
 
 			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)).getAbsolutePath();
+
+	final static String MEM_SCANNER_SMALI_CODE_ZIP_PATH = String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME);
 	final static String MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V";
 	// ===================
 
@@ -333,11 +348,10 @@ public class Patcher {
 		// copy the zip code of smali constructor from resources
 		// unextract it in a temp folder and then copy to
 		// the apk
-		String srcSmaliZipCode = String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME);
 		String tempDir = TempManager.CreateTempDirectory("TempSmalifolder").toString();
 		//
 		File destSmaliZipCode = new File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME);
-		resource.CopyResourceFile(srcSmaliZipCode, destSmaliZipCode.getAbsolutePath());
+		resource.CopyResourceFile(MEM_SCANNER_SMALI_CODE_ZIP_PATH, destSmaliZipCode.getAbsolutePath());
 
 		String destDir = new File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).getAbsolutePath();
 
