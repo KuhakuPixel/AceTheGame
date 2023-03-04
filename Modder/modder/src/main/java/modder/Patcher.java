@@ -30,10 +30,10 @@ public class Patcher {
 			"/" + String.join("/", "AceAndroidLib", "code_to_inject", "lib");
 	// smali code
 	final static String MEM_SCANNER_SMALI_DIR_NAME = "AceInjector";
-	final static String MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip";
 	final static String MEM_SCANNER_SMALI_BASE_DIR =
 
 			"/" + String.join("/", "AceAndroidLib", "code_to_inject", "smali", "com");
+	final static String MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip";
 	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
 
 			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)).getAbsolutePath();
@@ -333,7 +333,7 @@ public class Patcher {
 		// copy the zip code of smali constructor from resources
 		// unextract it in a temp folder and then copy to
 		// the apk
-		String srcSmaliZipCode = new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).getAbsolutePath();
+		String srcSmaliZipCode = String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME);
 		String tempDir = TempManager.CreateTempDirectory("TempSmalifolder").toString();
 		//
 		File destSmaliZipCode = new File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME);
