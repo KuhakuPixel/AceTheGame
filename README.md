@@ -1,5 +1,10 @@
 # Ace The Game
 
+
+<p align="center">
+  <img width="300" height="300" src="./assets/icon.png">
+</p>
+
 - Memory scanner and editor for 
   android (non-rooted and root) and linux (root)
 
