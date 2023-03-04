@@ -25,35 +25,37 @@ public class Patcher {
 	// ======== path to memory scanner engine lib ==============
 	// native lib
 	static final String MEM_SCANNER_LIB_NAME = "liblib_ACE.so";
-	final static String MEM_SCANNER_LIB_RESOURCE_DIR = "/AceAndroidLib/code_to_inject/lib";
+	final static String MEM_SCANNER_LIB_RESOURCE_DIR =
+
+			String.join(File.separator, "AceAndroidLib", "code_to_inject", "lib");
 	// smali code
 	final static String MEM_SCANNER_SMALI_DIR_NAME = "AceInjector";
 	final static String MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip";
-	final static String MEM_SCANNER_SMALI_BASE_DIR = "/AceAndroidLib/code_to_inject/smali/com";
+	final static String MEM_SCANNER_SMALI_BASE_DIR =
+
+			String.join(File.separator, "AceAndroidLib", "code_to_inject", "smali", "com");
 	final static String MEM_SCANNER_SMALI_RESOURCE_DIR =
 
 			(new File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)).getAbsolutePath();
 	final static String MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V";
 	// ===================
 
-	public Patcher(String apkFilePathStr) throws IOException {
+	public Patcher(String apkFilePathStr, TempManager.TaskOnExit tempFolderTaskOnExit) throws IOException {
 		File apkFile = new File(apkFilePathStr);
-
-		if (!apkFile.exists()) {
-			throw new IOException("[apkFilePathStr] doesn't exist");
-		}
-		if (apkFile.isDirectory()) {
-			throw new IOException("[apkFilePathStr] must be a file not directory");
-		}
+		Assert.AssertExistAndIsFile(apkFile);
 		// make sure to get the absolute path
 		this.apkFilePathStr = apkFile.getAbsolutePath();
 
-		Path tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk");
+		Path tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", tempFolderTaskOnExit);
 		// make sure we have the absolute path
 		// https://stackoverflow.com/a/17552395/14073678
 		this.decompiledApkDirStr = tempDir.toAbsolutePath().toString();
 		// =============================== decompile the apk ===========
 		ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr);
+	}
+
+	public Patcher(String apkFilePathStr) throws IOException {
+		this(apkFilePathStr, TempManager.TaskOnExit.clean);
 	}
 
 	public static String LaunchableActivityToSmaliRelativePath(String launchableActivity) {

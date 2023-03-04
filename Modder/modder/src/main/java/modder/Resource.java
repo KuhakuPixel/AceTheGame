@@ -8,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.net.URLDecoder;
+import java.io.File;
 
 /* 
  * class that handles reading resources file from jar
@@ -30,7 +31,7 @@ public class Resource {
 
     }
 
-    public static String GetFile(ClassLoader classLoader, String resourceFile) {
+    public static File GetFile(ClassLoader classLoader, String resourceFile) {
 
         try {
             // need to decode the path, because for some reason,
@@ -44,10 +45,10 @@ public class Resource {
             String filePath = URLDecoder.decode(
                     classLoader.getResource(resourceFile).getFile(),
                     "UTF-8");
-            return filePath;
+            return new File(filePath);
         } catch (UnsupportedEncodingException e) {
             System.out.printf("Warning: cannot get file of resource file %s\n %s", resourceFile, e.getMessage());
-            return "";
+            return new File("");
         }
     }
 }
