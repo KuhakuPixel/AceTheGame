@@ -233,6 +233,22 @@ class ModderMainCmd {
 
 	}
 
+	/*
+	 * Download apk from device specified by [package_name]
+	 * and put it in a folder with the same name as [package_name]
+	 */
+	@Command(name = "install", description = "install all apk in a folder")
+	void Install(
+
+			@Parameters(paramLabel = "apkDir", description = "Directory that contains apk") String apkDirStr
+
+	) throws IOException{
+
+		Adb adb = new Adb();
+		Adb.Output out =  adb.InstallApk(apkDirStr);
+		out.strings.forEach(System.out::println);
+
+	}
 }
 
 //

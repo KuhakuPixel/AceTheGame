@@ -6,6 +6,8 @@ package modder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
 
 public class Adb {
     public enum Error {
@@ -110,6 +112,24 @@ public class Adb {
             return out;
         }
         return out;
+    }
+
+    public Output InstallApk(String apkDirStr) throws IOException {
+
+        File apkDir = new File(apkDirStr);
+        Assert.AssertExistAndIsDirectory(apkDir);
+        List<String> command = new ArrayList<String>();
+        // use install-multiple to install one or more apk
+        // https://android.stackexchange.com/questions/221204/how-to-install-xapk-apks-or-multiple-apks-via-adb
+        command.add("install-multiple");
+        for (File f : apkDir.listFiles()) {
+            // only collect file that has extension of *.apk
+            if (f.getAbsolutePath().endsWith(".apk"))
+                command.add(f.getAbsolutePath());
+        }
+        Output out = Run(command);
+        return out;
+
     }
 
 }

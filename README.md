@@ -263,8 +263,10 @@ the syntax of installing apk is
   and run 
 
   ```
-  adb install-multiple base.apk split_config.arm64_v8a.apk
+  modder install online.limitless.appleknight.free.patched
   ```
+  where `online.limitless.appleknight.free.patched` is directory
+  of the patched apk
 
 #### scanning and editing memory 
 
