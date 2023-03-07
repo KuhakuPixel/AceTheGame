@@ -41,6 +41,8 @@ void ACE_jni_init() {
       [&](std::string input_str) -> std::string {
     // reset output  buffer
     frontend_output_buff = "";
+    // TODO: refactor frontend stuff, dont use global variable
+    // it looks very ugly
     // run input_str command
     cheater_mode_on_each_input<int>(pid, engine_module, &cheat_config,
                                     input_str);
@@ -55,8 +57,8 @@ void ACE_jni_init() {
   _server.start();
 }
 
-// =================================== 
-// JNI exports for init function that can be called 
+// ===================================
+// JNI exports for init function that can be called
 // in android apk
 // https://github.com/android/ndk-samples/tree/main/hello-libs
 // ======================

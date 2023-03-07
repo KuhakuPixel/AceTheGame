@@ -559,8 +559,6 @@ template <typename T> void run_cheater_mode(int pid) {
   engine_module.freezer_ptr = &freeze_manager;
   engine_module.process_rw = &process_rw;
   // run cheater_mode
-  // TODO: maybe add another struct called
-  // cheater_module_config which has a scanner, a freezer and a proc_rw
   cheater_mode_loop<T>(pid, engine_module);
 }
 
