@@ -1,19 +1,9 @@
 #pragma once
+#include "ace_type.hpp"
 #include "cheat_cmd_handler.hpp"
 #include "engine_module.hpp"
 #include "input.hpp"
 
-/*
- * return value for every cheater mode operation
- *
- * will be used to tell the outer loop like:
- * 1. when to exit cheater mode
- * 2. when and what to change scan type
- * */
-
-struct cheat_on_line_ret {
-  E_loop_statement loop_statement = E_loop_statement::continue_;
-};
 /*
  * core logic of the cheater mode
  * which also handle all the modules

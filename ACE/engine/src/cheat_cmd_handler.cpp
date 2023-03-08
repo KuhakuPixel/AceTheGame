@@ -1,10 +1,12 @@
 #include "cheat_cmd_handler.hpp"
+#include "ace_type.hpp"
+#include "cheat_session.hpp"
 #include "common.hpp"
 #include "maps.hpp"
 #include "proc_rw.hpp"
+#include "to_frontend.hpp"
 #include <limits.h>
 #include <sys/types.h> //For ssize_t
-#include "to_frontend.hpp"
 
 template <typename T> cheat_mode_args<T>::cheat_mode_args() {
 
@@ -59,7 +61,7 @@ void filter_cmd_handler(ACE_scanner<T> *scanner,
   TIME_ACTION({ scanner->filter_val(filter_type); }, &filter_time);
 
   frontend_print("current matches: %zu\n",
-         scanner->get_current_scan_result().get_matches_count());
+                 scanner->get_current_scan_result().get_matches_count());
   frontend_print("Done in: %lf s\n", filter_time);
 }
 
@@ -94,7 +96,8 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
             if (is_suitable || cheat_config->scan_all_region)
               segments_to_scan.push_back(proc_mem_segments[i]);
           }
-          frontend_print("Found %zu regions to be scanned\n", segments_to_scan.size());
+          frontend_print("Found %zu regions to be scanned\n",
+                         segments_to_scan.size());
           // =================================================================
           // do scan
           scanner->initial_scan_multiple(segments_to_scan, filter_type,
@@ -115,7 +118,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
   );
 
   frontend_print("current matches: %zu\n",
-         scanner->get_current_scan_result().get_matches_count());
+                 scanner->get_current_scan_result().get_matches_count());
   frontend_print("Done in: %lf s\n", scan_time);
 }
 template <typename T>
@@ -183,7 +186,7 @@ void writeat_cmd_handler(proc_rw<T> *process_rw, ADDR address, T val_to_write) {
 
   if (errno != 0 && ret_val == -1) {
     frontend_print("Error while writting at %p: %s\n", (byte *)address,
-           strerror(errno));
+                   strerror(errno));
     return;
   }
 }
@@ -213,6 +216,13 @@ void scan_level_cmd_handler(ACE_scanner<T> *scanner,
       Scan_Utils::E_scan_level_to_str.at(scan_level);
 
   frontend_print("set scan level to %s\n", new_scan_level_val.c_str());
+}
+
+void type_cmd_handler(E_num_type scan_type,
+                      cheat_on_line_ret *cheater_on_line_ret_ptr) {
+  cheater_on_line_ret_ptr->set_next_scan_type(scan_type);
+  frontend_print("set scan level to %s\n",
+                 E_num_type_to_str_map.at(scan_type).c_str());
 }
 
 template <typename T>

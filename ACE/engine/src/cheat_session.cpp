@@ -1,12 +1,14 @@
 #include "cheat_session.hpp"
 #include "../third_party/CLI11.hpp"
 #include "ace_type.hpp"
+#include "cheat_cmd_handler.hpp"
 #include "common.hpp"
 #include "input.hpp"
 #include "proc_stat.hpp"
 #include "ptrace.hpp"
 #include "to_frontend.hpp"
 
+// =================================================
 template <typename T>
 struct cheat_on_line_ret
 cheat_session::cheater_on_line(engine_module<T> *engine_module_ptr,
@@ -431,6 +433,24 @@ cheat_session::cheater_on_line(engine_module<T> *engine_module_ptr,
   config_pause_while_scan_cmd
       ->add_option("<VALUE>", cheat_config->pause_while_scan)
       ->required();
+  // ============= type  ============
+
+  CLI::App *config_type_cmd =
+      config_cmd->add_subcommand("type", "change type of type\n");
+
+  config_type_cmd->add_option("<VALUE>", cheat_args.num_scan_type)
+      ->required()
+      ->transform(CLI::CheckedTransformer(num_type_str_to_E_num_type_map,
+                                          CLI::ignore_case));
+
+  config_type_cmd->callback(
+
+      [&]() {
+        //
+        type_cmd_handler(cheat_args.num_scan_type, &_cheat_on_line_ret);
+      }
+
+  );
   // =======================================================
   // ======================== split and make args =================
   std::vector<std::string> _args = {""};
@@ -549,8 +569,15 @@ cheat_session::~cheat_session() {
 
 E_loop_statement cheat_session::on_each_input(std::string input_str) {
 
-  // if returned  a type change
-  // then reset the current engine_module of that type
+  if (this->current_cheat_on_line_ret.get_should_change_type()) {
+    // change the scan type
+    this->current_scan_type =
+        this->current_cheat_on_line_ret.get_scan_type_to_change_to();
+    //
+    // we don't want the next call to this function
+    // to "change scan type" so we  reset
+    this->current_cheat_on_line_ret.set_should_change_type(false);
+  }
 
   // then switch to the type to use
   switch (this->current_scan_type) {
