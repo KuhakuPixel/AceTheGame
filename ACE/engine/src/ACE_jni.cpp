@@ -22,14 +22,7 @@ void ACE_jni_init() {
   // scan self
   int pid = getpid();
   // initialize module
-  ACE_scanner<int> scanner = ACE_scanner<int>(pid);
-  freezer<int> freeze_manager = freezer<int>(pid);
-  proc_rw<int> process_rw = proc_rw<int>(pid);
-  engine_module<int> engine_module;
-  //
-  engine_module.scanner_ptr = &scanner;
-  engine_module.freezer_ptr = &freeze_manager;
-  engine_module.process_rw = &process_rw;
+  engine_module<int> _engine_module = engine_module<int>(pid);
   // initialize current config
   // to be used in this session
   struct cheat_mode_config cheat_config;
@@ -44,7 +37,7 @@ void ACE_jni_init() {
     // TODO: refactor frontend stuff, dont use global variable
     // it looks very ugly
     // run input_str command
-    cheater_mode_on_each_input<int>(pid, engine_module, &cheat_config,
+    cheater_mode_on_each_input<int>(pid, &(_engine_module), &cheat_config,
                                     input_str);
     // get its output
     std::string out = frontend_pop_output();

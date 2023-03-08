@@ -68,6 +68,7 @@ set(lib_ACE_src
 	src/common.cpp src/proc_rw.cpp src/proc_create.cpp src/endian.cpp src/aslr_edit.cpp 
 	src/main_cmd_handler.cpp src/loaded_mem_info.cpp src/scan_utils.cpp src/thread_continuous.cpp src/freeze.cpp
 	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp src/ACE_jni.cpp src/server.cpp
+	src/engine_module.cpp
 )
 
 add_library(lib_ACE SHARED ${lib_ACE_src})

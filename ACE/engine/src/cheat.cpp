@@ -4,6 +4,7 @@
 #include "ACE_global.hpp"
 #include "ace_type.hpp"
 #include "cheat_cmd_handler.hpp"
+#include "engine_module.hpp"
 #include "error.hpp"
 #include "freeze.hpp"
 #include "input.hpp"
@@ -18,15 +19,15 @@
 #include <unistd.h>
 
 template <typename T>
-E_loop_statement cheater_on_line(engine_module<T> engine_module,
+E_loop_statement cheater_on_line(engine_module<T> *engine_module_ptr,
                                  cheat_mode_config *cheat_config,
                                  std::string input_str) {
 
   // for short alias so functions wont have to use "engine_module.something"
   // to access an engine module
-  ACE_scanner<T> *scanner = engine_module.scanner_ptr;
-  freezer<T> *freezer_ptr = engine_module.freezer_ptr;
-  proc_rw<T> *process_rw = engine_module.process_rw;
+  ACE_scanner<T> *scanner = engine_module_ptr->scanner_ptr;
+  freezer<T> *freezer_ptr = engine_module_ptr->freezer_ptr;
+  proc_rw<T> *process_rw = engine_module_ptr->process_rw;
   //
   struct cheat_mode_args<T> cheat_args = cheat_mode_args<T>();
 
@@ -465,7 +466,7 @@ E_loop_statement cheater_on_line(engine_module<T> engine_module,
 
 template <typename T>
 E_loop_statement
-cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
+cheater_mode_on_each_input(int pid, engine_module<T> *engine_module_ptr,
                            struct cheat_mode_config *cheat_config,
                            std::string input_str) {
 
@@ -489,7 +490,7 @@ cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
 
         {
           cheater_on_line_ret_code =
-              cheater_on_line<T>(engine_module, cheat_config, input_str);
+              cheater_on_line<T>(engine_module_ptr, cheat_config, input_str);
         },
 
         &ptrace_attach_ret,
@@ -517,7 +518,7 @@ cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
     // on the target process
     // simple right :D ?
     cheater_on_line_ret_code =
-        cheater_on_line<T>(engine_module, cheat_config, input_str);
+        cheater_on_line<T>(engine_module_ptr, cheat_config, input_str);
   }
 
   // else return value of cheater_on_line
@@ -525,7 +526,7 @@ cheater_mode_on_each_input(int pid, engine_module<T> engine_module,
 }
 
 template <typename T>
-void cheater_mode_loop(int pid, engine_module<T> engine_module) {
+void cheater_mode_loop(int pid, engine_module<T> *engine_module_ptr) {
 
   // tell frontend cheater mode is entered succsessfully
   if (ACE_global::use_gui_protocol)
@@ -540,7 +541,7 @@ void cheater_mode_loop(int pid, engine_module<T> engine_module) {
   auto on_input =
 
       [&](std::string input_str) -> E_loop_statement {
-    return cheater_mode_on_each_input(pid, engine_module, &cheat_config,
+    return cheater_mode_on_each_input(pid, engine_module_ptr, &cheat_config,
                                       input_str);
   };
 
@@ -549,17 +550,9 @@ void cheater_mode_loop(int pid, engine_module<T> engine_module) {
 
 template <typename T> void run_cheater_mode(int pid) {
 
-  //
-  ACE_scanner<T> scanner = ACE_scanner<T>(pid);
-  freezer<T> freeze_manager = freezer<T>(pid);
-  proc_rw<T> process_rw = proc_rw<T>(pid);
-  //
-  engine_module<T> engine_module;
-  engine_module.scanner_ptr = &scanner;
-  engine_module.freezer_ptr = &freeze_manager;
-  engine_module.process_rw = &process_rw;
+  engine_module<T> _engine_module = engine_module<T>(pid);
   // run cheater_mode
-  cheater_mode_loop<T>(pid, engine_module);
+  cheater_mode_loop<T>(pid, &(_engine_module));
 }
 
 // ================================================
