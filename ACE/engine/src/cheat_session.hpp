@@ -4,6 +4,17 @@
 #include "input.hpp"
 
 /*
+ * return value for every cheater mode operation
+ *
+ * will be used to tell the outer loop like:
+ * 1. when to exit cheater mode
+ * 2. when and what to change scan type
+ * */
+
+struct cheat_on_line_ret {
+  E_loop_statement loop_statement = E_loop_statement::continue_;
+};
+/*
  * core logic of the cheater mode
  * which also handle all the modules
  * needed by it such as [engine_module] of all different type
@@ -24,16 +35,18 @@ private:
   // cheat config
   struct cheat_mode_config cheat_config;
   E_num_type current_scan_type;
+  //
+  struct cheat_on_line_ret current_cheat_on_line_ret;
 
   // functions
 
   template <typename T>
-  E_loop_statement cheater_on_line(engine_module<T> *engine_module_ptr,
-                                   cheat_mode_config *cheat_config,
-                                   std::string input_str);
+  struct cheat_on_line_ret cheater_on_line(engine_module<T> *engine_module_ptr,
+                                           cheat_mode_config *cheat_config,
+                                           std::string input_str);
 
   template <typename T>
-  E_loop_statement
+  struct cheat_on_line_ret
   cheater_mode_on_each_input(int pid, engine_module<T> *engine_module_ptr,
                              struct cheat_mode_config *cheat_config,
                              std::string input_str);

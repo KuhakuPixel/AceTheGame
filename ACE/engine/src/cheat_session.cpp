@@ -8,11 +8,11 @@
 #include "to_frontend.hpp"
 
 template <typename T>
-E_loop_statement
+struct cheat_on_line_ret
 cheat_session::cheater_on_line(engine_module<T> *engine_module_ptr,
                                cheat_mode_config *cheat_config,
                                std::string input_str) {
-
+  struct cheat_on_line_ret _cheat_on_line_ret;
   // for short alias so functions wont have to use "engine_module.something"
   // to access an engine module
   ACE_scanner<T> *scanner = engine_module_ptr->scanner_ptr;
@@ -149,7 +149,8 @@ cheat_session::cheater_on_line(engine_module<T> *engine_module_ptr,
   // ================ quit command ===============================
 
   if (input_str == "q" || input_str == "quit") {
-    return E_loop_statement::break_;
+    _cheat_on_line_ret.loop_statement = E_loop_statement::break_;
+    return _cheat_on_line_ret;
   }
 
   // ================ write command ===============================
@@ -451,24 +452,29 @@ cheat_session::cheater_on_line(engine_module<T> *engine_module_ptr,
   };
   // reset options
   cheat_args = cheat_mode_args<T>();
-  return E_loop_statement::continue_;
+  //
+  _cheat_on_line_ret.loop_statement = E_loop_statement::continue_;
+  return _cheat_on_line_ret;
 }
 template <typename T>
-E_loop_statement cheat_session::cheater_mode_on_each_input(
+struct cheat_on_line_ret
+
+cheat_session::cheater_mode_on_each_input(
     int pid, engine_module<T> *engine_module_ptr,
     struct cheat_mode_config *cheat_config, std::string input_str) {
 
+  struct cheat_on_line_ret _cheat_on_line_ret;
   // before running a command,
   // check if process [pid] is still running
 
   if (!proc_is_running(pid)) {
     frontend_mark_task_fail("Process %d doesn't exist anymore\n", pid);
-    return E_loop_statement::break_;
+
+    _cheat_on_line_ret.loop_statement = E_loop_statement::break_;
+    return _cheat_on_line_ret;
   }
 
   // run command input
-  E_loop_statement cheater_on_line_ret_code;
-
   int ptrace_attach_ret = 0;
   int ptrace_deattach_ret = 0;
   if (cheat_config->pause_while_scan) {
@@ -477,7 +483,7 @@ E_loop_statement cheat_session::cheater_mode_on_each_input(
         pid,
 
         {
-          cheater_on_line_ret_code =
+          _cheat_on_line_ret =
               cheater_on_line<T>(engine_module_ptr, cheat_config, input_str);
         },
 
@@ -492,12 +498,16 @@ E_loop_statement cheat_session::cheater_mode_on_each_input(
     // check if any ptrace attach of deattach failed
     if (ptrace_attach_ret == -1) {
       frontend_mark_task_fail("Fail to attach, exiting cheater mode\n");
-      return E_loop_statement::break_;
+
+      _cheat_on_line_ret.loop_statement = E_loop_statement::break_;
+      return _cheat_on_line_ret;
     }
 
     if (ptrace_deattach_ret == -1) {
       frontend_mark_task_fail("Fail to deattach, exiting cheater mode\n");
-      return E_loop_statement::break_;
+
+      _cheat_on_line_ret.loop_statement = E_loop_statement::break_;
+      return _cheat_on_line_ret;
     }
   }
 
@@ -505,12 +515,12 @@ E_loop_statement cheat_session::cheater_mode_on_each_input(
     // just run command without any pause
     // on the target process
     // simple right :D ?
-    cheater_on_line_ret_code =
+    _cheat_on_line_ret =
         cheater_on_line<T>(engine_module_ptr, cheat_config, input_str);
   }
 
   // else return value of cheater_on_line
-  return cheater_on_line_ret_code;
+  return _cheat_on_line_ret;
 }
 cheat_session::cheat_session(int pid, E_num_type current_scan_type) {
 
@@ -539,14 +549,13 @@ cheat_session::~cheat_session() {
 
 E_loop_statement cheat_session::on_each_input(std::string input_str) {
 
-  E_loop_statement ret = E_loop_statement::continue_;
   // if returned  a type change
   // then reset the current engine_module of that type
 
   // then switch to the type to use
   switch (this->current_scan_type) {
   case E_num_type::INT: {
-    ret = this->cheater_mode_on_each_input<int>(
+    this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<int>(
 
         this->pid, this->engine_module_ptr_int, &(this->cheat_config), input_str
 
@@ -556,7 +565,7 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
   }
 
   case E_num_type::LONG: {
-    ret = this->cheater_mode_on_each_input<long>(
+    this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<long>(
 
         this->pid, this->engine_module_ptr_long, &(this->cheat_config),
         input_str
@@ -567,7 +576,7 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
 
   case E_num_type::SHORT: {
 
-    ret = this->cheater_mode_on_each_input<short>(
+    this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<short>(
 
         this->pid, this->engine_module_ptr_short, &(this->cheat_config),
         input_str
@@ -576,7 +585,7 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
     break;
   }
   case E_num_type::BYTE: {
-    ret = this->cheater_mode_on_each_input<byte>(
+    this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<byte>(
 
         this->pid, this->engine_module_ptr_byte, &(this->cheat_config),
         input_str
@@ -586,7 +595,7 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
   }
 
   case E_num_type::FLOAT: {
-    ret = this->cheater_mode_on_each_input<float>(
+    this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<float>(
 
         this->pid, this->engine_module_ptr_float, &(this->cheat_config),
         input_str
@@ -595,5 +604,5 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
     break;
   }
   }
-  return ret;
+  return current_cheat_on_line_ret.loop_statement;
 }
