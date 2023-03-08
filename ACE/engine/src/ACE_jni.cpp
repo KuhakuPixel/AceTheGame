@@ -29,14 +29,15 @@ void ACE_jni_init() {
   cheat_config.initial_scan_done = false;
   cheat_config.pid = pid;
 
+  // callback on each input
   auto on_input_received =
 
       [&](std::string input_str) -> std::string {
-    // reset output  buffer
+    // reset output  buffer to make sure
+    // we won't have previous output
     frontend_output_buff = "";
     // TODO: refactor frontend stuff, dont use global variable
     // it looks very ugly
-    // run input_str command
     cheater_mode_on_each_input<int>(pid, &(_engine_module), &cheat_config,
                                     input_str);
     // get its output

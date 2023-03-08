@@ -541,8 +541,8 @@ void cheater_mode_loop(int pid, engine_module<T> *engine_module_ptr) {
   auto on_input =
 
       [&](std::string input_str) -> E_loop_statement {
-    return cheater_mode_on_each_input(pid, engine_module_ptr, &cheat_config,
-                                      input_str);
+    return cheater_mode_on_each_input<T>(pid, engine_module_ptr, &cheat_config,
+                                         input_str);
   };
 
   run_input_loop(on_input, "CHEATER");
