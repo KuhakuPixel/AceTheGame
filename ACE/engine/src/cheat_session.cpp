@@ -546,10 +546,6 @@ cheat_session::cheat_session(int pid, E_num_type current_scan_type) {
 
   this->pid = pid;
   this->current_scan_type = current_scan_type;
-  // initialize current config
-  // to be used in this session
-  this->cheat_config.initial_scan_done = false;
-  this->cheat_config.pid = pid;
   // initialize engine modules for all types
   this->engine_module_ptr_int = new engine_module<int>(pid);
   this->engine_module_ptr_long = new engine_module<long>(pid);
@@ -569,6 +565,10 @@ cheat_session::~cheat_session() {
 
 E_loop_statement cheat_session::on_each_input(std::string input_str) {
 
+  /*
+   * check if the previous command (a call to this functon)
+   * has request a change of scan type
+   * */
   if (this->current_cheat_on_line_ret.get_should_change_type()) {
     // change the scan type
     this->current_scan_type =
@@ -584,7 +584,8 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
   case E_num_type::INT: {
     this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<int>(
 
-        this->pid, this->engine_module_ptr_int, &(this->cheat_config), input_str
+        this->pid, this->engine_module_ptr_int,
+        &(this->engine_module_ptr_int->_cheat_mode_config), input_str
 
     );
 
@@ -594,8 +595,8 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
   case E_num_type::LONG: {
     this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<long>(
 
-        this->pid, this->engine_module_ptr_long, &(this->cheat_config),
-        input_str
+        this->pid, this->engine_module_ptr_long,
+        &(this->engine_module_ptr_long->_cheat_mode_config), input_str
 
     );
     break;
@@ -605,8 +606,8 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
 
     this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<short>(
 
-        this->pid, this->engine_module_ptr_short, &(this->cheat_config),
-        input_str
+        this->pid, this->engine_module_ptr_short,
+        &(this->engine_module_ptr_short->_cheat_mode_config), input_str
 
     );
     break;
@@ -614,8 +615,8 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
   case E_num_type::BYTE: {
     this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<byte>(
 
-        this->pid, this->engine_module_ptr_byte, &(this->cheat_config),
-        input_str
+        this->pid, this->engine_module_ptr_byte,
+        &(this->engine_module_ptr_byte->_cheat_mode_config), input_str
 
     );
     break;
@@ -624,8 +625,8 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
   case E_num_type::FLOAT: {
     this->current_cheat_on_line_ret = this->cheater_mode_on_each_input<float>(
 
-        this->pid, this->engine_module_ptr_float, &(this->cheat_config),
-        input_str
+        this->pid, this->engine_module_ptr_float,
+        &(this->engine_module_ptr_float->_cheat_mode_config), input_str
 
     );
     break;

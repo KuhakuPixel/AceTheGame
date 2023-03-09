@@ -21,9 +21,6 @@ private:
   engine_module<byte> *engine_module_ptr_byte = NULL;
   engine_module<float> *engine_module_ptr_float = NULL;
 
-  // and ect
-  // cheat config
-  struct cheat_mode_config cheat_config;
   E_num_type current_scan_type;
   //
   struct cheat_on_line_ret current_cheat_on_line_ret;

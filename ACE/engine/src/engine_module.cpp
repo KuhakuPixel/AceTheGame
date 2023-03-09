@@ -6,6 +6,9 @@ template <typename T> engine_module<T>::engine_module(int pid) {
   this->scanner_ptr = new ACE_scanner<T>(pid);
   this->freezer_ptr = new freezer<T>(pid);
   this->process_rw = new proc_rw<T>(pid);
+  // TODO: add constructor for cheat_mode_config
+  // that accepts pid
+  this->_cheat_mode_config.pid = pid;
 }
 
 template <typename T> engine_module<T>::~engine_module() {

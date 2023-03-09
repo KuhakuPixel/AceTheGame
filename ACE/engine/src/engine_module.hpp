@@ -2,6 +2,7 @@
 #include "freeze.hpp"
 #include "proc_rw.hpp"
 #include "scanner.hpp"
+#include "cheat_cmd_handler.hpp"
 
 /*
  * the core module for memory scanner and editor
@@ -15,6 +16,7 @@ public:
   ACE_scanner<T> *scanner_ptr = NULL;
   freezer<T> *freezer_ptr = NULL;
   proc_rw<T> *process_rw = NULL;
+  cheat_mode_config _cheat_mode_config;
 
   engine_module(int pid);
   ~engine_module();
