@@ -97,7 +97,7 @@ static const std::unordered_map<std::string, E_endian_scan_type>
  * */
 
 // TODO: add test ?
-struct cheat_on_line_ret {
+struct cheat_cmd_ret {
 
 private:
   //

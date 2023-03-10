@@ -219,7 +219,7 @@ void scan_level_cmd_handler(ACE_scanner<T> *scanner,
 }
 
 void type_cmd_handler(E_num_type scan_type,
-                      cheat_on_line_ret *cheater_on_line_ret_ptr) {
+                      cheat_cmd_ret *cheater_on_line_ret_ptr) {
   cheater_on_line_ret_ptr->set_next_scan_type(scan_type);
   frontend_print("set scan level to %s\n",
                  E_num_type_to_str_map.at(scan_type).c_str());

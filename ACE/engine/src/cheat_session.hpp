@@ -23,17 +23,17 @@ private:
 
   E_num_type current_scan_type;
   //
-  struct cheat_on_line_ret current_cheat_on_line_ret;
+  struct cheat_cmd_ret current_cheat_cmd_ret;
 
   // functions
 
   template <typename T>
-  struct cheat_on_line_ret cheater_on_line(engine_module<T> *engine_module_ptr,
+  struct cheat_cmd_ret _cheat_cmd(engine_module<T> *engine_module_ptr,
                                            cheat_mode_config *cheat_config,
                                            std::string input_str);
 
   template <typename T>
-  struct cheat_on_line_ret
+  struct cheat_cmd_ret
   cheater_mode_on_each_input(int pid, engine_module<T> *engine_module_ptr,
                              struct cheat_mode_config *cheat_config,
                              std::string input_str);

@@ -82,7 +82,7 @@ void scan_level_cmd_handler(ACE_scanner<T> *scanner,
                             Scan_Utils::E_scan_level scan_level);
 
 void type_cmd_handler(E_num_type scan_type,
-                      cheat_on_line_ret *cheater_on_line_ret_ptr);
+                      cheat_cmd_ret *cheater_on_line_ret_ptr);
 template <typename T>
 void freeze_at_cmd_handler(freezer<T> *freezer_manager, ADDR addr);
 
