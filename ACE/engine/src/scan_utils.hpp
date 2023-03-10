@@ -239,23 +239,4 @@ template <typename T> struct addr_and_value {
   addr_and_value(ADDR address, T value);
 };
 
-template <typename T>
-ssize_t _get_last_chunk_read_idx(
-
-    const std::vector<struct addr_and_value<T>> &array,
-    const size_t array_from_idx,
-
-    size_t low_idx, size_t high_idx
-
-);
-
-template <typename T>
-ssize_t get_last_chunk_read_idx(
-
-    const std::vector<struct addr_and_value<T>> &array,
-
-    size_t from_idx
-
-);
-
 }; // namespace Scan_Utils
