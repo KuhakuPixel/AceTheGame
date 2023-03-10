@@ -17,7 +17,7 @@ void quit_cmd_handler();
  * handles error checking when entering cheater mode
  * on process [pid]
  * */
-void cheater_cmd_handler(int pid, E_num_type num_type);
+void cheater_cmd_handler(int pid);
 
 void aslr_cmd_handler(bool aslr_set_val);
 

@@ -62,7 +62,7 @@ void list_processes_cmd_handler(bool ps_ls_reverse) {
   // display each of processes
   for (size_t i = 0; i < processes_infos.size(); i++) {
     frontend_print("%d %s\n", processes_infos[i].pid,
-           processes_infos[i].proc_name.c_str());
+                   processes_infos[i].proc_name.c_str());
   }
 }
 
@@ -79,13 +79,14 @@ void version_cmd_handler() {
   frontend_print("======================================\n");
   frontend_print("ACE Engine %d.%d.%d\n",
 
-         ACE_global::major_version, ACE_global::minor_version,
-         ACE_global::patch_level);
+                 ACE_global::major_version, ACE_global::minor_version,
+                 ACE_global::patch_level);
 
   frontend_print("compile time:  %s  %s\n", __DATE__, __TIME__);
   frontend_print("Compiler : %s %s\n", ACE_global::cpp_compiler_name.c_str(),
-         ACE_global::cpp_compiler_version.c_str());
-  frontend_print("Endianness: %s\n", ACE_global::platform_endianness_str.c_str());
+                 ACE_global::cpp_compiler_version.c_str());
+  frontend_print("Endianness: %s\n",
+                 ACE_global::platform_endianness_str.c_str());
   frontend_print("======================================\n");
   frontend_print("build options: \n\n\n");
 
@@ -97,17 +98,17 @@ void version_cmd_handler() {
   frontend_print("Features included (+) or not (-): \n");
 
   frontend_print("%c use \"/proc/<pid>/mem\"\n",
-         ACE_global::use_proc_pid_mem ? '+' : '-');
+                 ACE_global::use_proc_pid_mem ? '+' : '-');
 
   frontend_print("%c use process_vm_readv and process_vm_writev\n",
-         ACE_global::use_proc_vm_read_writev ? '+' : '-');
+                 ACE_global::use_proc_vm_read_writev ? '+' : '-');
 
   frontend_print("======================================\n");
 }
 
 void quit_cmd_handler() { exit(EXIT_SUCCESS); };
 
-void cheater_cmd_handler(int pid, E_num_type num_type) {
+void cheater_cmd_handler(int pid) {
 
   // check if <pid> is running
   if (!proc_is_running(pid)) {
@@ -116,7 +117,7 @@ void cheater_cmd_handler(int pid, E_num_type num_type) {
   }
 
   frontend_print("attaching to process %d \n", pid);
-  cheater_mode(pid, num_type);
+  cheater_mode(pid);
 }
 
 void aslr_cmd_handler(bool aslr_set_val) { aslr_set(aslr_set_val); }
@@ -125,7 +126,7 @@ void gui_protocol_cmd_handler() { frontend_print("gui_protocol_ok\n"); }
 // ======================================================
 void display_intro() { frontend_print("%s", ACE_global::intro_display); }
 
-void license_cmd_handler() {
-  frontend_print("%s\n", ACE_global::license);
+void license_cmd_handler() { frontend_print("%s\n", ACE_global::license); }
+void credit_cmd_handler() {
+  frontend_print("%s\n", ACE_global::engine_credits);
 }
-void credit_cmd_handler() { frontend_print("%s\n", ACE_global::engine_credits); }
