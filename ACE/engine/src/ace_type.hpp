@@ -4,6 +4,7 @@
  * nothing else
  * */
 #pragma once
+#include "input.hpp"
 #include <string>
 #include <unordered_map>
 
@@ -61,11 +62,12 @@ static const std::unordered_map<std::string, E_num_type>
 
 };
 
-static const std::unordered_map<E_num_type, std::string> E_num_type_to_str_map = {
+static const std::unordered_map<E_num_type, std::string> E_num_type_to_str_map =
+    {
 
-    {E_num_type::SHORT, "short"}, {E_num_type::INT, "int"},
-    {E_num_type::LONG, "long"},   {E_num_type::BYTE, "byte"},
-    {E_num_type::FLOAT, "float"},
+        {E_num_type::SHORT, "short"}, {E_num_type::INT, "int"},
+        {E_num_type::LONG, "long"},   {E_num_type::BYTE, "byte"},
+        {E_num_type::FLOAT, "float"},
 
 };
 
@@ -84,4 +86,28 @@ static const std::unordered_map<std::string, E_endian_scan_type>
         {"native", E_endian_scan_type::native},
         {"swapped", E_endian_scan_type::swapped},
 
+};
+
+/*
+ * return value for every cheater mode operation
+ *
+ * will be used to tell the outer loop like:
+ * 1. when to exit cheater mode
+ * 2. when and what to change scan type
+ * */
+
+// TODO: add test ?
+struct cheat_cmd_ret {
+
+private:
+  //
+  bool should_change_type = false;
+  E_num_type scan_type_to_change_to = E_num_type::INT;
+
+public:
+  E_loop_statement loop_statement = E_loop_statement::continue_;
+  void set_next_scan_type(E_num_type num_type);
+  bool get_should_change_type();
+  void set_should_change_type(bool val);
+  E_num_type get_scan_type_to_change_to();
 };

@@ -49,7 +49,7 @@ int ptrace_deattach_pid(int pid, bool force_stop);
 
         // call a block of code while ptrace attached
         {
-          ret_code = cheater_on_line<long>(&scanner, input_str,
+          ret_code = _cheat_cmd<long>(&scanner, input_str,
                                            segments_to_scan, &cheat_config);
         },
 

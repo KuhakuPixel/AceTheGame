@@ -19,6 +19,9 @@ Disclaimer!!!: this program is still in beta phase
 If you found any BUG, thanks
 report it [here](https://github.com/KuhakuPixel/AceTheGame/issues)
 
+for discussion, suggestion and question
+feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
+
 ## Showcase
 ### infinite coin 
 

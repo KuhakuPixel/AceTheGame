@@ -65,19 +65,11 @@ CLI::App *initialize_main_commands_new(CLI::App *app) {
                    "<pid> of the process be scanned an edited")
       ->required();
 
-  // TODO: add default using CLI11 way
-  cheater_cmd
-      ->add_option("-t,--type", current_options.cheater_num_type,
-                   "type to set for scanning and writting\n"
-                   "default to int")
-      ->transform(CLI::CheckedTransformer(num_type_str_to_E_num_type_map,
-                                          CLI::ignore_case));
-
   cheater_cmd->callback(
 
       []() -> void {
-        cheater_cmd_handler(current_options.pid,
-                            current_options.cheater_num_type);
+        //
+        cheater_cmd_handler(current_options.pid);
       }
 
   );

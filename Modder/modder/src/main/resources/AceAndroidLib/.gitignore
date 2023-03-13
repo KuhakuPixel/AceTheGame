@@ -1,0 +1,3 @@
+# ignore generated smali code and native library
+# from the [injector] project
+code_to_inject/

@@ -1,0 +1,74 @@
+
+how should I solve this thing
+
+the hard thing is that I need to change the scan type
+within the cheater mode, so that it would work 
+with non rooted device
+
+
+well why?
+because in non rooted device, we depends on the apk itself
+to provide a service to read and write its own memory
+so it basically start its own server of cheater mode
+
+maybe its quite hard to use the curent method
+(choosing the type before entering cheater mode)
+because then, I have to tell the server to die first?
+humm, 
+
+
+
+
+
+
+because I need a engine_moudle  to be persistent
+for multiple calls of the same type
+
+lets just create a new class called
+
+[cheat_session]: which will have all [engine_module]
+of different type, each time a type change is requested
+we will just reset those modules and then check the output
+of the runner
+
+
+the prerequisite of this is 
+cheater_mode_on_each_input  must return some kind of variable
+for the type change
+
+
+class cheat_session{
+private:
+	engine_module<int> engine_module_int;
+	engine_module<long> engine_module_long;
+	engine_module<short> engine_module_short;
+	// and ect
+	// cheat config
+  	struct cheat_mode_config cheat_config;
+	E_num_type current_scan_type;
+public:
+	/* 
+	* [current_scan_type]: the current scan type to be used
+			       which can be changed later on
+	*/
+	cheat_session(E_num_type current_scan_type){
+		this->current_scan_type = current_scan_type;
+	}
+	
+	// this can be wrapped, if needs to be passed
+	// to a callback parameter
+	E_loop_statement on_each_input(std::string input_str){
+
+		// if returned  a type change
+		// then reset the current engine_module of that type
+
+		// then switch to the type to use
+	}
+
+
+}
+
+
+
+
+
