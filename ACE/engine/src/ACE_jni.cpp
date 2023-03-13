@@ -10,6 +10,7 @@
 #include "to_frontend.hpp"
 #include <string>
 #include <unistd.h>
+#include "cheat_session.hpp"
 
 /*
  * function for initializing the ACE engine
@@ -21,14 +22,8 @@
 void ACE_jni_init() {
   // scan self
   int pid = getpid();
-  // initialize module
-  engine_module<int> _engine_module = engine_module<int>(pid);
-  // initialize current config
-  // to be used in this session
-  struct cheat_mode_config cheat_config;
-  cheat_config.initial_scan_done = false;
-  cheat_config.pid = pid;
 
+  cheat_session _cheat_session = cheat_session(pid, E_num_type::INT);
   // callback on each input
   auto on_input_received =
 
@@ -36,11 +31,9 @@ void ACE_jni_init() {
     // reset output  buffer to make sure
     // we won't have previous output
     frontend_output_buff = "";
-    // TODO: refactor frontend stuff, dont use global variable
-    // it looks very ugly
-    cheater_mode_on_each_input<int>(pid, &(_engine_module), &cheat_config,
-                                    input_str);
-    // get its output
+    _cheat_session.on_each_input(input_str);
+    // get std output from _cheat_session.on_each_input
+    // function call
     std::string out = frontend_pop_output();
     return out;
   };
