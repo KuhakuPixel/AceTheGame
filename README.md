@@ -37,6 +37,9 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
 ![](./assets/showcase/freezed_health.gif)
 
+## Dev Guide
+For build and project structure
+[DEV_GUIDE](./DEV_GUIDE.md)
 ## Installation
 ### Prerequisite
 - adb program installed and can be run through the command prompt
@@ -320,22 +323,3 @@ the syntax of installing apk is
    ```
    (Engine Server) write 1000 
    ```
-
-
-
-
-
-
-## Build instruction
-### clone repo
-#### https
-```
-git clone --recurse-submodules https://github.com/KuhakuPixel/AceTheGame.git
-```
-#### ssh
-```
-git clone --recurse-submodules git@github.com:KuhakuPixel/AceTheGame.git
-```
-
-... TO be added
-
