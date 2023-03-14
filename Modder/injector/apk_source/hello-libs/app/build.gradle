@@ -17,7 +17,7 @@ android {
 	// https://stackoverflow.com/questions/64829357/specify-targets-in-externalnativebuild-of-the-build-gradle-file-no-signature-o
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23"
+                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23", "-DCMAKE_BUILD_TYPE=Release"
             }
         }
     }
@@ -31,7 +31,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path "../../../../ACE/engine/CMakeLists.txt"
+            path "../../../../../ACE/engine/CMakeLists.txt"
         }
     }
     namespace 'com.AceInjector.hellolibs'

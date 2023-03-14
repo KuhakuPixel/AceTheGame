@@ -42,7 +42,7 @@ def cp_folder(src: str, dest: str):
 APK_SOURCE_ROOT_DIR = "./apk_source/hello-libs"
 
 OUT_CODE_FOR_INJECT_DIR = (
-    "../Modder/modder/src/main/resources/AceAndroidLib/code_to_inject"
+    "../../Modder/modder/src/main/resources/AceAndroidLib/code_to_inject"
 )
 
 TEMP_DECOMPILED_APK_DIR = "/tmp/temp_decompiled_apk"
