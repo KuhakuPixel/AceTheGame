@@ -16,8 +16,10 @@ android {
 	// inside defaultConfig, not,
 	// https://stackoverflow.com/questions/64829357/specify-targets-in-externalnativebuild-of-the-build-gradle-file-no-signature-o
         externalNativeBuild {
+	    // TODO: fix scanning/editing memory becomes unstable when built as release?
+	    // 	     (maybe some fault in memscanner/editor 's match_storage)
             cmake {
-                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23", "-DCMAKE_BUILD_TYPE=Release"
+                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23", "-DCMAKE_BUILD_TYPE=Debug" 
             }
         }
     }
