@@ -27,6 +27,7 @@ TODO: make it runnable in windows also
 import subprocess
 import os
 import shutil
+import tempfile
 
 # =========================== funcs =============
 
@@ -38,64 +39,61 @@ def cp_folder(src: str, dest: str):
     # then copy
     shutil.copytree(src, dest)
 
-# ============================= paths ==================
-APK_SOURCE_ROOT_DIR = "./apk_source/hello-libs"
+# creating temp dir for decompilation result
+# https://stackoverflow.com/a/55104228/14073678
+with tempfile.TemporaryDirectory() as TEMP_DECOMPILED_APK_DIR:
+    # ============================= paths ==================
+    APK_SOURCE_ROOT_DIR = "./apk_source/hello-libs"
 
-OUT_CODE_FOR_INJECT_DIR = (
-    "../../Modder/modder/src/main/resources/AceAndroidLib/code_to_inject"
-)
+    OUT_CODE_FOR_INJECT_DIR = (
+        "../../Modder/modder/src/main/resources/AceAndroidLib/code_to_inject"
+    )
+    SMALI_RELATIVE_DIR = "smali/com/AceInjector"
 
-TEMP_DECOMPILED_APK_DIR = "/tmp/temp_decompiled_apk"
-SMALI_RELATIVE_DIR = "smali/com/AceInjector"
-
-GENERATED_SMALI_DIR = os.path.join(TEMP_DECOMPILED_APK_DIR, SMALI_RELATIVE_DIR)
-# TODO: need to check if there is an actually native lib
-GENERATED_NATIVE_LIB_DIR = os.path.join(TEMP_DECOMPILED_APK_DIR, "lib")
-NATIVE_LIB_OUT_DIR = os.path.join(OUT_CODE_FOR_INJECT_DIR, "lib")
-
-
-# ======================================================
+    GENERATED_SMALI_DIR = os.path.join(TEMP_DECOMPILED_APK_DIR, SMALI_RELATIVE_DIR)
+    # get path to native lib for source and destination
+    GENERATED_NATIVE_LIB_DIR = os.path.join(TEMP_DECOMPILED_APK_DIR, "lib")
+    NATIVE_LIB_OUT_DIR = os.path.join(OUT_CODE_FOR_INJECT_DIR, "lib")
 
 
-print("Generating temporary apk")
-subprocess.run(["./gradlew", "assembleDebug"], cwd=APK_SOURCE_ROOT_DIR)
-
-# decode without resources and
-# put the smali results in smali folder
-# also force them using -f
-print("decompiling temp APK")
-subprocess.run(
-    [
-        "apktool",
-        "d",
-        "apk_source/hello-libs/app/build/outputs/apk/debug/app-debug.apk",
-        "-r",
-        "-f",
-        "-o",
-        "%s" % (TEMP_DECOMPILED_APK_DIR),
-    ]
-)
-
-# put the smali for injection
-OUT_SMALI_DIR = os.path.join(OUT_CODE_FOR_INJECT_DIR, SMALI_RELATIVE_DIR)
-print("Copying smali %s to %s" % (GENERATED_SMALI_DIR, OUT_SMALI_DIR))
-cp_folder(GENERATED_SMALI_DIR, OUT_SMALI_DIR)
-
-print("Copying native libs")
-cp_folder(GENERATED_NATIVE_LIB_DIR, NATIVE_LIB_OUT_DIR)
+    # ======================================================
 
 
-# zip the smali code for easier resource access by [Modder]
-# don't need to add ".zip" extension, because 
-# it will do it for us
-OUT_SMALI_DIR_ZIPPED_FILE = OUT_SMALI_DIR 
-shutil.make_archive(
-    base_name=OUT_SMALI_DIR_ZIPPED_FILE, format="zip", base_dir=GENERATED_SMALI_DIR
-)
-print("Generated zipped smali at %s" % (OUT_SMALI_DIR_ZIPPED_FILE))
+    print("Generating temporary apk")
+    subprocess.run(["./gradlew", "assembleDebug"], cwd=APK_SOURCE_ROOT_DIR)
 
-print("Cleaning up temp dirs at %s" % (TEMP_DECOMPILED_APK_DIR))
-shutil.rmtree(TEMP_DECOMPILED_APK_DIR)
+    # decode without resources and
+    # put the smali results in smali folder
+    # also force them using -f
+    print("decompiling temp APK")
+    subprocess.run(
+        [
+            "apktool",
+            "d",
+            "apk_source/hello-libs/app/build/outputs/apk/debug/app-debug.apk",
+            "-r",
+            "-f",
+            "-o",
+            "%s" % (TEMP_DECOMPILED_APK_DIR),
+        ]
+    )
 
-print("Code for injection is generated at %s" % (OUT_CODE_FOR_INJECT_DIR))
+    # put the smali for injection
+    OUT_SMALI_DIR = os.path.join(OUT_CODE_FOR_INJECT_DIR, SMALI_RELATIVE_DIR)
+    print("Copying smali %s to %s" % (GENERATED_SMALI_DIR, OUT_SMALI_DIR))
+    cp_folder(GENERATED_SMALI_DIR, OUT_SMALI_DIR)
+
+    print("Copying native libs")
+    cp_folder(GENERATED_NATIVE_LIB_DIR, NATIVE_LIB_OUT_DIR)
+
+
+    # zip the smali code for easier resource access by [Modder]
+    # don't need to add ".zip" extension, because 
+    # it will do it for us
+    OUT_SMALI_DIR_ZIPPED_FILE = OUT_SMALI_DIR 
+    shutil.make_archive(
+        base_name=OUT_SMALI_DIR_ZIPPED_FILE, format="zip", base_dir=GENERATED_SMALI_DIR
+    )
+    print("Generated zipped smali at %s" % (OUT_SMALI_DIR_ZIPPED_FILE))
+    print("Code for injection is generated at %s" % (OUT_CODE_FOR_INJECT_DIR))
 
