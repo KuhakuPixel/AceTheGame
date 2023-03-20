@@ -72,6 +72,8 @@ void match_storage<T>::iterate_val(
    * will yield undefined behavior
    *
    * https://stackoverflow.com/a/8325449/14073678
+   *
+   * but it is fine since [_iterate] call in below, won't modify anything
    */
   const_cast<match_storage<T> *>(this)->_iterate(NULL, on_each_iteration,
                                                  max_iter);
