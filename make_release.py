@@ -97,6 +97,7 @@ def gen_make_and_make_ACE(
     # make the program and install to the specified target
     # https://stackoverflow.com/questions/6003374/what-is-cmake-equivalent-of-configure-prefix-dir-make-all-install
     # also use core of 8 to make compilation faster
+    # TODO: determine core count programatically
     subprocess.run(["make", "all", "install", "-j8"], cwd=dir_name)
 
 
@@ -111,11 +112,11 @@ android_toolchain_file = args.android_toolchain_file
 # ==============================================
 print("making release......")
 
-# make build dir for building engine
-mkdir_overwrite(BUILD_DIR)
 mkdir_overwrite(RELEASE_DIR)
 
 # ============================ android =====================
+# recreate build dir for building engine
+mkdir_overwrite(BUILD_DIR)
 android_release_dir = os.path.join(RELEASE_DIR, "android")
 mkdir_overwrite(android_release_dir)
 
@@ -136,6 +137,8 @@ for arch in ANDROID_ARCH_ABI_ARR:
     )
 
 # ============================ linux =====================
+# recreate build dir for building engine
+mkdir_overwrite(BUILD_DIR)
 linux_release_dir = os.path.join(RELEASE_DIR, "linux")
 mkdir_overwrite(linux_release_dir)
 gen_make_and_make_ACE(
