@@ -1,8 +1,6 @@
 """
-    for making releases of 
-    different arch of the ACE Engine
-    note that a `MAKEFILE` needs to be 
-    generated firsts
+    Make ACE's release for linux desktop and android (multi archs)  automatically
+    This script run cmake and makefile to generate the build
 
     for running a bash command in a directory
     don't use cd but use cwd parameter 
@@ -15,11 +13,12 @@ import os
 import glob
 import shutil
 import argparse
+import multiprocessing
 from typing import List
 
-LINUX_DESKTOP_BUILD_DIR = "./linux_desktop"
+LINUX_RELEASE_DIR = "./linux"
+ANDROID_RELEASE_DIR = "./android"
 
-ANDROID_BUILD_DIR = "./android"
 ANDROID_ARCH_ABI_ARR = [
     "armeabi-v7a",
     "arm64-v8a",
@@ -34,7 +33,6 @@ ANDROID_PLATFORM = "android-23"
 CMAKELIST_PATH = "./ACE/engine/"
 RELEASE_DIR = "./release"
 BUILD_DIR = "./build"
-PROGRAM_NAME = "ACE"
 
 
 def assert_is_file_and_exist(filename: str):
@@ -61,15 +59,24 @@ def mkdir_overwrite(dir_name: str):
 
 
 def gen_make_and_make_ACE(
-    dir_name: str,
-    install_path: str,
+    build_dir: str,
+    install_dir: str,
     CMAKElist_dir_path: str,
     toolchain_path: str = None,
     extra_args: List[str] = None,
+    # by default, use all cpu for fastest compilation
+    # https://unix.stackexchange.com/questions/208568/how-to-determine-the-maximum-number-to-pass-to-make-j-option
+    # https://stackoverflow.com/a/1006337/14073678
+    cpu_count_for_compile: int = multiprocessing.cpu_count(),
 ):
+
+    # recreate build and release directory in case its previously
+    # not empty
+    mkdir_overwrite(build_dir)
+    mkdir_overwrite(install_dir)
     # get abs path when possible
-    assert_is_dir_and_exist(install_path)
-    install_path = os.path.abspath(install_path)
+    assert_is_dir_and_exist(install_dir)
+    install_path = os.path.abspath(install_dir)
 
     assert_is_dir_and_exist(CMAKElist_dir_path)
     CMAKElist_path = os.path.abspath(CMAKElist_dir_path)
@@ -83,6 +90,8 @@ def gen_make_and_make_ACE(
         "cmake",
         CMAKElist_path,
         "-DCMAKE_BUILD_TYPE=Release",
+        # set install prefix
+        # https://stackoverflow.com/questions/6003374/what-is-cmake-equivalent-of-configure-prefix-dir-make-all-install
         "-DCMAKE_INSTALL_PREFIX:PATH=" + install_path,
     ]
     # append extra arguments
@@ -93,12 +102,11 @@ def gen_make_and_make_ACE(
     if toolchain_path != None:
         CMAKE_cmd_args.append("-DCMAKE_TOOLCHAIN_FILE=" + toolchain_path)
     # run cmake
-    subprocess.run(CMAKE_cmd_args, cwd=dir_name)
+    subprocess.run(CMAKE_cmd_args, cwd=build_dir)
     # make the program and install to the specified target
-    # https://stackoverflow.com/questions/6003374/what-is-cmake-equivalent-of-configure-prefix-dir-make-all-install
-    # also use core of 8 to make compilation faster
-    # TODO: determine core count programatically
-    subprocess.run(["make", "all", "install", "-j8"], cwd=dir_name)
+    subprocess.run(
+        ["make", "all", "install", f"-j{cpu_count_for_compile}"], cwd=build_dir
+    )
 
 
 # ===================== making commands ========
@@ -116,18 +124,14 @@ mkdir_overwrite(RELEASE_DIR)
 
 # ============================ android =====================
 # recreate build dir for building engine
-mkdir_overwrite(BUILD_DIR)
-android_release_dir = os.path.join(RELEASE_DIR, "android")
-mkdir_overwrite(android_release_dir)
-
+android_release_dir = os.path.join(RELEASE_DIR, ANDROID_RELEASE_DIR)
 for arch in ANDROID_ARCH_ABI_ARR:
     # create directory for specific arch release
     current_android_release_dir = os.path.join(android_release_dir, arch)
-    mkdir_overwrite(current_android_release_dir)
     #
     gen_make_and_make_ACE(
-        dir_name=BUILD_DIR,
-        install_path=current_android_release_dir,
+        build_dir=BUILD_DIR,
+        install_dir=current_android_release_dir,
         CMAKElist_dir_path=CMAKELIST_PATH,
         toolchain_path=android_toolchain_file,
         extra_args=[
@@ -138,12 +142,10 @@ for arch in ANDROID_ARCH_ABI_ARR:
 
 # ============================ linux =====================
 # recreate build dir for building engine
-mkdir_overwrite(BUILD_DIR)
-linux_release_dir = os.path.join(RELEASE_DIR, "linux")
-mkdir_overwrite(linux_release_dir)
+linux_release_dir = os.path.join(RELEASE_DIR, LINUX_RELEASE_DIR)
 gen_make_and_make_ACE(
-    dir_name=BUILD_DIR,
-    install_path=linux_release_dir,
+    build_dir=BUILD_DIR,
+    install_dir=linux_release_dir,
     CMAKElist_dir_path=CMAKELIST_PATH,
     toolchain_path=None,
 )
