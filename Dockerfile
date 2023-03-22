@@ -17,8 +17,12 @@ RUN unzip ndk.zip -d ndk
 RUN rm ndk.zip
 
 # copy sources code
-COPY ./ACE/ ./ACE
+COPY ./ACE ./ACE
+COPY ./util.py ./util.py
+COPY ./ACE_release.py ./ACE_release.py
 COPY ./make_release.py ./make_release.py
+
+COPY ./Modder ./Modder
 
 # generate build
 # TODO: have an automated way to determine toolchain path?
