@@ -108,44 +108,47 @@ def gen_make_and_make_ACE(
         ["make", "all", "install", f"-j{cpu_count_for_compile}"], cwd=build_dir
     )
 
+def main_func():
+    # ===================== making commands ========
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "android_toolchain_file",
+        help="path to android's cmake toolchain file, usually come with android ndk",
+    )
+    args = parser.parse_args()
+    android_toolchain_file = args.android_toolchain_file
+    # ==============================================
+    print("making release......")
 
-# ===================== making commands ========
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "android_toolchain_file",
-    help="path to android's cmake toolchain file, usually come with android ndk",
-)
-args = parser.parse_args()
-android_toolchain_file = args.android_toolchain_file
-# ==============================================
-print("making release......")
+    mkdir_overwrite(RELEASE_DIR)
 
-mkdir_overwrite(RELEASE_DIR)
+    # ============================ android =====================
+    # recreate build dir for building engine
+    android_release_dir = os.path.join(RELEASE_DIR, ANDROID_RELEASE_DIR)
+    for arch in ANDROID_ARCH_ABI_ARR:
+        # create directory for specific arch release
+        current_android_release_dir = os.path.join(android_release_dir, arch)
+        #
+        gen_make_and_make_ACE(
+            build_dir=BUILD_DIR,
+            install_dir=current_android_release_dir,
+            CMAKElist_dir_path=CMAKELIST_PATH,
+            toolchain_path=android_toolchain_file,
+            extra_args=[
+                "-DANDROID_ABI=" + arch,
+                "-DANDROID_PLATFORM=" + ANDROID_PLATFORM,
+            ],
+        )
 
-# ============================ android =====================
-# recreate build dir for building engine
-android_release_dir = os.path.join(RELEASE_DIR, ANDROID_RELEASE_DIR)
-for arch in ANDROID_ARCH_ABI_ARR:
-    # create directory for specific arch release
-    current_android_release_dir = os.path.join(android_release_dir, arch)
-    #
+    # ============================ linux =====================
+    # recreate build dir for building engine
+    linux_release_dir = os.path.join(RELEASE_DIR, LINUX_RELEASE_DIR)
     gen_make_and_make_ACE(
         build_dir=BUILD_DIR,
-        install_dir=current_android_release_dir,
+        install_dir=linux_release_dir,
         CMAKElist_dir_path=CMAKELIST_PATH,
-        toolchain_path=android_toolchain_file,
-        extra_args=[
-            "-DANDROID_ABI=" + arch,
-            "-DANDROID_PLATFORM=" + ANDROID_PLATFORM,
-        ],
+        toolchain_path=None,
     )
 
-# ============================ linux =====================
-# recreate build dir for building engine
-linux_release_dir = os.path.join(RELEASE_DIR, LINUX_RELEASE_DIR)
-gen_make_and_make_ACE(
-    build_dir=BUILD_DIR,
-    install_dir=linux_release_dir,
-    CMAKElist_dir_path=CMAKELIST_PATH,
-    toolchain_path=None,
-)
+if __name__ == "__main__":
+    main_func()
