@@ -20,6 +20,8 @@ RUN apt-get -y install android-sdk
 # for accepting the licenses
 # https://stackoverflow.com/a/72443530/14073678
 RUN apt-get -y install sdkmanager
+# (ping command for unit test)
+RUN apt-get -y install iputils-ping
 #
 # ====== Set env needed by gradle ========
 ENV ANDROID_HOME=/usr/lib/android-sdk
