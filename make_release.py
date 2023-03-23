@@ -1,5 +1,7 @@
 import ACE_release
+import Modder_release
 import argparse
+from util import mkdir_overwrite
 
 RELEASE_DIR = "./release"
 if __name__ == "__main__":
@@ -12,7 +14,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
     android_toolchain_file = args.android_toolchain_file
     # ==============================================
+
+    # make sure to start with clean directory
+    print("making release......")
+    mkdir_overwrite(RELEASE_DIR)
+    #
     ACE_release.make_release(
         release_dir=RELEASE_DIR,
         android_toolchain_file=android_toolchain_file,
+    )
+    Modder_release.make_release(
+        release_dir=RELEASE_DIR,
     )

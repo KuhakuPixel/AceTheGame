@@ -19,9 +19,3 @@ def make_release(release_dir: str):
     with zipfile.ZipFile(PATH_TO_ZIP_BUILD, 'r') as zip_ref:
         zip_ref.extractall(release_dir)
 
-
-    
-
-
-if __name__ == "__main__":
-    make_release("modder_release_build")

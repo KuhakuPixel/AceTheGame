@@ -85,10 +85,6 @@ def gen_make_and_make_ACE(
 
 
 def make_release(release_dir: str, android_toolchain_file: str):
-    print("making release......")
-
-    mkdir_overwrite(release_dir)
-
     # ============================ android =====================
     # recreate build dir for building engine
     android_release_dir = os.path.join(release_dir, ANDROID_RELEASE_DIR)
