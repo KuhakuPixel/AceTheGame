@@ -210,29 +210,32 @@ public:
   void set_scan_level(Scan_Utils::E_scan_level scan_level);
 
   /*
-   * low level function to iterate through each matches
-   * */
-  void _iterate(
-
-      std::function<void(ADDR addr, T *val_ptr)> on_each_iteration_val_ptr =
-          NULL,
-      std::function<void(ADDR addr, T val)> on_each_iteration_val = NULL,
-      size_t max_iter = SIZE_MAX
-
-  );
-
-  /*
-   * iterate the each matches and call
+   * iterate each matches, it provides 2 callback,
    *
-   * [on_each_iteration]: called on each iteration
+   * [on_each_iteration_val]: called on each iteration
    * it takes 2 parameter which is the current match address
-   * and a pointer to the  address's value, caller can get
+   * andaddress's value, caller can get
    * the match value of the address or update its match
    * value
+   *
+   * [on_each_iteration_val_ptr]: same as [on_each_iteration_val], but instead
+   * of having match's value as parameter, it gives pointer to match's value so
+   * caller can change/update its value when needed
+   *
+   * [max_iter]: the maximum amount of iteration
    * */
-  void iterate(std::function<void(ADDR addr, T *val_ptr)> on_each_iteration,
-               size_t max_iter = SIZE_MAX);
 
+  void _iterate(
+
+      std::function<void(ADDR addr, T *val_ptr)> on_each_iteration_val_ptr,
+      std::function<void(ADDR addr, T val)> on_each_iteration_val,
+      size_t max_iter
+
+  );
+  void iterate(
+
+      std::function<void(ADDR addr, T *val_ptr)> on_each_iteration,
+      size_t max_iter = SIZE_MAX);
   void iterate_val(
 
       std::function<void(ADDR addr, T val)> on_each_iteration,

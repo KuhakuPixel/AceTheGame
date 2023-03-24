@@ -37,22 +37,42 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
 ![](./assets/showcase/freezed_health.gif)
 
+## Dev Guide
+For build and project structure
+[DEV_GUIDE](./DEV_GUIDE.md)
 ## Installation
 ### Prerequisite
 - adb program installed and can be run through the command prompt
  [adb download](https://developer.android.com/studio/command-line/adb)
 
+### Installing memory scanner and editor to device
 - [download latest release of AceTheGame](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
   and unzip the file to get `release` folder
 
   inside the `release` folder, the structure should look like 
   ```
-	.
+
 	├── android
-	│   ├── bin
-	│   ├── include
-	│   ├── lib
-	│   └── share
+	│   ├── arm64-v8a
+	│   │   ├── bin
+	│   │   ├── include
+	│   │   ├── lib
+	│   │   └── share
+	│   ├── armeabi-v7a
+	│   │   ├── bin
+	│   │   ├── include
+	│   │   ├── lib
+	│   │   └── share
+	│   ├── x86
+	│   │   ├── bin
+	│   │   ├── include
+	│   │   ├── lib
+	│   │   └── share
+	│   └── x86_64
+	│       ├── bin
+	│       ├── include
+	│       ├── lib
+	│       └── share
 	├── linux
 	│   ├── bin
 	│   ├── include
@@ -64,25 +84,27 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
   ```
 - open the terminal and go to the directory
-  of the `release` folder
+  of your specific architecture
   ```
-  cd [PATH TO YOUR RELEASE FOLDER]
+  ./android/[ARCH]/bin
   ```
 
-### Rooted Device
-in terminal, go to directory `./android/bin/`
+  for example if your arch is `arm64-v8` then `cd`
+  to directory of `./android/arm64-v8a/bin`
+
+#### Rooted Device
 
 ```
-adb push ACE /data/local/tmp
+adb push ./ACE /data/local/tmp
 adb shell chmod +x /data/local/tmp/ACE 
 ```
-### Non-Rooted Device
-in terminal, go to directory `./android/bin/`
+#### Non-Rooted Device
 
 ```
-adb push engine_client /data/local/tmp
+adb push ./engine_client /data/local/tmp
 adb shell chmod +x /data/local/tmp/engine_client 
 ```
+
 this binary will be used to scan and edit memory of the apk
 
 #### Optional:
@@ -320,22 +342,3 @@ the syntax of installing apk is
    ```
    (Engine Server) write 1000 
    ```
-
-
-
-
-
-
-## Build instruction
-### clone repo
-#### https
-```
-git clone --recurse-submodules https://github.com/KuhakuPixel/AceTheGame.git
-```
-#### ssh
-```
-git clone --recurse-submodules git@github.com:KuhakuPixel/AceTheGame.git
-```
-
-... TO be added
-

@@ -351,9 +351,9 @@ void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
     val = swap_endian<T>(val);
 
-  this->current_scan_result.iterate(
+  this->current_scan_result.iterate_val(
 
-      [&](ADDR addr, T *val_ptr) {
+      [&](ADDR addr, T old_val) {
         // reset errno
         errno = 0;
         ssize_t ret_val = this->process_rw->write_val((byte *)(addr), val);
