@@ -1,5 +1,6 @@
 #include "../third_party/CLI11.hpp"
 #include "ACE_global.hpp"
+#include "engine_server.hpp"
 #include "input.hpp"
 #include "main_cmd_handler.hpp"
 #include "server.hpp"
@@ -293,9 +294,24 @@ int main(int argc, char **argv) {
   main_app.add_flag("--start-server", current_options.start_server,
                     "enable ACE engine server\n");
 
+  int pid_to_attach = 0;
+  CLI::Option *attach_pid_opt = main_app.add_option(
+      "--attach-pid", pid_to_attach,
+      "attach to a process with pid for gui communication via zeromq\n"
+      "which is provided by port " +
+          ACE_global::engine_client_binded_address);
+
   CLI11_PARSE(main_app, argc, argv);
+  // TODO: deprecate
   if (current_options.start_server) {
     on_start_server();
+  }
+
+  //
+  if (*attach_pid_opt) {
+    engine_server_start(pid_to_attach,
+                        ACE_global::engine_server_binded_address);
+    return 0;
   }
   ace_main();
 
