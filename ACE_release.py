@@ -14,23 +14,13 @@ import shutil
 import multiprocessing
 from typing import List
 from util import assert_is_dir_and_exist, assert_is_file_and_exist, mkdir_overwrite
+from build_option import ANDROID_ARCH_ABI_ARR, ANDROID_PLATFORM_TARGET
 
 LINUX_RELEASE_DIR = "./linux"
 ANDROID_RELEASE_DIR = "./android"
-
-ANDROID_ARCH_ABI_ARR = [
-    "armeabi-v7a",
-    "arm64-v8a",
-    "x86",
-    "x86_64",
-]
-# need to be set to at least 23
-# for process_vm_read support
-# see ACE's cmake for more detail
-ANDROID_PLATFORM = "android-23"
-
 CMAKELIST_PATH = "./ACE/engine/"
 BUILD_DIR = "./build"
+ACE_BIN_NAME = "ACE"
 
 
 def gen_make_and_make_ACE(
@@ -99,7 +89,7 @@ def make_release(release_dir: str, android_toolchain_file: str):
             toolchain_path=android_toolchain_file,
             extra_args=[
                 "-DANDROID_ABI=" + arch,
-                "-DANDROID_PLATFORM=" + ANDROID_PLATFORM,
+                "-DANDROID_PLATFORM=" + ANDROID_PLATFORM_TARGET,
             ],
         )
 
