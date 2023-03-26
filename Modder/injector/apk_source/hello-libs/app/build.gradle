@@ -18,8 +18,14 @@ android {
         externalNativeBuild {
 	    // TODO: fix scanning/editing memory becomes unstable when built as release?
 	    // 	     (maybe some fault in memscanner/editor 's match_storage)
+
+	    // Disable stripping on release, because for some reason in this build
+	    // The strip binary can't be found even though building the project
+	    // normally outside gradle works just fin
             cmake {
-                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23", "-DCMAKE_BUILD_TYPE=RelWithDebInfo" 
+                arguments '-DANDROID_STL=c++_static',"-DANDROID_PLATFORM=android-23", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", 
+			
+			  "-DSTRIP_ON_RELEASE=False"
             }
         }
     }
