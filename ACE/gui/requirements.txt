@@ -1,4 +1,3 @@
--e git+ssh://git@github.com/KuhakuPixel/ACE.git@388b2fce2212a7ec63f79fee4899c241aec72012#egg=ACEG&subdirectory=gui
 attrs==22.1.0
 exceptiongroup==1.0.4
 iniconfig==1.1.1

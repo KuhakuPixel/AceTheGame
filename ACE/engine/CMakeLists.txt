@@ -68,7 +68,7 @@ set(lib_ACE_src
 	src/common.cpp src/proc_rw.cpp src/proc_create.cpp src/endian.cpp src/aslr_edit.cpp 
 	src/main_cmd_handler.cpp src/loaded_mem_info.cpp src/scan_utils.cpp src/thread_continuous.cpp src/freeze.cpp
 	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp src/ACE_jni.cpp src/server.cpp
-	src/engine_module.cpp src/cheat_session.cpp
+	src/engine_module.cpp src/cheat_session.cpp src/engine_server.cpp
 )
 
 add_library(lib_ACE SHARED ${lib_ACE_src})
@@ -91,7 +91,7 @@ endif()
 file(COPY test/test_files DESTINATION .)
 
 # ================================================================================
-
+include(./cmake_utils/CMakeLists.txt)
 # CTest needs to read the location of the mem check command (valgrind ,it needs
 # to read from DartConfiguration.tcl, and to make that this instruction is
 # needed credits :
@@ -117,14 +117,11 @@ add_subdirectory(program_utils/)
 # ===============================================================================
 # build main program
 add_executable(${PROJECT_NAME} src/main.cpp)
-# strip binary for release build
-# thanks https://stackoverflow.com/a/71236302/14073678
-message("strip ${CMAKE_STRIP}")
-#add_custom_command(
-#  TARGET "${PROJECT_NAME}" POST_BUILD
-#  COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
-#  ARGS --strip-all "${PROJECT_NAME}"
-#)
+# ===============================================================================
+if (STRIP_ON_RELEASE)
+	strip_bin_on_release(${PROJECT_NAME})
+endif()
+# ===============================================================================
 # link against the library and add compile's options defined in common_flag
 target_link_libraries(${PROJECT_NAME} PRIVATE common_flag)
 target_link_libraries(${PROJECT_NAME} PRIVATE lib_ACE-static)
@@ -133,10 +130,10 @@ if(BUILD_OPTIONS)
 	message("build options: ")
 	print_all_variables()
 endif()
+
 # ============================================= install options ========================
 
 # Binaries
 install (TARGETS ${PROJECT_NAME}
     DESTINATION bin)
 # ======================================================================================
-
