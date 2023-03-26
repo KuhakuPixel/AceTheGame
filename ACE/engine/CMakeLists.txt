@@ -16,7 +16,6 @@ set (PROJECT_NAME "ACE")
 project(${PROJECT_NAME})
 # ====================================== build options ============
 option(BUILD_OPTIONS "display the specified build options" FALSE)
-option(STRIP_ON_RELEASE "Strip ACE Binary on release" TRUE)
 # =================================================================
 
 # =================================== if android build ============
@@ -92,7 +91,7 @@ endif()
 file(COPY test/test_files DESTINATION .)
 
 # ================================================================================
-
+include(./cmake_utils/CMakeLists.txt)
 # CTest needs to read the location of the mem check command (valgrind ,it needs
 # to read from DartConfiguration.tcl, and to make that this instruction is
 # needed credits :
@@ -118,20 +117,11 @@ add_subdirectory(program_utils/)
 # ===============================================================================
 # build main program
 add_executable(${PROJECT_NAME} src/main.cpp)
-# strip binary for release build
-# thanks https://stackoverflow.com/a/71236302/14073678
+# ===============================================================================
 if (STRIP_ON_RELEASE)
-	if (NOT ${CMAKE_STRIP} STREQUAL "")
-		message("strip command found at ${CMAKE_STRIP}")
-		add_custom_command(
-		  TARGET "${PROJECT_NAME}" POST_BUILD
-		  COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
-		  ARGS --strip-all "${PROJECT_NAME}"
-		)
-	else()
-		message(WARNING "Cannot find binary for stripping")
-	endif()
+	strip_bin_on_release(${PROJECT_NAME})
 endif()
+# ===============================================================================
 # link against the library and add compile's options defined in common_flag
 target_link_libraries(${PROJECT_NAME} PRIVATE common_flag)
 target_link_libraries(${PROJECT_NAME} PRIVATE lib_ACE-static)
@@ -140,10 +130,10 @@ if(BUILD_OPTIONS)
 	message("build options: ")
 	print_all_variables()
 endif()
+
 # ============================================= install options ========================
 
 # Binaries
 install (TARGETS ${PROJECT_NAME}
     DESTINATION bin)
 # ======================================================================================
-
