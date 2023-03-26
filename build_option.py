@@ -1,4 +1,3 @@
-
 ANDROID_ARCH_ABI_ARR = [
     "armeabi-v7a",
     "arm64-v8a",

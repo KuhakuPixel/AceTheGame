@@ -22,6 +22,48 @@ CMAKELIST_PATH = "./ACE/engine/"
 BUILD_DIR = "./build"
 ACE_BIN_NAME = "ACE"
 
+ATG_ACE_BIN_RESOURCE_DIR = os.path.join("./ATG/app/src/main/res/bin/", ACE_BIN_NAME)
+
+
+def copy_ace_bin_to_ATG(src_root_dir: str, dest_root_dir: str):
+    """
+    copy all arch's binary from [src_root_dir] to [dest_dir]
+
+    [src_root_dir]'s structure is expected to look like
+
+    ├── arm64-v8a
+    │   ├── bin
+    ├── armeabi-v7a
+    │   ├── bin
+    ├── x86
+    │   ├── bin
+    └── x86_64
+        ├── bin
+
+    after copy, [dest_root_dir] will look like
+
+    ├── arm64-v8a
+    │   ├── [ACE_BIN_NAME]
+    ├── armeabi-v7a
+    │   ├── [ACE_BIN_NAME]
+    ├── x86
+    │   ├── [ACE_BIN_NAME]
+    └── x86_64
+        ├── [ACE_BIN_NAME]
+    """
+    mkdir_overwrite(dest_root_dir)
+    for arch in ANDROID_ARCH_ABI_ARR:
+        src_bin_path = os.path.join(src_root_dir, arch, "bin", ACE_BIN_NAME)
+        # create [arch] dir
+        arch_dest_dir = os.path.join(dest_root_dir, arch)
+        mkdir_overwrite(arch_dest_dir)
+        # copy the binary
+        dest_bin_path = os.path.join(arch_dest_dir, ACE_BIN_NAME)
+        shutil.copy(
+            src=src_bin_path,
+            dst=dest_bin_path,
+        )
+
 
 def gen_make_and_make_ACE(
     build_dir: str,
@@ -93,6 +135,11 @@ def make_release(release_dir: str, android_toolchain_file: str):
             ],
         )
 
+    # copy ACE binary to ATG app
+    copy_ace_bin_to_ATG(
+        src_root_dir=android_release_dir,
+        dest_root_dir=ATG_ACE_BIN_RESOURCE_DIR,
+    )
     # ============================ linux =====================
     # recreate build dir for building engine
     linux_release_dir = os.path.join(release_dir, LINUX_RELEASE_DIR)
