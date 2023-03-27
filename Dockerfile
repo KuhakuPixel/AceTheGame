@@ -34,15 +34,9 @@ RUN wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip -O 
 RUN unzip ndk.zip -d ndk
 RUN rm ndk.zip
 
-# copy sources code
-COPY ./ACE ./ACE
-COPY ./util.py ./util.py
-COPY ./ACE_release.py ./ACE_release.py
-COPY ./make_release.py ./make_release.py
-
-COPY ./Modder ./Modder
-COPY ./Modder_release.py ./Modder_release.py
-
+# ========== copy sources code =================
+COPY . .
+#================================================
 # accept all licenses of android sdk 
 RUN yes | sdkmanager --licenses
 # generate build
