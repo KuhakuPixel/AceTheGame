@@ -22,7 +22,7 @@ CMAKELIST_PATH = "./ACE/engine/"
 BUILD_DIR = "./build"
 ACE_BIN_NAME = "ACE"
 
-ATG_ACE_BIN_RESOURCE_DIR = os.path.join("./ATG/app/src/main/res/raw/bin/", ACE_BIN_NAME)
+ATG_ACE_BIN_RESOURCE_DIR = os.path.join("./ATG/app/src/main/assets/bin/", ACE_BIN_NAME)
 
 
 def copy_ace_bin_to_ATG(src_root_dir: str, dest_root_dir: str):
