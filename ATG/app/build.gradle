@@ -29,6 +29,12 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -38,7 +44,16 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation 'androidx.test:monitor:1.6.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:core:1.0.0-beta02'
+    androidTestImplementation("androidx.test:runner:1.2.0")
+    // Robolectric environment
+    // need to install for both test and androidTest
+    // https://stackoverflow.com/a/61838248/14073678
+    testImplementation 'org.robolectric:robolectric:4.9'
+    androidTestImplementation 'org.robolectric:robolectric:4.9'
+
 }
