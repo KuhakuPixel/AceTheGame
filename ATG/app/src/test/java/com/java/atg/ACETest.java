@@ -30,6 +30,7 @@ public class ACETest {
     @Test
     public void GetBinPath() throws IOException {
         String path = ACE.GetBinPath();
+        System.out.println("path is " + path);
         assert(path!="");
     }
 }

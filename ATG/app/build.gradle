@@ -55,5 +55,7 @@ dependencies {
     // https://stackoverflow.com/a/61838248/14073678
     testImplementation 'org.robolectric:robolectric:4.9'
     androidTestImplementation 'org.robolectric:robolectric:4.9'
+    // apache commons
+    implementation 'commons-io:commons-io:2.6'
 
 }
