@@ -22,24 +22,9 @@ public class ACE {
     };
 
     public static String GetBinPath(Cpu.Arch arch) throws IOException {
-        Context context = ATG.GetContext();
-        // get the input stream to binary for this specific [arch]
         String archDirName = CpuArchEnumToDirNameMap.get(arch);
-        String pathBinStr = String.format("bin/ACE/%s/ACE", archDirName);
-        InputStream inputStream = context.getAssets().open(pathBinStr);
-        assert(inputStream != null);
-        // create temp folder and file
-        File tempDir = context.getCacheDir();
-        File ace_engine_prog = File.createTempFile("ACE","",tempDir);
-        FileUtils.copyInputStreamToFile(inputStream,ace_engine_prog);
-
-        // set this file as executable to make sure we can run it
-        if (!ace_engine_prog.setExecutable(true)) {
-            String errMsg = String.format("Cannot set %s as executable", ace_engine_prog.getAbsolutePath());
-            throw new IOException(errMsg);
-        }
-        //
-        return ace_engine_prog.getAbsolutePath();
+        String assetPathBinStr = String.format("bin/ACE/%s/ACE", archDirName);
+        return Asset.CopyAssetToExecutableDir(assetPathBinStr);
 
     }
 
