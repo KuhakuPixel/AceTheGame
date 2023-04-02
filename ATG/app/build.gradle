@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.java.atg"
-        minSdk 23
-        targetSdk 32
+        minSdk 26
+        targetSdk 28
         versionCode 1
         versionName "1.0"
 
@@ -57,5 +57,8 @@ dependencies {
     androidTestImplementation 'org.robolectric:robolectric:4.9'
     // apache commons
     implementation 'commons-io:commons-io:2.6'
+    implementation 'commons-codec:commons-codec:1.15'
+    // for communication
+    implementation 'org.zeromq:jeromq:0.5.3'
 
 }
