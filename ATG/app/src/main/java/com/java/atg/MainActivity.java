@@ -23,69 +23,86 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import com.topjohnwu.superuser.Shell;
+import java.util.List;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    static {
+        // Set settings before the main shell can be created
+        Shell.enableVerboseLogging = BuildConfig.DEBUG;
+        Shell.setDefaultBuilder(Shell.Builder.create()
+                .setFlags(Shell.FLAG_REDIRECT_STDERR)
+                .setTimeout(30)
+        );
+    }
 
     private void RunBinary() throws IOException {
         Log.i("ATG", "Running Binary");
         // select only arm binaries, because instrumented test
         // under RobolectricTestRunner seems to run only under arm device
-        String path = ACE.GetBinPath();
-        // should run without errors ...
-        Process p = Runtime.getRuntime().exec(new String[]{path, "--attach-self"});
-        BufferedReader stdInput = new BufferedReader(new
-                InputStreamReader(p.getInputStream()));
+        String path = ACE.GetBinPath() ;
+        assert(true == (new File(path).exists()));
+        System.out.println("Binary path is " + path);
+        String[] cmds = new String[]{path, "--attach-self"};
+        String cmd_string = String.join(" ", cmds);
+        Shell.Result result;
+        // Execute commands synchronously
+        System.out.printf("Running command %s\n", cmd_string);
+        // TODO: need to run at another thread because it is blocking the current thread
+        result = Shell.cmd(cmd_string).exec();
+        List<String> out = result.getOut();
+        System.out.println("Output of binary: ");
+        System.out.println(String.join("\n", out));
+        // =================
 
-        BufferedReader stdError = new BufferedReader(new
-                InputStreamReader(p.getErrorStream()));
-
-// Read the output from the command
-        System.out.println("Here is the standard output of the command:\n");
-        String s = null;
-        while ((s = stdInput.readLine()) != null) {
-            System.out.println(s);
-        }
-
-// Read any errors from the attempted command
-        System.out.println("Here is the standard error of the command (if any):\n");
-        while ((s = stdError.readLine()) != null) {
-            System.out.println(s);
-        }
-        //
         ACEClient client = new ACEClient();
         String reply = client.Request("attached");
         Log.i("ATG", "Getting reply ...");
         Log.i("ATG", reply);
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        // Preheat the main root shell in the splash screen
+        // so the app can use it afterwards without interrupting
+        // application flow (e.g. root permission prompt)
+        Shell.getShell(
 
-        setSupportActionBar(binding.toolbar);
+                shell -> {
+                    binding = ActivityMainBinding.inflate(getLayoutInflater());
+                    setContentView(binding.getRoot());
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+                    setSupportActionBar(binding.toolbar);
 
-        try {
-            RunBinary();
-        }catch(IOException e){
-            Log.e("ATG", e.getMessage());
-        }
+                    NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                    appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+                    NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+                    try {
+                        RunBinary();
+                    }catch(IOException e){
+                        System.out.println("Error when running binary");
+                        Log.e("ATG", ExceptionUtils.getStackTrace(e));
+                        Log.e("ATG", e.getMessage());
+                    }
+
+                    binding.fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    });
+                }
+
+        );
+
 
     }
 

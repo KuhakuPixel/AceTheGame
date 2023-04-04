@@ -58,7 +58,13 @@ dependencies {
     // apache commons
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-codec:commons-codec:1.15'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     // for communication
     implementation 'org.zeromq:jeromq:0.5.3'
+    // ====================
+    def libsuVersion = '5.0.4'
+    // The core module that provides APIs to a shell
+    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+
 
 }
