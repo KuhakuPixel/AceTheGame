@@ -18,14 +18,10 @@ import com.java.atg.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import com.topjohnwu.superuser.Shell;
-import java.util.List;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,27 +36,16 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void RunBinary() throws IOException {
-        Log.i("ATG", "Running Binary");
-        // select only arm binaries, because instrumented test
-        // under RobolectricTestRunner seems to run only under arm device
-        String path = ACE.GetBinPath() ;
-        assert(true == (new File(path).exists()));
-        System.out.println("Binary path is " + path);
-        String[] cmds = new String[]{path, "--attach-self"};
-        String cmd_string = String.join(" ", cmds);
-        Shell.Result result;
-        // Execute commands synchronously
-        System.out.printf("Running command %s\n", cmd_string);
-        // TODO: need to run at another thread because it is blocking the current thread
-        result = Shell.cmd(cmd_string).exec();
-        List<String> out = result.getOut();
-        System.out.println("Output of binary: ");
-        System.out.println(String.join("\n", out));
+
+    private void RunBinary() throws IOException,InterruptedException {
+        Thread serverThread = ACE.RunServer();
+        System.out.println("Waiting for server to start");
+        TimeUnit.SECONDS.sleep(10);
         // =================
 
         ACEClient client = new ACEClient();
         String reply = client.Request("attached");
+        System.out.printf("Reply is %s", reply);
         Log.i("ATG", "Getting reply ...");
         Log.i("ATG", reply);
 
@@ -86,7 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
                         RunBinary();
-                    }catch(IOException e){
+                    }
+                    catch(IOException e){
+                        System.out.println("Error when running binary");
+                        Log.e("ATG", ExceptionUtils.getStackTrace(e));
+                        Log.e("ATG", e.getMessage());
+                    }
+                    catch(InterruptedException e){
                         System.out.println("Error when running binary");
                         Log.e("ATG", ExceptionUtils.getStackTrace(e));
                         Log.e("ATG", e.getMessage());
