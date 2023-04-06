@@ -21,6 +21,7 @@ ANDROID_RELEASE_DIR = "./android"
 CMAKELIST_PATH = "./ACE/engine/"
 BUILD_DIR = "./build"
 ACE_BIN_NAME = "ACE"
+ACE_CLIENT_BIN_NAME = "engine_client"
 
 ATG_ACE_BIN_RESOURCE_DIR = os.path.join("./ATG/app/src/main/assets/bin/", ACE_BIN_NAME)
 
@@ -53,15 +54,20 @@ def copy_ace_bin_to_ATG(src_root_dir: str, dest_root_dir: str):
     """
     mkdir_overwrite(dest_root_dir)
     for arch in ANDROID_ARCH_ABI_ARR:
-        src_bin_path = os.path.join(src_root_dir, arch, "bin", ACE_BIN_NAME)
+        
         # create [arch] dir
         arch_dest_dir = os.path.join(dest_root_dir, arch)
+        arch_src_dir = os.path.join(src_root_dir, arch, "bin")
         mkdir_overwrite(arch_dest_dir)
-        # copy the binary
-        dest_bin_path = os.path.join(arch_dest_dir, ACE_BIN_NAME)
+        # copy ACE binary
         shutil.copy(
-            src=src_bin_path,
-            dst=dest_bin_path,
+            src=os.path.join(arch_src_dir, ACE_BIN_NAME),
+            dst=os.path.join(arch_dest_dir, ACE_BIN_NAME),
+        )
+        # copy ACE client binary
+        shutil.copy(
+            src=os.path.join(arch_src_dir, ACE_CLIENT_BIN_NAME),
+            dst=os.path.join(arch_dest_dir, ACE_CLIENT_BIN_NAME),
         )
 
 
