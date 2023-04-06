@@ -23,7 +23,7 @@ if(ANDROID)
 	# https://stackoverflow.com/a/4629747/14073678
 	# https://stackoverflow.com/a/4629747/14073678
 	message("Android Build=${ANDROID}")
-	target_link_libraries(${PROJECT_NAME} lib_ACE-static  log)
+	target_link_libraries(${PROJECT_NAME} lib_ACE-static cppzmq-static log)
 else()
-	target_link_libraries(${PROJECT_NAME} lib_ACE-static)
+	target_link_libraries(${PROJECT_NAME} lib_ACE-static cppzmq-static)
 endif()

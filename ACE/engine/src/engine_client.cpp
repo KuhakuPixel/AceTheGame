@@ -4,8 +4,6 @@
  * */
 #include "engine_client.hpp"
 #include <stdlib.h>
-#include <zmq.hpp>
-
 engine_client::engine_client(std::string client_binded_address) {
   this->client_binded_address = client_binded_address;
   // connect the socket to address
