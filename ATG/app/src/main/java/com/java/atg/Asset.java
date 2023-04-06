@@ -43,17 +43,6 @@ public class Asset {
             String errMsg = String.format("Cannot set %s as executable", destFile.getAbsolutePath());
             throw new IOException(errMsg);
         }
-        /*
-        try(InputStream destInputStream = new FileInputStream(destFile)){
-            // why is this not equal?
-            // wht the heck?
-            // I have literally copied that thing
-            String srcInputStreamStr = IOUtils.toString(srcInputStream, StandardCharsets.UTF_8);
-            String destInputStreamStr = IOUtils.toString(destInputStream, StandardCharsets.UTF_8);
-            assert true==IOUtils.contentEquals( srcInputStream, destInputStream);
-
-        }
-        */
         // some cleanup
         srcInputStream.close();
         //

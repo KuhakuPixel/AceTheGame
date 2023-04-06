@@ -48,6 +48,6 @@ public class AssetTest {
         //
         String pathToCopiedStr = Asset.CopyAssetToExecutableDir(pathBin);
         InputStream actualInputStream = new FileInputStream(pathToCopiedStr);
-        assert true== IOUtils.contentEquals( expectedInputStream, actualInputStream);
+        assert true == IOUtils.contentEquals( expectedInputStream, actualInputStream);
     }
 }

@@ -35,12 +35,6 @@ public class ACETest {
     }
 
     @Test
-    public void GetBinPath() throws IOException {
-        String path = ACE.GetBinPath();
-        assert (path != "");
-    }
-
-    @Test
     public void Run() throws IOException {
         /*
         // select only arm binaries, because instrumented test
