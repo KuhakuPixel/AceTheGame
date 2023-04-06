@@ -14,6 +14,10 @@ public:
    * [on_input_received]: called every time the server receive an input,
    * 			  it will be passed to [input_str] and the callback
    * 			  should return a output
+   *
+   *
+   * server can be stopped by sending "stop" 
+   *
    * */
   server(std::string server_binded_address,
 

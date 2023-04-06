@@ -29,13 +29,21 @@ void server::start() {
       printf("Warning: Failed to receive message\n");
     }
 
-    //  Do some 'work' and get an output string
     std::string request_str = request.to_string();
+    //  Do some 'work' and get an output string
     std::string out_str = this->on_input_received(request_str);
 
     //  Send reply back to client
     zmq::message_t reply(out_str.size());
     memcpy(reply.data(), out_str.c_str(), out_str.size());
     socket.send(reply, zmq::send_flags::none);
+    // check if client want the server to be stopped
+    // we have to do this after we sent a reply to the client
+    // if this is done before reply is sent the client will hang waiting forever
+    // for a reply
+    if (request_str == "stop") {
+      printf("stopping server\n");
+      return;
+    }
   }
 }

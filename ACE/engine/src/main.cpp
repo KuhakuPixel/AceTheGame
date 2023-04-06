@@ -264,6 +264,7 @@ void ace_main() {
   run_input_loop(main_mode_on_each_input, "ACE");
 }
 
+// TODO: Deprecate in future
 void on_start_server() {
   // TODO: fix when entering cheater mode
   auto on_input_received =
@@ -305,11 +306,12 @@ int main(int argc, char **argv) {
       main_app.add_option("--attach-pid", pid_to_attach, attach_cmd_help);
 
   bool attach_self = false;
-  main_app.add_flag("--attach-self", attach_self, attach_cmd_help + "\n" + "(not important for unit testing only)");
+  main_app.add_flag("--attach-self", attach_self,
+                    attach_cmd_help + "\n" +
+                        "(not important for unit testing only)");
   // ================================================================
 
   CLI11_PARSE(main_app, argc, argv);
-  // TODO: deprecate
   if (current_options.start_server) {
     on_start_server();
   }
