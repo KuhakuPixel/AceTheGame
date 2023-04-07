@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class CpuTest {
     @Test
-    public void addition_isCorrect() throws IOException {
+    public void GetArch() throws IOException {
 
         // make sure the current cpu is in supported list
         Cpu.Arch cpuArch = Cpu.GetArch();
