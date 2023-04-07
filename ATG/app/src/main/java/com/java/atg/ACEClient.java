@@ -1,60 +1,42 @@
 package com.java.atg;
 
+import com.topjohnwu.superuser.Shell;
+
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.io.IOException;
+import java.util.List;
+
 public class ACEClient {
 
-    ZContext zmqContext = null;
-    ZMQ.Socket zmqSocket = null;
+    String binaryPath = "";
 
-    String zmqAddress = "tcp://localhost:56666";
-
-    public ACEClient() throws InterruptedException{
-
-        // =================== connect to service port ===========
-        // this.zmqContext = new ZContext();
-        // // connect to address
-        // this.zmqSocket = zmqContext.createSocket(SocketType.REQ);
-        // this.zmqSocket.connect(zmqAddress);
-
+    public ACEClient() throws IOException {
+        this.binaryPath = Binary.GetBinPath(Binary.Type.client);
+        System.out.println("Done getting binary");
     }
 
-    public String Request(String requestCmd) throws InterruptedException{
-        /*
-        // Socket to talk to server
-        System.out.println("Connecting to server");
-        zmqSocket.send(requestCmd.getBytes(ZMQ.CHARSET), 0);
-        byte[] reply = zmqSocket.recv(0);
-        System.out.println("Reply received");
-        String replyStr = new String(reply, ZMQ.CHARSET);
-        replyStr = replyStr.replace("\n","");
-        return replyStr;
+    public String Request(String requestCmd) throws InterruptedException {
 
-         */
-        String[] replyStrArr = {""};
-        Thread clientThread = new Thread(
-
-                () -> {
-                    // code goes here.
-                    try (ZContext context = new ZContext()) {
-                        //  Socket to talk to server
-                        System.out.println("Connecting to server");
-
-                        ZMQ.Socket socket = context.createSocket(SocketType.REQ);
-                        socket.connect(this.zmqAddress);
-                        socket.send(requestCmd.getBytes(ZMQ.CHARSET), 0);
-
-                        byte[] reply = socket.recv(0);
-                        replyStrArr[0] = new String(reply, ZMQ.CHARSET);
-                    }
-                }
-
-        );
-        clientThread.start();
-        clientThread.join();
-        return replyStrArr[0];
+        // wrap it inside quotes just in case
+        // that [requestCmd] contains space
+        requestCmd = String.format("\"%s\"", requestCmd);
+        String[] cmdArr = new String[]{this.binaryPath, "--msg", requestCmd};
+        //String[] cmdArr = new String[]{"echo", "hello world"};
+        String cmdStr = String.join(" ", cmdArr);
+        System.out.printf("running %s\n", cmdStr);
+        // build another shell
+        Shell.Builder shellBuilder = Shell.Builder.create();
+        Shell sh = shellBuilder.build();
+        //
+        Shell.Result result = sh.cmd(cmdStr).exec();
+        List<String> out = result.getOut();
+        System.out.println("Output of binary: ");
+        String outStr = String.join("\n", out);
+        System.out.println(outStr);
+        return outStr;
 
 
     }

@@ -18,29 +18,35 @@ import com.java.atg.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
 import java.io.IOException;
+
 import com.topjohnwu.superuser.Shell;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
     static {
         // Set settings before the main shell can be created
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
+        /*
         Shell.setDefaultBuilder(Shell.Builder.create()
                 .setFlags(Shell.FLAG_REDIRECT_STDERR)
                 .setTimeout(30)
         );
+         */
     }
 
 
-    private void RunBinary() throws IOException,InterruptedException {
-        Thread serverThread = ACE.RunServer();
+    private void RunBinary() throws IOException, InterruptedException {
+        ACE.RunServer();
         System.out.println("Waiting for server to start");
-        TimeUnit.SECONDS.sleep(10);
         // =================
 
         ACEClient client = new ACEClient();
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("ATG", reply);
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,13 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
                         RunBinary();
-                    }
-                    catch(IOException e){
+                    } catch (IOException e) {
                         System.out.println("Error when running binary");
                         Log.e("ATG", ExceptionUtils.getStackTrace(e));
                         Log.e("ATG", e.getMessage());
-                    }
-                    catch(InterruptedException e){
+                    } catch (InterruptedException e) {
                         System.out.println("Error when running binary");
                         Log.e("ATG", ExceptionUtils.getStackTrace(e));
                         Log.e("ATG", e.getMessage());

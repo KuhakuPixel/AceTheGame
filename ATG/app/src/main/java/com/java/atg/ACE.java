@@ -1,46 +1,50 @@
 package com.java.atg;
 
 import android.util.Log;
-
-import com.topjohnwu.superuser.Shell;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ACE {
-    public static Thread RunServer() throws IOException {
-
+    public static Thread GetRunServerThread() throws IOException{
         Thread thread = new Thread(
-
-                () -> {
+                ()->{
                     Log.i("ATG", "Running Binary");
                     String path = "";
                     try {
                         path = Binary.GetBinPath(Binary.Type.server);
-                    }
-                    catch(IOException e){
+                    } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }
                     assert (new File(path).exists());
+
                     System.out.println("Binary path is " + path);
                     String[] cmds = new String[]{path, "--attach-self"};
                     String cmd_string = String.join(" ", cmds);
-                    Shell.Result result;
-                    // Execute commands synchronously
                     System.out.printf("Running command %s\n", cmd_string);
-                    result = Shell.cmd(cmd_string).exec();
-                    List<String> out = result.getOut();
-                    System.out.println("Output of binary: ");
-                    System.out.println(String.join("\n", out));
+                    try {
+                        // To run the server, we can't use topjohnwu's libsu
+                        // because I think there is a bug where multiple shell
+                        // can't be run in pararrel, despite building new instance of Shell
+                        // https://github.com/topjohnwu/libsu/issues/91
+                        // so this hacky solution will do for now,
+                        // we can still use libsu for the client for
+                        // getting the output of the client
+                        Root.sudo(cmd_string);
+                    } catch(IOException e){
+                        System.out.printf("Error when starting server %s\n",e.getMessage() );
+                    }
+
                 }
 
         );
-        thread.start();
+
         return thread;
+    }
+
+    public static void RunServer() throws IOException {
+        Thread thread = GetRunServerThread();
+        thread.start();
     }
 
 }
