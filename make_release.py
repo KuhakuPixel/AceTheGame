@@ -1,9 +1,13 @@
 import ACE_release
 import Modder_release
 import argparse
+import os
 from util import mkdir_overwrite
+from build_option import ANDROID_ARCH_ABI_ARR
+import shutil
 
 RELEASE_DIR = "./release"
+
 if __name__ == "__main__":
     # ===================== making commands ========
     parser = argparse.ArgumentParser()
@@ -18,11 +22,12 @@ if __name__ == "__main__":
     # make sure to start with clean directory
     print("making release......")
     mkdir_overwrite(RELEASE_DIR)
-    #
+
     ACE_release.make_release(
         release_dir=RELEASE_DIR,
         android_toolchain_file=android_toolchain_file,
     )
+
     Modder_release.make_release(
         release_dir=RELEASE_DIR,
     )

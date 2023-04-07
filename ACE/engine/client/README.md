@@ -1,3 +1,3 @@
 # client
 
-client for communicating to ace engine's server
+client cli for communicating to ace engine's server

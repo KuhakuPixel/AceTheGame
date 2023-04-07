@@ -1,43 +1,47 @@
-//
-//  Hello World client in C++
-//  Connects REQ socket to tcp://localhost:5555
-//  Sends "Hello" to server, expects "World" back
-//
 #include "../src/ACE_global.hpp"
+#include "../src/engine_client.hpp"
 #include "../src/input.hpp"
+#include "../third_party/CLI11.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <string>
-#include <zmq.hpp>
 
-int main() {
-  //  Prepare our context and socket
-  zmq::context_t context(1);
-  zmq::socket_t socket(context, zmq::socket_type::req);
+int main(int argc, char **argv) {
 
-  printf("Connecting to ACE engine server ...\n");
-  socket.connect(ACE_global::engine_client_binded_address);
-  printf("done\n");
+  // ================ parse args =================
+  CLI::App main_app{
+      "ACE engine client: client for communicating to ACE's server"};
 
-  auto on_input = [&](std::string input_str) -> E_loop_statement {
-    // dont allow empty input
-    if (input_str.size() == 0)
+  //
+  std::string msg_to_server = "";
+  CLI::Option *msg_option = main_app.add_option(
+      "--msg", msg_to_server,
+      "send message to engine's server and get reply via stdout\n");
+  //
+  CLI11_PARSE(main_app, argc, argv);
+  // ==============================================
+  engine_client client =
+      engine_client(ACE_global::engine_client_binded_address);
+
+  // only output one time  request
+  if (*msg_option) {
+    std::string reply = client.request(msg_to_server);
+    printf("%s", reply.c_str());
+  }
+
+  else {
+    // run prompt
+    auto on_input = [&](std::string input_str) -> E_loop_statement {
+      // dont allow empty input
+      if (input_str.size() == 0)
+        return E_loop_statement::continue_;
+      //
+      std::string reply = client.request(input_str);
+      printf("\n%s\n", reply.c_str());
       return E_loop_statement::continue_;
-    //
-    zmq::message_t request(input_str.size());
-    memcpy(request.data(), input_str.c_str(), input_str.size());
-    socket.send(request, zmq::send_flags::none);
+    };
 
-    //  Get and print the reply.
-    zmq::message_t reply;
-    auto receive_res = socket.recv(reply, zmq::recv_flags::none);
-    if (!receive_res) {
-      printf("Warning: Failed to receive message\n");
-    }
-    printf("\n%s\n", reply.to_string().c_str());
-    return E_loop_statement::continue_;
-  };
-
-  run_input_loop(on_input, "Engine Server");
+    run_input_loop(on_input, "Engine Server");
+  }
   return 0;
 }

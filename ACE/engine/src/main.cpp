@@ -264,6 +264,7 @@ void ace_main() {
   run_input_loop(main_mode_on_each_input, "ACE");
 }
 
+// TODO: Deprecate in future
 void on_start_server() {
   // TODO: fix when entering cheater mode
   auto on_input_received =
@@ -294,15 +295,23 @@ int main(int argc, char **argv) {
   main_app.add_flag("--start-server", current_options.start_server,
                     "enable ACE engine server\n");
 
-  int pid_to_attach = 0;
-  CLI::Option *attach_pid_opt = main_app.add_option(
-      "--attach-pid", pid_to_attach,
+  // ============================ attach commands ============
+  std::string attach_cmd_help =
       "attach to a process with pid for gui communication via zeromq\n"
       "which is provided by port " +
-          ACE_global::engine_client_binded_address);
+      ACE_global::engine_client_binded_address;
+
+  int pid_to_attach = 0;
+  CLI::Option *attach_pid_opt =
+      main_app.add_option("--attach-pid", pid_to_attach, attach_cmd_help);
+
+  bool attach_self = false;
+  main_app.add_flag("--attach-self", attach_self,
+                    attach_cmd_help + "\n" +
+                        "(not important for unit testing only)");
+  // ================================================================
 
   CLI11_PARSE(main_app, argc, argv);
-  // TODO: deprecate
   if (current_options.start_server) {
     on_start_server();
   }
@@ -311,6 +320,11 @@ int main(int argc, char **argv) {
   if (*attach_pid_opt) {
     engine_server_start(pid_to_attach,
                         ACE_global::engine_server_binded_address);
+    return 0;
+  }
+
+  else if (attach_self) {
+    engine_server_start(getpid(), ACE_global::engine_server_binded_address);
     return 0;
   }
   ace_main();

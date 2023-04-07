@@ -9,3 +9,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+# 
+build/
+release/
