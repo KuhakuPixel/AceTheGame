@@ -25,8 +25,6 @@ import com.topjohnwu.superuser.Shell;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.util.concurrent.TimeUnit;
-
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void RunBinary() throws IOException, InterruptedException {
-        ACE.RunServer();
+        ACEServer.Start();
         System.out.println("Waiting for server to start");
         // =================
 

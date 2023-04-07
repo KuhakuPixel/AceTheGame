@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-public class ACE {
-    public static Thread GetRunServerThread() throws IOException{
+public class ACEServer {
+    /*
+    * Get thread to start the server
+    * */
+    public static Thread GetStarterThread() throws IOException{
         Thread thread = new Thread(
                 ()->{
                     Log.i("ATG", "Running Binary");
@@ -42,8 +45,11 @@ public class ACE {
         return thread;
     }
 
-    public static void RunServer() throws IOException {
-        Thread thread = GetRunServerThread();
+    /*
+    * start the server
+    * */
+    public static void Start() throws IOException {
+        Thread thread = GetStarterThread();
         thread.start();
     }
 

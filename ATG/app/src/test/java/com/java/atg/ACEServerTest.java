@@ -24,7 +24,7 @@ import org.robolectric.RobolectricTestRunner;
  * https://stackoverflow.com/questions/53595837/androidx-no-instrumentation-registered-must-run-under-a-registering-instrumen
  */
 @RunWith(RobolectricTestRunner.class)
-public class ACETest {
+public class ACEServerTest {
 
 
     @Before
