@@ -25,11 +25,8 @@ public class ACEClient {
         String[] cmdArr = new String[]{this.binaryPath, "--msg", requestCmd};
         String cmdStr = String.join(" ", cmdArr);
         System.out.printf("running %s\n", cmdStr);
-        // build another shell
-        Shell.Builder shellBuilder = Shell.Builder.create();
-        Shell sh = shellBuilder.build();
-        //
-        Shell.Result result = sh.cmd(cmdStr).exec();
+        // run command
+        Shell.Result result = Shell.cmd(cmdStr).exec();
         List<String> out = result.getOut();
         String outStr = String.join("\n", out);
         return outStr;
