@@ -17,7 +17,7 @@ public class ACEClient {
         this.binaryPath = Binary.GetBinPath(Binary.Type.client);
     }
 
-    public String Request(String requestCmd) throws InterruptedException {
+    public String Request(String requestCmd) {
 
         // wrap it inside quotes just in case
         // that [requestCmd] contains space
@@ -30,7 +30,6 @@ public class ACEClient {
         List<String> out = result.getOut();
         String outStr = String.join("\n", out);
         return outStr;
-
 
     }
 
