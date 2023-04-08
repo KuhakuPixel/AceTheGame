@@ -5,41 +5,26 @@ import static org.junit.Assert.assertEquals;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 
 /**
- * need to run test under Robolectric (instrumented test)
- * to fix no instrumentation registered error
- * <p>
- * https://stackoverflow.com/questions/53595837/androidx-no-instrumentation-registered-must-run-under-a-registering-instrumen
+ * Instrumented test, which will execute on an Android device.
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class AssetTest {
-
-
-    @Before
-    public void prepareApplication() {
-        // https://stackoverflow.com/questions/52510088/application-oncreate-not-being-called-in-test
-        ATG app = (ATG) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
-        app.onCreate();
-    }
-
     @Test
-    public void CopyAssetToExecutableDir() throws IOException{
+    public void CopyAssetToExecutableDir() throws IOException {
         //
         String pathBin = "bin/ACE/arm64-v8a/ACE";
         Context context = ATG.GetContext();
