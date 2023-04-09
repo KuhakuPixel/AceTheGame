@@ -46,7 +46,7 @@ public class ACETest {
             Assert.assertEquals(pid, ACE.GetAttachedPid());
             Assert.assertNotNull(ACE.GetServerThread());
             ACE.Deattach();
-            Assert.assertNull(null, ACE.GetServerThread());
+            Assert.assertNull(ACE.GetServerThread());
         }
     }
 }
