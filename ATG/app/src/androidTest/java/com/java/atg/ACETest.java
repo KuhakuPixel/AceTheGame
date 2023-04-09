@@ -18,17 +18,18 @@ public class ACETest {
 
     @Test
     public void GetReply() throws IOException, InterruptedException {
+        ACE ace = new ACE();
         Long pid = ProcUtil.RunBusyProgram();
-        ACE.Attach(pid);
+        ace.Attach(pid);
         // should be attached and we can get its pid
-        Assert.assertEquals(true, ACE.IsAttached());
-        Assert.assertEquals(pid, ACE.GetAttachedPid());
+        Assert.assertEquals(true, ace.IsAttached());
+        Assert.assertEquals(pid, ace.GetAttachedPid());
         // we should have thread that runs the server
-        Assert.assertNotNull(ACE.GetServerThread());
+        Assert.assertNotNull(ace.GetServerThread());
 
-        ACE.Deattach();
+        ace.Deattach();
         // server's thread shouldn't exist anymore
-        Assert.assertNull(ACE.GetServerThread());
+        Assert.assertNull(ace.GetServerThread());
 
 
     }
@@ -36,17 +37,18 @@ public class ACETest {
     @Test
     public void AttachDeattach() throws IOException, InterruptedException {
         /*
-        * test if we can attach and deattach multiple time reliably
-        * */
+         * test if we can attach and deattach multiple time reliably
+         * */
+        ACE ace = new ACE();
         int attachDeattachCount = 5;
-        for (int i = 0;i<attachDeattachCount ;i++){
+        for (int i = 0; i < attachDeattachCount; i++) {
             Long pid = ProcUtil.RunBusyProgram();
-            ACE.Attach(pid);
-            Assert.assertEquals(true, ACE.IsAttached());
-            Assert.assertEquals(pid, ACE.GetAttachedPid());
-            Assert.assertNotNull(ACE.GetServerThread());
-            ACE.Deattach();
-            Assert.assertNull(ACE.GetServerThread());
+            ace.Attach(pid);
+            Assert.assertEquals(true, ace.IsAttached());
+            Assert.assertEquals(pid, ace.GetAttachedPid());
+            Assert.assertNotNull(ace.GetServerThread());
+            ace.Deattach();
+            Assert.assertNull(ace.GetServerThread());
         }
     }
 }

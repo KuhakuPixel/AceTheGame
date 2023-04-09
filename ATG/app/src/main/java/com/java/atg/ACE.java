@@ -8,35 +8,28 @@ public class ACE {
      * <p>
      * if null means it isn't attached to anything
      */
-    private static Thread serverThread = null;
-    private static ACEClient client;
-    private static Integer portNum;
+    private Thread serverThread = null;
+    private ACEClient client;
+    private Integer portNum;
 
-    static {
-
-        try {
-            portNum = Port.GetOpenPort();
-        } catch (IOException e) {
-            //
-            System.out.println("Error while getting open port " + e.getMessage());
-        }
-        try {
-            client = new ACEClient(portNum);
-        } catch (IOException e) {
-            System.out.println("Error while getting client " + e.getMessage());
-        }
+    public ACE(Integer portNum) throws IOException{
+        this.portNum = portNum;
+        this.client = new ACEClient(portNum);
+    }
+    public ACE() throws IOException {
+        this(Port.GetOpenPort());
     }
 
-    public static Thread GetServerThread() {
+    public Thread GetServerThread() {
         return serverThread;
     }
 
-    public static void Attach(Long pid) throws IOException {
-        serverThread = ACEServer.GetStarterThread(pid, portNum);
-        serverThread.start();
+    public void Attach(Long pid) throws IOException {
+        this.serverThread = ACEServer.GetStarterThread(pid, this.portNum);
+        this.serverThread.start();
     }
 
-    public static void Deattach() throws InterruptedException {
+    public void Deattach() throws InterruptedException {
         // tell server to die
         client.Request("stop");
         // wait for server's thread to finish
@@ -46,12 +39,12 @@ public class ACE {
         serverThread = null;
     }
 
-    public static Boolean IsAttached() {
+    public Boolean IsAttached() {
         if (serverThread == null) return false;
         return client.Request("attached").equals("attached_ok");
     }
 
-    public static Long GetAttachedPid() {
+    public Long GetAttachedPid() {
         String pidStr = client.Request("pid");
         return Long.parseLong(pidStr);
     }
