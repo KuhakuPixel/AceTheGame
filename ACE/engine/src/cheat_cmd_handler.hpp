@@ -42,6 +42,8 @@ void list_cmd_handler(const ACE_scanner<T> *scanner, size_t list_max_count);
 template <typename T>
 void matchcount_cmd_handler(const ACE_scanner<T> *scanner);
 
+void pid_cmd_handler(int pid);
+
 template <typename T>
 void filter_cmd_handler(ACE_scanner<T> *scanner,
                         Scan_Utils::E_filter_type filter_type,
