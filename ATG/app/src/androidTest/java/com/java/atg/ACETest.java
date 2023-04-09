@@ -24,12 +24,29 @@ public class ACETest {
         Assert.assertEquals(true, ACE.IsAttached());
         Assert.assertEquals(pid, ACE.GetAttachedPid());
         // we should have thread that runs the server
-        Assert.assertNotEquals(null, ACE.GetServerThread());
+        Assert.assertNotNull(ACE.GetServerThread());
 
         ACE.Deattach();
         // server's thread shouldn't exist anymore
-        Assert.assertEquals(null, ACE.GetServerThread());
+        Assert.assertNull(ACE.GetServerThread());
 
 
+    }
+
+    @Test
+    public void AttachDeattach() throws IOException, InterruptedException {
+        /*
+        * test if we can attach and deattach multiple time reliably
+        * */
+        int attachDeattachCount = 5;
+        for (int i = 0;i<attachDeattachCount ;i++){
+            Long pid = ProcUtil.RunBusyProgram();
+            ACE.Attach(pid);
+            Assert.assertEquals(true, ACE.IsAttached());
+            Assert.assertEquals(pid, ACE.GetAttachedPid());
+            Assert.assertNotNull(ACE.GetServerThread());
+            ACE.Deattach();
+            Assert.assertNull(null, ACE.GetServerThread());
+        }
     }
 }
