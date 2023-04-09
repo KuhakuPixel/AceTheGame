@@ -52,7 +52,7 @@ void matchcount_cmd_handler(const ACE_scanner<T> *scanner) {
 
 void pid_cmd_handler(int pid) {
   //
-  printf("%d\n", pid);
+  frontend_print("%d\n", pid);
 }
 template <typename T>
 void filter_cmd_handler(ACE_scanner<T> *scanner,
