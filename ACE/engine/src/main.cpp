@@ -21,7 +21,6 @@ struct main_mode_options {
   bool ps_map_list_all;
   bool ps_ls_reverse;
   bool aslr_set_val;
-  bool start_server;
 
   E_num_type cheater_num_type;
 
@@ -31,7 +30,6 @@ struct main_mode_options {
     this->ps_ls_reverse = false;
     this->aslr_set_val = false;
     this->cheater_num_type = E_num_type::INT;
-    this->start_server = false;
   }
 };
 
@@ -264,24 +262,11 @@ void ace_main() {
   run_input_loop(main_mode_on_each_input, "ACE");
 }
 
-// TODO: Deprecate in future
-void on_start_server() {
-  // TODO: fix when entering cheater mode
-  auto on_input_received =
-
-      [](std::string input_str) -> std::string {
-    // reset output  buffer
-    frontend_output_buff = "";
-    // run input_str command
-    main_mode_on_each_input(input_str);
-    // get its output
-    std::string out = frontend_pop_output();
-    return out;
-  };
-  server _server =
-      server(ACE_global::engine_server_binded_address, on_input_received);
-  _server.start();
+void attach_pid_cmd_handler(int pid, int port) {
+  printf("attaching to %d\n", pid);
+  engine_server_start(pid, port);
 }
+
 int main(int argc, char **argv) {
   /* parse args passed to program*/
   CLI::App main_app{"ACE Engine, a game hacking tools for linux and android\n"
@@ -292,19 +277,29 @@ int main(int argc, char **argv) {
                       "enable engine's gui protocol\n"
                       "for communication via stdin\n");
 
-  main_app.add_flag("--start-server", current_options.start_server,
-                    "enable ACE engine server\n");
-
   // ============================ attach commands ============
   std::string attach_cmd_help =
-      "attach to a process with pid for gui communication via zeromq\n"
-      "which is provided by port " +
-      ACE_global::engine_client_binded_address;
+      "attach to a process with pid for gui communication via zeromq\n";
 
   int pid_to_attach = 0;
-  CLI::Option *attach_pid_opt =
-      main_app.add_option("--attach-pid", pid_to_attach, attach_cmd_help);
+  int engine_server_port = ACE_global::engine_server_client_default_port;
+  CLI::App *attach_pid_cmd =
+      main_app.add_subcommand("attach-pid", attach_cmd_help);
+  attach_pid_cmd->add_option("--pid", pid_to_attach)->required();
+  attach_pid_cmd->add_option("--port", engine_server_port,
+                             "default port: " +
+                                 std::to_string(engine_server_port));
+  //
+  attach_pid_cmd->callback(
 
+      [&]() {
+        //
+        attach_pid_cmd_handler(pid_to_attach, engine_server_port);
+      }
+
+  );
+
+  //
   bool attach_self = false;
   main_app.add_flag("--attach-self", attach_self,
                     attach_cmd_help + "\n" +
@@ -312,22 +307,21 @@ int main(int argc, char **argv) {
   // ================================================================
 
   CLI11_PARSE(main_app, argc, argv);
-  if (current_options.start_server) {
-    on_start_server();
-  }
-
-  //
-  if (*attach_pid_opt) {
-    engine_server_start(pid_to_attach,
-                        ACE_global::engine_server_binded_address);
+  // any request to run as server?
+  if (attach_self) {
+    engine_server_start(getpid(),
+                        ACE_global::engine_server_client_default_port);
     return 0;
   }
 
-  else if (attach_self) {
-    engine_server_start(getpid(), ACE_global::engine_server_binded_address);
+  else if (main_app.got_subcommand(attach_pid_cmd)) {
     return 0;
   }
-  ace_main();
+
+  else {
+    // if not, just run it as normal console app :)
+    ace_main();
+  }
 
   return 0;
 }

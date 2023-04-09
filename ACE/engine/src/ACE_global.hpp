@@ -36,9 +36,11 @@ public:
   static const char *engine_credits;
   static const char *intro_display;
 
-  // servers
-  static const std::string engine_server_binded_address;
-  static const std::string engine_client_binded_address;
+  // ================ engine client server ========================
+  static const int engine_server_client_default_port;
+  // zmq base address without port
+  static const std::string engine_server_base_zmq_address;
+  static const std::string engine_client_base_zmq_address;
 
 private:
   // Disallow creating an instance of this object
