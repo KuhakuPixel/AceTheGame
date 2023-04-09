@@ -3,7 +3,6 @@ package com.java.atg;
 import java.io.IOException;
 
 public class ACE {
-    private static ACEServer server = new ACEServer();
     /**
      * the running server thread
      *
@@ -25,7 +24,7 @@ public class ACE {
     }
 
     public static void Attach(Long pid) throws IOException {
-        serverThread = server.GetStarterThread(pid);
+        serverThread = ACEServer.GetStarterThread(pid);
         serverThread.start();
     }
 
