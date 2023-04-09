@@ -9,7 +9,7 @@ public class ACEServer {
     /*
     * Get thread to start the server
     * */
-    public static Thread GetStarterThread() throws IOException{
+    public static Thread GetStarterThread(Long pid) throws IOException{
         Thread thread = new Thread(
                 ()->{
                     Log.i("ATG", "Running Binary");
@@ -22,7 +22,8 @@ public class ACEServer {
                     assert (new File(path).exists());
 
                     System.out.println("Binary path is " + path);
-                    String[] cmds = new String[]{path, "--attach-self"};
+                    String[] cmds = new String[]{path, "--attach-pid", pid.toString()};
+
                     String cmd_string = String.join(" ", cmds);
                     System.out.printf("Running command %s\n", cmd_string);
                     try {
@@ -45,12 +46,5 @@ public class ACEServer {
         return thread;
     }
 
-    /*
-    * start the server
-    * */
-    public static void Start() throws IOException {
-        Thread thread = GetStarterThread();
-        thread.start();
-    }
 
 }
