@@ -5,17 +5,25 @@ import java.io.IOException;
 public class ACE {
     /**
      * the running server thread
-     *
+     * <p>
      * if null means it isn't attached to anything
-     * */
+     */
     private static Thread serverThread = null;
     private static ACEClient client;
+    private static Integer portNum;
 
     static {
+
         try {
-            client = new ACEClient();
+            portNum = Port.GetOpenPort();
         } catch (IOException e) {
-            client = null;
+            //
+            System.out.println("Error while getting open port " + e.getMessage());
+        }
+        try {
+            client = new ACEClient(portNum);
+        } catch (IOException e) {
+            System.out.println("Error while getting client " + e.getMessage());
         }
     }
 
@@ -24,7 +32,7 @@ public class ACE {
     }
 
     public static void Attach(Long pid) throws IOException {
-        serverThread = ACEServer.GetStarterThread(pid);
+        serverThread = ACEServer.GetStarterThread(pid, portNum);
         serverThread.start();
     }
 

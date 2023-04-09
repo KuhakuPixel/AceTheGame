@@ -12,9 +12,11 @@ import java.util.List;
 public class ACEClient {
 
     String binaryPath = "";
+    Integer port;
 
-    public ACEClient() throws IOException {
+    public ACEClient(Integer port) throws IOException {
         this.binaryPath = Binary.GetBinPath(Binary.Type.client);
+        this.port = port;
     }
 
     public String Request(String requestCmd) {
@@ -22,7 +24,7 @@ public class ACEClient {
         // wrap it inside quotes just in case
         // that [requestCmd] contains space
         requestCmd = String.format("\"%s\"", requestCmd);
-        String[] cmdArr = new String[]{this.binaryPath, "--msg", requestCmd};
+        String[] cmdArr = new String[]{this.binaryPath, "--port", this.port.toString(), "--msg", requestCmd};
         String cmdStr = String.join(" ", cmdArr);
         System.out.printf("running %s\n", cmdStr);
         // run command
