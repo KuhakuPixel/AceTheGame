@@ -1,17 +1,18 @@
 package com.java.atg;
 
 import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
 public class ACEServer {
     /*
-    * Get thread to start the server
-    * */
-    public static Thread GetStarterThread() throws IOException{
+     * Get thread to start the server
+     * */
+    public static Thread GetStarterThread(Long pid, Integer portNum) throws IOException {
         Thread thread = new Thread(
-                ()->{
+                () -> {
                     Log.i("ATG", "Running Binary");
                     String path = "";
                     try {
@@ -22,7 +23,8 @@ public class ACEServer {
                     assert (new File(path).exists());
 
                     System.out.println("Binary path is " + path);
-                    String[] cmds = new String[]{path, "--attach-self"};
+                    String[] cmds = new String[]{path, "attach-pid", "--pid", pid.toString(), "--port", portNum.toString()};
+
                     String cmd_string = String.join(" ", cmds);
                     System.out.printf("Running command %s\n", cmd_string);
                     try {
@@ -34,8 +36,8 @@ public class ACEServer {
                         // we can still use libsu for the client for
                         // getting the output of the client
                         Root.sudo(cmd_string);
-                    } catch(IOException e){
-                        System.out.printf("Error when starting server %s\n",e.getMessage() );
+                    } catch (IOException e) {
+                        System.out.printf("Error when starting server %s\n", e.getMessage());
                     }
 
                 }
@@ -45,12 +47,5 @@ public class ACEServer {
         return thread;
     }
 
-    /*
-    * start the server
-    * */
-    public static void Start() throws IOException {
-        Thread thread = GetStarterThread();
-        thread.start();
-    }
 
 }

@@ -41,20 +41,6 @@ public class MainActivity extends AppCompatActivity {
          */
     }
 
-
-    private void RunBinary() throws IOException, InterruptedException {
-        ACEServer.Start();
-        System.out.println("Waiting for server to start");
-        // =================
-
-        ACEClient client = new ACEClient();
-        String reply = client.Request("attached");
-        System.out.printf("Reply is %s", reply);
-        Log.i("ATG", "Getting reply ...");
-        Log.i("ATG", reply);
-
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,18 +59,6 @@ public class MainActivity extends AppCompatActivity {
                     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
                     appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
                     NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-                    try {
-                        RunBinary();
-                    } catch (IOException e) {
-                        System.out.println("Error when running binary");
-                        Log.e("ATG", ExceptionUtils.getStackTrace(e));
-                        Log.e("ATG", e.getMessage());
-                    } catch (InterruptedException e) {
-                        System.out.println("Error when running binary");
-                        Log.e("ATG", ExceptionUtils.getStackTrace(e));
-                        Log.e("ATG", e.getMessage());
-                    }
 
                     binding.fab.setOnClickListener(new View.OnClickListener() {
                         @Override

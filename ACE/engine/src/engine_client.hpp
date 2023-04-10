@@ -14,6 +14,8 @@ public:
    * [client_binded_address]: binded address of the client
    * */
   engine_client(std::string client_binded_address);
+  //
+  engine_client(int port);
 
   /*
    * send message expecting reply

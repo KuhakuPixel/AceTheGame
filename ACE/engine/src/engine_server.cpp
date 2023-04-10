@@ -1,4 +1,5 @@
 #include "engine_server.hpp"
+#include "ACE_global.hpp"
 #include "ace_type.hpp"
 #include "cheat_session.hpp"
 #include "server.hpp"
@@ -22,7 +23,12 @@ void engine_server_start(int pid, std::string engine_server_binded_address) {
   };
 
   // start server
-  server _server =
-      server(ACE_global::engine_server_binded_address, on_input_received);
+  server _server = server(engine_server_binded_address, on_input_received);
   _server.start();
+}
+
+void engine_server_start(int pid, int port) {
+  std::string binded_address_str =
+      ACE_global::engine_server_base_zmq_address + std::to_string(port);
+  engine_server_start(pid, binded_address_str);
 }

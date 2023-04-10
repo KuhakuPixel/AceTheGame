@@ -12,8 +12,8 @@
 template <typename T>
 struct cheat_cmd_ret
 cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
-                               cheat_mode_config *cheat_config,
-                               std::string input_str) {
+                          cheat_mode_config *cheat_config,
+                          std::string input_str) {
   struct cheat_cmd_ret _cheat_cmd_ret;
   // for short alias so functions wont have to use "engine_module.something"
   // to access an engine module
@@ -73,6 +73,18 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   matchcount_cmd->callback(
 
       [&]() { matchcount_cmd_handler(scanner); }
+
+  );
+
+  // ========================== pid command ============================
+  CLI::App *pid_cmd =
+      app.add_subcommand("pid", "Get the current pid of attached process");
+  pid_cmd->callback(
+
+      [&]() {
+        //
+        pid_cmd_handler(cheat_config->pid);
+      }
 
   );
 
@@ -535,8 +547,7 @@ cheat_session::cheater_mode_on_each_input(
     // just run command without any pause
     // on the target process
     // simple right :D ?
-    _cheat_cmd_ret =
-        _cheat_cmd<T>(engine_module_ptr, cheat_config, input_str);
+    _cheat_cmd_ret = _cheat_cmd<T>(engine_module_ptr, cheat_config, input_str);
   }
 
   // else return value of _cheat_cmd

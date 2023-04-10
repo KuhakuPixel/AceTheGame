@@ -3,11 +3,19 @@
  * adapted from hello world client inc++
  * */
 #include "engine_client.hpp"
+#include "ACE_global.hpp"
 #include <stdlib.h>
 engine_client::engine_client(std::string client_binded_address) {
   this->client_binded_address = client_binded_address;
   // connect the socket to address
   this->socket.connect(client_binded_address);
+}
+engine_client::engine_client(int port)
+    : engine_client::engine_client(
+          ACE_global::engine_client_base_zmq_address + std::to_string(port)
+
+      ) {
+  // nothing
 }
 
 std::string engine_client::request(std::string msg) {

@@ -18,10 +18,12 @@ int main(int argc, char **argv) {
       "--msg", msg_to_server,
       "send message to engine's server and get reply via stdout\n");
   //
+  //
+  int port = ACE_global::engine_server_client_default_port;
+  main_app.add_option("--port", port, "default port: " + std::to_string(port));
   CLI11_PARSE(main_app, argc, argv);
   // ==============================================
-  engine_client client =
-      engine_client(ACE_global::engine_client_binded_address);
+  engine_client client = engine_client(port);
 
   // only output one time  request
   if (*msg_option) {

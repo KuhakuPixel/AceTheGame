@@ -50,6 +50,10 @@ void matchcount_cmd_handler(const ACE_scanner<T> *scanner) {
   frontend_print("%zu\n", scan_res.get_matches_count());
 }
 
+void pid_cmd_handler(int pid) {
+  //
+  frontend_print("%d\n", pid);
+}
 template <typename T>
 void filter_cmd_handler(ACE_scanner<T> *scanner,
                         Scan_Utils::E_filter_type filter_type,
