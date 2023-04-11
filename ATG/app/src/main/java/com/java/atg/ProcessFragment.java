@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +26,8 @@ public class ProcessFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    //
+    private final int rowItemCount = 3;
 
     public ProcessFragment() {
         // Required empty public constructor
@@ -59,6 +64,17 @@ public class ProcessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_process, container, false);
+        View mainView = inflater.inflate(R.layout.fragment_process, container, false);
+        TableLayout procTable = mainView.findViewById(R.id.ProcessTable);
+        for (int i = 0; i < 30; i++) {
+            TableRow exampleRow = (TableRow) inflater.inflate(R.layout.process_table_row, null);
+            // =========== setup row ===========
+            assert (rowItemCount == exampleRow.getChildCount());
+            TextView view1 = (TextView) exampleRow.getChildAt(0);
+            view1.setText(String.format("%d.", i + 1));
+            // =================================
+            procTable.addView(exampleRow);
+        }
+        return mainView;
     }
 }

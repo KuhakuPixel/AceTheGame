@@ -1,5 +1,6 @@
 package com.java.atg;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.Toolbar;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.topjohnwu.superuser.Shell;
 
@@ -47,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        List<ActivityManager.RunningAppProcessInfo> appsRunning = ProcUtil.ListRunnningApk();
+
+        for (ActivityManager.RunningAppProcessInfo app : appsRunning){
+            System.out.printf("PID: %d, Name: %s\n", app.pid, app.processName);
+        }
 
         // Preheat the main root shell in the splash screen
         // so the app can use it afterwards without interrupting
