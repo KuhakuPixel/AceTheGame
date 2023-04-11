@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                     // this.getSupportActionBar();
                     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment_host);
                     NavController navController = navHostFragment.getNavController();
-                    NavigationUI.setupActionBarWithNavController(this,navController, appBarConfiguration);
                     NavigationUI.setupWithNavController(navigationView, navController);
 
                 }
