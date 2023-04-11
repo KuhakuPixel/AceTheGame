@@ -1,5 +1,6 @@
 package com.java.atg;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +54,27 @@ public class ProcessFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Make Row View representation from [ActivityManager.RunningAppProcessInfo]
+     */
+    private TableRow RunningAppInfoToTableRow(LayoutInflater inflater, ActivityManager.RunningAppProcessInfo apk, int apkIndex) {
+
+        TableRow rowView = (TableRow) inflater.inflate(R.layout.process_table_row, null);
+        // =========== setup row ===========
+        assert (rowItemCount == rowView.getChildCount());
+        // set number
+        TextView orderNumView = (TextView) rowView.getChildAt(0);
+        orderNumView.setText(String.format("%d.", apkIndex + 1));
+        // set Pid
+        TextView pidView = (TextView) rowView.getChildAt(1);
+        pidView.setText(String.format("%d", apk.pid));
+        // set ApkName
+        TextView apkNameView = (TextView) rowView.getChildAt(2);
+        apkNameView.setText(apk.processName);
+        // =================================
+        return rowView;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,14 +90,11 @@ public class ProcessFragment extends Fragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_process, container, false);
         TableLayout procTable = mainView.findViewById(R.id.ProcessTable);
-        for (int i = 0; i < 30; i++) {
-            TableRow exampleRow = (TableRow) inflater.inflate(R.layout.process_table_row, null);
-            // =========== setup row ===========
-            assert (rowItemCount == exampleRow.getChildCount());
-            TextView view1 = (TextView) exampleRow.getChildAt(0);
-            view1.setText(String.format("%d.", i + 1));
-            // =================================
-            procTable.addView(exampleRow);
+
+        List<ActivityManager.RunningAppProcessInfo> runningApks = ProcUtil.ListRunnningApk();
+        for (int i = 0; i < runningApks.size(); i++) {
+            TableRow rowView = RunningAppInfoToTableRow(inflater, runningApks.get(i), i);
+            procTable.addView(rowView);
         }
         return mainView;
     }
