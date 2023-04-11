@@ -1,7 +1,12 @@
 package com.java.atg;
 
+import static android.content.Context.ACTIVITY_SERVICE;
+
+import android.app.ActivityManager;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class ProcUtil {
 
@@ -38,5 +43,10 @@ public class ProcUtil {
         Process process = Runtime.getRuntime().exec(cmd);
         return GetPid(process);
 
+    }
+    public static List<ActivityManager.RunningAppProcessInfo> ListRunnningApk(){
+        ActivityManager activityManager = (ActivityManager) ATG.GetContext().getSystemService( ACTIVITY_SERVICE );
+        List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        return procInfos;
     }
 }
