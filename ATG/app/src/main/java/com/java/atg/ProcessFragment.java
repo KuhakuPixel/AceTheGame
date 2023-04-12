@@ -1,6 +1,5 @@
 package com.java.atg;
 
-import android.app.ActivityManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +11,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -55,9 +55,9 @@ public class ProcessFragment extends Fragment {
     }
 
     /**
-     * Make Row View representation from [ActivityManager.RunningAppProcessInfo]
+     * Make Row View representation from [ProcInfo]
      */
-    private TableRow RunningAppInfoToTableRow(LayoutInflater inflater, ActivityManager.RunningAppProcessInfo apk, int apkIndex) {
+    private TableRow ProcInfoToTableRow(LayoutInflater inflater, ProcInfo procInfo, int apkIndex) {
 
         TableRow rowView = (TableRow) inflater.inflate(R.layout.process_table_row, null);
         // =========== setup row ===========
@@ -67,10 +67,10 @@ public class ProcessFragment extends Fragment {
         orderNumView.setText(String.format("%d.", apkIndex + 1));
         // set Pid
         TextView pidView = (TextView) rowView.getChildAt(1);
-        pidView.setText(String.format("%d", apk.pid));
+        pidView.setText(procInfo.GetPidStr());
         // set ApkName
         TextView apkNameView = (TextView) rowView.getChildAt(2);
-        apkNameView.setText(apk.processName);
+        apkNameView.setText(procInfo.GetName());
         // =================================
         return rowView;
     }
@@ -91,9 +91,15 @@ public class ProcessFragment extends Fragment {
         View mainView = inflater.inflate(R.layout.fragment_process, container, false);
         TableLayout procTable = mainView.findViewById(R.id.ProcessTable);
 
-        List<ActivityManager.RunningAppProcessInfo> runningApks = ProcUtil.ListRunnningApk();
-        for (int i = 0; i < runningApks.size(); i++) {
-            TableRow rowView = RunningAppInfoToTableRow(inflater, runningApks.get(i), i);
+        ACE ace = null;
+        try {
+            ace = new ACE();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        List<ProcInfo> runningProcs = ace.ListRunningProc();
+        for (int i = 0; i < runningProcs.size(); i++) {
+            TableRow rowView = ProcInfoToTableRow(inflater, runningProcs.get(i), i);
             procTable.addView(rowView);
         }
         return mainView;

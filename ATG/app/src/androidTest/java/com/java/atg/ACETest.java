@@ -7,6 +7,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -16,6 +17,14 @@ import java.io.IOException;
 @RunWith(AndroidJUnit4.class)
 public class ACETest {
 
+    @Test
+    public void ListRunningProcs() throws IOException {
+
+        ACE ace = new ACE();
+        List<ProcInfo> runningProcs =  ace.ListRunningProc();
+        assert(runningProcs.size() > 1);
+
+    }
     @Test
     public void GetReply() throws IOException, InterruptedException {
         ACE ace = new ACE();

@@ -1,6 +1,8 @@
 package com.java.atg;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ACE {
     /**
@@ -47,5 +49,15 @@ public class ACE {
     public Long GetAttachedPid() {
         String pidStr = client.Request("pid");
         return Long.parseLong(pidStr);
+    }
+    public List<ProcInfo> ListRunningProc(){
+        List<ProcInfo> runningProcs = new ArrayList<ProcInfo>();
+        // use --reverse so newest process will be shown first
+        List<String> runningProcsInfoStr = this.client.MainCmdAsList("ps ls --reverse");
+        // parse each string
+        for (String procInfoStr : runningProcsInfoStr){
+            runningProcs.add(new ProcInfo(procInfoStr));
+        }
+        return runningProcs;
     }
 }
