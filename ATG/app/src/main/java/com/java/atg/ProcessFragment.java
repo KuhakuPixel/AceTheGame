@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ public class ProcessFragment extends Fragment {
         pidView.setText(procInfo.GetPidStr());
         // set ApkName
         TextView apkNameView = (TextView) rowView.getChildAt(2);
+        apkNameView.setMovementMethod(new ScrollingMovementMethod());
         apkNameView.setText(procInfo.GetName());
         // =================================
         return rowView;
