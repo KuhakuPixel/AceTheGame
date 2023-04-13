@@ -1,5 +1,7 @@
 package com.java.atg;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -22,7 +24,6 @@ import java.util.List;
  */
 public class ProcessFragment extends Fragment {
 
-    private final int rowItemCount = 3;
     public ProcessFragment() {
         // Required empty public constructor
     }
@@ -37,6 +38,51 @@ public class ProcessFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    public void OnAttach(Long pid) {
+        /*
+         * if is attached to some process previously
+         * deattach first
+         * */
+        try {
+            if (ATG.GetAce().IsAttached())
+                ATG.GetAce().Deattach();
+        } catch (InterruptedException e) {
+            DialogUtil.ShowError(getContext(), e.getMessage());
+            return;
+
+        }
+        // then we can attach
+        try {
+            ATG.GetAce().Attach(pid);
+        } catch (IOException e) {
+            DialogUtil.ShowError(getContext(), e.getMessage());
+        }
+
+        // just to make sure if we are attached to the correct process
+        if (ATG.GetAce().GetAttachedPid().equals(pid))
+            DialogUtil.ShowInfo(getContext(), "Attach is successful ");
+        else
+            DialogUtil.ShowError(getContext(), "Unknown error when attaching, attached to wrong process");
+    }
+
+    private void OnRowClicked(Long pid, String procName) {
+        new AlertDialog.Builder(this.getContext())
+                .setTitle("Attaching")
+                .setMessage(String.format("Attach to %d (%s)?", pid, procName))
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        OnAttach(pid);
+                    }
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(R.drawable.ic_question_mark)
+                .show();
+    }
+
     /**
      * Make Row View representation from [ProcInfo]
      */
@@ -44,18 +90,30 @@ public class ProcessFragment extends Fragment {
 
         TableRow rowView = (TableRow) inflater.inflate(R.layout.process_table_row, null);
         // =========== setup row ===========
+        int rowItemCount = 3;
         assert (rowItemCount == rowView.getChildCount());
         // set number
         TextView orderNumView = (TextView) rowView.getChildAt(0);
         orderNumView.setText(String.format("%d.", apkIndex + 1));
         // set Pid
         TextView pidView = (TextView) rowView.getChildAt(1);
-        pidView.setText(procInfo.GetPidStr());
+        Long pid = Long.parseLong(procInfo.GetPidStr());
+        pidView.setText(pid.toString());
         // set ApkName
         TextView apkNameView = (TextView) rowView.getChildAt(2);
         apkNameView.setMovementMethod(new ScrollingMovementMethod());
         apkNameView.setText(procInfo.GetName());
         // =================================
+        rowView.setOnClickListener(
+
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        OnRowClicked(pid, procInfo.GetName());
+                    }
+                }
+
+        );
         return rowView;
     }
 
