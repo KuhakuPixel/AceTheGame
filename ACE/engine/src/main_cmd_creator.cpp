@@ -39,6 +39,7 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
   );
   // ================================= ps command ======================
   CLI::App *ps_cmd = app->add_subcommand("ps", "analyze running processes");
+  // ls
   CLI::App *ps_ls_cmd = ps_cmd->add_subcommand(
       "ls", "list all running processes (newer process listed at bottom)");
   ps_ls_cmd->callback(
@@ -51,6 +52,7 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
   ps_ls_cmd->add_flag("-r,--reverse", current_options_ptr->ps_ls_reverse,
                       "sort running process in reverse order");
 
+  // map
   CLI::App *ps_map_cmd =
       ps_cmd->add_subcommand("map", "display special region of <PID>");
   ps_map_cmd->callback(
@@ -68,6 +70,20 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
       ->required();
   ps_map_cmd->add_flag("-a,--all", current_options_ptr->ps_map_list_all,
                        "list all mapped memory region");
+  // is_running
+  CLI::App *ps_is_running_cmd =
+      ps_cmd->add_subcommand("is_running", "Check if process pid is running");
+  ps_is_running_cmd
+      ->add_option("<PID>", current_options_ptr->pid, "<pid> of the process")
+      ->required();
+  ps_is_running_cmd->callback(
+
+      [=]() -> void {
+        //
+        process_is_running_handler(current_options_ptr->pid);
+      }
+
+  );
 
   // ================================= aslr command ======================
   CLI::App *aslr_cmd = app->add_subcommand(
