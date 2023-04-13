@@ -22,7 +22,7 @@ public class ACETest {
 
         ACE ace = new ACE();
         List<ProcInfo> runningProcs =  ace.ListRunningProc();
-        assert(runningProcs.size() > 1);
+        Assert.assertTrue(runningProcs.size() > 1);
 
     }
     @Test

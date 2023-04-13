@@ -44,10 +44,4 @@ public class ProcUtil {
         return GetPid(process);
 
     }
-
-    public static List<ActivityManager.RunningAppProcessInfo> ListRunnningApk(){
-        ActivityManager activityManager = (ActivityManager) ATG.GetContext().getSystemService( ACTIVITY_SERVICE );
-        List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
-        return procInfos;
-    }
 }

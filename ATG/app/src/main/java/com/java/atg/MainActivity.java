@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -49,12 +50,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<ActivityManager.RunningAppProcessInfo> appsRunning = ProcUtil.ListRunnningApk();
-
-        for (ActivityManager.RunningAppProcessInfo app : appsRunning){
-            System.out.printf("PID: %d, Name: %s\n", app.pid, app.processName);
-        }
-
+        //
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         // Preheat the main root shell in the splash screen
         // so the app can use it afterwards without interrupting
         // application flow (e.g. root permission prompt)
