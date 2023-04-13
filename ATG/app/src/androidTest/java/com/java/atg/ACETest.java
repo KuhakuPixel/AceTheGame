@@ -28,7 +28,8 @@ public class ACETest {
     @Test
     public void GetReply() throws IOException, InterruptedException {
         ACE ace = new ACE(ATG.GetContext());
-        Long pid = ProcUtil.RunBusyProgram();
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
         ace.Attach(pid);
         // should be attached and we can get its pid
         Assert.assertEquals(true, ace.IsAttached());
@@ -51,7 +52,8 @@ public class ACETest {
         ACE ace = new ACE(ATG.GetContext());
         int attachDeattachCount = 5;
         for (int i = 0; i < attachDeattachCount; i++) {
-            Long pid = ProcUtil.RunBusyProgram();
+            Process p = ProcUtil.RunBusyProgram();
+            Long pid = ProcUtil.GetPid(p);
             ace.Attach(pid);
             Assert.assertEquals(true, ace.IsAttached());
             Assert.assertEquals(pid, ace.GetAttachedPid());
@@ -60,4 +62,19 @@ public class ACETest {
             Assert.assertNull(ace.GetServerThread());
         }
     }
+
+    @Test
+    public void IsPidRunning() throws IOException, InterruptedException {
+        /*
+         * test if we can attach and deattach multiple time reliably
+         * */
+        ACE ace = new ACE(ATG.GetContext());
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        Assert.assertTrue(ace.IsPidRunning(pid));
+        p.destroy();
+        Assert.assertFalse(ace.IsPidRunning(pid));
+
+    }
+
 }

@@ -64,4 +64,10 @@ public class ACE {
         }
         return runningProcs;
     }
+    public boolean IsPidRunning(Long pid){
+        String cmdArr[] = new String[]{"ps","is_running", pid.toString()};
+        String boolStr = this.client.MainCmd(String.join(" ", cmdArr));
+        assert (boolStr.equals("true") || boolStr.equals("false"));
+        return Boolean.parseBoolean(boolStr);
+    }
 }
