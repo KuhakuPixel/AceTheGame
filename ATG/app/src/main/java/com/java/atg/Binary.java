@@ -1,5 +1,7 @@
 package com.java.atg;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,12 +33,12 @@ public class Binary {
         }
     };
 
-    public static String GetBinPath(Binary.Type type, Cpu.Arch arch) throws IOException {
+    public static String GetBinPath(Context context, Binary.Type type, Cpu.Arch arch) throws IOException {
         String archDirName = cpuArchEnumToDirNameMap.get(arch);
         String fileName = binaryNameToFileNameMap.get(type);
         String assetPathBinStr = String.format("bin/ACE/%s/%s", archDirName, fileName);
         System.out.printf("Getting binary at %s\n", assetPathBinStr);
-        return Asset.CopyAssetToExecutableDir(assetPathBinStr);
+        return Asset.CopyAssetToExecutableDir(context, assetPathBinStr);
 
     }
 
@@ -46,8 +48,8 @@ public class Binary {
      * This function will copy the binary to a temporary directory
      * so multiple call to this is no good
      */
-    public static String GetBinPath(Binary.Type type) throws IOException {
-        return GetBinPath(type, Cpu.GetArch());
+    public static String GetBinPath(Context context, Binary.Type type) throws IOException {
+        return GetBinPath(context, type, Cpu.GetArch());
     }
 
 }

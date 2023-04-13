@@ -14,7 +14,7 @@ public class ATG extends Application {
         super.onCreate();
         ATG.context = getApplicationContext();
         try {
-            ace = new ACE();
+            ace = new ACE(ATG.context);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

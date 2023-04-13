@@ -20,14 +20,14 @@ public class ACETest {
     @Test
     public void ListRunningProcs() throws IOException {
 
-        ACE ace = new ACE();
+        ACE ace = new ACE(ATG.GetContext());
         List<ProcInfo> runningProcs =  ace.ListRunningProc();
         Assert.assertTrue(runningProcs.size() > 1);
 
     }
     @Test
     public void GetReply() throws IOException, InterruptedException {
-        ACE ace = new ACE();
+        ACE ace = new ACE(ATG.GetContext());
         Long pid = ProcUtil.RunBusyProgram();
         ace.Attach(pid);
         // should be attached and we can get its pid
@@ -48,7 +48,7 @@ public class ACETest {
         /*
          * test if we can attach and deattach multiple time reliably
          * */
-        ACE ace = new ACE();
+        ACE ace = new ACE(ATG.GetContext());
         int attachDeattachCount = 5;
         for (int i = 0; i < attachDeattachCount; i++) {
             Long pid = ProcUtil.RunBusyProgram();

@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,8 +32,8 @@ public class AssetTest {
         AssetManager assetManager = context.getAssets();
         InputStream expectedInputStream = assetManager.open(pathBin);
         //
-        String pathToCopiedStr = Asset.CopyAssetToExecutableDir(pathBin);
+        String pathToCopiedStr = Asset.CopyAssetToExecutableDir(context, pathBin);
         InputStream actualInputStream = new FileInputStream(pathToCopiedStr);
-        assert true == IOUtils.contentEquals( expectedInputStream, actualInputStream);
+        Assert.assertTrue(IOUtils.contentEquals( expectedInputStream, actualInputStream));
     }
 }

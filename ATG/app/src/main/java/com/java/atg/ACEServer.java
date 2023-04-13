@@ -1,5 +1,6 @@
 package com.java.atg;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -10,13 +11,13 @@ public class ACEServer {
     /*
      * Get thread to start the server
      * */
-    public static Thread GetStarterThread(Long pid, Integer portNum) throws IOException {
+    public static Thread GetStarterThread(Context context, Long pid, Integer portNum) throws IOException {
         Thread thread = new Thread(
                 () -> {
                     Log.i("ATG", "Running Binary");
                     String path = "";
                     try {
-                        path = Binary.GetBinPath(Binary.Type.server);
+                        path = Binary.GetBinPath(context, Binary.Type.server);
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }

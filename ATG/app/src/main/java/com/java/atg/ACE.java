@@ -1,5 +1,7 @@
 package com.java.atg;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,15 @@ public class ACE {
     private Thread serverThread = null;
     private ACEClient client;
     private Integer portNum;
+    private Context context;
 
-    public ACE(Integer portNum) throws IOException{
+    public ACE(Context context, Integer portNum) throws IOException{
         this.portNum = portNum;
-        this.client = new ACEClient(portNum);
+        this.context = context;
+        this.client = new ACEClient(context, portNum);
     }
-    public ACE() throws IOException {
-        this(Port.GetOpenPort());
+    public ACE(Context context) throws IOException {
+        this(context, Port.GetOpenPort());
     }
 
     public Thread GetServerThread() {
@@ -27,7 +31,7 @@ public class ACE {
     }
 
     public void Attach(Long pid) throws IOException {
-        this.serverThread = ACEServer.GetStarterThread(pid, this.portNum);
+        this.serverThread = ACEServer.GetStarterThread(this.context, pid, this.portNum);
         this.serverThread.start();
     }
 

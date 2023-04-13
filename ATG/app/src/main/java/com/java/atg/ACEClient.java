@@ -1,5 +1,7 @@
 package com.java.atg;
 
+import android.content.Context;
+
 import com.topjohnwu.superuser.Shell;
 
 import java.io.IOException;
@@ -10,8 +12,8 @@ public class ACEClient {
     String binaryPath = "";
     Integer port;
 
-    public ACEClient(Integer port) throws IOException {
-        this.binaryPath = Binary.GetBinPath(Binary.Type.client);
+    public ACEClient(Context context, Integer port) throws IOException {
+        this.binaryPath = Binary.GetBinPath(context, Binary.Type.client);
         this.port = port;
     }
 

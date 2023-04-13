@@ -27,10 +27,9 @@ public class Asset {
     * returns full path of the copied file
     * https://stackoverflow.com/a/18753500/14073678
     * */
-    public static String CopyAssetToExecutableDir(String srcFileStr) throws IOException {
+    public static String CopyAssetToExecutableDir(Context context, String srcFileStr) throws IOException {
         File srcFile = new File(srcFileStr);
         // get the directory where we can execute this file
-        Context context = ATG.GetContext();
         AssetManager assetManager = context.getAssets();
         String appDirStr = context.getFilesDir().getPath();
         // open the original file as InputStream and copy it
