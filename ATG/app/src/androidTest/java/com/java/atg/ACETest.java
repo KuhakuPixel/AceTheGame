@@ -37,7 +37,7 @@ public class ACETest {
         // we should have thread that runs the server
         Assert.assertNotNull(ace.GetServerThread());
 
-        ace.Deattach();
+        ace.DeAttach();
         // server's thread shouldn't exist anymore
         Assert.assertNull(ace.GetServerThread());
 
@@ -58,7 +58,7 @@ public class ACETest {
             Assert.assertEquals(true, ace.IsAttached());
             Assert.assertEquals(pid, ace.GetAttachedPid());
             Assert.assertNotNull(ace.GetServerThread());
-            ace.Deattach();
+            ace.DeAttach();
             Assert.assertNull(ace.GetServerThread());
         }
     }
@@ -76,5 +76,59 @@ public class ACETest {
         Assert.assertFalse(ace.IsPidRunning(pid));
 
     }
+
+    @Test
+    public void AttachInARowException() throws IOException {
+
+        ACE ace = new ACE(ATG.GetContext());
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        //
+        ace.Attach(pid);
+        // can't Attach in a row without DeAttaching first
+        try {
+            ace.Attach(pid);
+            Assert.fail();
+        }catch(ACE.AttachingInARowException e){
+           Assert.assertTrue(true);
+        }
+        // cleanup
+        p.destroy();
+
+    }
+
+    @Test
+    public void DeAttachingWithoutAttachException() throws IOException, InterruptedException {
+
+        ACE ace = new ACE(ATG.GetContext());
+        Process p = ProcUtil.RunBusyProgram();
+        // can't DeAttach without Attach first
+        try {
+            ace.DeAttach();
+            Assert.fail();
+        }catch(ACE.NoAttachException e){
+            Assert.assertTrue(true);
+        }
+        // cleanup
+        p.destroy();
+
+    }
+    @Test
+    public void OperationRequiresAttach() throws IOException{
+
+        ACE ace = new ACE(ATG.GetContext());
+        Process p = ProcUtil.RunBusyProgram();
+        // can't do operation without Attach first
+        try {
+            ace.GetAttachedPid();
+            Assert.fail();
+        }catch(ACE.NoAttachException e){
+            Assert.assertTrue(true);
+        }
+        // cleanup
+        p.destroy();
+
+    }
+
 
 }

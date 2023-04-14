@@ -45,7 +45,7 @@ public class ProcessFragment extends Fragment {
          * */
         try {
             if (ATG.GetAce().IsAttached())
-                ATG.GetAce().Deattach();
+                ATG.GetAce().DeAttach();
         } catch (InterruptedException e) {
             DialogUtil.ShowError(getContext(), e.getMessage());
             return;
