@@ -33,12 +33,8 @@ public class ProcessFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
-    public void OnAttach(Long pid) {
+    public void OnAttach(TextView attachedProcView, Long pid, String procName) {
         /*
          * if is attached to some process previously
          * deattach first
@@ -59,6 +55,8 @@ public class ProcessFragment extends Fragment {
         // then we can attach
         try {
             ATG.GetAce().Attach(pid);
+            // update text on what process we are attached to
+            attachedProcView.setText(String.format("%d - %s", pid, procName));
         } catch (IOException e) {
             DialogUtil.ShowError(getContext(), e.getMessage());
             return;
@@ -71,7 +69,8 @@ public class ProcessFragment extends Fragment {
             DialogUtil.ShowError(getContext(), "Unknown error when attaching, attached to wrong process");
     }
 
-    private void OnRowClicked(Long pid, String procName) {
+    private void OnRowClicked(View mainView, Long pid, String procName) {
+
         new AlertDialog.Builder(this.getContext())
                 .setTitle("Attaching")
                 .setMessage(String.format("Attach to %d (%s)?", pid, procName))
@@ -79,7 +78,8 @@ public class ProcessFragment extends Fragment {
                 // The dialog is automatically dismissed when a dialog button is clicked.
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        OnAttach(pid);
+                        TextView attachedProcView = mainView.findViewById(R.id.SelectedProcStatus);
+                        OnAttach(attachedProcView, pid, procName);
                     }
                 })
 
@@ -92,7 +92,7 @@ public class ProcessFragment extends Fragment {
     /**
      * Make Row View representation from [ProcInfo]
      */
-    private TableRow ProcInfoToTableRow(LayoutInflater inflater, ProcInfo procInfo, int apkIndex) {
+    private TableRow ProcInfoToTableRow(View mainView, LayoutInflater inflater, ProcInfo procInfo, int apkIndex) {
 
         TableRow rowView = (TableRow) inflater.inflate(R.layout.process_table_row, null);
         // =========== setup row ===========
@@ -115,7 +115,7 @@ public class ProcessFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        OnRowClicked(pid, procInfo.GetName());
+                        OnRowClicked(mainView, pid, procInfo.GetName());
                     }
                 }
 
@@ -123,6 +123,10 @@ public class ProcessFragment extends Fragment {
         return rowView;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,7 +137,7 @@ public class ProcessFragment extends Fragment {
 
         List<ProcInfo> runningProcs = ATG.GetAce().ListRunningProc();
         for (int i = 0; i < runningProcs.size(); i++) {
-            TableRow rowView = ProcInfoToTableRow(inflater, runningProcs.get(i), i);
+            TableRow rowView = ProcInfoToTableRow(mainView, inflater, runningProcs.get(i), i);
             procTable.addView(rowView);
         }
         return mainView;

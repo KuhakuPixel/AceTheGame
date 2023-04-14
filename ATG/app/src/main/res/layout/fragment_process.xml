@@ -8,11 +8,14 @@
     tools:context=".ProcessFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/SelectedProcStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Process"
+        android:layout_marginTop="164dp"
+        android:text="@string/no_process_selected"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
