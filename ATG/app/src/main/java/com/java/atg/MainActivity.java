@@ -33,7 +33,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
     static {
@@ -61,12 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     setContentView(R.layout.activity_main);
 
                     BottomNavigationView navigationView = findViewById(R.id.bottom_navigation_view);
-
-                    AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-
-                            R.id.processFragment, R.id.memoryFragment, R.id.settingFragment).build();
-
-                    // this.getSupportActionBar();
                     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment_host);
                     NavController navController = navHostFragment.getNavController();
                     NavigationUI.setupWithNavController(navigationView, navController);
