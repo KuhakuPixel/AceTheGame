@@ -51,11 +51,17 @@ public class ProcessFragment extends Fragment {
             return;
 
         }
+        // make sure The Process still exist
+        if (!ATG.GetAce().IsPidRunning(pid)) {
+            DialogUtil.ShowError(getContext(), String.format("Process %d doesn't exist anymore", pid));
+            return;
+        }
         // then we can attach
         try {
             ATG.GetAce().Attach(pid);
         } catch (IOException e) {
             DialogUtil.ShowError(getContext(), e.getMessage());
+            return;
         }
 
         // just to make sure if we are attached to the correct process
