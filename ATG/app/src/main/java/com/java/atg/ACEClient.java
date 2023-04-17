@@ -1,10 +1,8 @@
 package com.java.atg;
 
-import com.topjohnwu.superuser.Shell;
+import android.content.Context;
 
-import org.zeromq.SocketType;
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ;
+import com.topjohnwu.superuser.Shell;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,8 +12,8 @@ public class ACEClient {
     String binaryPath = "";
     Integer port;
 
-    public ACEClient(Integer port) throws IOException {
-        this.binaryPath = Binary.GetBinPath(Binary.Type.client);
+    public ACEClient(Context context, Integer port) throws IOException {
+        this.binaryPath = Binary.GetBinPath(context, Binary.Type.client);
         this.port = port;
     }
 
@@ -33,6 +31,23 @@ public class ACEClient {
         String outStr = String.join("\n", out);
         return outStr;
 
+    }
+
+    public List<String> MainCmdAsList(String requestCmd) {
+
+        // need to use "main" because its the subcommand for Main Command
+        String[] cmdArr = new String[]{this.binaryPath, "main", requestCmd};
+        String cmdStr = String.join(" ", cmdArr);
+        // run command
+        Shell.Result result = Shell.cmd(cmdStr).exec();
+        List<String> out = result.getOut();
+        return out;
+
+    }
+    public String MainCmd(String requestCmd){
+        List<String> out = MainCmdAsList(requestCmd);
+        String outStr = String.join("\n", out);
+        return outStr;
     }
 
 }

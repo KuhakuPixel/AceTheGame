@@ -69,6 +69,7 @@ set(lib_ACE_src
 	src/main_cmd_handler.cpp src/loaded_mem_info.cpp src/scan_utils.cpp src/thread_continuous.cpp src/freeze.cpp
 	src/to_frontend.cpp src/math_util.cpp src/match_store.cpp src/ACE_jni.cpp src/server.cpp
 	src/engine_module.cpp src/cheat_session.cpp src/engine_server.cpp src/engine_client.cpp
+	src/main_cmd_creator.cpp
 )
 
 add_library(lib_ACE SHARED ${lib_ACE_src})

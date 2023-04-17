@@ -1,7 +1,12 @@
 package com.java.atg;
 
+import static android.content.Context.ACTIVITY_SERVICE;
+
+import android.app.ActivityManager;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class ProcUtil {
 
@@ -27,16 +32,16 @@ public class ProcUtil {
     /**
      * run a program that does nothing,
      * this function is only for testing
-     * return: pid of created process
+     * return: created process
      */
-    public static long RunBusyProgram() throws IOException {
+    public static Process RunBusyProgram() throws IOException {
 
         // command that do nothing and runs forever
         // https://unix.stackexchange.com/a/42905/505340
 
         String cmd = "tail -f /dev/null";
         Process process = Runtime.getRuntime().exec(cmd);
-        return GetPid(process);
+        return process;
 
     }
 }

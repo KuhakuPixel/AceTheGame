@@ -40,6 +40,10 @@ void process_map_cmd_handler(int pid, bool ps_map_list_all) {
   frontend_print("------------------------------------\n");
 }
 
+void process_is_running_handler(int pid) {
+  bool is_running = proc_is_running(pid);
+  printf("%s\n", is_running ? "true" : "false");
+}
 void list_processes_cmd_handler(bool ps_ls_reverse) {
 
   std::vector<struct proc_info> processes_infos = list_processes();

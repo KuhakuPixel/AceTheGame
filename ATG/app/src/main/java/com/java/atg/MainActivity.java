@@ -1,7 +1,9 @@
 package com.java.atg;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -18,8 +22,10 @@ import com.java.atg.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toolbar;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.topjohnwu.superuser.Shell;
 
@@ -27,7 +33,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
     static {
@@ -44,62 +49,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         // Preheat the main root shell in the splash screen
         // so the app can use it afterwards without interrupting
         // application flow (e.g. root permission prompt)
         Shell.getShell(
 
                 shell -> {
-                    binding = ActivityMainBinding.inflate(getLayoutInflater());
-                    setContentView(binding.getRoot());
+                    setContentView(R.layout.activity_main);
 
-                    setSupportActionBar(binding.toolbar);
+                    BottomNavigationView navigationView = findViewById(R.id.bottom_navigation_view);
+                    NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment_host);
+                    NavController navController = navHostFragment.getNavController();
+                    NavigationUI.setupWithNavController(navigationView, navController);
 
-                    NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-                    appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-                    NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-                    binding.fab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
-                        }
-                    });
                 }
 
         );
-
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }

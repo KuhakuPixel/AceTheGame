@@ -22,11 +22,12 @@ public class BinaryTest {
 
     @Test
     public void GetBinPath() throws IOException {
+        Context context = ATG.GetContext();
         String path = "";
-        path = Binary.GetBinPath(Binary.Type.server);
+        path = Binary.GetBinPath(context, Binary.Type.server);
         assert (path != "");
 
-        path = Binary.GetBinPath(Binary.Type.client);
+        path = Binary.GetBinPath(context, Binary.Type.client);
         assert (path != "");
     }
 }

@@ -1,23 +1,74 @@
 package com.java.atg;
 
+import android.content.Context;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ACE {
+
+    /**
+     * thrown when an operation requires attach to a process
+     * but we haven't
+     */
+    public class NoAttachException extends RuntimeException {
+        public NoAttachException() {
+            super();
+        }
+
+        public NoAttachException(String msg) {
+            super(msg);
+        }
+
+    }
+
+    /**
+     * thrown when trying to attach when we have attached to a process
+     * without deattaching first
+     */
+    public class AttachingInARowException extends RuntimeException {
+        public AttachingInARowException() {
+            super();
+        }
+
+        public AttachingInARowException(String msg) {
+            super(msg);
+        }
+
+    }
+
     /**
      * the running server thread
      * <p>
      * if null means it isn't attached to anything
      */
     private Thread serverThread = null;
-    private ACEClient client;
-    private Integer portNum;
+    private final ACEClient client;
+    private final Integer portNum;
+    private final Context context;
 
-    public ACE(Integer portNum) throws IOException{
+    public ACE(Context context, Integer portNum) throws IOException {
         this.portNum = portNum;
-        this.client = new ACEClient(portNum);
+        this.context = context;
+        this.client = new ACEClient(context, portNum);
     }
-    public ACE() throws IOException {
-        this(Port.GetOpenPort());
+
+    public ACE(Context context) throws IOException {
+        this(context, Port.GetOpenPort());
+    }
+
+    public Boolean IsAttached() {
+        if (serverThread == null) return false;
+        return client.Request("attached").equals("attached_ok");
+    }
+    private void AssertAttached() {
+        if (!this.IsAttached())
+            throw new NoAttachException("Operation requires attaching to a process, but it hasn't been attached");
+    }
+    private void AssertNoAttachInARow() {
+        if (this.IsAttached())
+            throw new AttachingInARowException("Cannot Attach without DeAttaching first");
     }
 
     public Thread GetServerThread() {
@@ -25,11 +76,13 @@ public class ACE {
     }
 
     public void Attach(Long pid) throws IOException {
-        this.serverThread = ACEServer.GetStarterThread(pid, this.portNum);
+        AssertNoAttachInARow();
+        this.serverThread = ACEServer.GetStarterThread(this.context, pid, this.portNum);
         this.serverThread.start();
     }
 
-    public void Deattach() throws InterruptedException {
+    public void DeAttach() throws InterruptedException {
+        AssertAttached();
         // tell server to die
         client.Request("stop");
         // wait for server's thread to finish
@@ -39,13 +92,30 @@ public class ACE {
         serverThread = null;
     }
 
-    public Boolean IsAttached() {
-        if (serverThread == null) return false;
-        return client.Request("attached").equals("attached_ok");
-    }
 
+    // =============== this commands require attach ===================
     public Long GetAttachedPid() {
+        AssertAttached();
         String pidStr = client.Request("pid");
         return Long.parseLong(pidStr);
+    }
+
+    // =============== this commands don't require attach ===================
+    public List<ProcInfo> ListRunningProc() {
+        List<ProcInfo> runningProcs = new ArrayList<ProcInfo>();
+        // use --reverse so newest process will be shown first
+        List<String> runningProcsInfoStr = this.client.MainCmdAsList("ps ls --reverse");
+        // parse each string
+        for (String procInfoStr : runningProcsInfoStr) {
+            runningProcs.add(new ProcInfo(procInfoStr));
+        }
+        return runningProcs;
+    }
+
+    public boolean IsPidRunning(Long pid) {
+        String[] cmdArr = new String[]{"ps", "is_running", pid.toString()};
+        String boolStr = this.client.MainCmd(String.join(" ", cmdArr));
+        assert (boolStr.equals("true") || boolStr.equals("false"));
+        return Boolean.parseBoolean(boolStr);
     }
 }
