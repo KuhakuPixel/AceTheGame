@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.java.atg'
+    namespace 'com.kuhakupixel.atg'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.java.atg"
+        applicationId "com.kuhakupixel.atg"
         minSdk 26
         targetSdk 33
         versionCode 1
