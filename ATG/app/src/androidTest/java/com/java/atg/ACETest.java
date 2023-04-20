@@ -1,6 +1,13 @@
 package com.java.atg;
 
+import android.content.Context;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.java.atg.backend.ACE;
+import com.java.atg.backend.ProcInfo;
+import com.java.atg.backend.ProcUtil;
 
 import org.junit.Test;
 import org.junit.*;
@@ -20,14 +27,16 @@ public class ACETest {
     @Test
     public void ListRunningProcs() throws IOException {
 
-        ACE ace = new ACE(ATG.GetContext());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
         List<ProcInfo> runningProcs =  ace.ListRunningProc();
         Assert.assertTrue(runningProcs.size() > 1);
 
     }
     @Test
     public void GetReply() throws IOException, InterruptedException {
-        ACE ace = new ACE(ATG.GetContext());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
         Process p = ProcUtil.RunBusyProgram();
         Long pid = ProcUtil.GetPid(p);
         ace.Attach(pid);
@@ -49,7 +58,8 @@ public class ACETest {
         /*
          * test if we can attach and deattach multiple time reliably
          * */
-        ACE ace = new ACE(ATG.GetContext());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
         int attachDeattachCount = 5;
         for (int i = 0; i < attachDeattachCount; i++) {
             Process p = ProcUtil.RunBusyProgram();
@@ -68,7 +78,8 @@ public class ACETest {
         /*
          * test if we can attach and deattach multiple time reliably
          * */
-        ACE ace = new ACE(ATG.GetContext());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
         Process p = ProcUtil.RunBusyProgram();
         Long pid = ProcUtil.GetPid(p);
         Assert.assertTrue(ace.IsPidRunning(pid));
@@ -80,7 +91,8 @@ public class ACETest {
     @Test
     public void AttachInARowException() throws IOException {
 
-        ACE ace = new ACE(ATG.GetContext());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
         Process p = ProcUtil.RunBusyProgram();
         Long pid = ProcUtil.GetPid(p);
         //
@@ -100,7 +112,8 @@ public class ACETest {
     @Test
     public void DeAttachingWithoutAttachException() throws IOException, InterruptedException {
 
-        ACE ace = new ACE(ATG.GetContext());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
         Process p = ProcUtil.RunBusyProgram();
         // can't DeAttach without Attach first
         try {
@@ -116,7 +129,8 @@ public class ACETest {
     @Test
     public void OperationRequiresAttach() throws IOException{
 
-        ACE ace = new ACE(ATG.GetContext());
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
         Process p = ProcUtil.RunBusyProgram();
         // can't do operation without Attach first
         try {

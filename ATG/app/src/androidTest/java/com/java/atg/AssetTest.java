@@ -8,6 +8,8 @@ import android.content.res.AssetManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.java.atg.backend.Asset;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +30,7 @@ public class AssetTest {
     public void CopyAssetToExecutableDir() throws IOException {
         //
         String pathBin = "bin/ACE/arm64-v8a/ACE";
-        Context context = ATG.GetContext();
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         AssetManager assetManager = context.getAssets();
         InputStream expectedInputStream = assetManager.open(pathBin);
         //

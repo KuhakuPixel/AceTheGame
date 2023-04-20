@@ -7,9 +7,12 @@ import android.content.Context;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.java.atg.backend.Binary;
+
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import java.io.IOException;
 
 /**
@@ -22,12 +25,13 @@ public class BinaryTest {
 
     @Test
     public void GetBinPath() throws IOException {
-        Context context = ATG.GetContext();
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         String path = "";
+
         path = Binary.GetBinPath(context, Binary.Type.server);
-        assert (path != "");
+        Assert.assertFalse(StringUtils.isEmpty(path));
 
         path = Binary.GetBinPath(context, Binary.Type.client);
-        assert (path != "");
+        Assert.assertFalse(StringUtils.isEmpty(path));
     }
 }

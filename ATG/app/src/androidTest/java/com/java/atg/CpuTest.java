@@ -3,10 +3,9 @@ package com.java.atg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import android.content.Context;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.java.atg.backend.Cpu;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

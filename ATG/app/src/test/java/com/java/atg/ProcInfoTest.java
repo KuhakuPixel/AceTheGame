@@ -1,5 +1,7 @@
 package com.java.atg;
 
+import com.java.atg.backend.ProcInfo;
+
 import org.junit.Test;
 import org.junit.Assert;
 
