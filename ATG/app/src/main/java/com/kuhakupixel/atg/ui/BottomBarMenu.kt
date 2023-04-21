@@ -1,4 +1,6 @@
-package com.kuhakupixel.atg
+package com.kuhakupixel.atg.ui
+
+import com.kuhakupixel.atg.R
 
 sealed class BottomBarMenu(
     val route: String,

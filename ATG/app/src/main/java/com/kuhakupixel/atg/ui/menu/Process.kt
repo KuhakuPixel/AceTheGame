@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.menu
+package com.kuhakupixel.atg.ui.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,7 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kuhakupixel.atg.GlobalConf
+import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.dialogUtil.ConfirmDialog
