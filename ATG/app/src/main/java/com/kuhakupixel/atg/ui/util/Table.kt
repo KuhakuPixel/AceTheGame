@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,43 +51,43 @@ fun CreateTable(
         )
     }
     if (colNames.size != colWeights.size) {
-        throw IllegalArgumentException("headerNames and header Weight size are not equal")
+        throw IllegalArgumentException("Column names and weights length not equal")
     }
     if (colNames.isEmpty()) {
-        throw IllegalArgumentException("headerNames empty")
+        throw IllegalArgumentException("Column names empty")
     }
 
     val colCount: Int = colNames.size
-    //
-    LazyColumn(
+
+    Column(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         // header
-
-        item {
-            Row(Modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
-                for (i in 0 until colNames.size)
-                    TableCell(text = colNames[i], weight = colWeights[i])
-            }
+        Row(Modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
+            for (i in 0 until colNames.size)
+                TableCell(text = colNames[i], weight = colWeights[i])
         }
         // items
-        items(rowCount) { rowIndex: Int ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // when row is clicked
-                    .clickable {
-                        onRowClicked(rowIndex)
-                    },
-            ) {
-                for (colIndex in 0 until colCount) {
-                    this.drawCell(
-                        rowIndex = rowIndex,
-                        colIndex = colIndex,
-                        cellModifier = GetCellModifier(weight = colWeights[colIndex]),
-                    )
+        LazyColumn() {
+            // items
+            items(rowCount) { rowIndex: Int ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        // when row is clicked
+                        .clickable {
+                            onRowClicked(rowIndex)
+                        },
+                ) {
+                    for (colIndex in 0 until colCount) {
+                        this.drawCell(
+                            rowIndex = rowIndex,
+                            colIndex = colIndex,
+                            cellModifier = GetCellModifier(weight = colWeights[colIndex]),
+                        )
+                    }
                 }
             }
         }
