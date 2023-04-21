@@ -31,6 +31,7 @@ import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.util.ConfirmDialog
+import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.InfoDialog
 import com.kuhakupixel.atg.ui.util.WarningDialog
 
@@ -70,68 +71,35 @@ fun ProcessTable(
     processList: SnapshotStateList<ProcInfo>,
     onProcessSelected: (pid: Long, procName: String) -> Unit,
 ) {
-    @Composable
-    fun RowScope.TableCell(
-        text: String,
-        weight: Float
-    ) {
-        Text(
-            text = text,
-            Modifier
-                .border(1.dp, MaterialTheme.colorScheme.primary)
-                .weight(weight)
-                .padding(8.dp)
-                // just in case if text is too long
-                .horizontalScroll(rememberScrollState())
-
-        )
-    }
-
-    //
-    //
-    val pidColumnWeight = .3f
-    val nameColumnWeight = .7f
 
     var openConfirmDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
     // the selected Process to Attach
     var selectedPid: MutableState<Long> = remember { mutableStateOf(-1) }
     var selectedProcNameStr: MutableState<String> = remember { mutableStateOf("") }
-    //
-    LazyColumn(
-        Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // header
 
-        item {
-            Row(Modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
-                TableCell(text = "Pid", weight = pidColumnWeight)
-                TableCell(text = "Name", weight = nameColumnWeight)
+    CreateTable(
+        colNames = listOf("Pid", "Name"),
+        colWeights = listOf(0.3f, 0.7f),
+        rowCount = processList.size,
+        onRowClicked = { rowIndex: Int ->
+            // when row is clicked
+            openConfirmDialog.value = true
+            // set params
+            selectedPid.value = processList[rowIndex]
+                .GetPidStr()
+                .toLong()
+            selectedProcNameStr.value = processList[rowIndex].GetName()
+
+        },
+        drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
+            if (colIndex == 0) {
+                Text(text = processList[rowIndex].GetPidStr(), modifier = cellModifier)
+            }
+            if (colIndex == 1) {
+                Text(text = processList[rowIndex].GetName(), modifier = cellModifier)
             }
         }
-        // items
-        items(processList.size) { i: Int ->
-            Row(
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // when row is clicked
-                    .clickable {
-                        openConfirmDialog.value = true
-                        // set params
-                        selectedPid.value = processList[i]
-                            .GetPidStr()
-                            .toLong()
-                        selectedProcNameStr.value = processList[i].GetName()
-
-                    },
-            ) {
-                TableCell(text = processList[i].GetPidStr(), weight = pidColumnWeight)
-                TableCell(text = processList[i].GetName(), weight = nameColumnWeight)
-            }
-        }
-    }
+    )
     // only show dialog if asked to
     if (openConfirmDialog.value) {
         ConfirmDialog(
