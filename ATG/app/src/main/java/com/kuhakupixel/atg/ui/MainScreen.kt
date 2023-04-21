@@ -23,7 +23,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.kuhakupixel.atg.ui.dialogUtil.WarningDialog
+import com.kuhakupixel.atg.ui.util.WarningDialog
 import com.topjohnwu.superuser.Shell
 
 @Composable

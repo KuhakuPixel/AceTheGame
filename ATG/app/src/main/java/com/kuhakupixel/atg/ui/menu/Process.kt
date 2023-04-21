@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
-import com.kuhakupixel.atg.ui.dialogUtil.ConfirmDialog
-import com.kuhakupixel.atg.ui.dialogUtil.InfoDialog
-import com.kuhakupixel.atg.ui.dialogUtil.WarningDialog
+import com.kuhakupixel.atg.ui.util.ConfirmDialog
+import com.kuhakupixel.atg.ui.util.InfoDialog
+import com.kuhakupixel.atg.ui.util.WarningDialog
 
 /**
  * which process we are currently attached to?

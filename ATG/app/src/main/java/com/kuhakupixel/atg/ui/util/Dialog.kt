@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.dialogUtil
+package com.kuhakupixel.atg.ui.util
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
