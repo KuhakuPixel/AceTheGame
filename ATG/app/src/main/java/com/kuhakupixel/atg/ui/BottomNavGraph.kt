@@ -1,15 +1,15 @@
-package com.kuhakupixel.atg
+package com.kuhakupixel.atg.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.kuhakupixel.atg.menu.ProcessMenu
-import com.kuhakupixel.atg.menu.MemoryMenu
-import com.kuhakupixel.atg.menu.SettingsMenu
+import com.kuhakupixel.atg.ui.menu.ProcessMenu
+import com.kuhakupixel.atg.ui.menu.MemoryMenu
+import com.kuhakupixel.atg.ui.menu.SettingsMenu
 
 @Composable
-fun BottomNavGraph(navController: NavHostController,globalConf:GlobalConf) {
+fun BottomNavGraph(navController: NavHostController,globalConf: GlobalConf) {
     NavHost(
         navController = navController,
         startDestination = BottomBarMenu.Process.route

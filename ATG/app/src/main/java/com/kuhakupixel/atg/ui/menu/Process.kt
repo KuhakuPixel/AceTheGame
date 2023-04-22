@@ -1,21 +1,13 @@
-package com.kuhakupixel.atg.menu
+package com.kuhakupixel.atg.ui.menu
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -25,14 +17,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kuhakupixel.atg.GlobalConf
+import com.kuhakupixel.atg.R
+import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
-import com.kuhakupixel.atg.ui.dialogUtil.ConfirmDialog
-import com.kuhakupixel.atg.ui.dialogUtil.InfoDialog
-import com.kuhakupixel.atg.ui.dialogUtil.WarningDialog
+import com.kuhakupixel.atg.ui.util.ConfirmDialog
+import com.kuhakupixel.atg.ui.util.CreateTable
+import com.kuhakupixel.atg.ui.util.ErrorDialog
+import com.kuhakupixel.atg.ui.util.InfoDialog
+import com.kuhakupixel.atg.ui.util.WarningDialog
 
 /**
  * which process we are currently attached to?
@@ -45,6 +41,7 @@ private fun AttachToProcess(
     pid: Long,
     onProcessNoExistAnymore: @Composable () -> Unit,
     onAttachSuccess: @Composable () -> Unit,
+    onAttachFailure: @Composable (msg: String) -> Unit,
 ) {
 
     // check if its still alive
@@ -56,11 +53,21 @@ private fun AttachToProcess(
     if (ace.IsAttached()) {
         ace.DeAttach()
     }
+    // attach
     ace.Attach(pid)
+    var attachedPid: Long = -1
+    try {
+        attachedPid = ace.GetAttachedPid()
+    } catch (e: Exception) {
+        onAttachFailure("Unable to attach to process:  ${e.stackTraceToString()}")
+        return
+    }
     // final check to see if we are attached
     // to the correct process
-    if (pid == ace.GetAttachedPid()) {
+    if (attachedPid == pid) {
         onAttachSuccess()
+    } else {
+        onAttachFailure("Unexpected Error, cannot attach to $pid")
     }
 
 }
@@ -70,68 +77,36 @@ fun ProcessTable(
     processList: SnapshotStateList<ProcInfo>,
     onProcessSelected: (pid: Long, procName: String) -> Unit,
 ) {
-    @Composable
-    fun RowScope.TableCell(
-        text: String,
-        weight: Float
-    ) {
-        Text(
-            text = text,
-            Modifier
-                .border(1.dp, MaterialTheme.colorScheme.primary)
-                .weight(weight)
-                .padding(8.dp)
-                // just in case if text is too long
-                .horizontalScroll(rememberScrollState())
-
-        )
-    }
-
-    //
-    //
-    val pidColumnWeight = .3f
-    val nameColumnWeight = .7f
 
     var openConfirmDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
     // the selected Process to Attach
     var selectedPid: MutableState<Long> = remember { mutableStateOf(-1) }
     var selectedProcNameStr: MutableState<String> = remember { mutableStateOf("") }
-    //
-    LazyColumn(
-        Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // header
 
-        item {
-            Row(Modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
-                TableCell(text = "Pid", weight = pidColumnWeight)
-                TableCell(text = "Name", weight = nameColumnWeight)
+    CreateTable(
+        colNames = listOf("Pid", "Name"),
+        colWeights = listOf(0.3f, 0.7f),
+        itemCount = processList.size,
+        minEmptyItemCount = 50,
+        onRowClicked = { rowIndex: Int ->
+            // when row is clicked
+            openConfirmDialog.value = true
+            // set params
+            selectedPid.value = processList[rowIndex]
+                .GetPidStr()
+                .toLong()
+            selectedProcNameStr.value = processList[rowIndex].GetName()
+
+        },
+        drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
+            if (colIndex == 0) {
+                Text(text = processList[rowIndex].GetPidStr(), modifier = cellModifier)
+            }
+            if (colIndex == 1) {
+                Text(text = processList[rowIndex].GetName(), modifier = cellModifier)
             }
         }
-        // items
-        items(processList.size) { i: Int ->
-            Row(
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // when row is clicked
-                    .clickable {
-                        openConfirmDialog.value = true
-                        // set params
-                        selectedPid.value = processList[i]
-                            .GetPidStr()
-                            .toLong()
-                        selectedProcNameStr.value = processList[i].GetName()
-
-                    },
-            ) {
-                TableCell(text = processList[i].GetPidStr(), weight = pidColumnWeight)
-                TableCell(text = processList[i].GetName(), weight = nameColumnWeight)
-            }
-        }
-    }
+    )
     // only show dialog if asked to
     if (openConfirmDialog.value) {
         ConfirmDialog(
@@ -145,8 +120,11 @@ fun ProcessTable(
 @Composable
 private fun _ProcessMenu(
     runningProcState: SnapshotStateList<ProcInfo>,
-    onAttach: (pid: Long, procName: String) -> Unit
-) {
+    onRefreshClicked: () -> Unit,
+    onAttach: (pid: Long, procName: String) -> Unit,
+
+
+    ) {
 
     Box(
         modifier = Modifier
@@ -156,6 +134,14 @@ private fun _ProcessMenu(
         Column() {
             Spacer(modifier = Modifier.height(10.dp))
             Text("Selected process: ${attachedStatusString.value}")
+            Spacer(modifier = Modifier.height(10.dp))
+            Button(onClick = onRefreshClicked, modifier = Modifier.padding(start = 10.dp)) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_refresh),
+                    contentDescription = "Refresh",
+                )
+            }
+
             ProcessTable(
                 processList = runningProcState,
                 onProcessSelected = onAttach,
@@ -165,31 +151,42 @@ private fun _ProcessMenu(
 }
 
 
+fun refreshProcList(ace: ACE?, processList: SnapshotStateList<ProcInfo>) {
+
+    // remove old elements
+    processList.clear()
+    // grab new one and add to the list
+    val runningProcs: List<ProcInfo>? = ace!!.ListRunningProc()
+    if (runningProcs != null) {
+        for (proc in runningProcs)
+            processList.add(proc)
+    }
+}
+
 @Composable
 fun ProcessMenu(globalConf: GlobalConf?) {
     val ace: ACE? = globalConf?.getAce()
-    // copy to list first
-    val runningProcs: List<ProcInfo>? = ace?.ListRunningProc()
-    val runningProcState = remember { SnapshotStateList<ProcInfo>() }
-    if (runningProcs != null) {
-        for (proc in runningProcs)
-            runningProcState.add(proc)
-    }
+    // list of processes that are gonna be shown
+    val currentProcList = remember { SnapshotStateList<ProcInfo>() }
+    //
+    // initialize the list first
+    refreshProcList(ace, currentProcList)
     // params
     val shouldAttach: MutableState<Boolean> = remember { mutableStateOf(false) }
     val pidToAttach: MutableState<Long> = remember { mutableStateOf(0) }
     val procNameToAttach: MutableState<String> = remember { mutableStateOf("") }
     _ProcessMenu(
-        runningProcState,
+        currentProcList,
         onAttach = { pid: Long, procName: String ->
             shouldAttach.value = true
             pidToAttach.value = pid
             procNameToAttach.value = procName
         },
+        onRefreshClicked = { refreshProcList(ace, currentProcList) }
     )
     if (shouldAttach.value) {
         // this should be called to close all the window
-        val onAttachDialogClose: () -> Unit = { shouldAttach.value = false }
+        val closeDialog: () -> Unit = { shouldAttach.value = false }
         //
         AttachToProcess(
             ace = ace, pid = pidToAttach.value,
@@ -197,7 +194,7 @@ fun ProcessMenu(globalConf: GlobalConf?) {
                 InfoDialog(
                     msg = "Attaching to ${procNameToAttach.value} is successful",
                     onClick = {},
-                    onClose = onAttachDialogClose,
+                    onClose = closeDialog,
                 )
                 attachedStatusString.value = "${pidToAttach.value} - ${procNameToAttach.value}"
             },
@@ -205,7 +202,14 @@ fun ProcessMenu(globalConf: GlobalConf?) {
                 WarningDialog(
                     msg = "Process ${procNameToAttach.value} is not running anymore, Can't attach",
                     onClick = {},
-                    onClose = onAttachDialogClose,
+                    onClose = closeDialog,
+                )
+            },
+            onAttachFailure = { msg: String ->
+                ErrorDialog(
+                    msg = msg,
+                    onClick = {},
+                    onClose = closeDialog,
                 )
             },
         )

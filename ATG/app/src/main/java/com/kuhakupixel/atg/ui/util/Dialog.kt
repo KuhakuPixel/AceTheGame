@@ -1,9 +1,13 @@
-package com.kuhakupixel.atg.ui.dialogUtil
+package com.kuhakupixel.atg.ui.util
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 
 /**
@@ -26,7 +30,12 @@ fun _ShowDialog(
             Text(title)
         },
         text = {
-            Text(msg)
+            Text(
+                msg,
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .horizontalScroll(rememberScrollState()),
+            )
         },
         confirmButton = {
             Button(
@@ -58,6 +67,11 @@ fun InfoDialog(msg: String, onClose: () -> Unit, onClick: () -> Unit) {
 @Composable
 fun WarningDialog(msg: String, onClose: () -> Unit, onClick: () -> Unit) {
     _ShowDialog(title = "Warning", msg = msg, onClose = onClose, onClick = onClick)
+}
+
+@Composable
+fun ErrorDialog(msg: String, onClose: () -> Unit, onClick: () -> Unit) {
+    _ShowDialog(title = "Error", msg = msg, onClose = onClose, onClick = onClick)
 }
 
 @Composable

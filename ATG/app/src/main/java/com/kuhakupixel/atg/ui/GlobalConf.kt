@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg
+package com.kuhakupixel.atg.ui
 
 import android.content.Context
 import com.kuhakupixel.atg.backend.ACE
