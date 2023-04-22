@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.backend.ACE
-import com.kuhakupixel.atg.backend.ACE.NoAttachException
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.util.ConfirmDialog
 import com.kuhakupixel.atg.ui.util.CreateTable
@@ -87,7 +86,8 @@ fun ProcessTable(
     CreateTable(
         colNames = listOf("Pid", "Name"),
         colWeights = listOf(0.3f, 0.7f),
-        rowCount = processList.size,
+        itemCount = processList.size,
+        minEmptyItemCount = 50,
         onRowClicked = { rowIndex: Int ->
             // when row is clicked
             openConfirmDialog.value = true

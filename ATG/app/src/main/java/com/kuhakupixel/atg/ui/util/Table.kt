@@ -18,13 +18,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import java.lang.IllegalArgumentException
+import kotlin.math.max
 
 
 @Composable
 fun CreateTable(
     colNames: List<String>,
     colWeights: List<Float>,
-    rowCount: Int,
+    itemCount: Int,
+    minEmptyItemCount: Int = 0,
     onRowClicked: (rowIndex: Int) -> Unit,
     drawCell: @Composable RowScope.(rowIndex: Int, colIndex: Int, cellModifier: Modifier) -> Unit,
 ) {
@@ -72,7 +74,7 @@ fun CreateTable(
         // items
         LazyColumn() {
             // items
-            items(rowCount) { rowIndex: Int ->
+            items(itemCount) { rowIndex: Int ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -88,6 +90,19 @@ fun CreateTable(
                             cellModifier = GetCellModifier(weight = colWeights[colIndex]),
                         )
                     }
+                }
+            }
+            // ============== show Empty Item ======================
+            var emptyItemShownCount: Int = max(0, minEmptyItemCount - itemCount)
+            items(emptyItemShownCount) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {}
+                ) {
+                    for (i in 0 until colCount)
+                        TableCell(text = "", weight = colWeights[i])
+
                 }
             }
         }
