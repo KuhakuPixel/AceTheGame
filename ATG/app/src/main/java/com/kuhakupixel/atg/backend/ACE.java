@@ -59,8 +59,7 @@ public class ACE {
     }
 
     public Boolean IsAttached() {
-        if (serverThread == null) return false;
-        return client.Request("attached").equals("attached_ok");
+        return serverThread != null;
     }
     private void AssertAttached() {
         if (!this.IsAttached())
