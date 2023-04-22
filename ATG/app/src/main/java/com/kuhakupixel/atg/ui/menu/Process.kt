@@ -23,9 +23,11 @@ import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.backend.ACE
+import com.kuhakupixel.atg.backend.ACE.NoAttachException
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.util.ConfirmDialog
 import com.kuhakupixel.atg.ui.util.CreateTable
+import com.kuhakupixel.atg.ui.util.ErrorDialog
 import com.kuhakupixel.atg.ui.util.InfoDialog
 import com.kuhakupixel.atg.ui.util.WarningDialog
 
@@ -40,6 +42,7 @@ private fun AttachToProcess(
     pid: Long,
     onProcessNoExistAnymore: @Composable () -> Unit,
     onAttachSuccess: @Composable () -> Unit,
+    onAttachFailure: @Composable (msg: String) -> Unit,
 ) {
 
     // check if its still alive
@@ -51,11 +54,21 @@ private fun AttachToProcess(
     if (ace.IsAttached()) {
         ace.DeAttach()
     }
+    // attach
     ace.Attach(pid)
+    var attachedPid: Long = -1
+    try {
+        attachedPid = ace.GetAttachedPid()
+    } catch (e: Exception) {
+        onAttachFailure("Unable to attach to process:  ${e.stackTraceToString()}")
+        return
+    }
     // final check to see if we are attached
     // to the correct process
-    if (pid == ace.GetAttachedPid()) {
+    if (attachedPid == pid) {
         onAttachSuccess()
+    } else {
+        onAttachFailure("Unexpected Error, cannot attach to $pid")
     }
 
 }
@@ -173,7 +186,7 @@ fun ProcessMenu(globalConf: GlobalConf?) {
     )
     if (shouldAttach.value) {
         // this should be called to close all the window
-        val onAttachDialogClose: () -> Unit = { shouldAttach.value = false }
+        val closeDialog: () -> Unit = { shouldAttach.value = false }
         //
         AttachToProcess(
             ace = ace, pid = pidToAttach.value,
@@ -181,7 +194,7 @@ fun ProcessMenu(globalConf: GlobalConf?) {
                 InfoDialog(
                     msg = "Attaching to ${procNameToAttach.value} is successful",
                     onClick = {},
-                    onClose = onAttachDialogClose,
+                    onClose = closeDialog,
                 )
                 attachedStatusString.value = "${pidToAttach.value} - ${procNameToAttach.value}"
             },
@@ -189,7 +202,14 @@ fun ProcessMenu(globalConf: GlobalConf?) {
                 WarningDialog(
                     msg = "Process ${procNameToAttach.value} is not running anymore, Can't attach",
                     onClick = {},
-                    onClose = onAttachDialogClose,
+                    onClose = closeDialog,
+                )
+            },
+            onAttachFailure = { msg: String ->
+                ErrorDialog(
+                    msg = msg,
+                    onClick = {},
+                    onClose = closeDialog,
                 )
             },
         )
