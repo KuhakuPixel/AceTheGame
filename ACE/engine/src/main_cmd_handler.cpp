@@ -134,3 +134,14 @@ void license_cmd_handler() { frontend_print("%s\n", ACE_global::license); }
 void credit_cmd_handler() {
   frontend_print("%s\n", ACE_global::engine_credits);
 }
+
+void type_size_cmd_handler() {
+
+  for (auto it = E_num_type_to_bit_size_map.begin();
+       it != E_num_type_to_bit_size_map.end(); it++) {
+    E_num_type num_type = it->first;
+    size_t num_type_size = it->second;
+    std::string num_type_str = E_num_type_to_str_map.at(num_type);
+    frontend_print("%s %zu\n", num_type_str.c_str(), num_type_size);
+  }
+}

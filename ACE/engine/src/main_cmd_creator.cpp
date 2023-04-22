@@ -150,4 +150,17 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
       }
 
   );
+
+  // ================================= type command ================
+  CLI::App *type_cmd = app->add_subcommand(
+      "type", "get information about all supported number type");
+
+  CLI::App *type_size_cmd =
+      type_cmd->add_subcommand("size", "get all number type size in bits");
+
+  type_size_cmd->callback(
+
+      []() -> void { type_size_cmd_handler(); }
+
+  );
 }
