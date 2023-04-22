@@ -61,10 +61,12 @@ public class ACE {
     public Boolean IsAttached() {
         return serverThread != null;
     }
+
     private void AssertAttached() {
         if (!this.IsAttached())
             throw new NoAttachException("Operation requires attaching to a process, but it hasn't been attached");
     }
+
     private void AssertNoAttachInARow() {
         if (this.IsAttached())
             throw new AttachingInARowException("Cannot Attach without DeAttaching first");
@@ -116,5 +118,27 @@ public class ACE {
         String boolStr = this.client.MainCmd(String.join(" ", cmdArr));
         assert (boolStr.equals("true") || boolStr.equals("false"));
         return Boolean.parseBoolean(boolStr);
+    }
+
+    /**
+     * Get List of available number types and its bit size
+     * that ACE engine support, with command `type size`
+     * which will return list of "<type name> <bit size>"
+     * like "int 32", "short 16" and ect
+     */
+    public List<NumType> GetAvailableNumTypes() {
+        List<NumType> numTypes = new ArrayList<NumType>();
+        String[] cmdArr = new String[]{"type", "size"};
+
+        List<String> out = this.client.MainCmdAsList(String.join(" ", cmdArr));
+        for (String s : out) {
+            String[] splitted = s.split(" ");
+            assert 2 == splitted.length;
+            String typeStr = splitted[0];
+            Integer bitSize = Integer.parseInt(splitted[1]);
+            numTypes.add(new NumType(typeStr, bitSize));
+        }
+        return numTypes;
+
     }
 }

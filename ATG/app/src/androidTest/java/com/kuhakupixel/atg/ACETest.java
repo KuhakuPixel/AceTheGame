@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.kuhakupixel.atg.backend.ACE;
+import com.kuhakupixel.atg.backend.NumType;
 import com.kuhakupixel.atg.backend.ProcInfo;
 import com.kuhakupixel.atg.backend.ProcUtil;
 
@@ -14,6 +15,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,10 +31,11 @@ public class ACETest {
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ACE ace = new ACE(context);
-        List<ProcInfo> runningProcs =  ace.ListRunningProc();
+        List<ProcInfo> runningProcs = ace.ListRunningProc();
         Assert.assertTrue(runningProcs.size() > 1);
 
     }
+
     @Test
     public void GetReply() throws IOException, InterruptedException {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -101,8 +104,8 @@ public class ACETest {
         try {
             ace.Attach(pid);
             Assert.fail();
-        }catch(ACE.AttachingInARowException e){
-           Assert.assertTrue(true);
+        } catch (ACE.AttachingInARowException e) {
+            Assert.assertTrue(true);
         }
         // cleanup
         p.destroy();
@@ -119,15 +122,16 @@ public class ACETest {
         try {
             ace.DeAttach();
             Assert.fail();
-        }catch(ACE.NoAttachException e){
+        } catch (ACE.NoAttachException e) {
             Assert.assertTrue(true);
         }
         // cleanup
         p.destroy();
 
     }
+
     @Test
-    public void OperationRequiresAttach() throws IOException{
+    public void OperationRequiresAttach() throws IOException {
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ACE ace = new ACE(context);
@@ -136,12 +140,31 @@ public class ACETest {
         try {
             ace.GetAttachedPid();
             Assert.fail();
-        }catch(ACE.NoAttachException e){
+        } catch (ACE.NoAttachException e) {
             Assert.assertTrue(true);
         }
         // cleanup
         p.destroy();
 
+    }
+
+    @Test
+    public void GetAvailableNumTypes() throws IOException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        List<NumType> availableTypes = ace.GetAvailableNumTypes();
+
+        // need to have at least 8, 16 and 32 bit number type
+        Assert.assertTrue(
+                availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(8))
+        );
+        Assert.assertTrue(
+                availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(16))
+        );
+
+        Assert.assertTrue(
+                availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(32))
+        );
     }
 
 
