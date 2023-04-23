@@ -21,27 +21,6 @@ enum class E_filter_type {
   unknown,
 };
 
-/*
- * comparasion mode whether used to compare
- * against itself with or
- * against another value with [E_filter_type]
- *
- * example: if [E_filter_type] is greater and
- * [E_compare_mode] is [against_self] then the scanner
- * will check if the current value is bigger than
- * the previous match value
- *
- * if [E_filter_type] is [less] and
- * [E_compare_mode] is [against_another_val]
- * it will check if a value from previous match are
- * less than user's input value, if true add to match
- * l
- * */
-enum class E_compare_mode {
-  against_self,
-  against_another_val,
-};
-
 enum class E_read_mem_method {
   with_proc_pid_mem_file,
   with_process_vm_readv,
