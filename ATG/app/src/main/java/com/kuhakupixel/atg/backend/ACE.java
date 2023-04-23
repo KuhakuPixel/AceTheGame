@@ -128,7 +128,7 @@ public class ACE {
      */
     public List<NumType> GetAvailableNumTypes() {
         List<NumType> numTypes = new ArrayList<NumType>();
-        String[] cmdArr = new String[]{"type", "size"};
+        String[] cmdArr = new String[]{"info", "type"};
 
         List<String> out = this.client.MainCmdAsList(String.join(" ", cmdArr));
         for (String s : out) {

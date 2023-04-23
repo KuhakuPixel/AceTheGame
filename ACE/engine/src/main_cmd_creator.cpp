@@ -151,16 +151,26 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
 
   );
 
-  // ================================= type command ================
-  CLI::App *type_cmd = app->add_subcommand(
-      "type", "get information about all supported number type");
+  // ================================= info command ================
+  CLI::App *info_cmd = app->add_subcommand(
+      "info", "get detailed information about all supported number type and "
+              "scan types supported");
 
-  CLI::App *type_size_cmd =
-      type_cmd->add_subcommand("size", "get all number type size in bits");
+  CLI::App *info_type_cmd = info_cmd->add_subcommand(
+      "type", "get all number type and its size in bits");
 
-  type_size_cmd->callback(
+  info_type_cmd->callback(
 
-      []() -> void { type_size_cmd_handler(); }
+      []() -> void { info_type_cmd_handler(); }
+
+  );
+
+  CLI::App *info_operator_cmd = info_cmd->add_subcommand(
+      "operator", "get all supported scan/filter operation symbol ");
+
+  info_operator_cmd->callback(
+
+      []() -> void { info_operator_cmd_handler(); }
 
   );
 }
