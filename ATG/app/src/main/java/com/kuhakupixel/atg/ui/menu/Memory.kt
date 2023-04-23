@@ -3,9 +3,14 @@ package com.kuhakupixel.atg.ui.menu
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -38,6 +43,7 @@ fun MemoryMenu(globalConf: GlobalConf?) {
             modifier = Modifier
                 .weight(0.4f)
                 .padding(10.dp)
+                .fillMaxHeight()
         )
     }
 }
@@ -65,13 +71,27 @@ private fun MatchesSetting(modifier: Modifier = Modifier) {
                 label = { Text(text = "Scan For") },
                 placeholder = { Text(text = "value ...") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine=true,
+                singleLine = true,
             )
         }
     }
 
-    Column(modifier = modifier) {
+    @Composable
+    fun ScanButton(modifier: Modifier = Modifier, enabled: Boolean) {
+        Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly) {
+            Button(enabled = enabled, onClick = {}) {
+                Text("New Scan")
+            }
+            Button(enabled = enabled, onClick = {}) {
+                Text("Next Scan")
+            }
+        }
+
+    }
+
+    Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
         ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
+        ScanButton(modifier = Modifier.fillMaxWidth(), enabled = false)
     }
 }
 
