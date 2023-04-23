@@ -97,11 +97,11 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
         "scan current value in scan against an operator and number");
 
     scan_cmd
-        ->add_option("<COMPARISON>", cheat_args.filter_type,
+        ->add_option("<COMPARISON>", cheat_args.operator_type,
                      "comparator like '<' ,'>'")
         ->required()
         ->transform(CLI::CheckedTransformer(
-            Scan_Utils::filter_str_to_E_filter_type_map));
+            Scan_Utils::filter_str_to_E_operator_type_map));
 
     scan_cmd
         ->add_option("<VALUE>", cheat_args.num_val,
@@ -113,7 +113,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
         [&]() {
           scan_cmd_handler<T>(scanner,
 
-                              cheat_args.filter_type,
+                              cheat_args.operator_type,
 
                               cheat_config,
 
@@ -131,15 +131,15 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
                            "filter current value in scan against an opertator");
 
     filter_cmd
-        ->add_option("<COMPARISON>", cheat_args.filter_type,
+        ->add_option("<COMPARISON>", cheat_args.operator_type,
                      "comparator like '<' ,'>'")
         ->required()
         ->transform(CLI::CheckedTransformer(
-            Scan_Utils::filter_str_to_E_filter_type_map));
+            Scan_Utils::filter_str_to_E_operator_type_map));
     filter_cmd->callback(
 
         [&]() {
-          filter_cmd_handler<T>(scanner, cheat_args.filter_type, cheat_config);
+          filter_cmd_handler<T>(scanner, cheat_args.operator_type, cheat_config);
         }
 
     );

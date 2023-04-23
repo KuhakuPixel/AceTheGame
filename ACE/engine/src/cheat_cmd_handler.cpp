@@ -10,7 +10,7 @@
 
 template <typename T> cheat_mode_args<T>::cheat_mode_args() {
 
-  this->filter_type = Scan_Utils::E_filter_type::equal;
+  this->operator_type = Scan_Utils::E_operator_type::equal;
   this->addr_to_read = 0;
   this->addr_to_write = 0;
   this->endian_scan_type = E_endian_scan_type::native;
@@ -56,13 +56,13 @@ void pid_cmd_handler(int pid) {
 }
 template <typename T>
 void filter_cmd_handler(ACE_scanner<T> *scanner,
-                        Scan_Utils::E_filter_type filter_type,
+                        Scan_Utils::E_operator_type operator_type,
                         const cheat_mode_config *cheat_config) {
   if (!cheat_config->initial_scan_done)
     frontend_print("WARN: no initial scan has been setup\n");
 
   double filter_time = -1;
-  TIME_ACTION({ scanner->filter_val(filter_type); }, &filter_time);
+  TIME_ACTION({ scanner->filter_val(operator_type); }, &filter_time);
 
   frontend_print("current matches: %zu\n",
                  scanner->get_current_scan_result().get_matches_count());
@@ -72,7 +72,7 @@ void filter_cmd_handler(ACE_scanner<T> *scanner,
 template <typename T>
 void scan_cmd_handler(ACE_scanner<T> *scanner,
 
-                      Scan_Utils::E_filter_type filter_type,
+                      Scan_Utils::E_operator_type operator_type,
 
                       cheat_mode_config *cheat_config,
 
@@ -104,7 +104,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
                          segments_to_scan.size());
           // =================================================================
           // do scan
-          scanner->initial_scan_multiple(segments_to_scan, filter_type,
+          scanner->initial_scan_multiple(segments_to_scan, operator_type,
                                          num_to_find);
           // mark initial scan has been done
           // so subsequent scan or filter operation know
@@ -113,7 +113,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
         }
 
         else {
-          scanner->filter_from_cmp_val(filter_type, num_to_find);
+          scanner->filter_from_cmp_val(operator_type, num_to_find);
         }
       },
 
@@ -308,11 +308,11 @@ void unfreeze_all_cmd_handler(freezer<T> *freezer_manager) {
       const ACE_scanner<TYPE> *scanner);                                       \
                                                                                \
   template void filter_cmd_handler<TYPE>(                                      \
-      ACE_scanner<TYPE> * scanner, Scan_Utils::E_filter_type filter_type,      \
+      ACE_scanner<TYPE> * scanner, Scan_Utils::E_operator_type operator_type,      \
       const cheat_mode_config *cheat_config);                                  \
                                                                                \
   template void scan_cmd_handler<TYPE>(                                        \
-      ACE_scanner<TYPE> * scanner, Scan_Utils::E_filter_type filter_type,      \
+      ACE_scanner<TYPE> * scanner, Scan_Utils::E_operator_type operator_type,      \
       cheat_mode_config * cheat_config, TYPE num_to_find);                     \
                                                                                \
   template void write_cmd_handler<TYPE>(ACE_scanner<TYPE> * scanner,           \

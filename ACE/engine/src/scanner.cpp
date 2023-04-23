@@ -186,7 +186,7 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
   }
 }
 template <typename T>
-void ACE_scanner<T>::_filter_from_cmp_val(Scan_Utils::E_filter_type filter_type,
+void ACE_scanner<T>::_filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
                                           bool compare_with_new_value,
                                           T cmp_val) {
 
@@ -225,10 +225,10 @@ void ACE_scanner<T>::_filter_from_cmp_val(Scan_Utils::E_filter_type filter_type,
           T prev_val = chunk_prop.get_val_at_addr(addr, this->scan_level);
           //
           if (compare_with_new_value) {
-            if (Scan_Utils::value_compare<T>(new_val, filter_type, prev_val))
+            if (Scan_Utils::value_compare<T>(new_val, operator_type, prev_val))
               new_scan_result.add_match(addr, new_val);
           } else {
-            if (Scan_Utils::value_compare<T>(new_val, filter_type, cmp_val))
+            if (Scan_Utils::value_compare<T>(new_val, operator_type, cmp_val))
               new_scan_result.add_match(addr, new_val);
           }
         },
@@ -247,7 +247,7 @@ void ACE_scanner<T>::_filter_from_cmp_val(Scan_Utils::E_filter_type filter_type,
 
 template <typename T>
 void ACE_scanner<T>::append_initial_scan(byte *addr_start, byte *addr_end,
-                                         Scan_Utils::E_filter_type filter_type,
+                                         Scan_Utils::E_operator_type operator_type,
                                          T value_to_find) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
     value_to_find = swap_endian(value_to_find);
@@ -289,8 +289,8 @@ void ACE_scanner<T>::append_initial_scan(byte *addr_start, byte *addr_end,
 
       scan_prop,
 
-      [value_to_find, this, filter_type](ADDR addr, T new_val) {
-        if (Scan_Utils::value_compare<T>(new_val, filter_type, value_to_find)) {
+      [value_to_find, this, operator_type](ADDR addr, T new_val) {
+        if (Scan_Utils::value_compare<T>(new_val, operator_type, value_to_find)) {
           this->current_scan_result.add_match(addr, new_val);
         }
       },
@@ -305,15 +305,15 @@ void ACE_scanner<T>::append_initial_scan(byte *addr_start, byte *addr_end,
 
 template <typename T>
 void ACE_scanner<T>::initial_scan(byte *addr_start, byte *addr_end,
-                                  Scan_Utils::E_filter_type filter_type,
+                                  Scan_Utils::E_operator_type operator_type,
                                   T value_to_find) {
   this->current_scan_result.clear();
-  this->append_initial_scan(addr_start, addr_end, filter_type, value_to_find);
+  this->append_initial_scan(addr_start, addr_end, operator_type, value_to_find);
 }
 template <typename T>
 void ACE_scanner<T>::initial_scan_multiple(
     const std::vector<struct mem_segment> &segments_to_scan,
-    Scan_Utils::E_filter_type filter_type, T value_to_find) {
+    Scan_Utils::E_operator_type operator_type, T value_to_find) {
   // TODO: add print for debug, show the memory segments for each scan
   // add callback for display
   // before and after a scan
@@ -333,18 +333,18 @@ void ACE_scanner<T>::initial_scan_multiple(
 
     this->append_initial_scan((byte *)segments_to_scan[i].address_start,
                               (byte *)segments_to_scan[i].address_end,
-                              filter_type, value_to_find);
+                              operator_type, value_to_find);
   }
 }
 
 template <typename T>
-void ACE_scanner<T>::filter_from_cmp_val(Scan_Utils::E_filter_type filter_type,
+void ACE_scanner<T>::filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
                                          T cmp_val) {
-  this->_filter_from_cmp_val(filter_type, false, cmp_val);
+  this->_filter_from_cmp_val(operator_type, false, cmp_val);
 }
 template <typename T>
-void ACE_scanner<T>::filter_val(Scan_Utils::E_filter_type filter_type) {
-  this->_filter_from_cmp_val(filter_type, true, 0);
+void ACE_scanner<T>::filter_val(Scan_Utils::E_operator_type operator_type) {
+  this->_filter_from_cmp_val(operator_type, true, 0);
 }
 template <typename T>
 void ACE_scanner<T>::write_val_to_current_scan_results(T val) {

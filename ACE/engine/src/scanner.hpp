@@ -86,7 +86,7 @@ private:
    * else: compare old value with new value in that address
    *
    * */
-  void _filter_from_cmp_val(Scan_Utils::E_filter_type filter_type,
+  void _filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
                             bool compare_with_new_value, T cmp_val);
 
 public:
@@ -118,7 +118,7 @@ public:
    * */
   void
   initial_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
-                        Scan_Utils::E_filter_type filter_type, T value_to_find);
+                        Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*
    * find value [value_to_find] from [addr_start] to [addr_end]
@@ -143,7 +143,7 @@ public:
    * |1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|
    *
    * 	if we iterate each address one by one to find [value_to_find] with
-   * 	filter_type as [filter_type] and on each address we use ptrace
+   * 	operator_type as [operator_type] and on each address we use ptrace
    * 	call, the performance will go to a sink hole since
    * 	ptrace call is expensive
    *
@@ -176,26 +176,26 @@ public:
    *
    * */
   void append_initial_scan(byte *addr_start, byte *addr_end,
-                           Scan_Utils::E_filter_type filter_type,
+                           Scan_Utils::E_operator_type operator_type,
                            T value_to_find);
 
   /*
    * clear current scan result before call to [append_initial_scan]
    * */
   void initial_scan(byte *addr_start, byte *addr_end,
-                    Scan_Utils::E_filter_type filter_type, T value_to_find);
+                    Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*
    * if [compare_with_new_value] is false: compare old value with [cmp_val]
    * else: compare old value with new value in that address
    *
    * */
-  void filter_from_cmp_val(Scan_Utils::E_filter_type filter_type, T cmp_val);
+  void filter_from_cmp_val(Scan_Utils::E_operator_type operator_type, T cmp_val);
 
   /*
    * should be called after `scanner_find_val`
    * */
-  void filter_val(Scan_Utils::E_filter_type filter_type);
+  void filter_val(Scan_Utils::E_operator_type operator_type);
 
   void write_val_to_current_scan_results(T val);
 };

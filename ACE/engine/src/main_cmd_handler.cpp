@@ -146,8 +146,8 @@ void info_type_cmd_handler() {
   }
 }
 void info_operator_cmd_handler() {
-  for (auto it = Scan_Utils::filter_str_to_E_filter_type_map.begin();
-       it != Scan_Utils::filter_str_to_E_filter_type_map.end(); it++) {
+  for (auto it = Scan_Utils::filter_str_to_E_operator_type_map.begin();
+       it != Scan_Utils::filter_str_to_E_operator_type_map.end(); it++) {
 	  std::string operand_symbol = it->first;
     frontend_print("%s\n", operand_symbol.c_str());
   }
