@@ -166,6 +166,18 @@ public class ACETest {
                 availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(32))
         );
     }
+    @Test
+    public void GetAvailableOperatorTypes() throws IOException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        List<ACE.Operator> availableTypes = ace.GetAvailableOperatorTypes();
+
+        // assert that the engine support all operation types that
+        // we have listed
+        for (ACE.Operator op: ACE.Operator.values()){
+            Assert.assertTrue(availableTypes.contains(op));
+        }
+    }
 
 
 }

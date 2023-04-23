@@ -6,6 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+/**
+ * to communicate with ACE's engine binary
+ * sending input and getting output
+ */
 public class ACE {
 
     /**
@@ -36,6 +43,29 @@ public class ACE {
             super(msg);
         }
 
+    }
+
+    public enum Operator {
+        greater,
+        less,
+        equal,
+        greaterEqual,
+        lessEqual,
+        notEqual,
+        unknown,
+    }
+
+    // https://stackoverflow.com/a/507658/14073678
+    public static final BiMap<ACE.Operator, String> operatorEnumToSymbolBiMap = HashBiMap.create();
+
+    static {
+        operatorEnumToSymbolBiMap.put(Operator.greater, ">");
+        operatorEnumToSymbolBiMap.put(Operator.less, "<");
+        operatorEnumToSymbolBiMap.put(Operator.equal, "=");
+        operatorEnumToSymbolBiMap.put(Operator.greaterEqual, ">=");
+        operatorEnumToSymbolBiMap.put(Operator.lessEqual, "<=");
+        operatorEnumToSymbolBiMap.put(Operator.notEqual, "!=");
+        operatorEnumToSymbolBiMap.put(Operator.unknown, "?");
     }
 
     /**
@@ -140,5 +170,19 @@ public class ACE {
         }
         return numTypes;
 
+    }
+
+    public List<Operator> GetAvailableOperatorTypes() {
+        // the output will be a list of supported operators like
+        // >
+        // <
+        // >=
+        // etc
+        List<Operator> availableOperators = new ArrayList<Operator>();
+        String[] cmdArr = new String[]{"info", "operator"};
+        List<String> out = this.client.MainCmdAsList(String.join(" ", cmdArr));
+        for (String s : out)
+            availableOperators.add(operatorEnumToSymbolBiMap.inverse().get(s));
+        return availableOperators;
     }
 }
