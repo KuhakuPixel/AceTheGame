@@ -84,6 +84,7 @@ fun ProcessTable(
     var selectedProcNameStr: MutableState<String> = remember { mutableStateOf("") }
 
     CreateTable(
+        modifier = Modifier.padding(16.dp),
         colNames = listOf("Pid", "Name"),
         colWeights = listOf(0.3f, 0.7f),
         itemCount = processList.size,
