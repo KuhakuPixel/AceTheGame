@@ -23,6 +23,7 @@ import kotlin.math.max
 
 @Composable
 fun CreateTable(
+    modifier: Modifier = Modifier,
     colNames: List<String>,
     colWeights: List<Float>,
     itemCount: Int,
@@ -61,11 +62,7 @@ fun CreateTable(
 
     val colCount: Int = colNames.size
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+    Column(modifier = modifier) {
         // header
         Row(Modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
             for (i in 0 until colNames.size)
