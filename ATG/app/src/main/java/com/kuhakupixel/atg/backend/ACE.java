@@ -45,6 +45,7 @@ public class ACE {
 
     }
 
+
     public enum Operator {
         greater,
         less,
@@ -125,17 +126,29 @@ public class ACE {
 
 
     // =============== this commands require attach ===================
-    public Long GetAttachedPid() {
+    public String CheaterCmd(String cmd) {
         AssertAttached();
-        String pidStr = client.Request("pid");
+        String out = client.Request(cmd);
+        return out;
+    }
+    
+    public Long GetAttachedPid() {
+        String pidStr = CheaterCmd("pid");
         return Long.parseLong(pidStr);
     }
 
     // =============== this commands don't require attach ===================
+    public List<String> MainCmdAsList(String cmd) {
+        return this.client.MainCmdAsList(cmd);
+    }
+
+    public String MainCmd(String cmd) {
+        return this.client.MainCmd(cmd);
+    }
     public List<ProcInfo> ListRunningProc() {
         List<ProcInfo> runningProcs = new ArrayList<ProcInfo>();
         // use --reverse so newest process will be shown first
-        List<String> runningProcsInfoStr = this.client.MainCmdAsList("ps ls --reverse");
+        List<String> runningProcsInfoStr = MainCmdAsList("ps ls --reverse");
         // parse each string
         for (String procInfoStr : runningProcsInfoStr) {
             runningProcs.add(new ProcInfo(procInfoStr));
@@ -145,7 +158,7 @@ public class ACE {
 
     public boolean IsPidRunning(Long pid) {
         String[] cmdArr = new String[]{"ps", "is_running", pid.toString()};
-        String boolStr = this.client.MainCmd(String.join(" ", cmdArr));
+        String boolStr = MainCmd(String.join(" ", cmdArr));
         assert (boolStr.equals("true") || boolStr.equals("false"));
         return Boolean.parseBoolean(boolStr);
     }
@@ -160,7 +173,7 @@ public class ACE {
         List<NumType> numTypes = new ArrayList<NumType>();
         String[] cmdArr = new String[]{"info", "type"};
 
-        List<String> out = this.client.MainCmdAsList(String.join(" ", cmdArr));
+        List<String> out = MainCmdAsList(String.join(" ", cmdArr));
         for (String s : out) {
             String[] splitted = s.split(" ");
             assert 2 == splitted.length;
@@ -180,7 +193,7 @@ public class ACE {
         // etc
         List<Operator> availableOperators = new ArrayList<Operator>();
         String[] cmdArr = new String[]{"info", "operator"};
-        List<String> out = this.client.MainCmdAsList(String.join(" ", cmdArr));
+        List<String> out = MainCmdAsList(String.join(" ", cmdArr));
         for (String s : out)
             availableOperators.add(operatorEnumToSymbolBiMap.inverse().get(s));
         return availableOperators;

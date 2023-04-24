@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.kuhakupixel.atg.backend.ACE;
+import com.kuhakupixel.atg.backend.ACEClient;
 import com.kuhakupixel.atg.backend.NumType;
 import com.kuhakupixel.atg.backend.ProcInfo;
 import com.kuhakupixel.atg.backend.ProcUtil;
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,6 +54,62 @@ public class ACETest {
         ace.DeAttach();
         // server's thread shouldn't exist anymore
         Assert.assertNull(ace.GetServerThread());
+
+
+    }
+
+    @Test
+    public void InvalidCommandException() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+
+        List<String> invalidCmd = new ArrayList<String>();
+        invalidCmd.add("ThisCommandDoesntExist");
+        invalidCmd.add("wifijif20");
+        invalidCmd.add("Randommm");
+        // "scan" valid command, but complete argument is required
+        invalidCmd.add("scan");
+        invalidCmd.add("scan =");
+        // for commands that requires attach
+        for (String s : invalidCmd) {
+            try {
+                ace.CheaterCmd(s);
+                Assert.fail();
+            } catch (ACEClient.InvalidCommandException e) {
+                Assert.assertTrue(true);
+            }
+        }
+        // for commands that don't require attach
+        for (String s : invalidCmd) {
+            try {
+                ace.MainCmd(s);
+                Assert.fail();
+            } catch (ACEClient.InvalidCommandException e) {
+                Assert.assertTrue(true);
+            }
+        }
+        ace.DeAttach();
+
+
+    }
+    @Test
+    public void ValidCommand() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // valid command
+        try {
+            ace.CheaterCmd("scan = 0");
+            Assert.assertTrue(true);
+        } catch (ACEClient.InvalidCommandException e) {
+            Assert.fail();
+        }
+        ace.DeAttach();
 
 
     }
@@ -166,6 +224,7 @@ public class ACETest {
                 availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(32))
         );
     }
+
     @Test
     public void GetAvailableOperatorTypes() throws IOException {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -174,7 +233,7 @@ public class ACETest {
 
         // assert that the engine support all operation types that
         // we have listed
-        for (ACE.Operator op: ACE.Operator.values()){
+        for (ACE.Operator op : ACE.Operator.values()) {
             Assert.assertTrue(availableTypes.contains(op));
         }
     }
