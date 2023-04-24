@@ -139,7 +139,8 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
     filter_cmd->callback(
 
         [&]() {
-          filter_cmd_handler<T>(scanner, cheat_args.operator_type, cheat_config);
+          filter_cmd_handler<T>(scanner, cheat_args.operator_type,
+                                cheat_config);
         }
 
     );
@@ -478,6 +479,12 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
     (app).parse(c_str_arr_length, c_str_arr);
     str_arr_free(c_str_arr, c_str_arr_length);
   } catch (const CLI::ParseError &e) {
+    /**
+     * tells error to frontend if only not calling for help
+     * */
+    if (e.get_name() != "CallForHelp") {
+      frontend_invalid_command(false, "%s\n", e.what());
+    }
     (app).exit(e);
     str_arr_free(c_str_arr, c_str_arr_length);
     //

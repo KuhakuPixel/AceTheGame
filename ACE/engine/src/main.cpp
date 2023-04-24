@@ -80,6 +80,12 @@ E_loop_statement main_mode_on_each_input(std::string input_str) {
     (app).parse(c_str_arr_length, c_str_arr);
     str_arr_free(c_str_arr, c_str_arr_length);
   } catch (const CLI::ParseError &e) {
+    /**
+     * tells error to frontend if only not calling for help
+     * */
+    if (e.get_name() != "CallForHelp") {
+      frontend_invalid_command(false, "%s\n", e.what());
+    }
     (app).exit(e);
     str_arr_free(c_str_arr, c_str_arr_length);
     //

@@ -2,6 +2,7 @@
 #include "../src/engine_client.hpp"
 #include "../src/input.hpp"
 #include "../src/main_cmd_creator.hpp"
+#include "../src/to_frontend.hpp"
 #include "../third_party/CLI11.hpp"
 #include <iostream>
 #include <stdio.h>
@@ -25,7 +26,19 @@ int main(int argc, char **argv) {
   //
   int port = ACE_global::engine_server_client_default_port;
   app.add_option("--port", port, "default port: " + std::to_string(port));
-  CLI11_PARSE(app, argc, argv);
+  // ==============================================
+  // parse inputs
+  try {
+    (app).parse(argc, argv);
+  } catch (const CLI::ParseError &e) {
+    /**
+     * tells error to frontend if only not calling for help
+     * */
+    if (e.get_name() != "CallForHelp") {
+      frontend_invalid_command(true, "%s\n", e.what());
+    }
+    return (app).exit(e);
+  }
   // ==============================================
   engine_client client = engine_client(port);
 
