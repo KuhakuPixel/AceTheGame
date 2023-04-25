@@ -255,7 +255,8 @@ private fun MatchesSetting(
                 initialScanDone.value = true
             },
             onNewScan = {
-
+                ace.ResetMatches()
+                UpdateMatches(ace = ace)
                 initialScanDone.value = false
             },
         )
