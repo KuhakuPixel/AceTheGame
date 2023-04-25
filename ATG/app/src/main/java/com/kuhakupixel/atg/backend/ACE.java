@@ -56,6 +56,16 @@ public class ACE {
         unknown,
     }
 
+    public enum NumType {
+        _int, _long, _short, _float, _byte;
+
+        @Override
+        public String toString() {
+            return this.name().replace("_", "");
+        }
+    }
+
+
     // https://stackoverflow.com/a/507658/14073678
     public static final BiMap<ACE.Operator, String> operatorEnumToSymbolBiMap = HashBiMap.create();
 
@@ -131,10 +141,14 @@ public class ACE {
         String out = client.Request(cmd);
         return out;
     }
-    
+
     public Long GetAttachedPid() {
         String pidStr = CheaterCmd("pid");
         return Long.parseLong(pidStr);
+    }
+
+    public void SetNumType(NumType type) {
+        CheaterCmd("config type " + type.toString());
     }
 
     // =============== this commands don't require attach ===================
@@ -145,6 +159,7 @@ public class ACE {
     public String MainCmd(String cmd) {
         return this.client.MainCmd(cmd);
     }
+
     public List<ProcInfo> ListRunningProc() {
         List<ProcInfo> runningProcs = new ArrayList<ProcInfo>();
         // use --reverse so newest process will be shown first
@@ -169,8 +184,8 @@ public class ACE {
      * which will return list of "<type name> <bit size>"
      * like "int 32", "short 16" and ect
      */
-    public List<NumType> GetAvailableNumTypes() {
-        List<NumType> numTypes = new ArrayList<NumType>();
+    public List<NumTypeInfo> GetAvailableNumTypes() {
+        List<NumTypeInfo> numTypeInfos = new ArrayList<NumTypeInfo>();
         String[] cmdArr = new String[]{"info", "type"};
 
         List<String> out = MainCmdAsList(String.join(" ", cmdArr));
@@ -179,9 +194,9 @@ public class ACE {
             assert 2 == splitted.length;
             String typeStr = splitted[0];
             Integer bitSize = Integer.parseInt(splitted[1]);
-            numTypes.add(new NumType(typeStr, bitSize));
+            numTypeInfos.add(new NumTypeInfo(typeStr, bitSize));
         }
-        return numTypes;
+        return numTypeInfos;
 
     }
 

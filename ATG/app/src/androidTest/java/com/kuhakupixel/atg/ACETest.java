@@ -7,7 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.kuhakupixel.atg.backend.ACE;
 import com.kuhakupixel.atg.backend.ACEClient;
-import com.kuhakupixel.atg.backend.NumType;
+import com.kuhakupixel.atg.backend.NumTypeInfo;
 import com.kuhakupixel.atg.backend.ProcInfo;
 import com.kuhakupixel.atg.backend.ProcUtil;
 
@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -108,6 +107,21 @@ public class ACETest {
             Assert.assertTrue(true);
         } catch (ACEClient.InvalidCommandException e) {
             Assert.fail();
+        }
+        ace.DeAttach();
+
+
+    }
+    @Test
+    public void SetNumType() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shouldn't throw any exception ...
+        for(ACE.NumType numType : ACE.NumType.values()) {
+            ace.SetNumType(numType);
         }
         ace.DeAttach();
 
@@ -210,7 +224,7 @@ public class ACETest {
     public void GetAvailableNumTypes() throws IOException {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ACE ace = new ACE(context);
-        List<NumType> availableTypes = ace.GetAvailableNumTypes();
+        List<NumTypeInfo> availableTypes = ace.GetAvailableNumTypes();
 
         // need to have at least 8, 16 and 32 bit number type
         Assert.assertTrue(
