@@ -29,6 +29,18 @@ import java.util.List;
 public class ACETest {
 
     @Test
+    public void NumTypeEnumStringConversion() throws IOException {
+        Assert.assertEquals("int", ACE.NumType._int.toString());
+        Assert.assertEquals("byte", ACE.NumType._byte.toString());
+        Assert.assertEquals(ACE.NumType._long, ACE.NumType.fromString("long"));
+        Assert.assertEquals(ACE.NumType._long, ACE.NumType.fromString("_long"));
+        Assert.assertEquals(ACE.NumType._float, ACE.NumType.fromString("float"));
+        Assert.assertEquals(ACE.NumType._float, ACE.NumType.fromString("_float"));
+
+
+    }
+
+    @Test
     public void ListRunningProcs() throws IOException {
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();

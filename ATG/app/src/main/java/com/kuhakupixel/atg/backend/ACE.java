@@ -66,6 +66,14 @@ public class ACE {
         public String toString() {
             return this.name().replace("_", "");
         }
+
+        public static NumType fromString(String s) {
+            if (s.charAt(0) != '_')
+                s = "_" + s;
+            return NumType.valueOf(s);
+
+        }
+
     }
 
     public class MatchInfo {
@@ -80,6 +88,7 @@ public class ACE {
         public String getPrevValue() {
             return prevValue;
         }
+
         public MatchInfo(String address, String prevValue) {
             this.address = address;
             this.prevValue = prevValue;
