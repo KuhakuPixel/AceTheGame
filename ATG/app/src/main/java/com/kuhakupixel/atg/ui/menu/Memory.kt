@@ -3,8 +3,10 @@ package com.kuhakupixel.atg.ui.menu
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -27,6 +29,7 @@ import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
+import kotlin.math.min
 
 
 // ======================= drop down options =================
@@ -42,7 +45,10 @@ private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 
 // ================================================================
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
+
+// ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
+private var matchesStatusText: MutableState<String> = mutableStateOf("No Matches")
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?) {
@@ -57,6 +63,8 @@ fun MemoryMenu(globalConf: GlobalConf?) {
             valueTypeList.add(displayStr)
 
         }
+        // init default
+        valueTypeSelectedOptionIdx.value = NumType.values().indexOf(Settings.defaultNumType)
     }
     // initialize display for scan types
     if (scanTypeList.isEmpty()) {
@@ -66,7 +74,7 @@ fun MemoryMenu(globalConf: GlobalConf?) {
             scanTypeList.add(displayStr)
         }
         // init default
-        scanTypeSelectedOptionIdx.value = scanTypeList.indexOf("=")
+        scanTypeSelectedOptionIdx.value = Operator.values().indexOf(Settings.defaultScanType)
     }
     // ==================================
     Column(
@@ -76,13 +84,14 @@ fun MemoryMenu(globalConf: GlobalConf?) {
     ) {
         MatchesTable(
             modifier = Modifier
-                .weight(0.5f)
+                .weight(0.6f)
                 .padding(16.dp),
             matches = currentMatchesList,
+            matchesStatusText = matchesStatusText,
         )
         MatchesSetting(
             modifier = Modifier
-                .weight(0.5f)
+                .weight(0.4f)
                 .padding(10.dp)
                 .fillMaxSize(),
             ace = ace!!,
@@ -90,6 +99,48 @@ fun MemoryMenu(globalConf: GlobalConf?) {
 
         )
     }
+}
+
+
+@Composable
+private fun MatchesTable(
+    modifier: Modifier = Modifier,
+    matches: MutableState<List<MatchInfo>>,
+    matchesStatusText: MutableState<String>,
+) {
+
+    Column(modifier = modifier) {
+        Text(matchesStatusText.value)
+        Spacer(modifier = Modifier.height(10.dp))
+        CreateTable(
+            colNames = listOf("Address", "Previous Value"),
+            colWeights = listOf(0.4f, 0.6f),
+            itemCount = matches.value.size,
+            minEmptyItemCount = 50,
+            onRowClicked = { rowIndex: Int ->
+
+            },
+            drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
+                if (colIndex == 0) {
+                    Text(text = matches.value[rowIndex].address, modifier = cellModifier)
+                }
+                if (colIndex == 1) {
+                    Text(text = matches.value[rowIndex].prevValue, modifier = cellModifier)
+                }
+            }
+        )
+    }
+
+}
+
+private fun UpdateMatches(ace: ACE) {
+    val matchesCount: Int = ace.GetMatchCount()
+    val shownMatchesCount: Int = min(matchesCount, Settings.maxShownMatchesCount)
+    // update ui
+    currentMatchesList.value = ace.ListMatches(shownMatchesCount)
+    matchesStatusText.value = "$matchesCount matches (showing ${shownMatchesCount})"
+
+
 }
 
 @Composable
@@ -199,7 +250,8 @@ private fun MatchesSetting(
 
 
                 // update matches table
-                matches.value = ace.ListMatches(1000)
+                UpdateMatches(ace = ace)
+                matches.value = ace.ListMatches(Settings.maxShownMatchesCount)
                 // set initial scan to true
                 initialScanDone.value = true
             },
@@ -210,29 +262,6 @@ private fun MatchesSetting(
         )
 
     }
-}
-
-@Composable
-private fun MatchesTable(modifier: Modifier = Modifier, matches: MutableState<List<MatchInfo>>) {
-
-    CreateTable(
-        modifier = modifier,
-        colNames = listOf("Address", "Previous Value"),
-        colWeights = listOf(0.4f, 0.6f),
-        itemCount = matches.value.size,
-        minEmptyItemCount = 50,
-        onRowClicked = { rowIndex: Int ->
-
-        },
-        drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
-            if (colIndex == 0) {
-                Text(text = matches.value[rowIndex].address, modifier = cellModifier)
-            }
-            if (colIndex == 1) {
-                Text(text = matches.value[rowIndex].prevValue, modifier = cellModifier)
-            }
-        }
-    )
 }
 
 @Composable
