@@ -18,23 +18,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kuhakupixel.atg.backend.ACE
+import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
+import org.apache.commons.lang3.mutable.Mutable
+
 
 private val scanTypeList: List<String> = ArrayList<String>(operatorEnumToSymbolBiMap.values)
-// ==================== scan options ==============================
+private val valueTypeList: MutableList<String> = mutableListOf()
+
+// ==================== selected scan options ==============================
 private var scanInputVal: MutableState<String> = mutableStateOf("")
 private var scanAgainstValue: MutableState<Boolean> = mutableStateOf(true)
 
 private val scanTypeSelectedOptionIdx = mutableStateOf(scanTypeList.indexOf("="))
+private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 // ================================================================
 
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?) {
+    val ace: ACE? = globalConf?.getAce()
+    // ==================================
+    // initialize display for num types including its bit size
+    if (valueTypeList.isEmpty()) {
+        for (numType: NumType in NumType.values()) {
+            val bitSize: Int = ace!!.GetNumTypeBitSize(numType)
+            val displayStr: String = "${numType.toString()} (${bitSize} bit)"
+            valueTypeList.add(displayStr)
+
+        }
+    }
+    // ==================================
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -96,33 +115,32 @@ private fun MatchesSetting(modifier: Modifier = Modifier) {
     }
 
     @Composable
-    fun ScanTypeDropDown() {
+    fun ScanTypeDropDown(selectedOptionIndex: MutableState<Int>) {
         val expanded = remember { mutableStateOf(false) }
         // default to "exact scan (=)"
         ATGDropDown(
             label = "Scan Type",
             expanded = expanded,
             options = scanTypeList,
-            selectedOptionIndex = scanTypeSelectedOptionIdx,
+            selectedOptionIndex = selectedOptionIndex,
         )
     }
 
     @Composable
-    fun ValueTypeDropDown() {
+    fun ValueTypeDropDown(selectedOptionIndex: MutableState<Int>) {
         val expanded = remember { mutableStateOf(false) }
-        val selectedOptionIdx = remember { mutableStateOf(0) }
         ATGDropDown(
             label = "Value Type",
             expanded = expanded,
-            options = listOf("option1", "option2", "option3"),
-            selectedOptionIndex = selectedOptionIdx,
+            options = valueTypeList,
+            selectedOptionIndex = selectedOptionIndex,
         )
     }
 
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
+        ScanTypeDropDown(scanTypeSelectedOptionIdx)
+        ValueTypeDropDown(valueTypeSelectedOptionIdx)
         ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
-        ScanTypeDropDown()
-        ValueTypeDropDown()
         ScanButton(modifier = Modifier.fillMaxWidth(), enabled = false)
 
     }
