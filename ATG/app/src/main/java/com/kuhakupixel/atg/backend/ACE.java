@@ -2,6 +2,8 @@ package com.kuhakupixel.atg.backend;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,7 @@ public class ACE {
     public enum NumType {
         _int, _long, _short, _float, _byte;
 
+        @NonNull
         @Override
         public String toString() {
             return this.name().replace("_", "");
@@ -88,11 +91,14 @@ public class ACE {
     private final ACEClient client;
     private final Integer portNum;
     private final Context context;
+    private final List<NumTypeInfo> availableNumTypes;
+
 
     public ACE(Context context, Integer portNum) throws IOException {
         this.portNum = portNum;
         this.context = context;
         this.client = new ACEClient(context, portNum);
+        this.availableNumTypes = GetAvailableNumTypes();
     }
 
     public ACE(Context context) throws IOException {
@@ -132,6 +138,15 @@ public class ACE {
         serverThread.join();
         //
         serverThread = null;
+    }
+
+    public Integer GetNumTypeBitSize(NumType numType) {
+        Integer bitSize = null;
+        for (NumTypeInfo typeInfo : this.availableNumTypes) {
+            if (typeInfo.GetName().equals(numType.toString()))
+                bitSize = typeInfo.GetBitSize();
+        }
+        return bitSize;
     }
 
 

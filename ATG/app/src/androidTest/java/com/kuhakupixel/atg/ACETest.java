@@ -94,6 +94,7 @@ public class ACETest {
 
 
     }
+
     @Test
     public void ValidCommand() throws IOException, InterruptedException {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -112,6 +113,7 @@ public class ACETest {
 
 
     }
+
     @Test
     public void SetNumType() throws IOException, InterruptedException {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -120,12 +122,21 @@ public class ACETest {
         Long pid = ProcUtil.GetPid(p);
         ace.Attach(pid);
         // shouldn't throw any exception ...
-        for(ACE.NumType numType : ACE.NumType.values()) {
+        for (ACE.NumType numType : ACE.NumType.values()) {
             ace.SetNumType(numType);
         }
         ace.DeAttach();
 
 
+    }
+
+    @Test
+    public void GetNumTypeBitSize() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        for (ACE.NumType numType : ACE.NumType.values()) {
+            Assert.assertNotNull(ace.GetNumTypeBitSize(numType));
+        }
     }
 
     @Test
