@@ -213,6 +213,9 @@ public class ACE {
         Integer count = Integer.parseInt(CheaterCmd("matchcount"));
         return count;
     }
+    public void ResetMatches() {
+        CheaterCmd("reset");
+    }
 
     public List<MatchInfo> ListMatches(Integer maxCount) {
         /**

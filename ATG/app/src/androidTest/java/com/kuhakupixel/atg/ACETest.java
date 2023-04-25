@@ -325,5 +325,24 @@ public class ACETest {
         ace.DeAttach();
     }
 
+    @Test
+    public void ScanAndResetMatches() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shoudlnt have any matches before scan
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
+        // now we should have some matches
+        Assert.assertTrue(ace.GetMatchCount() > 0);
+        ace.ResetMatches();
+        // matches should be 0 now
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        // ====================
+        ace.DeAttach();
+    }
+
 
 }
