@@ -18,13 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
 
+private val scanTypeList: List<String> = ArrayList<String>(operatorEnumToSymbolBiMap.values)
+// ==================== scan options ==============================
 private var scanInputVal: MutableState<String> = mutableStateOf("")
 private var scanAgainstValue: MutableState<Boolean> = mutableStateOf(true)
+
+private val scanTypeSelectedOptionIdx = mutableStateOf(scanTypeList.indexOf("="))
+// ================================================================
+
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?) {
@@ -91,12 +98,12 @@ private fun MatchesSetting(modifier: Modifier = Modifier) {
     @Composable
     fun ScanTypeDropDown() {
         val expanded = remember { mutableStateOf(false) }
-        val selectedOptionIdx = remember { mutableStateOf(0) }
+        // default to "exact scan (=)"
         ATGDropDown(
             label = "Scan Type",
             expanded = expanded,
-            options = listOf("option1", "option2", "option3"),
-            selectedOptionIndex = selectedOptionIdx,
+            options = scanTypeList,
+            selectedOptionIndex = scanTypeSelectedOptionIdx,
         )
     }
 
