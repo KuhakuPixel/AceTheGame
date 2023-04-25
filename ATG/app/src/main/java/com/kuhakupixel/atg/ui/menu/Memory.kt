@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
+import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.ATGDropDown
@@ -28,14 +29,15 @@ import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
 
 
-private val scanTypeList: List<String> = ArrayList<String>(operatorEnumToSymbolBiMap.values)
+// ======================= drop down options =================
+private val scanTypeList: MutableList<String> = mutableListOf()
 private val valueTypeList: MutableList<String> = mutableListOf()
 
 // ==================== selected scan options ==============================
 private var scanInputVal: MutableState<String> = mutableStateOf("")
 private var scanAgainstValue: MutableState<Boolean> = mutableStateOf(true)
 
-private val scanTypeSelectedOptionIdx = mutableStateOf(scanTypeList.indexOf("="))
+private val scanTypeSelectedOptionIdx = mutableStateOf(0)
 private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 
 // ================================================================
@@ -48,12 +50,23 @@ fun MemoryMenu(globalConf: GlobalConf?) {
     // ==================================
     // initialize display for num types including its bit size
     if (valueTypeList.isEmpty()) {
+        // init list
         for (numType: NumType in NumType.values()) {
             val bitSize: Int = ace!!.GetNumTypeBitSize(numType)
             val displayStr: String = "${numType.toString()} (${bitSize} bit)"
             valueTypeList.add(displayStr)
 
         }
+    }
+    // initialize display for scan types
+    if (scanTypeList.isEmpty()) {
+        // init list
+        for (op: Operator in Operator.values()) {
+            val displayStr: String = (operatorEnumToSymbolBiMap.get(op))!!
+            scanTypeList.add(displayStr)
+        }
+        // init default
+        scanTypeSelectedOptionIdx.value = scanTypeList.indexOf("=")
     }
     // ==================================
     Column(
@@ -173,10 +186,7 @@ private fun MatchesSetting(
             onNextScan = {
                 // ====================== get scan options ========================
                 val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
-
-                val scanTypeStr: String = scanTypeList[scanTypeSelectedOptionIdx.value]
-                val scanType: ACE.Operator =
-                    (operatorEnumToSymbolBiMap.inverse().get(scanTypeStr))!!
+                val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
                 // ================================================================
                 // set the value type
                 if (!initialScanDone.value)
