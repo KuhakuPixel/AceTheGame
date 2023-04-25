@@ -251,7 +251,6 @@ private fun MatchesSetting(
 
                 // update matches table
                 UpdateMatches(ace = ace)
-                matches.value = ace.ListMatches(Settings.maxShownMatchesCount)
                 // set initial scan to true
                 initialScanDone.value = true
             },
