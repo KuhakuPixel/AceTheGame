@@ -35,7 +35,7 @@ public class ACEClient {
         }
     }
 
-    public String Request(String requestCmd) throws InvalidCommandException {
+    public List<String> RequestAsList(String requestCmd) throws InvalidCommandException {
 
         // wrap it inside quotes just in case
         // that [requestCmd] contains space
@@ -47,8 +47,13 @@ public class ACEClient {
         Shell.Result result = Shell.cmd(cmdStr).exec();
         List<String> out = result.getOut();
         AssertValidCommand(out);
-        String outStr = String.join("\n", out);
-        // assert valid command is sent
+        return out;
+
+    }
+
+    public String Request(String requestCmd) throws InvalidCommandException {
+
+        String outStr = String.join("\n", RequestAsList(requestCmd));
         return outStr;
 
     }

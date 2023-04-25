@@ -68,6 +68,24 @@ public class ACE {
         }
     }
 
+    public class MatchInfo {
+
+        String address;
+        String prevValue;
+
+        public String getAddress() {
+            return address;
+        }
+
+        public String getPrevValue() {
+            return prevValue;
+        }
+        public MatchInfo(String address, String prevValue) {
+            this.address = address;
+            this.prevValue = prevValue;
+        }
+    }
+
 
     // https://stackoverflow.com/a/507658/14073678
     public static final BiMap<ACE.Operator, String> operatorEnumToSymbolBiMap = HashBiMap.create();
@@ -157,6 +175,11 @@ public class ACE {
         return out;
     }
 
+    public List<String> CheaterCmdAsList(String cmd) {
+        AssertAttached();
+        return client.RequestAsList(cmd);
+    }
+
     public Long GetAttachedPid() {
         String pidStr = CheaterCmd("pid");
         return Long.parseLong(pidStr);
@@ -164,6 +187,39 @@ public class ACE {
 
     public void SetNumType(NumType type) {
         CheaterCmd("config type " + type.toString());
+    }
+
+    public void ScanAgainstValue(Operator operator, String numValStr) {
+        String cmd = String.format("scan %s %s", operatorEnumToSymbolBiMap.get(operator), numValStr);
+        CheaterCmd(cmd);
+
+    }
+
+    public void ScanWithoutValue(Operator operator) {
+        String cmd = String.format("filter %s", operatorEnumToSymbolBiMap.get(operator));
+        CheaterCmd(cmd);
+    }
+
+    public Integer GetMatchCount() {
+        Integer count = Integer.parseInt(CheaterCmd("matchcount"));
+        return count;
+    }
+
+    public List<MatchInfo> ListMatches(Integer maxCount) {
+        /**
+         * get list of matches with list command
+         * which will return a list of [address] - [prev value] one per each line
+         * */
+
+        List<MatchInfo> matches = new ArrayList<MatchInfo>();
+        String cmd = String.format("list --max-count %d", maxCount);
+        List<String> matchesStr = CheaterCmdAsList(cmd);
+        for (String s : matchesStr) {
+            String[] splitted = s.split(" ");
+            assert (splitted.length == 2);
+            matches.add(new MatchInfo(splitted[0], splitted[1]));
+        }
+        return matches;
     }
 
     // =============== this commands don't require attach ===================

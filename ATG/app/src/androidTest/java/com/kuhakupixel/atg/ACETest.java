@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.kuhakupixel.atg.backend.ACE;
 import com.kuhakupixel.atg.backend.ACEClient;
 import com.kuhakupixel.atg.backend.NumTypeInfo;
+import com.kuhakupixel.atg.backend.NumUtil;
 import com.kuhakupixel.atg.backend.ProcInfo;
 import com.kuhakupixel.atg.backend.ProcUtil;
 
@@ -261,6 +262,55 @@ public class ACETest {
         for (ACE.Operator op : ACE.Operator.values()) {
             Assert.assertTrue(availableTypes.contains(op));
         }
+    }
+
+    // TODO: add test for all number types :)
+    @Test
+    public void ScanAndGetMatches() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shoudlnt have any matches before scan
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
+        // now we should have some matches
+        Assert.assertTrue(ace.GetMatchCount() > 0);
+
+        // ====================
+        ace.DeAttach();
+    }
+
+    @Test
+    public void ScanAndGetMatchesList() throws IOException, InterruptedException {
+        // ============== init ==================
+        // nothing special, just some random number
+        Integer maxMatchesCount = 2;
+        //
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shouldn't have any matches before scan
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
+        // get matches
+        List<ACE.MatchInfo> matches = ace.ListMatches(maxMatchesCount);
+        // the actual matches count will be bigger than [maxMatchesCount]
+        // but we can limit how many matches we get from the engine
+        // for performance reason
+        Assert.assertTrue(ace.GetMatchCount() > maxMatchesCount);
+        Assert.assertEquals((int) maxMatchesCount, matches.size());
+        for (ACE.MatchInfo matchInfo : matches) {
+            // address must be hex and the previous value must be normal numeric
+            Assert.assertTrue(NumUtil.IsHex(matchInfo.getAddress()));
+            Assert.assertTrue(NumUtil.IsNumeric(matchInfo.getPrevValue()));
+        }
+
+        // ====================
+        ace.DeAttach();
     }
 
 
