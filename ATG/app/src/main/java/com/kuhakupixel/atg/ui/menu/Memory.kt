@@ -76,6 +76,8 @@ fun MemoryMenu(globalConf: GlobalConf?) {
         // init default
         scanTypeSelectedOptionIdx.value = Operator.values().indexOf(Settings.defaultScanType)
     }
+    val isAttached: Boolean = ace!!.IsAttached()
+
     // ==================================
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -94,9 +96,44 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 .weight(0.4f)
                 .padding(10.dp)
                 .fillMaxSize(),
-            ace = ace!!,
-            matches = currentMatchesList
+            //
+            scanTypeEnabled = isAttached,
+            scanTypeSelectedOptionIdx = scanTypeSelectedOptionIdx,
+            //
+            scanInputVal = scanInputVal,
+            // only allow to change Value type before any scan is done
+            valueTypeEnabled = isAttached && !(initialScanDone.value),
+            valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
+            //
+            nextScanEnabled = isAttached,
+            nextScanClicked = {
+                // ====================== get scan options ========================
+                val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
+                // ================================================================
+                // set the value type
+                if (!initialScanDone.value)
+                    ace.SetNumType(valueType)
+                // do the scan
+                if (scanAgainstValue.value)
+                    ace.ScanAgainstValue(scanType, scanInputVal.value)
+                else
+                    ace.ScanWithoutValue(scanType)
 
+
+                // update matches table
+                UpdateMatches(ace = ace)
+                // set initial scan to true
+                initialScanDone.value = true
+            },
+            //
+            newScanEnabled = isAttached && initialScanDone.value,
+            newScanClicked = {
+                ace.ResetMatches()
+                UpdateMatches(ace = ace)
+                initialScanDone.value = false
+            },
+            scanAgainstValue = scanAgainstValue,
         )
     }
 }
@@ -145,9 +182,23 @@ private fun UpdateMatches(ace: ACE) {
 
 @Composable
 private fun MatchesSetting(
-    ace: ACE,
     modifier: Modifier = Modifier,
-    matches: MutableState<List<MatchInfo>>
+    //
+    scanTypeEnabled: Boolean,
+    scanTypeSelectedOptionIdx: MutableState<Int>,
+    //
+    scanInputVal: MutableState<String>,
+    //
+    valueTypeEnabled: Boolean,
+    valueTypeSelectedOptionIdx: MutableState<Int>,
+    //
+    nextScanEnabled: Boolean,
+    nextScanClicked: () -> Unit,
+    //
+    scanAgainstValue: MutableState<Boolean>,
+    //
+    newScanEnabled: Boolean,
+    newScanClicked: () -> Unit,
 ) {
     @Composable
     fun ScanInputField(scanValue: MutableState<String>, scanAgainstValue: MutableState<Boolean>) {
@@ -219,46 +270,22 @@ private fun MatchesSetting(
         )
     }
 
-    val isAttached: Boolean = ace.IsAttached()
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
-        ScanTypeDropDown(scanTypeSelectedOptionIdx, enabled = isAttached)
+        ScanTypeDropDown(scanTypeSelectedOptionIdx, enabled = scanTypeEnabled)
         ValueTypeDropDown(
             valueTypeSelectedOptionIdx,
             // only allow to change type during initial scan
-            enabled = isAttached && !(initialScanDone.value),
+            enabled = valueTypeEnabled,
         )
         ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
         ScanButton(
             modifier = Modifier.fillMaxWidth(),
-            nextScanEnabled = isAttached,
+            nextScanEnabled = nextScanEnabled,
             // new scan can only be done if we have done at least one scan
-            newScanEnabled = isAttached && initialScanDone.value,
+            newScanEnabled = newScanEnabled,
             //
-            onNextScan = {
-                // ====================== get scan options ========================
-                val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
-                val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
-                // ================================================================
-                // set the value type
-                if (!initialScanDone.value)
-                    ace.SetNumType(valueType)
-                // do the scan
-                if (scanAgainstValue.value)
-                    ace.ScanAgainstValue(scanType, scanInputVal.value)
-                else
-                    ace.ScanWithoutValue(scanType)
-
-
-                // update matches table
-                UpdateMatches(ace = ace)
-                // set initial scan to true
-                initialScanDone.value = true
-            },
-            onNewScan = {
-                ace.ResetMatches()
-                UpdateMatches(ace = ace)
-                initialScanDone.value = false
-            },
+            onNextScan = nextScanClicked,
+            onNewScan = newScanClicked,
         )
 
     }
