@@ -10,6 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 
+/**
+ *  custom dropdown that can be enabled or disabled
+ *  which when disabled will not allow the dropdown to expand
+ *  and disable the arrow icon
+ *  https://stackoverflow.com/a/74534475/14073678
+ *  https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#ExposedDropdownMenuBox(kotlin.Boolean,kotlin.Function1,androidx.compose.ui.Modifier,kotlin.Function1)
+ * */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ATGDropDown(
@@ -17,23 +24,30 @@ fun ATGDropDown(
     expanded: MutableState<Boolean>,
     options: List<String>,
     selectedOptionIndex: MutableState<Int>,
+    enabled: Boolean = true,
 ) {
-    // https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#ExposedDropdownMenuBox(kotlin.Boolean,kotlin.Function1,androidx.compose.ui.Modifier,kotlin.Function1)
-    //val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
-    //var selectedOptionIndex: MutableState<Int> = remember { mutableStateOf(0) }
-    // We want to react on tap/press on TextField to show menu
+
     ExposedDropdownMenuBox(
         expanded = expanded.value,
-        onExpandedChange = { expanded.value = !expanded.value },
+        onExpandedChange = {
+            if (enabled) {
+                expanded.value = !expanded.value
+            }
+        },
     ) {
         TextField(
+            enabled = enabled,
             // The `menuAnchor` modifier must be passed to the text field for correctness.
             modifier = Modifier.menuAnchor(),
             readOnly = true,
             value = options[selectedOptionIndex.value],
             onValueChange = {},
             label = { Text(label) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
+            trailingIcon = {
+                if (enabled) {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
+                }
+            },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
         )
         ExposedDropdownMenu(
