@@ -25,7 +25,6 @@ import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
-import org.apache.commons.lang3.mutable.Mutable
 
 
 private val scanTypeList: List<String> = ArrayList<String>(operatorEnumToSymbolBiMap.values)
@@ -37,7 +36,9 @@ private var scanAgainstValue: MutableState<Boolean> = mutableStateOf(true)
 
 private val scanTypeSelectedOptionIdx = mutableStateOf(scanTypeList.indexOf("="))
 private val valueTypeSelectedOptionIdx = mutableStateOf(0)
+
 // ================================================================
+private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
 
 
 @Composable
@@ -68,13 +69,14 @@ fun MemoryMenu(globalConf: GlobalConf?) {
             modifier = Modifier
                 .weight(0.5f)
                 .padding(10.dp)
-                .fillMaxSize()
+                .fillMaxSize(),
+            ace = ace!!
         )
     }
 }
 
 @Composable
-private fun MatchesSetting(modifier: Modifier = Modifier) {
+private fun MatchesSetting(ace: ACE, modifier: Modifier = Modifier) {
     @Composable
     fun ScanInputField(scanValue: MutableState<String>, scanAgainstValue: MutableState<Boolean>) {
         Row() {
@@ -102,12 +104,18 @@ private fun MatchesSetting(modifier: Modifier = Modifier) {
     }
 
     @Composable
-    fun ScanButton(modifier: Modifier = Modifier, enabled: Boolean) {
+    fun ScanButton(
+        modifier: Modifier = Modifier,
+        nextScanEnabled: Boolean,
+        newScanEnabled: Boolean,
+        onNextScan: () -> Unit,
+        onNewScan: () -> Unit
+    ) {
         Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceEvenly) {
-            Button(enabled = enabled, onClick = {}) {
+            Button(enabled = newScanEnabled, onClick = onNewScan) {
                 Text("New Scan")
             }
-            Button(enabled = enabled, onClick = {}) {
+            Button(enabled = nextScanEnabled, onClick = onNextScan) {
                 Text("Next Scan")
             }
         }
@@ -141,7 +149,15 @@ private fun MatchesSetting(modifier: Modifier = Modifier) {
         ScanTypeDropDown(scanTypeSelectedOptionIdx)
         ValueTypeDropDown(valueTypeSelectedOptionIdx)
         ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
-        ScanButton(modifier = Modifier.fillMaxWidth(), enabled = false)
+        ScanButton(
+            modifier = Modifier.fillMaxWidth(),
+            nextScanEnabled = ace.IsAttached(),
+            newScanEnabled = ace.IsAttached() && initialScanDone.value,
+            onNextScan = {
+
+            },
+            onNewScan = {},
+        )
 
     }
 }
