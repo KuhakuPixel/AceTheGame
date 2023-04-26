@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
 
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
-private var matchesStatusText: MutableState<String> = mutableStateOf("No Matches")
+private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches")
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?) {
@@ -79,6 +80,9 @@ fun MemoryMenu(globalConf: GlobalConf?) {
     val isAttached: Boolean = ace!!.IsAttached()
 
     // ==================================
+    val scanTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
+    val valueTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
+
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -97,12 +101,12 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 .padding(10.dp)
                 .fillMaxSize(),
             //
-            scanTypeEnabled = isAttached,
+            scanTypeEnabled = scanTypeEnabled,
             scanTypeSelectedOptionIdx = scanTypeSelectedOptionIdx,
             //
             scanInputVal = scanInputVal,
             // only allow to change Value type before any scan is done
-            valueTypeEnabled = isAttached && !(initialScanDone.value),
+            valueTypeEnabled = valueTypeEnabled,
             valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
             //
             nextScanEnabled = isAttached,
@@ -125,6 +129,8 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 UpdateMatches(ace = ace)
                 // set initial scan to true
                 initialScanDone.value = true
+                // disable value type after first scan is done
+                valueTypeEnabled.value = false
             },
             //
             newScanEnabled = isAttached && initialScanDone.value,
@@ -132,6 +138,8 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 ace.ResetMatches()
                 UpdateMatches(ace = ace)
                 initialScanDone.value = false
+                // ReEnable value type again
+                valueTypeEnabled.value = true
             },
             scanAgainstValue = scanAgainstValue,
         )
@@ -180,16 +188,17 @@ private fun UpdateMatches(ace: ACE) {
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MatchesSetting(
     modifier: Modifier = Modifier,
     //
-    scanTypeEnabled: Boolean,
+    scanTypeEnabled: MutableState<Boolean>,
     scanTypeSelectedOptionIdx: MutableState<Int>,
     //
     scanInputVal: MutableState<String>,
     //
-    valueTypeEnabled: Boolean,
+    valueTypeEnabled: MutableState<Boolean>,
     valueTypeSelectedOptionIdx: MutableState<Int>,
     //
     nextScanEnabled: Boolean,
@@ -246,7 +255,7 @@ private fun MatchesSetting(
     }
 
     @Composable
-    fun ScanTypeDropDown(selectedOptionIndex: MutableState<Int>, enabled: Boolean) {
+    fun ScanTypeDropDown(selectedOptionIndex: MutableState<Int>, enabled: MutableState<Boolean>) {
         val expanded = remember { mutableStateOf(false) }
         // default to "exact scan (=)"
         ATGDropDown(
@@ -259,7 +268,7 @@ private fun MatchesSetting(
     }
 
     @Composable
-    fun ValueTypeDropDown(selectedOptionIndex: MutableState<Int>, enabled: Boolean) {
+    fun ValueTypeDropDown(selectedOptionIndex: MutableState<Int>, enabled: MutableState<Boolean>) {
         val expanded = remember { mutableStateOf(false) }
         ATGDropDown(
             enabled = enabled,

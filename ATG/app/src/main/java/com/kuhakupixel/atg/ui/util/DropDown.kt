@@ -24,19 +24,19 @@ fun ATGDropDown(
     expanded: MutableState<Boolean>,
     options: List<String>,
     selectedOptionIndex: MutableState<Int>,
-    enabled: Boolean = true,
+    enabled: MutableState<Boolean>,
 ) {
 
     ExposedDropdownMenuBox(
         expanded = expanded.value,
         onExpandedChange = {
-            if (enabled) {
+            if (enabled.value) {
                 expanded.value = !expanded.value
             }
         },
     ) {
         TextField(
-            enabled = enabled,
+            enabled = enabled.value,
             // The `menuAnchor` modifier must be passed to the text field for correctness.
             modifier = Modifier.menuAnchor(),
             readOnly = true,
@@ -44,7 +44,7 @@ fun ATGDropDown(
             onValueChange = {},
             label = { Text(label) },
             trailingIcon = {
-                if (enabled) {
+                if (enabled.value) {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
                 }
             },
