@@ -118,7 +118,8 @@ public:
    * */
   void
   initial_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
-                        Scan_Utils::E_operator_type operator_type, T value_to_find);
+                        Scan_Utils::E_operator_type operator_type,
+                        T value_to_find);
 
   /*
    * find value [value_to_find] from [addr_start] to [addr_end]
@@ -190,7 +191,8 @@ public:
    * else: compare old value with new value in that address
    *
    * */
-  void filter_from_cmp_val(Scan_Utils::E_operator_type operator_type, T cmp_val);
+  void filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
+                           T cmp_val);
 
   /*
    * should be called after `scanner_find_val`

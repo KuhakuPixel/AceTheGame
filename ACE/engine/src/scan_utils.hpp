@@ -82,7 +82,8 @@ ADDR get_nearest_aligned_addr(ADDR addr, size_t bytes_aligned);
 
  * */
 template <typename T>
-inline bool value_compare(T compare_from, Scan_Utils::E_operator_type operator_type,
+inline bool value_compare(T compare_from,
+                          Scan_Utils::E_operator_type operator_type,
                           T compare_to) {
 
   switch (operator_type) {

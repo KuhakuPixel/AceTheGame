@@ -308,11 +308,11 @@ void unfreeze_all_cmd_handler(freezer<T> *freezer_manager) {
       const ACE_scanner<TYPE> *scanner);                                       \
                                                                                \
   template void filter_cmd_handler<TYPE>(                                      \
-      ACE_scanner<TYPE> * scanner, Scan_Utils::E_operator_type operator_type,      \
+      ACE_scanner<TYPE> * scanner, Scan_Utils::E_operator_type operator_type,  \
       const cheat_mode_config *cheat_config);                                  \
                                                                                \
   template void scan_cmd_handler<TYPE>(                                        \
-      ACE_scanner<TYPE> * scanner, Scan_Utils::E_operator_type operator_type,      \
+      ACE_scanner<TYPE> * scanner, Scan_Utils::E_operator_type operator_type,  \
       cheat_mode_config * cheat_config, TYPE num_to_find);                     \
                                                                                \
   template void write_cmd_handler<TYPE>(ACE_scanner<TYPE> * scanner,           \

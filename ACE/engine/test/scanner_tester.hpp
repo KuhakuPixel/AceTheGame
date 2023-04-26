@@ -289,7 +289,8 @@ public:
     this->scanner->filter_val(operator_type);
   }
 
-  void scanner_filter_on_value(Scan_Utils::E_operator_type operator_type, T value) {
+  void scanner_filter_on_value(Scan_Utils::E_operator_type operator_type,
+                               T value) {
     this->scanner->filter_from_cmp_val(operator_type, value);
   }
 
