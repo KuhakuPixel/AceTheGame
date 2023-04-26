@@ -3,6 +3,7 @@ package com.kuhakupixel.atg.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ContentAlpha
@@ -17,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -100,12 +103,13 @@ fun AddItem(
 ) {
     rowScope.BottomNavigationItem(
         label = {
-            Text(text = screen.title)
+            Text(text = screen.title, fontSize = 10.sp)
         },
         icon = {
             Icon(
                 imageVector = ImageVector.vectorResource(id = screen.iconId),
-                contentDescription = "Navigation Icon"
+                contentDescription = "Navigation Icon",
+                modifier = Modifier.size(20.dp),
             )
 
         },

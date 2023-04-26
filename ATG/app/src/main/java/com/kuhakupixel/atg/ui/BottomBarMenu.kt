@@ -21,8 +21,8 @@ sealed class BottomBarMenu(
     )
 
     object AddressTable : BottomBarMenu(
-        route = "Table",
-        title = "Table",
+        route = "Address Table",
+        title = "Address Table",
         iconId = R.drawable.ic_table
     )
 
