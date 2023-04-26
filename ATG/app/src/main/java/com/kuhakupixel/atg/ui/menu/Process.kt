@@ -112,7 +112,7 @@ fun ProcessTable(
     if (openConfirmDialog.value) {
         ConfirmDialog(
             msg = "Attach to ${selectedPid.value} - ${selectedProcNameStr.value} ?",
-            onClick = { onProcessSelected(selectedPid.value, selectedProcNameStr.value) },
+            onConfirm = { onProcessSelected(selectedPid.value, selectedProcNameStr.value) },
             onClose = { openConfirmDialog.value = false }
         )
     }
@@ -194,7 +194,7 @@ fun ProcessMenu(globalConf: GlobalConf?) {
             onAttachSuccess = {
                 InfoDialog(
                     msg = "Attaching to ${procNameToAttach.value} is successful",
-                    onClick = {},
+                    onConfirm = {},
                     onClose = closeDialog,
                 )
                 attachedStatusString.value = "${pidToAttach.value} - ${procNameToAttach.value}"
@@ -202,14 +202,14 @@ fun ProcessMenu(globalConf: GlobalConf?) {
             onProcessNoExistAnymore = {
                 WarningDialog(
                     msg = "Process ${procNameToAttach.value} is not running anymore, Can't attach",
-                    onClick = {},
+                    onConfirm = {},
                     onClose = closeDialog,
                 )
             },
             onAttachFailure = { msg: String ->
                 ErrorDialog(
                     msg = msg,
-                    onClick = {},
+                    onConfirm = {},
                     onClose = closeDialog,
                 )
             },

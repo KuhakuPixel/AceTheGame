@@ -159,7 +159,7 @@ fun MemoryMenu(globalConf: GlobalConf?) {
     if (openErrDialog.value) {
         ErrorDialog(
             msg = errDialogMsg.value,
-            onClick = {},
+            onConfirm = {},
             onClose = { openErrDialog.value = false }
 
         )

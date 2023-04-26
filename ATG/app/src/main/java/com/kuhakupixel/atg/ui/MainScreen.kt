@@ -40,7 +40,7 @@ fun MainScreen() {
                 WarningDialog(
                     msg = "Root not granted, This apk need root in order to work :(",
                     onClose = { showDialog.value = false },
-                    onClick = {})
+                    onConfirm = {})
             }
 
         }
@@ -51,7 +51,7 @@ fun MainScreen() {
             WarningDialog(
                 msg = "Cannot determine whether Root has been granted or not :(",
                 onClose = { showDialog.value = false },
-                onClick = {})
+                onConfirm = {})
         }
     }
     // ==============================================================
