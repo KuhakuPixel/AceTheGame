@@ -258,7 +258,7 @@ public:
    *
    * */
 
-  void initial_scan(Scan_Utils::E_filter_type filter_type, T val_scan) {
+  void initial_scan(Scan_Utils::E_operator_type operator_type, T val_scan) {
 
     int ptrace_attach_ret = 0;
     int ptrace_deattach_ret = 0;
@@ -269,7 +269,7 @@ public:
         {
           this->scanner->initial_scan(
               (byte *)this->simulated_memory->get_addr_start(),
-              (byte *)this->simulated_memory->get_addr_end(), filter_type,
+              (byte *)this->simulated_memory->get_addr_end(), operator_type,
               val_scan);
         },
 
@@ -284,13 +284,13 @@ public:
 
   // ==============================================================
 
-  void scanner_filter(Scan_Utils::E_filter_type filter_type) {
+  void scanner_filter(Scan_Utils::E_operator_type operator_type) {
 
-    this->scanner->filter_val(filter_type);
+    this->scanner->filter_val(operator_type);
   }
 
-  void scanner_filter_on_value(Scan_Utils::E_filter_type filter_type, T value) {
-    this->scanner->filter_from_cmp_val(filter_type, value);
+  void scanner_filter_on_value(Scan_Utils::E_operator_type operator_type, T value) {
+    this->scanner->filter_from_cmp_val(operator_type, value);
   }
 
   void scanner_update_current_scan_result() {

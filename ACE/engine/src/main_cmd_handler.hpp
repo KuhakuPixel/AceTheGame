@@ -31,3 +31,6 @@ void display_intro();
 void license_cmd_handler();
 
 void credit_cmd_handler();
+
+void info_type_cmd_handler();
+void info_operator_cmd_handler();

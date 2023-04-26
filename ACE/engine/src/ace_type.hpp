@@ -5,6 +5,7 @@
  * */
 #pragma once
 #include "input.hpp"
+#include <limits.h>
 #include <string>
 #include <unordered_map>
 
@@ -68,6 +69,17 @@ static const std::unordered_map<E_num_type, std::string> E_num_type_to_str_map =
         {E_num_type::SHORT, "short"}, {E_num_type::INT, "int"},
         {E_num_type::LONG, "long"},   {E_num_type::BYTE, "byte"},
         {E_num_type::FLOAT, "float"},
+
+};
+
+static const std::unordered_map<E_num_type, size_t> E_num_type_to_bit_size_map =
+    {
+
+        {E_num_type::SHORT, sizeof(short) * CHAR_BIT},
+        {E_num_type::INT, sizeof(int) * CHAR_BIT},
+        {E_num_type::LONG, sizeof(long) * CHAR_BIT},
+        {E_num_type::BYTE, CHAR_BIT},
+        {E_num_type::FLOAT, sizeof(float) * CHAR_BIT},
 
 };
 

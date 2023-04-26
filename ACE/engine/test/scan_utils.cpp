@@ -119,80 +119,80 @@ TEST_CASE("ACE_get_address_iterator_end", "[scanner]") {
 TEST_CASE("Scan_Utils::value_compare", "[scanner]") {
 
   REQUIRE(true ==
-          Scan_Utils::value_compare(3, Scan_Utils::E_filter_type::equal, 3));
+          Scan_Utils::value_compare(3, Scan_Utils::E_operator_type::equal, 3));
 
   REQUIRE(true ==
-          Scan_Utils::value_compare(5, Scan_Utils::E_filter_type::equal, 5));
+          Scan_Utils::value_compare(5, Scan_Utils::E_operator_type::equal, 5));
 
   REQUIRE(false ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_filter_type::equal, 5));
+          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::equal, 5));
 
   REQUIRE(true ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_filter_type::less, 5));
+          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::less, 5));
 
   REQUIRE(false ==
-          Scan_Utils::value_compare(5, Scan_Utils::E_filter_type::less, 4));
+          Scan_Utils::value_compare(5, Scan_Utils::E_operator_type::less, 4));
 
   REQUIRE(true ==
-          Scan_Utils::value_compare(5, Scan_Utils::E_filter_type::greater, 4));
+          Scan_Utils::value_compare(5, Scan_Utils::E_operator_type::greater, 4));
 
   REQUIRE(false ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_filter_type::greater, 5));
+          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::greater, 5));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      4, Scan_Utils::E_filter_type::less_equal, 5));
+                      4, Scan_Utils::E_operator_type::less_equal, 5));
 
   REQUIRE(false == Scan_Utils::value_compare(
-                       5, Scan_Utils::E_filter_type::less_equal, 4));
+                       5, Scan_Utils::E_operator_type::less_equal, 4));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      5, Scan_Utils::E_filter_type::less_equal, 5));
+                      5, Scan_Utils::E_operator_type::less_equal, 5));
 
   REQUIRE(false == Scan_Utils::value_compare(
-                       6, Scan_Utils::E_filter_type::less_equal, 5));
+                       6, Scan_Utils::E_operator_type::less_equal, 5));
 
   REQUIRE(false == Scan_Utils::value_compare(
-                       4, Scan_Utils::E_filter_type::greater_equal, 5));
+                       4, Scan_Utils::E_operator_type::greater_equal, 5));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      5, Scan_Utils::E_filter_type::greater_equal, 4));
+                      5, Scan_Utils::E_operator_type::greater_equal, 4));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      5, Scan_Utils::E_filter_type::greater_equal, 5));
+                      5, Scan_Utils::E_operator_type::greater_equal, 5));
 
   REQUIRE(false == Scan_Utils::value_compare(
-                       5, Scan_Utils::E_filter_type::greater_equal, 6));
+                       5, Scan_Utils::E_operator_type::greater_equal, 6));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      -1, Scan_Utils::E_filter_type::not_equal, -4));
+                      -1, Scan_Utils::E_operator_type::not_equal, -4));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      5, Scan_Utils::E_filter_type::not_equal, 4));
+                      5, Scan_Utils::E_operator_type::not_equal, 4));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      4, Scan_Utils::E_filter_type::not_equal, 5));
+                      4, Scan_Utils::E_operator_type::not_equal, 5));
 
   REQUIRE(false == Scan_Utils::value_compare(
-                       5, Scan_Utils::E_filter_type::not_equal, 5));
+                       5, Scan_Utils::E_operator_type::not_equal, 5));
 
   REQUIRE(false == Scan_Utils::value_compare(
-                       6, Scan_Utils::E_filter_type::not_equal, 6));
+                       6, Scan_Utils::E_operator_type::not_equal, 6));
 
   //
   REQUIRE(true ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_filter_type::unknown, 5));
+          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::unknown, 5));
 
   REQUIRE(true ==
-          Scan_Utils::value_compare(5, Scan_Utils::E_filter_type::unknown, 4));
+          Scan_Utils::value_compare(5, Scan_Utils::E_operator_type::unknown, 4));
 
   REQUIRE(true == Scan_Utils::value_compare(
-                      -1, Scan_Utils::E_filter_type::unknown, -1));
+                      -1, Scan_Utils::E_operator_type::unknown, -1));
 
   REQUIRE(true ==
-          Scan_Utils::value_compare(-1, Scan_Utils::E_filter_type::unknown, 4));
+          Scan_Utils::value_compare(-1, Scan_Utils::E_operator_type::unknown, 4));
 
   REQUIRE(true ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_filter_type::unknown, -1));
+          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::unknown, -1));
 }
 
 TEST_CASE("Scan_Utils::value_compare_decimal", "[scan_utils]") {
@@ -207,92 +207,92 @@ TEST_CASE("Scan_Utils::value_compare_decimal", "[scan_utils]") {
 
   float x = 0.11;
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::equal, 0.11));
+                      x, Scan_Utils::E_operator_type::equal, 0.11));
   x += 1;
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::equal, 1.11));
+                      x, Scan_Utils::E_operator_type::equal, 1.11));
 
   x -= 1;
 
   //
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::equal, 0.11));
+                      x, Scan_Utils::E_operator_type::equal, 0.11));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::greater_equal, 0.11));
+                      x, Scan_Utils::E_operator_type::greater_equal, 0.11));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::less_equal, 0.11));
+                      x, Scan_Utils::E_operator_type::less_equal, 0.11));
 
   //
   REQUIRE(false == Scan_Utils::value_compare<float>(
-                       x, Scan_Utils::E_filter_type::not_equal, 0.11));
+                       x, Scan_Utils::E_operator_type::not_equal, 0.11));
 
   REQUIRE(false == Scan_Utils::value_compare<float>(
-                       x, Scan_Utils::E_filter_type::greater, 0.11));
+                       x, Scan_Utils::E_operator_type::greater, 0.11));
 
   REQUIRE(false == Scan_Utils::value_compare<float>(
-                       x, Scan_Utils::E_filter_type::less, 0.11));
+                       x, Scan_Utils::E_operator_type::less, 0.11));
 
   REQUIRE(false == Scan_Utils::value_compare<float>(
-                       x, Scan_Utils::E_filter_type::not_equal, 0.11));
+                       x, Scan_Utils::E_operator_type::not_equal, 0.11));
   //
   x -= 0.01;
   //
   REQUIRE(false == Scan_Utils::value_compare<float>(
-                       x, Scan_Utils::E_filter_type::equal, 0.11));
+                       x, Scan_Utils::E_operator_type::equal, 0.11));
 
   REQUIRE(false == Scan_Utils::value_compare<float>(
-                       x, Scan_Utils::E_filter_type::greater, 0.11));
+                       x, Scan_Utils::E_operator_type::greater, 0.11));
   REQUIRE(false == Scan_Utils::value_compare<float>(
-                       x, Scan_Utils::E_filter_type::greater_equal, 0.11));
+                       x, Scan_Utils::E_operator_type::greater_equal, 0.11));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::less, 0.11));
+                      x, Scan_Utils::E_operator_type::less, 0.11));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::less_equal, 0.11));
+                      x, Scan_Utils::E_operator_type::less_equal, 0.11));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      x, Scan_Utils::E_filter_type::not_equal, 0.11));
+                      x, Scan_Utils::E_operator_type::not_equal, 0.11));
 
   //
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      4.0, Scan_Utils::E_filter_type::unknown, 5.3));
+                      4.0, Scan_Utils::E_operator_type::unknown, 5.3));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      5.1, Scan_Utils::E_filter_type::unknown, 4.4));
+                      5.1, Scan_Utils::E_operator_type::unknown, 4.4));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      -1.3, Scan_Utils::E_filter_type::unknown, -1.3));
+                      -1.3, Scan_Utils::E_operator_type::unknown, -1.3));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      -1.3, Scan_Utils::E_filter_type::unknown, 4.5));
+                      -1.3, Scan_Utils::E_operator_type::unknown, 4.5));
 
   REQUIRE(true == Scan_Utils::value_compare<float>(
-                      4.2, Scan_Utils::E_filter_type::unknown, -1.1));
+                      4.2, Scan_Utils::E_operator_type::unknown, -1.1));
 }
 
 
-TEST_CASE("Scan_Utils::filter_str_to_E_filter_type_map", "[scanner]") {
+TEST_CASE("Scan_Utils::filter_str_to_E_operator_type_map", "[scanner]") {
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_filter_type_map.count("="));
-  REQUIRE(Scan_Utils::E_filter_type::equal ==
-          Scan_Utils::filter_str_to_E_filter_type_map.at("="));
+  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count("="));
+  REQUIRE(Scan_Utils::E_operator_type::equal ==
+          Scan_Utils::filter_str_to_E_operator_type_map.at("="));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_filter_type_map.count(">"));
-  REQUIRE(Scan_Utils::E_filter_type::greater ==
-          Scan_Utils::filter_str_to_E_filter_type_map.at(">"));
+  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count(">"));
+  REQUIRE(Scan_Utils::E_operator_type::greater ==
+          Scan_Utils::filter_str_to_E_operator_type_map.at(">"));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_filter_type_map.count(">="));
-  REQUIRE(Scan_Utils::E_filter_type::greater_equal ==
-          Scan_Utils::filter_str_to_E_filter_type_map.at(">="));
+  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count(">="));
+  REQUIRE(Scan_Utils::E_operator_type::greater_equal ==
+          Scan_Utils::filter_str_to_E_operator_type_map.at(">="));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_filter_type_map.count("<"));
-  REQUIRE(Scan_Utils::E_filter_type::less ==
-          Scan_Utils::filter_str_to_E_filter_type_map.at("<"));
+  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count("<"));
+  REQUIRE(Scan_Utils::E_operator_type::less ==
+          Scan_Utils::filter_str_to_E_operator_type_map.at("<"));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_filter_type_map.count("<="));
-  REQUIRE(Scan_Utils::E_filter_type::less_equal ==
-          Scan_Utils::filter_str_to_E_filter_type_map.at("<="));
+  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count("<="));
+  REQUIRE(Scan_Utils::E_operator_type::less_equal ==
+          Scan_Utils::filter_str_to_E_operator_type_map.at("<="));
 }

@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kuhakupixel.atg.ui.util.WarningDialog
 import com.topjohnwu.superuser.Shell
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     // =================== Check if root has been granted ===========
@@ -39,7 +40,7 @@ fun MainScreen() {
                 WarningDialog(
                     msg = "Root not granted, This apk need root in order to work :(",
                     onClose = { showDialog.value = false },
-                    onClick = {})
+                    onConfirm = {})
             }
 
         }
@@ -50,7 +51,7 @@ fun MainScreen() {
             WarningDialog(
                 msg = "Cannot determine whether Root has been granted or not :(",
                 onClose = { showDialog.value = false },
-                onClick = {})
+                onConfirm = {})
         }
     }
     // ==============================================================

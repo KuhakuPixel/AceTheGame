@@ -76,6 +76,8 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // guava (for bimap because java doesn't provide one :(
+    implementation 'com.google.guava:guava:31.1-jre'
     // for communication
     implementation 'org.zeromq:jeromq:0.5.3'
     // ====================

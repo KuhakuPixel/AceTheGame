@@ -21,7 +21,7 @@ struct cheat_mode_config {
 };
 
 template <typename T> struct cheat_mode_args {
-  Scan_Utils::E_filter_type filter_type;
+  Scan_Utils::E_operator_type operator_type;
   T num_val;
   ADDR addr_to_read;
   ADDR addr_to_write;
@@ -46,13 +46,13 @@ void pid_cmd_handler(int pid);
 
 template <typename T>
 void filter_cmd_handler(ACE_scanner<T> *scanner,
-                        Scan_Utils::E_filter_type filter_type,
+                        Scan_Utils::E_operator_type operator_type,
                         const cheat_mode_config *cheat_config);
 
 template <typename T>
 void scan_cmd_handler(ACE_scanner<T> *scanner,
 
-                      Scan_Utils::E_filter_type filter_type,
+                      Scan_Utils::E_operator_type operator_type,
 
                       cheat_mode_config *cheat_config,
 

@@ -4,7 +4,9 @@
  * */
 #include "engine_client.hpp"
 #include "ACE_global.hpp"
+#include "server.hpp"
 #include <stdlib.h>
+
 engine_client::engine_client(std::string client_binded_address) {
   this->client_binded_address = client_binded_address;
   // connect the socket to address
@@ -33,8 +35,6 @@ std::string engine_client::request(std::string msg) {
 }
 
 void engine_client::stop_server() {
-  // cannot expect a reply back here,
-  // because the server will be killed instantly
-  // after we send "stop"
-  this->request("stop");
+  //
+  this->request(server::stop_request_str);
 }

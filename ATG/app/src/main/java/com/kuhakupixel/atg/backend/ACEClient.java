@@ -9,6 +9,17 @@ import java.util.List;
 
 public class ACEClient {
 
+    public class InvalidCommandException extends RuntimeException {
+
+        public InvalidCommandException() {
+            super();
+        }
+
+        public InvalidCommandException(String msg) {
+            super(msg);
+        }
+    }
+
     String binaryPath = "";
     Integer port;
 
@@ -17,7 +28,14 @@ public class ACEClient {
         this.port = port;
     }
 
-    public String Request(String requestCmd) {
+    public void AssertValidCommand(List<String> out) throws InvalidCommandException {
+        if (out.size() > 0) {
+            if (out.get(0).equals("INVALID_COMMAND"))
+                throw new InvalidCommandException("Invalid Command: " + String.join("\n", out));
+        }
+    }
+
+    public List<String> RequestAsList(String requestCmd) throws InvalidCommandException {
 
         // wrap it inside quotes just in case
         // that [requestCmd] contains space
@@ -28,12 +46,19 @@ public class ACEClient {
         // run command
         Shell.Result result = Shell.cmd(cmdStr).exec();
         List<String> out = result.getOut();
-        String outStr = String.join("\n", out);
+        AssertValidCommand(out);
+        return out;
+
+    }
+
+    public String Request(String requestCmd) throws InvalidCommandException {
+
+        String outStr = String.join("\n", RequestAsList(requestCmd));
         return outStr;
 
     }
 
-    public List<String> MainCmdAsList(String requestCmd) {
+    public List<String> MainCmdAsList(String requestCmd) throws InvalidCommandException {
 
         // need to use "main" because its the subcommand for Main Command
         String[] cmdArr = new String[]{this.binaryPath, "main", requestCmd};
@@ -41,10 +66,12 @@ public class ACEClient {
         // run command
         Shell.Result result = Shell.cmd(cmdStr).exec();
         List<String> out = result.getOut();
+        AssertValidCommand(out);
         return out;
 
     }
-    public String MainCmd(String requestCmd){
+
+    public String MainCmd(String requestCmd) {
         List<String> out = MainCmdAsList(requestCmd);
         String outStr = String.join("\n", out);
         return outStr;

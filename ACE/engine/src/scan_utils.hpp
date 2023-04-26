@@ -11,7 +11,7 @@
 
 namespace Scan_Utils {
 
-enum class E_filter_type {
+enum class E_operator_type {
   greater,
   less,
   equal,
@@ -21,42 +21,21 @@ enum class E_filter_type {
   unknown,
 };
 
-/*
- * comparasion mode whether used to compare
- * against itself with or
- * against another value with [E_filter_type]
- *
- * example: if [E_filter_type] is greater and
- * [E_compare_mode] is [against_self] then the scanner
- * will check if the current value is bigger than
- * the previous match value
- *
- * if [E_filter_type] is [less] and
- * [E_compare_mode] is [against_another_val]
- * it will check if a value from previous match are
- * less than user's input value, if true add to match
- * l
- * */
-enum class E_compare_mode {
-  against_self,
-  against_another_val,
-};
-
 enum class E_read_mem_method {
   with_proc_pid_mem_file,
   with_process_vm_readv,
 };
 
-static const std::unordered_map<std::string, Scan_Utils::E_filter_type>
-    filter_str_to_E_filter_type_map = {
-        {">", Scan_Utils::E_filter_type::greater},
-        {"<", Scan_Utils::E_filter_type::less},
-        {"=", Scan_Utils::E_filter_type::equal},
-        {">=", Scan_Utils::E_filter_type::greater_equal},
-        {"<=", Scan_Utils::E_filter_type::less_equal},
-        {"!=", Scan_Utils::E_filter_type::not_equal},
+static const std::unordered_map<std::string, Scan_Utils::E_operator_type>
+    filter_str_to_E_operator_type_map = {
+        {">", Scan_Utils::E_operator_type::greater},
+        {"<", Scan_Utils::E_operator_type::less},
+        {"=", Scan_Utils::E_operator_type::equal},
+        {">=", Scan_Utils::E_operator_type::greater_equal},
+        {"<=", Scan_Utils::E_operator_type::less_equal},
+        {"!=", Scan_Utils::E_operator_type::not_equal},
         // For unknown, all comparasion must be true
-        {"?", Scan_Utils::E_filter_type::unknown},
+        {"?", Scan_Utils::E_operator_type::unknown},
 
 };
 
@@ -91,58 +70,58 @@ static const std::unordered_map<Scan_Utils::E_scan_level, std::string>
 ADDR get_nearest_aligned_addr(ADDR addr, size_t bytes_aligned);
 
 /*
- * compare [compare_from] with [filter_type] against  [compare_to]
+ * compare [compare_from] with [operator_type] against  [compare_to]
  *
  * example:
  * returns true if
  *
- * 	value_compare(4,Scan_Utils::E_filter_type::greater,3);
+ * 	value_compare(4,Scan_Utils::E_operator_type::greater,3);
  *
  * returns false if
- * 	value_compare(4,Scan_Utils::E_filter_type::greater,3);
+ * 	value_compare(4,Scan_Utils::E_operator_type::greater,3);
 
  * */
 template <typename T>
-inline bool value_compare(T compare_from, Scan_Utils::E_filter_type filter_type,
+inline bool value_compare(T compare_from, Scan_Utils::E_operator_type operator_type,
                           T compare_to) {
 
-  switch (filter_type) {
-  case Scan_Utils::E_filter_type::equal:
+  switch (operator_type) {
+  case Scan_Utils::E_operator_type::equal:
     if (compare_from == compare_to)
       return true;
     break;
 
-  case Scan_Utils::E_filter_type::greater:
+  case Scan_Utils::E_operator_type::greater:
 
     if (compare_from > compare_to)
       return true;
     break;
 
-  case Scan_Utils::E_filter_type::greater_equal:
+  case Scan_Utils::E_operator_type::greater_equal:
     if (compare_from >= compare_to)
       return true;
 
     break;
 
-  case Scan_Utils::E_filter_type::less:
+  case Scan_Utils::E_operator_type::less:
     if (compare_from < compare_to)
       return true;
 
     break;
 
-  case Scan_Utils::E_filter_type::less_equal:
+  case Scan_Utils::E_operator_type::less_equal:
     if (compare_from <= compare_to)
       return true;
 
     break;
 
-  case Scan_Utils::E_filter_type::not_equal:
+  case Scan_Utils::E_operator_type::not_equal:
     if (compare_from != compare_to)
       return true;
 
     break;
 
-  case Scan_Utils::E_filter_type::unknown:
+  case Scan_Utils::E_operator_type::unknown:
     return true;
 
     break;
@@ -177,21 +156,21 @@ inline ADDR get_address_of_match_index(
 
 template <>
 inline bool value_compare(float compare_from,
-                          Scan_Utils::E_filter_type filter_type,
+                          Scan_Utils::E_operator_type operator_type,
                           float compare_to) {
 
   float epsilon = std::numeric_limits<float>::epsilon();
-  switch (filter_type) {
-  case Scan_Utils::E_filter_type::equal:
+  switch (operator_type) {
+  case Scan_Utils::E_operator_type::equal:
     return fabs(compare_from - compare_to) < epsilon;
     break;
 
-  case Scan_Utils::E_filter_type::greater:
+  case Scan_Utils::E_operator_type::greater:
     return compare_from - compare_to > epsilon;
 
     break;
 
-  case Scan_Utils::E_filter_type::greater_equal:
+  case Scan_Utils::E_operator_type::greater_equal:
 
     return
         // is equal
@@ -201,13 +180,13 @@ inline bool value_compare(float compare_from,
 
     break;
 
-  case Scan_Utils::E_filter_type::less:
+  case Scan_Utils::E_operator_type::less:
 
     return compare_to - compare_from > epsilon;
 
     break;
 
-  case Scan_Utils::E_filter_type::less_equal:
+  case Scan_Utils::E_operator_type::less_equal:
 
     return
 
@@ -218,12 +197,12 @@ inline bool value_compare(float compare_from,
 
     break;
 
-  case Scan_Utils::E_filter_type::unknown:
+  case Scan_Utils::E_operator_type::unknown:
     return true;
 
     break;
 
-  case Scan_Utils::E_filter_type::not_equal:
+  case Scan_Utils::E_operator_type::not_equal:
     return fabs(compare_from - compare_to) >= epsilon;
   }
   return false;

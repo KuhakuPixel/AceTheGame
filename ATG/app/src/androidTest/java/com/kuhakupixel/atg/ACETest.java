@@ -6,6 +6,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.kuhakupixel.atg.backend.ACE;
+import com.kuhakupixel.atg.backend.ACEClient;
+import com.kuhakupixel.atg.backend.NumTypeInfo;
+import com.kuhakupixel.atg.backend.NumUtil;
 import com.kuhakupixel.atg.backend.ProcInfo;
 import com.kuhakupixel.atg.backend.ProcUtil;
 
@@ -14,6 +17,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,14 +29,27 @@ import java.util.List;
 public class ACETest {
 
     @Test
+    public void NumTypeEnumStringConversion() throws IOException {
+        Assert.assertEquals("int", ACE.NumType._int.toString());
+        Assert.assertEquals("byte", ACE.NumType._byte.toString());
+        Assert.assertEquals(ACE.NumType._long, ACE.NumType.fromString("long"));
+        Assert.assertEquals(ACE.NumType._long, ACE.NumType.fromString("_long"));
+        Assert.assertEquals(ACE.NumType._float, ACE.NumType.fromString("float"));
+        Assert.assertEquals(ACE.NumType._float, ACE.NumType.fromString("_float"));
+
+
+    }
+
+    @Test
     public void ListRunningProcs() throws IOException {
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ACE ace = new ACE(context);
-        List<ProcInfo> runningProcs =  ace.ListRunningProc();
+        List<ProcInfo> runningProcs = ace.ListRunningProc();
         Assert.assertTrue(runningProcs.size() > 1);
 
     }
+
     @Test
     public void GetReply() throws IOException, InterruptedException {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -51,6 +68,88 @@ public class ACETest {
         Assert.assertNull(ace.GetServerThread());
 
 
+    }
+
+    @Test
+    public void InvalidCommandException() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+
+        List<String> invalidCmd = new ArrayList<String>();
+        invalidCmd.add("ThisCommandDoesntExist");
+        invalidCmd.add("wifijif20");
+        invalidCmd.add("Randommm");
+        // "scan" valid command, but complete argument is required
+        invalidCmd.add("scan");
+        invalidCmd.add("scan =");
+        // for commands that requires attach
+        for (String s : invalidCmd) {
+            try {
+                ace.CheaterCmd(s);
+                Assert.fail();
+            } catch (ACEClient.InvalidCommandException e) {
+                Assert.assertTrue(true);
+            }
+        }
+        // for commands that don't require attach
+        for (String s : invalidCmd) {
+            try {
+                ace.MainCmd(s);
+                Assert.fail();
+            } catch (ACEClient.InvalidCommandException e) {
+                Assert.assertTrue(true);
+            }
+        }
+        ace.DeAttach();
+
+
+    }
+
+    @Test
+    public void ValidCommand() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // valid command
+        try {
+            ace.CheaterCmd("scan = 0");
+            Assert.assertTrue(true);
+        } catch (ACEClient.InvalidCommandException e) {
+            Assert.fail();
+        }
+        ace.DeAttach();
+
+
+    }
+
+    @Test
+    public void SetNumType() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shouldn't throw any exception ...
+        for (ACE.NumType numType : ACE.NumType.values()) {
+            ace.SetNumType(numType);
+        }
+        ace.DeAttach();
+
+
+    }
+
+    @Test
+    public void GetNumTypeBitSize() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        for (ACE.NumType numType : ACE.NumType.values()) {
+            Assert.assertNotNull(ace.GetNumTypeBitSize(numType));
+        }
     }
 
     @Test
@@ -101,8 +200,8 @@ public class ACETest {
         try {
             ace.Attach(pid);
             Assert.fail();
-        }catch(ACE.AttachingInARowException e){
-           Assert.assertTrue(true);
+        } catch (ACE.AttachingInARowException e) {
+            Assert.assertTrue(true);
         }
         // cleanup
         p.destroy();
@@ -119,15 +218,16 @@ public class ACETest {
         try {
             ace.DeAttach();
             Assert.fail();
-        }catch(ACE.NoAttachException e){
+        } catch (ACE.NoAttachException e) {
             Assert.assertTrue(true);
         }
         // cleanup
         p.destroy();
 
     }
+
     @Test
-    public void OperationRequiresAttach() throws IOException{
+    public void OperationRequiresAttach() throws IOException {
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ACE ace = new ACE(context);
@@ -136,12 +236,112 @@ public class ACETest {
         try {
             ace.GetAttachedPid();
             Assert.fail();
-        }catch(ACE.NoAttachException e){
+        } catch (ACE.NoAttachException e) {
             Assert.assertTrue(true);
         }
         // cleanup
         p.destroy();
 
+    }
+
+    @Test
+    public void GetAvailableNumTypes() throws IOException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        List<NumTypeInfo> availableTypes = ace.GetAvailableNumTypes();
+
+        // need to have at least 8, 16 and 32 bit number type
+        Assert.assertTrue(
+                availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(8))
+        );
+        Assert.assertTrue(
+                availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(16))
+        );
+
+        Assert.assertTrue(
+                availableTypes.stream().anyMatch(o -> o.GetBitSize().equals(32))
+        );
+    }
+
+    @Test
+    public void GetAvailableOperatorTypes() throws IOException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        List<ACE.Operator> availableTypes = ace.GetAvailableOperatorTypes();
+
+        // assert that the engine support all operation types that
+        // we have listed
+        for (ACE.Operator op : ACE.Operator.values()) {
+            Assert.assertTrue(availableTypes.contains(op));
+        }
+    }
+
+    // TODO: add test for all number types :)
+    @Test
+    public void ScanAndGetMatches() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shoudlnt have any matches before scan
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
+        // now we should have some matches
+        Assert.assertTrue(ace.GetMatchCount() > 0);
+
+        // ====================
+        ace.DeAttach();
+    }
+
+    @Test
+    public void ScanAndGetMatchesList() throws IOException, InterruptedException {
+        // ============== init ==================
+        // nothing special, just some random number
+        Integer maxMatchesCount = 2;
+        //
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shouldn't have any matches before scan
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
+        // get matches
+        List<ACE.MatchInfo> matches = ace.ListMatches(maxMatchesCount);
+        // the actual matches count will be bigger than [maxMatchesCount]
+        // but we can limit how many matches we get from the engine
+        // for performance reason
+        Assert.assertTrue(ace.GetMatchCount() > maxMatchesCount);
+        Assert.assertEquals((int) maxMatchesCount, matches.size());
+        for (ACE.MatchInfo matchInfo : matches) {
+            // address must be hex and the previous value must be normal numeric
+            Assert.assertTrue(NumUtil.IsHex(matchInfo.getAddress()));
+            Assert.assertTrue(NumUtil.IsNumeric(matchInfo.getPrevValue()));
+        }
+
+        // ====================
+        ace.DeAttach();
+    }
+
+    @Test
+    public void ScanAndResetMatches() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // shoudlnt have any matches before scan
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
+        // now we should have some matches
+        Assert.assertTrue(ace.GetMatchCount() > 0);
+        ace.ResetMatches();
+        // matches should be 0 now
+        Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        // ====================
+        ace.DeAttach();
     }
 
 
