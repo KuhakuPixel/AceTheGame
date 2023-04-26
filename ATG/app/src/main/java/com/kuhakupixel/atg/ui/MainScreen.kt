@@ -69,9 +69,11 @@ fun MainScreen() {
 
 @Composable
 fun BottomBar(navController: NavHostController) {
+
     val menus = listOf(
         BottomBarMenu.Process,
         BottomBarMenu.Memory,
+        BottomBarMenu.AddressTable,
         BottomBarMenu.Settings,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()

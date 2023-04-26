@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.kuhakupixel.atg.ui.menu.AddressTable
 import com.kuhakupixel.atg.ui.menu.ProcessMenu
 import com.kuhakupixel.atg.ui.menu.MemoryMenu
 import com.kuhakupixel.atg.ui.menu.SettingsMenu
@@ -20,6 +21,11 @@ fun BottomNavGraph(navController: NavHostController,globalConf: GlobalConf) {
         composable(route = BottomBarMenu.Memory.route) {
             MemoryMenu(globalConf)
         }
+
+        composable(route = BottomBarMenu.AddressTable.route) {
+            AddressTable(globalConf)
+        }
+
         composable(route = BottomBarMenu.Settings.route) {
             SettingsMenu(globalConf)
         }

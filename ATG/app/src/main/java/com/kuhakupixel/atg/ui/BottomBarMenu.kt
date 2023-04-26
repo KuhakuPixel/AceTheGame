@@ -20,6 +20,12 @@ sealed class BottomBarMenu(
         iconId = R.drawable.ic_memory
     )
 
+    object AddressTable : BottomBarMenu(
+        route = "Table",
+        title = "Table",
+        iconId = R.drawable.ic_table
+    )
+
     object Settings : BottomBarMenu(
         route = "settings",
         title = "Settings",
