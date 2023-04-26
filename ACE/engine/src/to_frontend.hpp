@@ -1,4 +1,5 @@
 #pragma once
+#include "../third_party/CLI11.hpp"
 #include <functional>
 #include <stdlib.h>
 #include <string>
@@ -57,3 +58,10 @@ void frontend_mark_task_done();
  * and [frontend_mark_task_done]
  * */
 void frontend_mark_progress(size_t current, size_t max);
+
+/*
+ * handle parsing error from cli and tell that error
+ * to frontend
+ * */
+void frontend_handle_cli_parse_error(bool print_to_stdout,
+                                     const CLI::ParseError &e);

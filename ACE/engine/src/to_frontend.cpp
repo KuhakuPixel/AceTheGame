@@ -80,3 +80,13 @@ void frontend_mark_progress(size_t current, size_t max) {
   frontend_print("%zu/%zu\n", current, max);
   frontend_print("PROGRESS_END\n");
 }
+
+void frontend_handle_cli_parse_error(bool print_to_stdout,
+                                     const CLI::ParseError &e) {
+  /**
+   * tells error to frontend if only not calling for help
+   * */
+  if (e.get_name() != "CallForHelp") {
+    frontend_invalid_command(print_to_stdout, "%s\n", e.what());
+  }
+}

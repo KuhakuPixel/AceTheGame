@@ -31,12 +31,7 @@ int main(int argc, char **argv) {
   try {
     (app).parse(argc, argv);
   } catch (const CLI::ParseError &e) {
-    /**
-     * tells error to frontend if only not calling for help
-     * */
-    if (e.get_name() != "CallForHelp") {
-      frontend_invalid_command(true, "%s\n", e.what());
-    }
+    frontend_handle_cli_parse_error(true, e);
     return (app).exit(e);
   }
   // ==============================================

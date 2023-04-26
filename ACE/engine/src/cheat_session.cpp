@@ -479,12 +479,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
     (app).parse(c_str_arr_length, c_str_arr);
     str_arr_free(c_str_arr, c_str_arr_length);
   } catch (const CLI::ParseError &e) {
-    /**
-     * tells error to frontend if only not calling for help
-     * */
-    if (e.get_name() != "CallForHelp") {
-      frontend_invalid_command(false, "%s\n", e.what());
-    }
+    frontend_handle_cli_parse_error(false, e);
     (app).exit(e);
     str_arr_free(c_str_arr, c_str_arr_length);
     //
