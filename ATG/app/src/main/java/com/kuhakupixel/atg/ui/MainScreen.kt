@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kuhakupixel.atg.ui.util.WarningDialog
 import com.topjohnwu.superuser.Shell
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     // =================== Check if root has been granted ===========

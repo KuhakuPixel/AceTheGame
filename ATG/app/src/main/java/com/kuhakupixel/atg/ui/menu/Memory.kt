@@ -26,10 +26,12 @@ import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
+import com.kuhakupixel.atg.backend.ACEClient.InvalidCommandException
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
+import com.kuhakupixel.atg.ui.util.ErrorDialog
 import kotlin.math.min
 
 
@@ -82,6 +84,9 @@ fun MemoryMenu(globalConf: GlobalConf?) {
     // ==================================
     val scanTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
     val valueTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
+    // =================================
+    var openErrDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
+    var errDialogMsg: MutableState<String> = remember { mutableStateOf("") }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -110,7 +115,7 @@ fun MemoryMenu(globalConf: GlobalConf?) {
             valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
             //
             nextScanEnabled = isAttached,
-            nextScanClicked = {
+            nextScanClicked = fun() {
                 // ====================== get scan options ========================
                 val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
                 val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
@@ -118,11 +123,17 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 // set the value type
                 if (!initialScanDone.value)
                     ace.SetNumType(valueType)
-                // do the scan
-                if (scanAgainstValue.value)
-                    ace.ScanAgainstValue(scanType, scanInputVal.value)
-                else
-                    ace.ScanWithoutValue(scanType)
+                try {
+                    // do the scan
+                    if (scanAgainstValue.value)
+                        ace.ScanAgainstValue(scanType, scanInputVal.value)
+                    else
+                        ace.ScanWithoutValue(scanType)
+                } catch (e: InvalidCommandException) {
+                    errDialogMsg.value = e.stackTraceToString()
+                    openErrDialog.value = true
+                    return
+                }
 
 
                 // update matches table
@@ -142,6 +153,15 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 valueTypeEnabled.value = true
             },
             scanAgainstValue = scanAgainstValue,
+        )
+    }
+    // show Error Dialog
+    if (openErrDialog.value) {
+        ErrorDialog(
+            msg = errDialogMsg.value,
+            onClick = {},
+            onClose = { openErrDialog.value = false }
+
         )
     }
 }
