@@ -8,12 +8,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.kuhakupixel.atg.backend.ACE
-import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.ui.GlobalConf
 
 @Composable
-fun AddressTable(globalConf: GlobalConf?) {
+fun AddressTableMenu(globalConf: GlobalConf?) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -29,5 +27,5 @@ fun AddressTable(globalConf: GlobalConf?) {
 @Composable
 @Preview
 fun AddressTablePreview() {
-    AddressTable(null)
+    AddressTableMenu(null)
 }
