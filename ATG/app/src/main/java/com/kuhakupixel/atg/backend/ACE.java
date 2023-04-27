@@ -176,6 +176,11 @@ public class ACE {
         return bitSize;
     }
 
+    public String GetNumTypeAndBitSize(NumType numType) {
+        Integer bitSize = this.GetNumTypeBitSize(numType);
+        return String.format("%s (%d bit)", numType.toString(), bitSize);
+    }
+
 
     // =============== this commands require attach ===================
     public String CheaterCmd(String cmd) {
@@ -213,6 +218,7 @@ public class ACE {
         Integer count = Integer.parseInt(CheaterCmd("matchcount"));
         return count;
     }
+
     public void ResetMatches() {
         CheaterCmd("reset");
     }

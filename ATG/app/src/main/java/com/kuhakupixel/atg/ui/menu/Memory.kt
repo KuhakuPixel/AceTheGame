@@ -55,16 +55,14 @@ private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches"
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?) {
-    val ace: ACE? = globalConf?.getAce()
+    val ace: ACE = (globalConf?.getAce())!!
     // ==================================
     // initialize display for num types including its bit size
     if (valueTypeList.isEmpty()) {
         // init list
         for (numType: NumType in NumType.values()) {
-            val bitSize: Int = ace!!.GetNumTypeBitSize(numType)
-            val displayStr: String = "${numType.toString()} (${bitSize} bit)"
+            val displayStr: String = ace.GetNumTypeAndBitSize(numType)
             valueTypeList.add(displayStr)
-
         }
         // init default
         valueTypeSelectedOptionIdx.value = NumType.values().indexOf(Settings.defaultNumType)
@@ -99,6 +97,11 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 .padding(16.dp),
             matches = currentMatchesList,
             matchesStatusText = matchesStatusText,
+            onMatchClicked = { matchInfo: MatchInfo ->
+                //
+                val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
+            }
         )
         MatchesSetting(
             modifier = Modifier
@@ -172,6 +175,7 @@ private fun MatchesTable(
     modifier: Modifier = Modifier,
     matches: MutableState<List<MatchInfo>>,
     matchesStatusText: MutableState<String>,
+    onMatchClicked: (matchInfo: MatchInfo) -> Unit,
 ) {
 
     Column(modifier = modifier) {
@@ -183,7 +187,7 @@ private fun MatchesTable(
             itemCount = matches.value.size,
             minEmptyItemCount = 50,
             onRowClicked = { rowIndex: Int ->
-
+                onMatchClicked(matches.value[rowIndex])
             },
             drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
                 if (colIndex == 0) {
