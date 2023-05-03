@@ -9,14 +9,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +37,8 @@ import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.ErrorDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.min
 
 
@@ -55,6 +62,23 @@ private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches"
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?) {
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
+        _MemoryMenu(
+            globalConf = globalConf,
+            snackbarHostState = snackbarHostState,
+            coroutineScope = coroutineScope,
+        )
+    }
+}
+
+@Composable
+fun _MemoryMenu(
+    globalConf: GlobalConf?,
+    snackbarHostState: SnackbarHostState,
+    coroutineScope: CoroutineScope
+) {
     val ace: ACE = (globalConf?.getAce())!!
     // ==================================
     // initialize display for num types including its bit size
@@ -101,6 +125,15 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 //
                 val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
                 AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
+                //
+                coroutineScope.launch() {
+                    snackbarHostState.showSnackbar(
+                        message = "Added ${matchInfo.address} to Address Table",
+                        duration = SnackbarDuration.Short,
+                        actionLabel = "Ok"
+
+                    )
+                }
             }
         )
         MatchesSetting(
