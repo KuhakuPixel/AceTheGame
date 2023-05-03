@@ -214,6 +214,11 @@ public class ACE {
         CheaterCmd(cmd);
     }
 
+    public void WriteValueAtAddress(String address, String value) {
+        String cmd = String.format("writeat %s %s", address, value);
+        CheaterCmd(cmd);
+    }
+
     public Integer GetMatchCount() {
         Integer count = Integer.parseInt(CheaterCmd("matchcount"));
         return count;
