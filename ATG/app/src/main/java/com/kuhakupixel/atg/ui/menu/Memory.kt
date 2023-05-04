@@ -237,7 +237,7 @@ private fun UpdateMatches(ace: ACE) {
     val matchesCount: Int = ace.GetMatchCount()
     val shownMatchesCount: Int = min(matchesCount, Settings.maxShownMatchesCount)
     // update ui
-    currentMatchesList.value = ace.ListMatches(shownMatchesCount)
+    currentMatchesList.value = ace.ListMatches(Settings.maxShownMatchesCount)
     matchesStatusText.value = "$matchesCount matches (showing ${shownMatchesCount})"
 
 
