@@ -29,8 +29,8 @@ private:
 
   template <typename T>
   struct cheat_cmd_ret _cheat_cmd(engine_module<T> *engine_module_ptr,
-                                           cheat_mode_config *cheat_config,
-                                           std::string input_str);
+                                  cheat_mode_config *cheat_config,
+                                  std::string input_str);
 
   template <typename T>
   struct cheat_cmd_ret

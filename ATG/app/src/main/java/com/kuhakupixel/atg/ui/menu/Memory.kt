@@ -9,14 +9,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +37,8 @@ import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.ErrorDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.min
 
 
@@ -48,6 +55,8 @@ private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 
 // ================================================================
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
+val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
@@ -55,16 +64,31 @@ private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches"
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?) {
-    val ace: ACE? = globalConf?.getAce()
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
+        _MemoryMenu(
+            globalConf = globalConf,
+            snackbarHostState = snackbarHostState,
+            coroutineScope = coroutineScope,
+        )
+    }
+}
+
+@Composable
+fun _MemoryMenu(
+    globalConf: GlobalConf?,
+    snackbarHostState: SnackbarHostState,
+    coroutineScope: CoroutineScope
+) {
+    val ace: ACE = (globalConf?.getAce())!!
     // ==================================
     // initialize display for num types including its bit size
     if (valueTypeList.isEmpty()) {
         // init list
         for (numType: NumType in NumType.values()) {
-            val bitSize: Int = ace!!.GetNumTypeBitSize(numType)
-            val displayStr: String = "${numType.toString()} (${bitSize} bit)"
+            val displayStr: String = ace.GetNumTypeAndBitSize(numType)
             valueTypeList.add(displayStr)
-
         }
         // init default
         valueTypeSelectedOptionIdx.value = NumType.values().indexOf(Settings.defaultNumType)
@@ -81,13 +105,13 @@ fun MemoryMenu(globalConf: GlobalConf?) {
     }
     val isAttached: Boolean = ace!!.IsAttached()
 
-    // ==================================
-    val scanTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
-    val valueTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
     // =================================
     var openErrDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
     var errDialogMsg: MutableState<String> = remember { mutableStateOf("") }
 
+    scanTypeEnabled.value = isAttached
+    // only enable change value type at first scan
+    valueTypeEnabled.value = isAttached && !(initialScanDone.value)
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -99,6 +123,20 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 .padding(16.dp),
             matches = currentMatchesList,
             matchesStatusText = matchesStatusText,
+            onMatchClicked = { matchInfo: MatchInfo ->
+                //
+                val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
+                //
+                coroutineScope.launch() {
+                    snackbarHostState.showSnackbar(
+                        message = "Added ${matchInfo.address} to Address Table",
+                        duration = SnackbarDuration.Short,
+                        actionLabel = "Ok"
+
+                    )
+                }
+            }
         )
         MatchesSetting(
             modifier = Modifier
@@ -140,8 +178,6 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 UpdateMatches(ace = ace)
                 // set initial scan to true
                 initialScanDone.value = true
-                // disable value type after first scan is done
-                valueTypeEnabled.value = false
             },
             //
             newScanEnabled = isAttached && initialScanDone.value,
@@ -149,8 +185,6 @@ fun MemoryMenu(globalConf: GlobalConf?) {
                 ace.ResetMatches()
                 UpdateMatches(ace = ace)
                 initialScanDone.value = false
-                // ReEnable value type again
-                valueTypeEnabled.value = true
             },
             scanAgainstValue = scanAgainstValue,
         )
@@ -172,6 +206,7 @@ private fun MatchesTable(
     modifier: Modifier = Modifier,
     matches: MutableState<List<MatchInfo>>,
     matchesStatusText: MutableState<String>,
+    onMatchClicked: (matchInfo: MatchInfo) -> Unit,
 ) {
 
     Column(modifier = modifier) {
@@ -183,7 +218,7 @@ private fun MatchesTable(
             itemCount = matches.value.size,
             minEmptyItemCount = 50,
             onRowClicked = { rowIndex: Int ->
-
+                onMatchClicked(matches.value[rowIndex])
             },
             drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
                 if (colIndex == 0) {
@@ -202,7 +237,7 @@ private fun UpdateMatches(ace: ACE) {
     val matchesCount: Int = ace.GetMatchCount()
     val shownMatchesCount: Int = min(matchesCount, Settings.maxShownMatchesCount)
     // update ui
-    currentMatchesList.value = ace.ListMatches(shownMatchesCount)
+    currentMatchesList.value = ace.ListMatches(Settings.maxShownMatchesCount)
     matchesStatusText.value = "$matchesCount matches (showing ${shownMatchesCount})"
 
 

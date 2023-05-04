@@ -176,6 +176,11 @@ public class ACE {
         return bitSize;
     }
 
+    public String GetNumTypeAndBitSize(NumType numType) {
+        Integer bitSize = this.GetNumTypeBitSize(numType);
+        return String.format("%s (%d bit)", numType.toString(), bitSize);
+    }
+
 
     // =============== this commands require attach ===================
     public String CheaterCmd(String cmd) {
@@ -209,10 +214,16 @@ public class ACE {
         CheaterCmd(cmd);
     }
 
+    public void WriteValueAtAddress(String address, String value) {
+        String cmd = String.format("writeat %s %s", address, value);
+        CheaterCmd(cmd);
+    }
+
     public Integer GetMatchCount() {
         Integer count = Integer.parseInt(CheaterCmd("matchcount"));
         return count;
     }
+
     public void ResetMatches() {
         CheaterCmd("reset");
     }

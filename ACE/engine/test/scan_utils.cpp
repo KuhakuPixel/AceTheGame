@@ -133,11 +133,11 @@ TEST_CASE("Scan_Utils::value_compare", "[scanner]") {
   REQUIRE(false ==
           Scan_Utils::value_compare(5, Scan_Utils::E_operator_type::less, 4));
 
-  REQUIRE(true ==
-          Scan_Utils::value_compare(5, Scan_Utils::E_operator_type::greater, 4));
+  REQUIRE(true == Scan_Utils::value_compare(
+                      5, Scan_Utils::E_operator_type::greater, 4));
 
-  REQUIRE(false ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::greater, 5));
+  REQUIRE(false == Scan_Utils::value_compare(
+                       4, Scan_Utils::E_operator_type::greater, 5));
 
   REQUIRE(true == Scan_Utils::value_compare(
                       4, Scan_Utils::E_operator_type::less_equal, 5));
@@ -179,20 +179,20 @@ TEST_CASE("Scan_Utils::value_compare", "[scanner]") {
                        6, Scan_Utils::E_operator_type::not_equal, 6));
 
   //
-  REQUIRE(true ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::unknown, 5));
+  REQUIRE(true == Scan_Utils::value_compare(
+                      4, Scan_Utils::E_operator_type::unknown, 5));
 
-  REQUIRE(true ==
-          Scan_Utils::value_compare(5, Scan_Utils::E_operator_type::unknown, 4));
+  REQUIRE(true == Scan_Utils::value_compare(
+                      5, Scan_Utils::E_operator_type::unknown, 4));
 
   REQUIRE(true == Scan_Utils::value_compare(
                       -1, Scan_Utils::E_operator_type::unknown, -1));
 
-  REQUIRE(true ==
-          Scan_Utils::value_compare(-1, Scan_Utils::E_operator_type::unknown, 4));
+  REQUIRE(true == Scan_Utils::value_compare(
+                      -1, Scan_Utils::E_operator_type::unknown, 4));
 
-  REQUIRE(true ==
-          Scan_Utils::value_compare(4, Scan_Utils::E_operator_type::unknown, -1));
+  REQUIRE(true == Scan_Utils::value_compare(
+                      4, Scan_Utils::E_operator_type::unknown, -1));
 }
 
 TEST_CASE("Scan_Utils::value_compare_decimal", "[scan_utils]") {
@@ -272,7 +272,6 @@ TEST_CASE("Scan_Utils::value_compare_decimal", "[scan_utils]") {
   REQUIRE(true == Scan_Utils::value_compare<float>(
                       4.2, Scan_Utils::E_operator_type::unknown, -1.1));
 }
-
 
 TEST_CASE("Scan_Utils::filter_str_to_E_operator_type_map", "[scanner]") {
 

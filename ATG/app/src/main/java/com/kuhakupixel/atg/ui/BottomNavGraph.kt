@@ -4,24 +4,22 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.kuhakupixel.atg.ui.menu.ProcessMenu
-import com.kuhakupixel.atg.ui.menu.MemoryMenu
-import com.kuhakupixel.atg.ui.menu.SettingsMenu
 
 @Composable
-fun BottomNavGraph(navController: NavHostController,globalConf: GlobalConf) {
+fun BottomNavGraph(
+    navController: NavHostController,
+    menus: List<BottomBarMenu>,
+    startDestinationIndex: Int,
+) {
+
     NavHost(
         navController = navController,
-        startDestination = BottomBarMenu.Process.route
+        startDestination = menus[startDestinationIndex].route
     ) {
-        composable(route = BottomBarMenu.Process.route) {
-            ProcessMenu(globalConf)
-        }
-        composable(route = BottomBarMenu.Memory.route) {
-            MemoryMenu(globalConf)
-        }
-        composable(route = BottomBarMenu.Settings.route) {
-            SettingsMenu(globalConf)
+        for (menu: BottomBarMenu in menus) {
+            this.composable(route = menu.route) {
+                menu.content()
+            }
         }
     }
 }

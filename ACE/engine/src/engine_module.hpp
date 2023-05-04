@@ -1,8 +1,8 @@
 #pragma once
+#include "cheat_cmd_handler.hpp"
 #include "freeze.hpp"
 #include "proc_rw.hpp"
 #include "scanner.hpp"
-#include "cheat_cmd_handler.hpp"
 
 /*
  * the core module for memory scanner and editor

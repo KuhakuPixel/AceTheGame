@@ -3,6 +3,7 @@ package com.kuhakupixel.atg.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ContentAlpha
@@ -17,14 +18,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kuhakupixel.atg.R
+import com.kuhakupixel.atg.ui.menu.AddressTableMenu
+import com.kuhakupixel.atg.ui.menu.MemoryMenu
+import com.kuhakupixel.atg.ui.menu.ProcessMenu
+import com.kuhakupixel.atg.ui.menu.SettingsMenu
 import com.kuhakupixel.atg.ui.util.WarningDialog
 import com.topjohnwu.superuser.Shell
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,8 +46,7 @@ fun MainScreen() {
         if (!isRootGranted) {
             val showDialog: MutableState<Boolean> = remember { mutableStateOf(true) }
             if (showDialog.value) {
-                WarningDialog(
-                    msg = "Root not granted, This apk need root in order to work :(",
+                WarningDialog(msg = "Root not granted, This apk need root in order to work :(",
                     onClose = { showDialog.value = false },
                     onConfirm = {})
             }
@@ -48,32 +56,62 @@ fun MainScreen() {
         // root access can't be determined if [isRootGranted] is null
         val showDialog: MutableState<Boolean> = remember { mutableStateOf(true) }
         if (showDialog.value) {
-            WarningDialog(
-                msg = "Cannot determine whether Root has been granted or not :(",
+            WarningDialog(msg = "Cannot determine whether Root has been granted or not :(",
                 onClose = { showDialog.value = false },
                 onConfirm = {})
         }
     }
     // ==============================================================
-
     val navController = rememberNavController()
     var globalConf: GlobalConf = GlobalConf(LocalContext.current)
-    Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
-    ) { padding ->
+    // ============================ each menu in bottom nav ===================
+    val menus = listOf(
+        BottomBarMenu(
+            route = "Process",
+            title = "Process",
+            iconId = R.drawable.ic_process,
+            content = { ProcessMenu(globalConf) },
+        ),
+
+        BottomBarMenu(
+            route = "Memory",
+            title = "Memory",
+            iconId = R.drawable.ic_memory,
+            content = { MemoryMenu(globalConf) },
+        ),
+
+        BottomBarMenu(
+            route = "Address Table",
+            title = "Address Table",
+            iconId = R.drawable.ic_table,
+            content = { AddressTableMenu(globalConf) },
+        ),
+
+        BottomBarMenu(
+            route = "settings",
+            title = "Settings",
+            iconId = R.drawable.ic_setting,
+            content = { SettingsMenu(globalConf) },
+        ),
+    )
+    // =====================================================
+    Scaffold(bottomBar = {
+        BottomBar(
+            navController = navController,
+            menus = menus
+        )
+    }) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-            BottomNavGraph(navController = navController, globalConf = globalConf)
+            BottomNavGraph(navController = navController, menus = menus, startDestinationIndex = 0)
         }
     }
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
-    val menus = listOf(
-        BottomBarMenu.Process,
-        BottomBarMenu.Memory,
-        BottomBarMenu.Settings,
-    )
+fun BottomBar(
+    navController: NavHostController,
+    menus: List<BottomBarMenu>
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -98,12 +136,13 @@ fun AddItem(
 ) {
     rowScope.BottomNavigationItem(
         label = {
-            Text(text = screen.title)
+            Text(text = screen.title, fontSize = 10.sp)
         },
         icon = {
             Icon(
                 imageVector = ImageVector.vectorResource(id = screen.iconId),
-                contentDescription = "Navigation Icon"
+                contentDescription = "Navigation Icon",
+                modifier = Modifier.size(20.dp),
             )
 
         },
@@ -124,7 +163,7 @@ fun AddItem(
                 // the destination to avoid multiple copies in backstack
                 this.launchSingleTop = true
             }
-        }
+        },
     )
 }
 

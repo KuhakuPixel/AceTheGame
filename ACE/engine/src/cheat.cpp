@@ -36,13 +36,10 @@ void cheater_mode_loop(int pid) {
   run_input_loop(on_input, "CHEATER");
 }
 
-void run_cheater_mode(int pid) {
-
-  cheater_mode_loop(pid);
-}
+void run_cheater_mode(int pid) { cheater_mode_loop(pid); }
 
 // ================================================
-void cheater_mode(int pid) { 
-	//
-	run_cheater_mode(pid); 
+void cheater_mode(int pid) {
+  //
+  run_cheater_mode(pid);
 }

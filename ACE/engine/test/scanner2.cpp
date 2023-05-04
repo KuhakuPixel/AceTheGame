@@ -277,7 +277,8 @@ TEST_CASE("reverse_endian_scan_write", "[writter]") {
   tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   // other filter
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+                                 VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::greater,
                                  VAL_TO_FIND - 1);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::less,

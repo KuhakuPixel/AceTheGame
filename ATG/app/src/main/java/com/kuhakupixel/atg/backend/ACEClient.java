@@ -1,6 +1,7 @@
 package com.kuhakupixel.atg.backend;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.topjohnwu.superuser.Shell;
 
@@ -37,6 +38,7 @@ public class ACEClient {
 
     public List<String> RequestAsList(String requestCmd) throws InvalidCommandException {
 
+        Log.i("ATG", String.format("Command to Engine: \"%s\"", requestCmd));
         // wrap it inside quotes just in case
         // that [requestCmd] contains space
         requestCmd = String.format("\"%s\"", requestCmd);
