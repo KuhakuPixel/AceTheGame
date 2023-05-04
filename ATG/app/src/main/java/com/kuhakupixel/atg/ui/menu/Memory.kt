@@ -55,6 +55,8 @@ private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 
 // ================================================================
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
+val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
@@ -103,13 +105,13 @@ fun _MemoryMenu(
     }
     val isAttached: Boolean = ace!!.IsAttached()
 
-    // ==================================
-    val scanTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
-    val valueTypeEnabled: MutableState<Boolean> = remember { mutableStateOf(isAttached) }
     // =================================
     var openErrDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
     var errDialogMsg: MutableState<String> = remember { mutableStateOf("") }
 
+    scanTypeEnabled.value = isAttached
+    // only enable change value type at first scan
+    valueTypeEnabled.value = isAttached && !(initialScanDone.value)
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -176,8 +178,6 @@ fun _MemoryMenu(
                 UpdateMatches(ace = ace)
                 // set initial scan to true
                 initialScanDone.value = true
-                // disable value type after first scan is done
-                valueTypeEnabled.value = false
             },
             //
             newScanEnabled = isAttached && initialScanDone.value,
@@ -185,8 +185,6 @@ fun _MemoryMenu(
                 ace.ResetMatches()
                 UpdateMatches(ace = ace)
                 initialScanDone.value = false
-                // ReEnable value type again
-                valueTypeEnabled.value = true
             },
             scanAgainstValue = scanAgainstValue,
         )
