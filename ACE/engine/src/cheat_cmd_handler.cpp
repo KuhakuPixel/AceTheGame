@@ -28,7 +28,6 @@ void list_cmd_handler(const ACE_scanner<T> *scanner, size_t list_max_count) {
   scan_res.iterate_val(
 
       [&](ADDR addr, int val) {
-        frontend_print("0x%llx ", addr);
         T val_display = val;
         // swap endian again if scan type is swapped
         // for a good normal (as in the endian is native )display
@@ -36,7 +35,8 @@ void list_cmd_handler(const ACE_scanner<T> *scanner, size_t list_max_count) {
           val_display = swap_endian<T>(val);
         //
 
-        frontend_print("%s\n", std::to_string(val_display).c_str());
+        frontend_print("0x%llx %s\n", addr,
+                       std::to_string(val_display).c_str());
       },
 
       display_count
