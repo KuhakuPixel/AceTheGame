@@ -27,7 +27,7 @@ void list_cmd_handler(const ACE_scanner<T> *scanner, size_t list_max_count) {
 
   scan_res.iterate_val(
 
-      [&](ADDR addr, int val) {
+      [&](ADDR addr, T val) {
         T val_display = val;
         // swap endian again if scan type is swapped
         // for a good normal (as in the endian is native )display
