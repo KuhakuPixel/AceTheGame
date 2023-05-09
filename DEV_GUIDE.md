@@ -16,7 +16,8 @@ specific build instruction is provided at the readme of each subproject.
 Folder 				| Description
 ----------------------------- 	| -----------------------------------------------
 [ACE](./ACE/) 			| Memory scanner and editor for linux and android
-[Modder](./Modder) 		| Attaching a memory scanner and editor service in the apk itself so you can read/write memory without roo
+[Modder](./Modder) 		| Attaching a memory scanner and editor service in the apk itself so you can read/write memory without root
+[ATG](./ATG) 	 		| Mobile Apk GUI For Memory scaner and editor (will be similiar like Game Guardian)
 
 ## Making Release
 
