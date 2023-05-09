@@ -112,6 +112,9 @@ for alternative install directory that is available in android
 look [here](https://android.stackexchange.com/questions/45554/running-own-executable-on-android-shell)
 
 ## Usage
+(this is only a brief tutorial about scanning,
+ for more in depth and real practice visit [here](./tutorial/))
+
 Notes: type command `-h` to list all available commands
 
 [video tutorial](https://www.youtube.com/watch?v=UlGm1nFxRzA)
