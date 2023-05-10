@@ -27,7 +27,7 @@ void frontend_print_core(bool print_to_stdout, const char *fmt, va_list args) {
     printf("%s", buffer);
 // also print to logcat for android
 #ifdef __ANDROID__
-  __android_log_print(ANDROID_LOG_DEBUG, "[ACE Engine]", "%s", buffer);
+  __android_log_print(ANDROID_LOG_DEBUG, "ACE", "%s", buffer);
 #endif
   // put to buffer
   frontend_output_buff += std::string(buffer);

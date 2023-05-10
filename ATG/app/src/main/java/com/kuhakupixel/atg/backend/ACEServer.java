@@ -14,7 +14,7 @@ public class ACEServer {
     public static Thread GetStarterThread(Context context, Long pid, Integer portNum) throws IOException {
         Thread thread = new Thread(
                 () -> {
-                    Log.i("ATG", "Running Binary");
+                    Log.i("ATG", String.format("Running engine server at port %d", portNum));
                     String path = "";
                     try {
                         path = Binary.GetBinPath(context, Binary.Type.server);

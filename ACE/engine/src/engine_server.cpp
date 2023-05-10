@@ -14,11 +14,12 @@ void engine_server_start(int pid, std::string engine_server_binded_address) {
       [&](std::string input_str) -> std::string {
     // reset output  buffer to make sure
     // we won't have previous output
-    frontend_output_buff = "";
+    frontend_pop_output();
     _cheat_session.on_each_input(input_str);
     // get std output from _cheat_session.on_each_input
     // function call
     std::string out = frontend_pop_output();
+    frontend_print("task \"%s\" done\n", input_str.c_str());
     return out;
   };
 
