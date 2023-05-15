@@ -20,6 +20,9 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
 
   CLI::App *q_cmd = app->add_subcommand("q", "quit the program");
   q_cmd->callback(quit_cmd_handler);
+  
+  CLI::App *exit_cmd = app->add_subcommand("exit", "quit the program");
+  exit_cmd->callback(quit_cmd_handler);
 
   // ================================= cheater command ================
   CLI::App *cheater_cmd =
