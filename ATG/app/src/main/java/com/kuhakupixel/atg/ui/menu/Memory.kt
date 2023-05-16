@@ -280,7 +280,7 @@ private fun MatchesSetting(
                 enabled = scanAgainstValue.value,
                 value = scanValue.value,
                 onValueChange = { value ->
-                    scanValue.value = value
+                    scanValue.value = value.replace("\n", "")
                 },
                 label = { Text(text = "Scan For") },
                 placeholder = { Text(text = "value ...") },
