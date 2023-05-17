@@ -78,10 +78,10 @@ add_library(lib_ACE-static STATIC ${lib_ACE_src})
 # ============= link ace's library with dependencies
 if(ANDROID)
 	# link with main android library
-	target_link_libraries(lib_ACE PRIVATE common_flag android log cppzmq-static linenoise)
+	target_link_libraries(lib_ACE PRIVATE common_flag android log cppzmq-static linenoise-static)
 	target_link_libraries(lib_ACE-static PRIVATE common_flag android log cppzmq-static linenoise-static)
 else()
-	target_link_libraries(lib_ACE PRIVATE common_flag cppzmq-static linenoise)
+	target_link_libraries(lib_ACE PRIVATE common_flag cppzmq-static linenoise-static)
 	target_link_libraries(lib_ACE-static PRIVATE common_flag cppzmq-static linenoise-static)
 
 endif()
