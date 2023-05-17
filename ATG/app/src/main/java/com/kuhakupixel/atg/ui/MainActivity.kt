@@ -1,8 +1,13 @@
 package com.kuhakupixel.atg.ui
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -15,6 +20,21 @@ import com.topjohnwu.superuser.Shell
 
 
 class MainActivity : ComponentActivity() {
+
+    /**
+     * returns true if permission is given, false otherwise
+     * */
+    fun askForOverlayPermission(): Boolean {
+        // if not construct intent to request permi
+        val intent = Intent(
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:" + applicationContext.packageName)
+        )
+        startActivityForResult(intent,0)
+
+        return Settings.canDrawOverlays(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,14 +44,14 @@ class MainActivity : ComponentActivity() {
         Shell.getShell { shell: Shell? ->
             // do some drawing ...
             setContent {
-                AtgTheme (darkTheme = true){
+                AtgTheme(darkTheme = true) {
                     // A surface container using the 'background' color from the theme
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
                         //HackingScreen()
-                        MainScreen()
+                        MainScreen(askForOverlayPermission = { askForOverlayPermission() })
                     }
                 }
             }

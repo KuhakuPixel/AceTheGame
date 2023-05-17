@@ -25,7 +25,7 @@ import com.topjohnwu.superuser.Shell
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(askForOverlayPermission: () -> Boolean) {
     // =================== Check if root has been granted ===========
     // https://topjohnwu.github.io/libsu/com/topjohnwu/superuser/Shell.html#isAppGrantedRoot()
     val isRootGranted: Boolean? = Shell.isAppGrantedRoot()
@@ -58,7 +58,7 @@ fun MainScreen() {
             route = "Home",
             title = "Home",
             iconId = R.drawable.ic_home,
-            content = { HomeMenu(globalConf) },
+            content = { HomeMenu(globalConf, askForOverlayPermission = askForOverlayPermission) },
         ),
     )
     // =====================================================
