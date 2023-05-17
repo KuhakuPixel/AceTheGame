@@ -91,7 +91,7 @@ fun _MemoryMenu(
             valueTypeList.add(displayStr)
         }
         // init default
-        valueTypeSelectedOptionIdx.value = NumType.values().indexOf(Settings.defaultNumType)
+        valueTypeSelectedOptionIdx.value = NumType.values().indexOf(ATGSettings.defaultNumType)
     }
     // initialize display for scan types
     if (scanTypeList.isEmpty()) {
@@ -101,7 +101,7 @@ fun _MemoryMenu(
             scanTypeList.add(displayStr)
         }
         // init default
-        scanTypeSelectedOptionIdx.value = Operator.values().indexOf(Settings.defaultScanType)
+        scanTypeSelectedOptionIdx.value = Operator.values().indexOf(ATGSettings.defaultScanType)
     }
     val isAttached: Boolean = ace!!.IsAttached()
 
@@ -235,9 +235,9 @@ private fun MatchesTable(
 
 private fun UpdateMatches(ace: ACE) {
     val matchesCount: Int = ace.GetMatchCount()
-    val shownMatchesCount: Int = min(matchesCount, Settings.maxShownMatchesCount)
+    val shownMatchesCount: Int = min(matchesCount, ATGSettings.maxShownMatchesCount)
     // update ui
-    currentMatchesList.value = ace.ListMatches(Settings.maxShownMatchesCount)
+    currentMatchesList.value = ace.ListMatches(ATGSettings.maxShownMatchesCount)
     matchesStatusText.value = "$matchesCount matches (showing ${shownMatchesCount})"
 
 
@@ -280,7 +280,7 @@ private fun MatchesSetting(
                 enabled = scanAgainstValue.value,
                 value = scanValue.value,
                 onValueChange = { value ->
-                    scanValue.value = value
+                    scanValue.value = value.replace("\n", "")
                 },
                 label = { Text(text = "Scan For") },
                 placeholder = { Text(text = "value ...") },

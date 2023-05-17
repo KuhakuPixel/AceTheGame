@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui
+package com.kuhakupixel.atg.ui.bottomnav
 
 import androidx.compose.runtime.Composable
 

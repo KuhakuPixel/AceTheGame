@@ -12,7 +12,7 @@ import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.ui.GlobalConf
 
-class Settings {
+class ATGSettings {
     companion object {
         val maxShownMatchesCount: Int = 1000
         // default to exact scan

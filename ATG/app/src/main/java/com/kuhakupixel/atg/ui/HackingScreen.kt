@@ -2,7 +2,7 @@ package com.kuhakupixel.atg.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -14,13 +14,17 @@ import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.ui.bottomnav.BottomBar
 import com.kuhakupixel.atg.ui.bottomnav.BottomBarMenu
 import com.kuhakupixel.atg.ui.bottomnav.BottomNavGraph
-import com.kuhakupixel.atg.ui.menu.HomeMenu
+import com.kuhakupixel.atg.ui.menu.AddressTableMenu
+import com.kuhakupixel.atg.ui.menu.MemoryMenu
+import com.kuhakupixel.atg.ui.menu.ProcessMenu
+import com.kuhakupixel.atg.ui.menu.SettingsMenu
 import com.kuhakupixel.atg.ui.util.WarningDialog
 import com.topjohnwu.superuser.Shell
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(askForOverlayPermission: () -> Unit) {
+fun HackingScreen() {
     // =================== Check if root has been granted ===========
     // https://topjohnwu.github.io/libsu/com/topjohnwu/superuser/Shell.html#isAppGrantedRoot()
     val isRootGranted: Boolean? = Shell.isAppGrantedRoot()
@@ -50,10 +54,31 @@ fun MainScreen(askForOverlayPermission: () -> Unit) {
     // ============================ each menu in bottom nav ===================
     val menus = listOf(
         BottomBarMenu(
-            route = "Home",
-            title = "Home",
-            iconId = R.drawable.ic_home,
-            content = { HomeMenu(globalConf, askForOverlayPermission = askForOverlayPermission) },
+            route = "Process",
+            title = "Process",
+            iconId = R.drawable.ic_process,
+            content = { ProcessMenu(globalConf) },
+        ),
+
+        BottomBarMenu(
+            route = "Memory",
+            title = "Memory",
+            iconId = R.drawable.ic_memory,
+            content = { MemoryMenu(globalConf) },
+        ),
+
+        BottomBarMenu(
+            route = "Address Table",
+            title = "Address Table",
+            iconId = R.drawable.ic_table,
+            content = { AddressTableMenu(globalConf) },
+        ),
+
+        BottomBarMenu(
+            route = "settings",
+            title = "Settings",
+            iconId = R.drawable.ic_setting,
+            content = { SettingsMenu(globalConf) },
         ),
     )
     // =====================================================

@@ -4,12 +4,12 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 /**
  * to communicate with ACE's engine binary
