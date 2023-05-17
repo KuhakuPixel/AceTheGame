@@ -76,15 +76,17 @@ add_library(lib_ACE SHARED ${lib_ACE_src})
 add_library(lib_ACE-static STATIC ${lib_ACE_src})
 
 # ============= link ace's library with dependencies
-if(ANDROID)
-	# link with main android library
-	target_link_libraries(lib_ACE PRIVATE common_flag android log cppzmq-static linenoise-static)
-	target_link_libraries(lib_ACE-static PRIVATE common_flag android log cppzmq-static linenoise-static)
-else()
-	target_link_libraries(lib_ACE PRIVATE common_flag cppzmq-static linenoise-static)
-	target_link_libraries(lib_ACE-static PRIVATE common_flag cppzmq-static linenoise-static)
+# libraries that lib_ACE need
+set(lib_ACE_linked_libraries common_flag cppzmq-static linenoise-static)
 
+message("linked libraries: ${lib_ACE_linked_libraries}")
+# add extra library to link to for android (logging and etc)
+if(ANDROID)
+	list(APPEND lib_ACE_linked_libraries android log)
 endif()
+
+target_link_libraries(lib_ACE PRIVATE ${lib_ACE_linked_libraries})
+target_link_libraries(lib_ACE-static PRIVATE ${lib_ACE_linked_libraries})
 
 # ================================================================================
 # for unit testing the the file's utils copy necessary files into the build
