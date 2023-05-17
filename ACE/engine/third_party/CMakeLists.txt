@@ -6,3 +6,4 @@ cmake_minimum_required(VERSION 3.12)
 # so libzmq comes first
 add_subdirectory(./libzmq)
 add_subdirectory(./cppzmq)
+add_subdirectory(./linenoise)
