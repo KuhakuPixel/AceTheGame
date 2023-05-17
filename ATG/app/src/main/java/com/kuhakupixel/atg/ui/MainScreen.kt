@@ -20,7 +20,7 @@ import com.topjohnwu.superuser.Shell
 
 
 @Composable
-fun MainScreen(askForOverlayPermission: () -> Boolean) {
+fun MainScreen(askForOverlayPermission: () -> Unit) {
     // =================== Check if root has been granted ===========
     // https://topjohnwu.github.io/libsu/com/topjohnwu/superuser/Shell.html#isAppGrantedRoot()
     val isRootGranted: Boolean? = Shell.isAppGrantedRoot()

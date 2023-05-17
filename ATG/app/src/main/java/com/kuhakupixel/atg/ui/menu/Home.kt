@@ -25,7 +25,7 @@ import com.kuhakupixel.atg.ui.util.InfoDialog
 
 
 @Composable
-fun HomeMenu(globalConf: GlobalConf?, askForOverlayPermission: () -> Boolean) {
+fun HomeMenu(globalConf: GlobalConf?, askForOverlayPermission: () -> Unit) {
     val context: Context = LocalContext.current
     val showAskForDrawOverOtherApp: MutableState<Boolean> = remember { mutableStateOf(false) }
     Box(
@@ -49,25 +49,15 @@ fun HomeMenu(globalConf: GlobalConf?, askForOverlayPermission: () -> Boolean) {
             )
         }
     }
-    val showPermissionNotGrantedDialog = remember { mutableStateOf(false) }
     if (showAskForDrawOverOtherApp.value) {
         ConfirmDialog(
-            msg = "Please Grant Overlay draw app",
+            msg = "Please Grant Overlay draw app permission",
             onClose = { showAskForDrawOverOtherApp.value = false },
             onConfirm = {
-                val isGranted: Boolean = askForOverlayPermission()
-                if (!isGranted)
-                    showPermissionNotGrantedDialog.value = true
+                askForOverlayPermission()
             },
         )
 
-    }
-    if (showPermissionNotGrantedDialog.value) {
-        InfoDialog(
-            msg = "Permission not granted :(",
-            onClose = { showPermissionNotGrantedDialog.value = false },
-            onConfirm = {},
-        )
     }
 }
 
@@ -83,9 +73,8 @@ fun startOverlayButton(context: Context) {
 fun HomeMenuPreview() {
     HomeMenu(
         null,
-        askForOverlayPermission = fun(): Boolean {
+        askForOverlayPermission = fun() {
             //
-            return false
         },
     )
 }

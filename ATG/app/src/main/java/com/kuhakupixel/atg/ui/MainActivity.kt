@@ -22,15 +22,13 @@ class MainActivity : ComponentActivity() {
     /**
      * returns true if permission is given, false otherwise
      * */
-    fun askForOverlayPermission(): Boolean {
+    fun askForOverlayPermission() {
         // if not construct intent to request permi
         val intent = Intent(
             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
             Uri.parse("package:" + applicationContext.packageName)
         )
-        startActivityForResult(intent,0)
-
-        return Settings.canDrawOverlays(this)
+        startActivityForResult(intent, 0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
