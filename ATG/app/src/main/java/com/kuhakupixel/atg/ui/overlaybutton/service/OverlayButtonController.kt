@@ -10,8 +10,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
 import com.kuhakupixel.atg.ui.overlaybutton.OVERLAY_BUTTON_SIZE_DP
+import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
 import com.kuhakupixel.atg.ui.overlaybutton.logd
 
 val LocalServiceState = compositionLocalOf<ServiceState> { error("No ServiceState provided") }

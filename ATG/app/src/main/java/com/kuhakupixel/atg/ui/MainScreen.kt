@@ -2,7 +2,6 @@ package com.kuhakupixel.atg.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -15,11 +14,7 @@ import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.ui.bottomnav.BottomBar
 import com.kuhakupixel.atg.ui.bottomnav.BottomBarMenu
 import com.kuhakupixel.atg.ui.bottomnav.BottomNavGraph
-import com.kuhakupixel.atg.ui.menu.AddressTableMenu
 import com.kuhakupixel.atg.ui.menu.HomeMenu
-import com.kuhakupixel.atg.ui.menu.MemoryMenu
-import com.kuhakupixel.atg.ui.menu.ProcessMenu
-import com.kuhakupixel.atg.ui.menu.SettingsMenu
 import com.kuhakupixel.atg.ui.util.WarningDialog
 import com.topjohnwu.superuser.Shell
 

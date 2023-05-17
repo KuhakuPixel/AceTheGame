@@ -9,13 +9,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
 import com.kuhakupixel.atg.ui.overlaybutton.FOREGROUND_SERVICE_NOTIFICATION_ID
 import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND
 import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND_EXIT
 import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND_OVERLAY_BUTTON_CREATE
-import com.kuhakupixel.atg.ui.overlaybutton.NOTIFICATION_CHANNEL
 import com.kuhakupixel.atg.ui.overlaybutton.logd
 
 class FloatingService() : Service() {

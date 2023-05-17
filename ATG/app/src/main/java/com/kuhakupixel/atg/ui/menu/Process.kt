@@ -21,9 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.R
-import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
+import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.ConfirmDialog
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.ErrorDialog
