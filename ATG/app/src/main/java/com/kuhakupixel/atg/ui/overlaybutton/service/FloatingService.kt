@@ -44,11 +44,12 @@ class FloatingService() : Service() {
         when (command) {
             INTENT_COMMAND_OVERLAY_BUTTON_CREATE -> {
                 state.overlayButtonState.isVisible.value = true
+                overlayButtonController.createView()
             }
 
             INTENT_COMMAND_EXIT -> {
                 if (state.overlayButtonState.isVisible.value) {
-                    overlayButtonController.exitOverlayButton()
+                    overlayButtonController.destroyView()
                 }
                 return START_NOT_STICKY
             }

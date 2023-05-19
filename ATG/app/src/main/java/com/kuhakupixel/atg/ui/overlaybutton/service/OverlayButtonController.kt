@@ -16,29 +16,26 @@ import com.kuhakupixel.atg.ui.overlaybutton.logd
 
 val LocalServiceState = compositionLocalOf<ServiceState> { error("No ServiceState provided") }
 
-class OverlayButtonController(val service: FloatingService, val onClick: () -> Unit) {
+class OverlayButtonController(val service: FloatingService, val onClick: () -> Unit) :
+    OverlayInterface {
 
     private val overlayButtonState = service.state.overlayButtonState
 
     private val density = service.resources.displayMetrics.density
     val timerSizePx = (OVERLAY_BUTTON_SIZE_DP * density).toInt()
     val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val fullScreenViewController = OverlayViewController(
+    private val fullScreenViewController = OverlayViewController(
         createOverlayViewHolder = this::createFullscreenOverlay,
         windowManager = windowManager,
         name = "FullScreen"
     )
 
-    val overlayButtonViewController = OverlayViewController(
+    private val overlayButtonViewController = OverlayViewController(
         createOverlayViewHolder = this::createOverlayButtonClickTarget,
         windowManager = windowManager,
         name = "Button ClickTarget"
     )
 
-    init {
-        logd("OverlayController init")
-        initViewControllers()
-    }
 
     private fun createFullscreenOverlay(): OverlayViewHolder {
         val fullscreenOverlay = OverlayViewHolder(
@@ -104,24 +101,20 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
     }
 
 
-    private fun createView() {
+    override fun createView() {
 
+        logd("Init the controller ")
         fullScreenViewController.createView()
         overlayButtonViewController.createView()
     }
 
-    private fun destroyView() {
+    override fun destroyView() {
+        exitOverlayButton()
+    }
+
+    private fun exitOverlayButton() {
         fullScreenViewController.destroyView()
         overlayButtonViewController.destroyView()
-    }
-
-    private fun initViewControllers() {
-        logd("Init the controller ")
-        createView()
-    }
-
-    fun exitOverlayButton() {
-        destroyView()
         overlayButtonState.isVisible.value = false
         service.stopSelf()
     }
