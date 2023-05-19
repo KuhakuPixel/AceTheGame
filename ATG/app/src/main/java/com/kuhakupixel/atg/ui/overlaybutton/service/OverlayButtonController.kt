@@ -23,7 +23,7 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
 
     private val density = service.resources.displayMetrics.density
     val timerSizePx = (OVERLAY_BUTTON_SIZE_DP * density).toInt()
-    val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val fullScreenViewController = OverlayViewController(
         createOverlayViewHolder = this::createFullscreenOverlay,
         windowManager = windowManager,
@@ -39,6 +39,7 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
 
     private fun createFullscreenOverlay(): OverlayViewHolder {
         val fullscreenOverlay = OverlayViewHolder(
+            windowManager = windowManager,
             params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -49,6 +50,12 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
             service = service,
         )
 
+        fullscreenOverlay.setContent {
+            CompositionLocalProvider(LocalServiceState provides service.state) {
+                OverlayContent(showOverlayButton = overlayButtonState.isVisible.value)
+            }
+        }
+
         // https://developer.android.com/reference/android/view/WindowManager.LayoutParams#MaximumOpacity
         fullscreenOverlay.params.alpha = 1f
         val inputManager =
@@ -58,17 +65,12 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
             fullscreenOverlay.params.alpha = inputManager.maximumObscuringOpacityForTouch
         }
 
-        fullscreenOverlay.view.setContent {
-            CompositionLocalProvider(LocalServiceState provides service.state) {
-                OverlayContent(showOverlayButton = overlayButtonState.isVisible.value)
-            }
-        }
-
         return fullscreenOverlay
     }
 
     private fun createOverlayButtonClickTarget(): OverlayViewHolder {
         val overlayButtonClickTarget = OverlayViewHolder(
+            windowManager = windowManager,
             WindowManager.LayoutParams(
                 timerSizePx,
                 timerSizePx,
@@ -77,9 +79,10 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
-            ), service
+            ), service = service
         )
-        overlayButtonClickTarget.view.setContent {
+        overlayButtonClickTarget.setContent {
+
             val showClickTarget = remember { mutableStateOf(true) }
             if (showClickTarget.value) {
                 ClickTarget(
