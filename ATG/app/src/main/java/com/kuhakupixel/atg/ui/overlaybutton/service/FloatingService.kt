@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.kuhakupixel.atg.ui.overlaybutton.FOREGROUND_SERVICE_NOTIFICATION_ID
@@ -21,15 +22,27 @@ class FloatingService() : Service() {
 
     // todo make private
     lateinit var overlayButtonController: OverlayButtonController
+    lateinit var overlayHackingScreenController: OverlayHackingScreenController
+    val windowManager get() = getSystemService(WINDOW_SERVICE) as WindowManager
+
 
     fun onOverlayButtonClick() {
         logd("Overlay Button Is Clicked")
+        overlayButtonController.destroyView()
+        overlayHackingScreenController.createView()
     }
 
     override fun onCreate() {
         super.onCreate()
         overlayButtonController =
-            OverlayButtonController(service = this, onClick = { onOverlayButtonClick() })
+            OverlayButtonController(
+                windowManager = windowManager,
+                service = this,
+                onClick = { onOverlayButtonClick() },
+            )
+        overlayHackingScreenController =
+            OverlayHackingScreenController(windowManager = windowManager, service = this)
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {

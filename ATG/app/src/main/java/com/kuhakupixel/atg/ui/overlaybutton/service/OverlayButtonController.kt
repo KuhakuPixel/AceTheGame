@@ -16,14 +16,13 @@ import com.kuhakupixel.atg.ui.overlaybutton.logd
 
 val LocalServiceState = compositionLocalOf<ServiceState> { error("No ServiceState provided") }
 
-class OverlayButtonController(val service: FloatingService, val onClick: () -> Unit) :
+class OverlayButtonController(val windowManager: WindowManager,val service: FloatingService, val onClick: () -> Unit) :
     OverlayInterface {
 
     private val overlayButtonState = service.state.overlayButtonState
 
     private val density = service.resources.displayMetrics.density
     val timerSizePx = (OVERLAY_BUTTON_SIZE_DP * density).toInt()
-    private val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val fullScreenViewController = OverlayViewController(
         createOverlayViewHolder = this::createFullscreenOverlay,
         windowManager = windowManager,
