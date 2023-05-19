@@ -106,6 +106,7 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
         logd("Init the controller ")
         fullScreenViewController.createView()
         overlayButtonViewController.createView()
+        overlayButtonState.isVisible.value = true
     }
 
     override fun destroyView() {

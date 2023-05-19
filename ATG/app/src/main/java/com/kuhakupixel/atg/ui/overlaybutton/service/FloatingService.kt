@@ -43,14 +43,11 @@ class FloatingService() : Service() {
         val command = intent!!.getStringExtra(INTENT_COMMAND)
         when (command) {
             INTENT_COMMAND_OVERLAY_BUTTON_CREATE -> {
-                state.overlayButtonState.isVisible.value = true
                 overlayButtonController.createView()
             }
 
             INTENT_COMMAND_EXIT -> {
-                if (state.overlayButtonState.isVisible.value) {
-                    overlayButtonController.destroyView()
-                }
+                overlayButtonController.destroyView()
                 return START_NOT_STICKY
             }
         }
@@ -65,7 +62,8 @@ class FloatingService() : Service() {
         var channelId: String = ""
         //
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channelId = createNotificationChannel("ATGOverlayButton", "ATG's overlay button service")
+            channelId =
+                createNotificationChannel("ATGOverlayButton", "ATG's overlay button service")
         }
 
         val notification: Notification =
