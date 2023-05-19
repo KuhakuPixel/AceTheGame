@@ -29,7 +29,7 @@ class OverlayHackingScreenController(
                 0,
                 0,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                0,
                 PixelFormat.TRANSLUCENT
             ),
             service = service,
