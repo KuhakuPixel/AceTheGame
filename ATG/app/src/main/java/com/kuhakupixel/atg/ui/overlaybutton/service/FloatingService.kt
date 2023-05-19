@@ -30,6 +30,7 @@ class FloatingService() : Service() {
         logd("Overlay Button Is Clicked")
         overlayButtonController.destroyView()
         overlayHackingScreenController.createView()
+        //overlayHackingScreenController.destroyView()
     }
 
     override fun onCreate() {

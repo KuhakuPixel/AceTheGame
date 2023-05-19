@@ -25,30 +25,6 @@ import com.topjohnwu.superuser.Shell
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HackingScreen() {
-    // =================== Check if root has been granted ===========
-    // https://topjohnwu.github.io/libsu/com/topjohnwu/superuser/Shell.html#isAppGrantedRoot()
-    val isRootGranted: Boolean? = Shell.isAppGrantedRoot()
-    if (isRootGranted != null) {
-        // apk not granted root, show warning
-        if (!isRootGranted) {
-            val showDialog: MutableState<Boolean> = remember { mutableStateOf(true) }
-            if (showDialog.value) {
-                WarningDialog(msg = "Root not granted, This apk need root in order to work :(",
-                    onClose = { showDialog.value = false },
-                    onConfirm = {})
-            }
-
-        }
-    } else {
-        // root access can't be determined if [isRootGranted] is null
-        val showDialog: MutableState<Boolean> = remember { mutableStateOf(true) }
-        if (showDialog.value) {
-            WarningDialog(msg = "Cannot determine whether Root has been granted or not :(",
-                onClose = { showDialog.value = false },
-                onConfirm = {})
-        }
-    }
-    // ==============================================================
     val navController = rememberNavController()
     var globalConf: GlobalConf = GlobalConf(LocalContext.current)
     // ============================ each menu in bottom nav ===================

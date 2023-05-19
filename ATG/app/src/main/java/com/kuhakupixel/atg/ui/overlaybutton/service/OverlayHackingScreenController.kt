@@ -35,8 +35,10 @@ class OverlayHackingScreenController(
             service = service,
         )
 
+        hackingScreen.params.alpha = 0.8f
         hackingScreen.setContent {
-            Text("hello world")
+            // Text("hello world")
+            HackingScreen()
         }
         return hackingScreen
     }
