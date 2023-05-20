@@ -53,14 +53,19 @@ fun AtgTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    /*
+    don't run this code when this is called in a Service Class (As a Overlay window)
+    because LocalContext.current can't be cast to Activity
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as Activity).window
+            val window = (LocalContext.current as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
+
+     */
 
     MaterialTheme(
         colorScheme = colorScheme,

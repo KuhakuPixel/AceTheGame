@@ -3,9 +3,15 @@ package com.kuhakupixel.atg.ui.overlaybutton.service
 import android.content.Context
 import android.graphics.PixelFormat
 import android.view.WindowManager
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.HackingScreen
+import com.kuhakupixel.atg.ui.MainScreen
 import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
+import com.kuhakupixel.atg.ui.theme.AtgTheme
 
 class OverlayHackingScreenController(
     val windowManager: WindowManager,
@@ -35,10 +41,18 @@ class OverlayHackingScreenController(
             service = service,
         )
 
-        hackingScreen.params.alpha = 0.8f
+        hackingScreen.params.alpha = 0.9f
         hackingScreen.setContent {
             // Text("hello world")
-            HackingScreen()
+            AtgTheme(darkTheme = true) {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    HackingScreen()
+                }
+            }
         }
         return hackingScreen
     }
