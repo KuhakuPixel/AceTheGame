@@ -3,10 +3,16 @@ package com.kuhakupixel.atg.ui.overlaybutton.service
 import android.content.Context
 import android.graphics.PixelFormat
 import android.view.WindowManager
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.HackingScreen
 import com.kuhakupixel.atg.ui.MainScreen
@@ -14,10 +20,8 @@ import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 
 class OverlayHackingScreenController(
-    val windowManager: WindowManager,
-    val service: FloatingService
-) :
-    OverlayInterface {
+    val windowManager: WindowManager, val service: FloatingService, val onClosed: () -> Unit
+) : OverlayInterface {
 
     private val hackingScreenController = OverlayViewController(
         createOverlayViewHolder = this::createOverlay,
@@ -47,10 +51,20 @@ class OverlayHackingScreenController(
             AtgTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    HackingScreen()
+                    Column(modifier = Modifier.fillMaxSize()) {
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            Button(onClick = onClosed) {
+                                Text("Close")
+                            }
+                        }
+                        HackingScreen()
+                    }
                 }
             }
         }

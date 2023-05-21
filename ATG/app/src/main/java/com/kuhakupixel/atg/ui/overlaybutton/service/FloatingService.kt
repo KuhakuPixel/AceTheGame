@@ -28,9 +28,9 @@ class FloatingService() : Service() {
 
     fun onOverlayButtonClick() {
         logd("Overlay Button Is Clicked")
+        // close the overlay button and open hacking menu
         overlayButtonController.destroyView()
         overlayHackingScreenController.createView()
-        //overlayHackingScreenController.destroyView()
     }
 
     override fun onCreate() {
@@ -42,7 +42,15 @@ class FloatingService() : Service() {
                 onClick = { onOverlayButtonClick() },
             )
         overlayHackingScreenController =
-            OverlayHackingScreenController(windowManager = windowManager, service = this)
+            OverlayHackingScreenController(
+                windowManager = windowManager, service = this,
+                onClosed = {
+                    // open the overlay button and close hacking menu
+                    // TODO: Fix because throws exception when destroying it directly
+                    // overlayHackingScreenController.destroyView()
+                    // overlayButtonController.createView()
+                },
+            )
 
     }
 
