@@ -15,8 +15,7 @@ class OverlayViewHolder(
     val service: FloatingService,
 ) {
 
-    var view: ComposeView? = null
-        get() = field
+    private var view: ComposeView? = null
 
     val originalWindowFlag: Int
     val originalWindowAlpha: Float
@@ -31,8 +30,12 @@ class OverlayViewHolder(
 
     fun getParams(): WindowManager.LayoutParams {
         return this.params
-
     }
+
+    fun getView(): ComposeView? {
+        return this.view
+    }
+
 
     fun updateViewPos(x: Int, y: Int) {
         params.x = x
