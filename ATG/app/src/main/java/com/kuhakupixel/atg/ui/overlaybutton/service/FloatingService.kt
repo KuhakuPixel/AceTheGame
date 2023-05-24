@@ -46,7 +46,6 @@ class FloatingService() : Service() {
                 windowManager = windowManager, service = this,
                 onClosed = {
                     // open the overlay button and close hacking menu
-                    // TODO: Fix because throws exception when destroying it directly
                     overlayHackingScreenController.disableView()
                     overlayButtonController.enableView()
                 },
