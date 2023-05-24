@@ -41,7 +41,7 @@ class OverlayHackingScreenController(
             ),
             alpha = 0.9f,
             service = service,
-            potraitOnly = true,
+            potraitOnly = false,
         )
         hackingScreen.setContent {
             // Text("hello world")
