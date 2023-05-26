@@ -12,21 +12,17 @@ class OverlayViewController(
     private var viewHolder: OverlayViewHolder? = null
 
     init {
-        // initialize and add to window
         viewHolder = createOverlayViewHolder()
+    }
+
+    override fun createView() {
         logd("${name}: adding view ${viewHolder!!.getView()}")
         windowManager.addView(viewHolder!!.getView(), viewHolder!!.getParams())
-        // disable by default
-        viewHolder!!.disable()
     }
 
-    override fun enableView() {
-        viewHolder!!.enable()
-    }
-
-    override fun disableView() {
-        viewHolder!!.disable()
+    override fun destroyView() {
         logd("${name}: removing view ${viewHolder!!.getView()}")
+        windowManager.removeView(viewHolder!!.getView())
     }
 
 }

@@ -112,21 +112,21 @@ class OverlayButtonController(
     }
 
 
-    override fun enableView() {
+    override fun createView() {
 
         logd("Init the controller ")
-        fullScreenViewController.enableView()
-        overlayButtonViewController.enableView()
+        fullScreenViewController.createView()
+        overlayButtonViewController.createView()
         overlayButtonState.isVisible.value = true
     }
 
-    override fun disableView() {
+    override fun destroyView() {
         exitOverlayButton()
     }
 
     private fun exitOverlayButton() {
-        fullScreenViewController.disableView()
-        overlayButtonViewController.disableView()
+        fullScreenViewController.destroyView()
+        overlayButtonViewController.destroyView()
         overlayButtonState.isVisible.value = false
         service.stopSelf()
     }

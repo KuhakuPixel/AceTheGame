@@ -68,11 +68,11 @@ class OverlayHackingScreenController(
         return hackingScreen
     }
 
-    override fun disableView() {
-        hackingScreenController.disableView()
+    override fun destroyView() {
+        hackingScreenController.destroyView()
     }
 
-    override fun enableView() {
-        hackingScreenController.enableView()
+    override fun createView() {
+        hackingScreenController.createView()
     }
 }
