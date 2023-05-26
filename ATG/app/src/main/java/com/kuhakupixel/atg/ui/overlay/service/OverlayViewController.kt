@@ -1,8 +1,8 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import android.view.WindowManager
-import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
-import com.kuhakupixel.atg.ui.overlaybutton.logd
+import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.logd
 
 class OverlayViewController(
     val createOverlayViewHolder: () -> OverlayViewHolder,

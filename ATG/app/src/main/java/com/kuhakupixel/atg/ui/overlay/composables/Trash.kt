@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.composables
+package com.kuhakupixel.atg.ui.overlay.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,10 +24,10 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.kuhakupixel.atg.ui.overlaybutton.OVERLAY_BUTTON_SIZE_DP
-import com.kuhakupixel.atg.ui.overlaybutton.TRASH_SIZE_DP
-import com.kuhakupixel.atg.ui.overlaybutton.logd
-import com.kuhakupixel.atg.ui.overlaybutton.service.OverlayState
+import com.kuhakupixel.atg.ui.overlay.OVERLAY_BUTTON_SIZE_DP
+import com.kuhakupixel.atg.ui.overlay.TRASH_SIZE_DP
+import com.kuhakupixel.atg.ui.overlay.logd
+import com.kuhakupixel.atg.ui.overlay.service.OverlayState
 
 @Composable
 fun Trash(overlayState: OverlayState) {

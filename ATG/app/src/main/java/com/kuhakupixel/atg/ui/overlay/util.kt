@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton
+package com.kuhakupixel.atg.ui.overlay
 
 import android.util.Log
 

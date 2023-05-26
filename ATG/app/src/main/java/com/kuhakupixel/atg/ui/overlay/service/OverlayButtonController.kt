@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import android.content.Context.INPUT_SERVICE
 import android.graphics.PixelFormat
@@ -9,9 +9,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.kuhakupixel.atg.ui.overlaybutton.OVERLAY_BUTTON_SIZE_DP
-import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
-import com.kuhakupixel.atg.ui.overlaybutton.logd
+import com.kuhakupixel.atg.ui.overlay.OVERLAY_BUTTON_SIZE_DP
+import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.logd
 
 val LocalServiceState = compositionLocalOf<ServiceState> { error("No ServiceState provided") }
 

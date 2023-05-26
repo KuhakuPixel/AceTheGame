@@ -1,12 +1,12 @@
-package com.kuhakupixel.atg.ui.overlaybutton
+package com.kuhakupixel.atg.ui.overlay
 
 import android.content.pm.ActivityInfo
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
-import com.kuhakupixel.atg.ui.overlaybutton.service.FloatingService
-import com.kuhakupixel.atg.ui.overlaybutton.service.overlayViewFactory
+import com.kuhakupixel.atg.ui.overlay.service.FloatingService
+import com.kuhakupixel.atg.ui.overlay.service.overlayViewFactory
 
 class OverlayViewHolder(
 

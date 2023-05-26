@@ -17,11 +17,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND
-import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND_OVERLAY_BUTTON_CREATE
-import com.kuhakupixel.atg.ui.overlaybutton.service.FloatingService
+import com.kuhakupixel.atg.ui.overlay.INTENT_COMMAND
+import com.kuhakupixel.atg.ui.overlay.INTENT_COMMAND_OVERLAY_BUTTON_CREATE
+import com.kuhakupixel.atg.ui.overlay.service.FloatingService
 import com.kuhakupixel.atg.ui.util.ConfirmDialog
-import com.kuhakupixel.atg.ui.util.InfoDialog
 
 
 @Composable

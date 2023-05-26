@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -11,11 +11,11 @@ import android.os.IBinder
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.kuhakupixel.atg.ui.overlaybutton.FOREGROUND_SERVICE_NOTIFICATION_ID
-import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND
-import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND_EXIT
-import com.kuhakupixel.atg.ui.overlaybutton.INTENT_COMMAND_OVERLAY_BUTTON_CREATE
-import com.kuhakupixel.atg.ui.overlaybutton.logd
+import com.kuhakupixel.atg.ui.overlay.FOREGROUND_SERVICE_NOTIFICATION_ID
+import com.kuhakupixel.atg.ui.overlay.INTENT_COMMAND
+import com.kuhakupixel.atg.ui.overlay.INTENT_COMMAND_EXIT
+import com.kuhakupixel.atg.ui.overlay.INTENT_COMMAND_OVERLAY_BUTTON_CREATE
+import com.kuhakupixel.atg.ui.overlay.logd
 
 class FloatingService() : Service() {
     val state = ServiceState()

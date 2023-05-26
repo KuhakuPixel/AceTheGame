@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable

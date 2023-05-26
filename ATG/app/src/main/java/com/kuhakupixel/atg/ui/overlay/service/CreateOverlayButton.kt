@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kuhakupixel.atg.ui.overlaybutton.OVERLAY_BUTTON_SIZE_DP
-import com.kuhakupixel.atg.ui.overlaybutton.composables.Trash
+import com.kuhakupixel.atg.ui.overlay.OVERLAY_BUTTON_SIZE_DP
+import com.kuhakupixel.atg.ui.overlay.composables.Trash
 
 @Composable
 fun CreateOverlayButton() {

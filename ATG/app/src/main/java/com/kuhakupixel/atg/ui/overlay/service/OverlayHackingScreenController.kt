@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import android.graphics.PixelFormat
 import android.view.WindowManager
@@ -13,7 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.HackingScreen
-import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 
 class OverlayHackingScreenController(
