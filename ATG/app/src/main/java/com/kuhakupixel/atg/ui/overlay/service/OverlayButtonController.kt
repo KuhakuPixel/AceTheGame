@@ -67,7 +67,10 @@ class OverlayButtonController(
 
         fullscreenOverlay.setContent {
             CompositionLocalProvider(LocalServiceState provides service.state) {
-                TrashContentScreen(showOverlayButton = overlayButtonState.isVisible.value)
+                TrashContentScreen(
+                    showOverlayButton = overlayButtonState.isVisible.value,
+                    service.state,
+                )
             }
         }
 

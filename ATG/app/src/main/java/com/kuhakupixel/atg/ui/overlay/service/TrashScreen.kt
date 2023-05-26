@@ -11,22 +11,21 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import com.kuhakupixel.atg.ui.overlay.composables.Trash
 
 @Composable
-fun TrashContentScreen(showOverlayButton: Boolean) {
-    val state = LocalServiceState.current
+fun TrashContentScreen(showOverlayButton: Boolean, serviceState: ServiceState) {
 
     Box(Modifier.onGloballyPositioned {
-        state.screenWidthPx = it.size.width
-        state.screenHeightPx = it.size.height
+        serviceState.screenWidthPx = it.size.width
+        serviceState.screenHeightPx = it.size.height
     }) {
         // future.txt correct z-order
         if (showOverlayButton) {
-            ShowTrash()
+            ShowTrash(serviceState = serviceState)
         }
     }
 }
+
 @Composable
-fun ShowTrash() {
-    val serviceState = LocalServiceState.current
+fun ShowTrash(serviceState: ServiceState) {
     val overlayState = serviceState.overlayButtonState
     if (overlayState.showTrash) {
         Column(
