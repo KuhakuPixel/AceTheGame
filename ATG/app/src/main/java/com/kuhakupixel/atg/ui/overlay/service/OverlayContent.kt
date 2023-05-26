@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 
 @Composable
-fun OverlayContent(showOverlayButton: Boolean) {
+fun TrashContentScreen(showOverlayButton: Boolean) {
     val state = LocalServiceState.current
 
     Box(Modifier.onGloballyPositioned {
@@ -15,7 +15,7 @@ fun OverlayContent(showOverlayButton: Boolean) {
     }) {
         // future.txt correct z-order
         if (showOverlayButton) {
-            CreateOverlayButton()
+            ShowTrash()
         }
     }
 }

@@ -3,6 +3,8 @@ package com.kuhakupixel.atg.ui.overlay.service
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -23,7 +25,7 @@ fun ClickTarget(
     onDropOnTrash: () -> Unit,
     onClick: () -> Unit
 ) {
-    Box(
+    Button(
         modifier = Modifier
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -42,6 +44,11 @@ fun ClickTarget(
                         y = min(y, serviceState.screenHeightPx - controller.timerSizePx)
                         // this is the good code
                         overlayState.timerOffset = IntOffset(x, y)
+
+                        viewHolder.updateViewPos(
+                            x = overlayState.timerOffset.x,
+                            y = overlayState.timerOffset.y,
+                        )
                     },
                     onDragEnd = {
                         logd("onDragEnd")
@@ -52,18 +59,12 @@ fun ClickTarget(
                             return@detectDragGestures
                         }
 
-                        viewHolder.updateViewPos(
-                            x = overlayState.timerOffset.x,
-                            y = overlayState.timerOffset.y,
-                        )
                         logd("onDragEnd x ${overlayState.timerOffset.x}")
                     },
                 )
-            }
-            .clickable {
-                onClick()
             },
+        onClick = { onClick() },
     ) {
-//        Text("click target")
+        Text("ATG")
     }
 }

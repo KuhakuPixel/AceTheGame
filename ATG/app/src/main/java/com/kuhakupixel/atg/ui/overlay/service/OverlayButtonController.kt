@@ -26,8 +26,8 @@ class OverlayButtonController(
 
     private val density = service.resources.displayMetrics.density
     val timerSizePx = (OVERLAY_BUTTON_SIZE_DP * density).toInt()
-    private val fullScreenViewController = OverlayViewController(
-        createOverlayViewHolder = this::createFullscreenOverlay,
+    private val trashScreenViewController = OverlayViewController(
+        createOverlayViewHolder = this::createTrashScreenOverlay,
         windowManager = windowManager,
         name = "FullScreen"
     )
@@ -39,7 +39,7 @@ class OverlayButtonController(
     )
 
 
-    private fun createFullscreenOverlay(): OverlayViewHolder {
+    private fun createTrashScreenOverlay(): OverlayViewHolder {
 
         // https://developer.android.com/reference/android/view/WindowManager.LayoutParams#MaximumOpacity
         var alpha = 1f
@@ -67,7 +67,7 @@ class OverlayButtonController(
 
         fullscreenOverlay.setContent {
             CompositionLocalProvider(LocalServiceState provides service.state) {
-                OverlayContent(showOverlayButton = overlayButtonState.isVisible.value)
+                TrashContentScreen(showOverlayButton = overlayButtonState.isVisible.value)
             }
         }
 
@@ -115,7 +115,7 @@ class OverlayButtonController(
     override fun createView() {
 
         logd("Init the controller ")
-        fullScreenViewController.createView()
+        trashScreenViewController.createView()
         overlayButtonViewController.createView()
         overlayButtonState.isVisible.value = true
     }
@@ -125,7 +125,7 @@ class OverlayButtonController(
     }
 
     private fun exitOverlayButton() {
-        fullScreenViewController.destroyView()
+        trashScreenViewController.destroyView()
         overlayButtonViewController.destroyView()
         overlayButtonState.isVisible.value = false
         service.stopSelf()
