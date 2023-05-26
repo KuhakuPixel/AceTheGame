@@ -52,13 +52,11 @@ fun ClickTarget(
                             return@detectDragGestures
                         }
 
-                        viewHolder.params.x = overlayState.timerOffset.x
-                        viewHolder.params.y = overlayState.timerOffset.y
-                        logd("onDragEnd x ${overlayState.timerOffset.x}")
-                        controller.windowManager.updateViewLayout(
-                            viewHolder.view,
-                            viewHolder.params
+                        viewHolder.updateViewPos(
+                            x = overlayState.timerOffset.x,
+                            y = overlayState.timerOffset.y,
                         )
+                        logd("onDragEnd x ${overlayState.timerOffset.x}")
                     },
                 )
             }

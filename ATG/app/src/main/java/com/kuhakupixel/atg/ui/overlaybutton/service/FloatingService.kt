@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.kuhakupixel.atg.ui.overlaybutton.FOREGROUND_SERVICE_NOTIFICATION_ID
@@ -21,15 +22,35 @@ class FloatingService() : Service() {
 
     // todo make private
     lateinit var overlayButtonController: OverlayButtonController
+    lateinit var overlayHackingScreenController: OverlayHackingScreenController
+    val windowManager get() = getSystemService(WINDOW_SERVICE) as WindowManager
+
 
     fun onOverlayButtonClick() {
         logd("Overlay Button Is Clicked")
+        // close the overlay button and open hacking menu
+        overlayButtonController.disableView()
+        overlayHackingScreenController.enableView()
     }
 
     override fun onCreate() {
         super.onCreate()
         overlayButtonController =
-            OverlayButtonController(service = this, onClick = { onOverlayButtonClick() })
+            OverlayButtonController(
+                windowManager = windowManager,
+                service = this,
+                onClick = { onOverlayButtonClick() },
+            )
+        overlayHackingScreenController =
+            OverlayHackingScreenController(
+                windowManager = windowManager, service = this,
+                onClosed = {
+                    // open the overlay button and close hacking menu
+                    overlayHackingScreenController.disableView()
+                    overlayButtonController.enableView()
+                },
+            )
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -43,13 +64,11 @@ class FloatingService() : Service() {
         val command = intent!!.getStringExtra(INTENT_COMMAND)
         when (command) {
             INTENT_COMMAND_OVERLAY_BUTTON_CREATE -> {
-                state.overlayButtonState.isVisible.value = true
+                overlayButtonController.enableView()
             }
 
             INTENT_COMMAND_EXIT -> {
-                if (state.overlayButtonState.isVisible.value) {
-                    overlayButtonController.exitOverlayButton()
-                }
+                overlayButtonController.disableView()
                 return START_NOT_STICKY
             }
         }
@@ -64,7 +83,8 @@ class FloatingService() : Service() {
         var channelId: String = ""
         //
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channelId = createNotificationChannel("ATGOverlayButton", "ATG's overlay button service")
+            channelId =
+                createNotificationChannel("ATGOverlayButton", "ATG's overlay button service")
         }
 
         val notification: Notification =

@@ -8,23 +8,25 @@ class OverlayViewController(
     val createOverlayViewHolder: () -> OverlayViewHolder,
     val windowManager: WindowManager,
     val name: String = "",
-) {
-    var viewHolder: OverlayViewHolder? = null
+) : OverlayInterface {
+    private var viewHolder: OverlayViewHolder? = null
 
-    // doitwrong
     init {
-    }
-
-    fun createView() {
+        // initialize and add to window
         viewHolder = createOverlayViewHolder()
-        logd("${name}: adding view ${viewHolder!!.view}")
-        windowManager.addView(viewHolder!!.view, viewHolder!!.params)
+        logd("${name}: adding view ${viewHolder!!.getView()}")
+        windowManager.addView(viewHolder!!.getView(), viewHolder!!.getParams())
+        // disable by default
+        viewHolder!!.disable()
     }
 
-    fun destroyView() {
-        logd("${name}: removing view ${viewHolder!!.view}")
-        // wrap in try catch???
-        windowManager.removeView(viewHolder!!.view)
+    override fun enableView() {
+        viewHolder!!.enable()
+    }
+
+    override fun disableView() {
+        viewHolder!!.disable()
+        logd("${name}: removing view ${viewHolder!!.getView()}")
     }
 
 }

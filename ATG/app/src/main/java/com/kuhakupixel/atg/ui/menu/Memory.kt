@@ -1,9 +1,12 @@
 package com.kuhakupixel.atg.ui.menu
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -77,9 +81,7 @@ fun MemoryMenu(globalConf: GlobalConf?) {
 
 @Composable
 fun _MemoryMenu(
-    globalConf: GlobalConf?,
-    snackbarHostState: SnackbarHostState,
-    coroutineScope: CoroutineScope
+    globalConf: GlobalConf?, snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope
 ) {
     val ace: ACE = (globalConf?.getAce())!!
     // ==================================
@@ -112,87 +114,113 @@ fun _MemoryMenu(
     scanTypeEnabled.value = isAttached
     // only enable change value type at first scan
     valueTypeEnabled.value = isAttached && !(initialScanDone.value)
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        MatchesTable(
-            modifier = Modifier
-                .weight(0.6f)
-                .padding(16.dp),
-            matches = currentMatchesList,
-            matchesStatusText = matchesStatusText,
-            onMatchClicked = { matchInfo: MatchInfo ->
+
+    val content: @Composable (matchesTableModifier: Modifier, matchesSettingModifier: Modifier) -> Unit =
+        { matchesTableModifier, matchesSettingModifier ->
+
+            MatchesTable(
+                modifier = matchesTableModifier,
+                matches = currentMatchesList,
+                matchesStatusText = matchesStatusText,
+                onMatchClicked = { matchInfo: MatchInfo ->
+                    //
+                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                    AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
+                    //
+                    coroutineScope.launch() {
+                        snackbarHostState.showSnackbar(
+                            message = "Added ${matchInfo.address} to Address Table",
+                            duration = SnackbarDuration.Short,
+                            actionLabel = "Ok"
+
+                        )
+                    }
+                },
+            )
+            MatchesSetting(
+                modifier = matchesSettingModifier,
                 //
-                val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
-                AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
+                scanTypeEnabled = scanTypeEnabled,
+                scanTypeSelectedOptionIdx = scanTypeSelectedOptionIdx,
                 //
-                coroutineScope.launch() {
-                    snackbarHostState.showSnackbar(
-                        message = "Added ${matchInfo.address} to Address Table",
-                        duration = SnackbarDuration.Short,
-                        actionLabel = "Ok"
-
-                    )
-                }
-            }
-        )
-        MatchesSetting(
-            modifier = Modifier
-                .weight(0.4f)
-                .padding(10.dp)
-                .fillMaxSize(),
-            //
-            scanTypeEnabled = scanTypeEnabled,
-            scanTypeSelectedOptionIdx = scanTypeSelectedOptionIdx,
-            //
-            scanInputVal = scanInputVal,
-            // only allow to change Value type before any scan is done
-            valueTypeEnabled = valueTypeEnabled,
-            valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
-            //
-            nextScanEnabled = isAttached,
-            nextScanClicked = fun() {
-                // ====================== get scan options ========================
-                val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
-                val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
-                // ================================================================
-                // set the value type
-                if (!initialScanDone.value)
-                    ace.SetNumType(valueType)
-                try {
-                    // do the scan
-                    if (scanAgainstValue.value)
-                        ace.ScanAgainstValue(scanType, scanInputVal.value)
-                    else
-                        ace.ScanWithoutValue(scanType)
-                } catch (e: InvalidCommandException) {
-                    errDialogMsg.value = e.stackTraceToString()
-                    openErrDialog.value = true
-                    return
-                }
+                scanInputVal = scanInputVal,
+                // only allow to change Value type before any scan is done
+                valueTypeEnabled = valueTypeEnabled,
+                valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
+                //
+                nextScanEnabled = isAttached,
+                nextScanClicked = fun() {
+                    // ====================== get scan options ========================
+                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                    val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
+                    // ================================================================
+                    // set the value type
+                    if (!initialScanDone.value) ace.SetNumType(valueType)
+                    try {
+                        // do the scan
+                        if (scanAgainstValue.value) ace.ScanAgainstValue(
+                            scanType,
+                            scanInputVal.value
+                        )
+                        else ace.ScanWithoutValue(scanType)
+                    } catch (e: InvalidCommandException) {
+                        errDialogMsg.value = e.stackTraceToString()
+                        openErrDialog.value = true
+                        return
+                    }
 
 
-                // update matches table
-                UpdateMatches(ace = ace)
-                // set initial scan to true
-                initialScanDone.value = true
-            },
-            //
-            newScanEnabled = isAttached && initialScanDone.value,
-            newScanClicked = {
-                ace.ResetMatches()
-                UpdateMatches(ace = ace)
-                initialScanDone.value = false
-            },
-            scanAgainstValue = scanAgainstValue,
-        )
+                    // update matches table
+                    UpdateMatches(ace = ace)
+                    // set initial scan to true
+                    initialScanDone.value = true
+                },
+                //
+                newScanEnabled = isAttached && initialScanDone.value,
+                newScanClicked = {
+                    ace.ResetMatches()
+                    UpdateMatches(ace = ace)
+                    initialScanDone.value = false
+                },
+                scanAgainstValue = scanAgainstValue,
+            )
+
+        }
+
+
+    // switch to column when portrait and row when landscape
+    if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            content(
+                matchesTableModifier = Modifier
+                    .weight(0.6f)
+                    .padding(16.dp),
+                matchesSettingModifier = Modifier
+                    .weight(0.4f)
+                    .padding(10.dp),
+            )
+        }
+    } else {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            content(
+                matchesTableModifier = Modifier
+                    .weight(0.6f)
+                    .padding(16.dp),
+                matchesSettingModifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxSize()
+            )
+        }
     }
     // show Error Dialog
     if (openErrDialog.value) {
-        ErrorDialog(
-            msg = errDialogMsg.value,
+        ErrorDialog(msg = errDialogMsg.value,
             onConfirm = {},
             onClose = { openErrDialog.value = false }
 
@@ -212,8 +240,7 @@ private fun MatchesTable(
     Column(modifier = modifier) {
         Text(matchesStatusText.value)
         Spacer(modifier = Modifier.height(10.dp))
-        CreateTable(
-            colNames = listOf("Address", "Previous Value"),
+        CreateTable(colNames = listOf("Address", "Previous Value"),
             colWeights = listOf(0.4f, 0.6f),
             itemCount = matches.value.size,
             minEmptyItemCount = 50,
@@ -227,8 +254,7 @@ private fun MatchesTable(
                 if (colIndex == 1) {
                     Text(text = matches.value[rowIndex].prevValue, modifier = cellModifier)
                 }
-            }
-        )
+            })
     }
 
 }
@@ -342,6 +368,7 @@ private fun MatchesSetting(
             enabled = valueTypeEnabled,
         )
         ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
+
         ScanButton(
             modifier = Modifier.fillMaxWidth(),
             nextScanEnabled = nextScanEnabled,

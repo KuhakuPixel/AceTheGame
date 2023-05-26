@@ -1,6 +1,5 @@
 package com.kuhakupixel.atg.ui.overlaybutton.service
 
-import android.content.Context
 import android.content.Context.INPUT_SERVICE
 import android.graphics.PixelFormat
 import android.hardware.input.InputManager
@@ -16,32 +15,43 @@ import com.kuhakupixel.atg.ui.overlaybutton.logd
 
 val LocalServiceState = compositionLocalOf<ServiceState> { error("No ServiceState provided") }
 
-class OverlayButtonController(val service: FloatingService, val onClick: () -> Unit) {
+class OverlayButtonController(
+    val windowManager: WindowManager,
+    val service: FloatingService,
+    val onClick: () -> Unit
+) :
+    OverlayInterface {
 
     private val overlayButtonState = service.state.overlayButtonState
 
     private val density = service.resources.displayMetrics.density
     val timerSizePx = (OVERLAY_BUTTON_SIZE_DP * density).toInt()
-    val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val fullScreenViewController = OverlayViewController(
+    private val fullScreenViewController = OverlayViewController(
         createOverlayViewHolder = this::createFullscreenOverlay,
         windowManager = windowManager,
         name = "FullScreen"
     )
 
-    val overlayButtonViewController = OverlayViewController(
+    private val overlayButtonViewController = OverlayViewController(
         createOverlayViewHolder = this::createOverlayButtonClickTarget,
         windowManager = windowManager,
         name = "Button ClickTarget"
     )
 
-    init {
-        logd("OverlayController init")
-        initViewControllers()
-    }
 
     private fun createFullscreenOverlay(): OverlayViewHolder {
+
+        // https://developer.android.com/reference/android/view/WindowManager.LayoutParams#MaximumOpacity
+        var alpha = 1f
+        val inputManager =
+            service.applicationContext.getSystemService(INPUT_SERVICE) as InputManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            logd("inputManager max opacity ${inputManager.maximumObscuringOpacityForTouch}")
+            alpha = inputManager.maximumObscuringOpacityForTouch
+        }
+
         val fullscreenOverlay = OverlayViewHolder(
+            windowManager = windowManager,
             params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -49,30 +59,26 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
             ),
+            alpha = alpha,
+
             service = service,
         )
 
-        // https://developer.android.com/reference/android/view/WindowManager.LayoutParams#MaximumOpacity
-        fullscreenOverlay.params.alpha = 1f
-        val inputManager =
-            service.applicationContext.getSystemService(INPUT_SERVICE) as InputManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            logd("inputManager max opacity ${inputManager.maximumObscuringOpacityForTouch}")
-            fullscreenOverlay.params.alpha = inputManager.maximumObscuringOpacityForTouch
-        }
 
-        fullscreenOverlay.view.setContent {
+        fullscreenOverlay.setContent {
             CompositionLocalProvider(LocalServiceState provides service.state) {
                 OverlayContent(showOverlayButton = overlayButtonState.isVisible.value)
             }
         }
+
 
         return fullscreenOverlay
     }
 
     private fun createOverlayButtonClickTarget(): OverlayViewHolder {
         val overlayButtonClickTarget = OverlayViewHolder(
-            WindowManager.LayoutParams(
+            windowManager = windowManager,
+            params = WindowManager.LayoutParams(
                 timerSizePx,
                 timerSizePx,
                 0,
@@ -80,9 +86,11 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
-            ), service
+            ),
+            alpha = 0.9f, service = service,
         )
-        overlayButtonClickTarget.view.setContent {
+        overlayButtonClickTarget.setContent {
+
             val showClickTarget = remember { mutableStateOf(true) }
             if (showClickTarget.value) {
                 ClickTarget(
@@ -104,24 +112,21 @@ class OverlayButtonController(val service: FloatingService, val onClick: () -> U
     }
 
 
-    private fun createView() {
+    override fun enableView() {
 
-        fullScreenViewController.createView()
-        overlayButtonViewController.createView()
-    }
-
-    private fun destroyView() {
-        fullScreenViewController.destroyView()
-        overlayButtonViewController.destroyView()
-    }
-
-    private fun initViewControllers() {
         logd("Init the controller ")
-        createView()
+        fullScreenViewController.enableView()
+        overlayButtonViewController.enableView()
+        overlayButtonState.isVisible.value = true
     }
 
-    fun exitOverlayButton() {
-        destroyView()
+    override fun disableView() {
+        exitOverlayButton()
+    }
+
+    private fun exitOverlayButton() {
+        fullScreenViewController.disableView()
+        overlayButtonViewController.disableView()
         overlayButtonState.isVisible.value = false
         service.stopSelf()
     }
