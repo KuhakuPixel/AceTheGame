@@ -115,21 +115,21 @@ class OverlayButtonController(
     }
 
 
-    override fun createView() {
+    override fun enableView() {
 
         logd("Init the controller ")
-        trashScreenViewController.createView()
-        overlayButtonViewController.createView()
+        trashScreenViewController.enableView()
+        overlayButtonViewController.enableView()
         overlayButtonState.isVisible.value = true
     }
 
-    override fun destroyView() {
+    override fun disableView() {
         exitOverlayButton()
     }
 
     private fun exitOverlayButton() {
-        trashScreenViewController.destroyView()
-        overlayButtonViewController.destroyView()
+        trashScreenViewController.disableView()
+        overlayButtonViewController.disableView()
         overlayButtonState.isVisible.value = false
         service.stopSelf()
     }

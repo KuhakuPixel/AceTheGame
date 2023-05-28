@@ -28,9 +28,8 @@ import com.topjohnwu.superuser.Shell
 fun HackingScreen(overlayManager: OverlayManager) {
     val navController = rememberNavController()
     var globalConf: GlobalConf = GlobalConf(LocalContext.current)
-    overlayManager.InfoDialog(msg = "Hello world") {
 
-    }
+
     // ============================ each menu in bottom nav ===================
     val menus = listOf(
         BottomBarMenu(

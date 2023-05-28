@@ -29,8 +29,8 @@ class FloatingService() : Service() {
     fun onOverlayButtonClick() {
         logd("Overlay Button Is Clicked")
         // close the overlay button and open hacking menu
-        overlayButtonController.destroyView()
-        overlayHackingScreenController.createView()
+        overlayButtonController.disableView()
+        overlayHackingScreenController.enableView()
     }
 
     var enableOverlayButton = true
@@ -54,8 +54,8 @@ class FloatingService() : Service() {
                 windowManager = windowManager, service = this,
                 onClosed = {
                     // open the overlay button and close hacking menu
-                    overlayHackingScreenController.destroyView()
-                    overlayButtonController.createView()
+                    overlayHackingScreenController.disableView()
+                    overlayButtonController.enableView()
                     // reenable again
                     enableOverlayButton = true
 
@@ -75,11 +75,11 @@ class FloatingService() : Service() {
         val command = intent!!.getStringExtra(INTENT_COMMAND)
         when (command) {
             INTENT_COMMAND_OVERLAY_BUTTON_CREATE -> {
-                overlayButtonController.createView()
+                overlayButtonController.enableView()
             }
 
             INTENT_COMMAND_EXIT -> {
-                overlayButtonController.destroyView()
+                overlayButtonController.disableView()
                 return START_NOT_STICKY
             }
         }

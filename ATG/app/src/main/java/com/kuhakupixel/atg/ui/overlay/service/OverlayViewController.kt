@@ -13,16 +13,21 @@ class OverlayViewController(
 
     init {
         viewHolder = createOverlayViewHolder()
-    }
-
-    override fun createView() {
         logd("${name}: adding view ${viewHolder!!.getView()}")
         windowManager.addView(viewHolder!!.getView(), viewHolder!!.getParams())
+        viewHolder!!.disable()
     }
 
-    override fun destroyView() {
+    override fun enableView() {
+        viewHolder!!.enable()
+    }
+
+    override fun disableView() {
+        viewHolder!!.disable()
+        /*
         logd("${name}: removing view ${viewHolder!!.getView()}")
         windowManager.removeView(viewHolder!!.getView())
+         */
     }
 
 }

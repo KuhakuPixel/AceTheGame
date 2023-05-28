@@ -26,6 +26,7 @@ class OverlayHackingScreenController(
         name = "Hacking Screen",
     )
 
+    var currentCounter = 0
     private fun createOverlay(): OverlayViewHolder {
 
         val hackingScreen = OverlayViewHolder(
@@ -43,7 +44,9 @@ class OverlayHackingScreenController(
             service = service,
             potraitOnly = false,
         )
+
         hackingScreen.setContent {
+            val overlayManager = OverlayManager(windowManager, service)
             // Text("hello world")
             AtgTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
@@ -59,8 +62,19 @@ class OverlayHackingScreenController(
                             Button(onClick = onClosed) {
                                 Text("Close")
                             }
+                            // TODO: only for testing showing dialog
+                            Button(
+                                onClick = {
+                                    overlayManager.InfoDialog(
+                                        msg = "current counter :$currentCounter",
+                                        onConfirm = { currentCounter++ })
+
+                                },
+                            ) {
+                                Text("Show Dialog")
+                            }
                         }
-                        HackingScreen(overlayManager = OverlayManager(windowManager, service))
+                        HackingScreen(overlayManager = overlayManager)
                     }
                 }
             }
@@ -68,11 +82,11 @@ class OverlayHackingScreenController(
         return hackingScreen
     }
 
-    override fun destroyView() {
-        hackingScreenController.destroyView()
+    override fun disableView() {
+        hackingScreenController.disableView()
     }
 
-    override fun createView() {
-        hackingScreenController.createView()
+    override fun enableView() {
+        hackingScreenController.enableView()
     }
 }

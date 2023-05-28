@@ -8,16 +8,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import com.kuhakupixel.atg.backend.ATG
 import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
-import com.kuhakupixel.atg.ui.util.ShowTextDialog
+import com.kuhakupixel.atg.ui.theme.AtgTheme
 
 class OverlayManager(
     private val windowManager: WindowManager,
@@ -51,45 +54,62 @@ class OverlayManager(
         return hackingScreen
     }
 
-    private fun SetDialogController(content: @Composable () -> Unit) {
+    private val dialogText: MutableState<String> = mutableStateOf("")
+    private var dialogOnConfirm: () -> Unit = {}
+    private val dialogContent: MutableState<String> = mutableStateOf("")
+
+    @Composable
+    private fun ATGDialog(title: String, onConfirm: () -> Unit, onClose: () -> Unit) {
+
+        Column(Modifier.fillMaxSize()) {
+            Text(title)
+            Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                Button(
+                    onClick = onClose,
+                ) { Text("Cancel") }
+
+                Button(
+                    onClick = {
+                        onClose()
+                        onConfirm()
+                    },
+                ) { Text("Okay") }
+            }
+        }
+    }
+
+    init {
 
         dialogController =
             OverlayViewController(
                 createOverlayViewHolder = fun(): OverlayViewHolder {
-                    return createDialogOverlay(content = content)
+                    return createDialogOverlay {
+
+                        AtgTheme(darkTheme = true) {
+                            // A surface container using the 'background' color from the theme
+                            Surface(
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
+                                ATGDialog(
+                                    title = dialogText.value,
+                                    onConfirm = { dialogOnConfirm() },
+                                    onClose = {
+                                        dialogController!!.disableView()
+                                    },
+                                )
+                            }
+                        }
+                    }
                 },
                 windowManager = windowManager,
             )
     }
 
-    @Composable
+    //@Composable
     fun InfoDialog(msg: String, onConfirm: () -> Unit) {
-        SetDialogController {
-            Box(
-                Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(Modifier.background(Color.White).fillMaxSize(0.6f)) {
-                    Column {
-                        Text(msg)
-                        Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                            Button(
-                                onClick = {
-                                    dialogController!!.destroyView()
-                                },
-                            ) { Text("Close") }
+        dialogText.value = msg
+        dialogOnConfirm = onConfirm
+        dialogController!!.enableView()
 
-                            Button(
-                                onClick = {
-                                    onConfirm
-                                },
-                            ) { Text("Okay") }
-                        }
-                    }
-                }
-            }
-        }
-        dialogController!!.createView()
     }
 }
