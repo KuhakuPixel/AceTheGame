@@ -33,13 +33,21 @@ class FloatingService() : Service() {
         overlayHackingScreenController.createView()
     }
 
+    var enableOverlayButton = true
     override fun onCreate() {
         super.onCreate()
         overlayButtonController =
             OverlayButtonController(
                 windowManager = windowManager,
                 service = this,
-                onClick = { onOverlayButtonClick() },
+                onClick = {
+                    // make sure to not allow double click
+                    // to avoid crash
+                    if (enableOverlayButton) {
+                        onOverlayButtonClick()
+                        enableOverlayButton = false
+                    }
+                },
             )
         overlayHackingScreenController =
             OverlayHackingScreenController(
@@ -48,6 +56,9 @@ class FloatingService() : Service() {
                     // open the overlay button and close hacking menu
                     overlayHackingScreenController.destroyView()
                     overlayButtonController.createView()
+                    // reenable again
+                    enableOverlayButton = true
+
                 },
             )
 
