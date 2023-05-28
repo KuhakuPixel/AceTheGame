@@ -60,7 +60,7 @@ class OverlayHackingScreenController(
                                 Text("Close")
                             }
                         }
-                        HackingScreen()
+                        HackingScreen(overlayManager = OverlayManager(windowManager, service))
                     }
                 }
             }

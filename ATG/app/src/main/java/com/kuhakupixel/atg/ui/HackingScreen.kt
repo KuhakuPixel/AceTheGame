@@ -18,15 +18,19 @@ import com.kuhakupixel.atg.ui.menu.AddressTableMenu
 import com.kuhakupixel.atg.ui.menu.MemoryMenu
 import com.kuhakupixel.atg.ui.menu.ProcessMenu
 import com.kuhakupixel.atg.ui.menu.SettingsMenu
+import com.kuhakupixel.atg.ui.overlay.service.OverlayManager
 import com.kuhakupixel.atg.ui.util.WarningDialog
 import com.topjohnwu.superuser.Shell
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HackingScreen() {
+fun HackingScreen(overlayManager: OverlayManager) {
     val navController = rememberNavController()
     var globalConf: GlobalConf = GlobalConf(LocalContext.current)
+    overlayManager.InfoDialog(msg = "Hello world") {
+
+    }
     // ============================ each menu in bottom nav ===================
     val menus = listOf(
         BottomBarMenu(
