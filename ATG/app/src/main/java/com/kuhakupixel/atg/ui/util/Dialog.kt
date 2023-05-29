@@ -59,34 +59,6 @@ fun ShowDialog(
 }
 
 @Composable
-fun InputValueDialog(
-    title: String,
-    onClose: () -> Unit,
-    onConfirm: (input: String) -> Unit,
-    showCancelButton: Boolean = false
-) {
-    var valueInput: MutableState<String> = remember { mutableStateOf("") }
-    ShowDialog(
-        title = title,
-        body = {
-            TextField(
-                value = valueInput.value,
-                onValueChange = { value ->
-                    valueInput.value = value
-                },
-                label = { Text(text = "Value Input ...") },
-                placeholder = { Text(text = "value ...") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-            )
-        },
-        onClose = onClose,
-        onConfirm = { onConfirm(valueInput.value) },
-        showCancelButton = showCancelButton,
-    )
-}
-
-@Composable
 fun ShowTextDialog(
     title: String,
     msg: String,

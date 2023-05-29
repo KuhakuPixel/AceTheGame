@@ -17,8 +17,8 @@ import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.ui.GlobalConf
+import com.kuhakupixel.atg.ui.overlay.service.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
-import com.kuhakupixel.atg.ui.util.InputValueDialog
 
 class AddressInfo(val matchInfo: MatchInfo, val numType: NumType) {
 }
@@ -30,7 +30,7 @@ fun AddressTableAddAddress(matchInfo: MatchInfo, numType: NumType) {
 }
 
 @Composable
-fun AddressTableMenu(globalConf: GlobalConf?) {
+fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
 
     val ace: ACE = globalConf!!.getAce()
     Column(
@@ -44,10 +44,16 @@ fun AddressTableMenu(globalConf: GlobalConf?) {
                 .weight(0.8f)
                 .padding(16.dp),
             savedAddressList = savedAddresList,
-            ace = ace
-
+            ace = ace,
+            onAddressClicked = { address: String ->
+                overlayManager!!.InputDialog(
+                    title = "Edit value of $address",
+                    onConfirm = { input: String ->
+                        ace.WriteValueAtAddress(address, input)
+                    }
+                )
+            }
         )
-
     }
 }
 
@@ -56,10 +62,8 @@ fun SavedAddressesTable(
     modifier: Modifier = Modifier,
     savedAddressList: SnapshotStateList<AddressInfo>,
     ace: ACE,
+    onAddressClicked: (address: String) -> Unit
 ) {
-
-    var address: MutableState<String> = remember { mutableStateOf("") }
-    var showWriteToAddressDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     CreateTable(
         modifier = modifier,
@@ -68,9 +72,7 @@ fun SavedAddressesTable(
         itemCount = savedAddressList.size,
         minEmptyItemCount = 50,
         onRowClicked = { rowIndex: Int ->
-            address.value = savedAddressList[rowIndex].matchInfo.address
-            showWriteToAddressDialog.value = true
-
+            onAddressClicked(savedAddressList[rowIndex].matchInfo.address)
         },
         drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
             if (colIndex == 0) {
@@ -86,20 +88,11 @@ fun SavedAddressesTable(
         }
     )
 
-    if (showWriteToAddressDialog.value) {
-        InputValueDialog(
-            title = "Edit value of ${address.value}",
-            onClose = { showWriteToAddressDialog.value = false },
-            onConfirm = { inputValue: String ->
-                ace.WriteValueAtAddress(address.value, inputValue)
-            },
-        )
-    }
 
 }
 
 @Composable
 @Preview
 fun AddressTablePreview() {
-    AddressTableMenu(null)
+    AddressTableMenu(null, null)
 }

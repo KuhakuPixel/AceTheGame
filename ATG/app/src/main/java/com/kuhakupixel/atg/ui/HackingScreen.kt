@@ -50,7 +50,7 @@ fun HackingScreen(overlayManager: OverlayManager) {
             route = "Address Table",
             title = "Address Table",
             iconId = R.drawable.ic_table,
-            content = { AddressTableMenu(globalConf) },
+            content = { AddressTableMenu(globalConf, overlayManager = overlayManager) },
         ),
 
         BottomBarMenu(
