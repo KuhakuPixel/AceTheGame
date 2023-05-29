@@ -65,11 +65,22 @@ class OverlayHackingScreenController(
                             // TODO: only for testing showing dialog
                             Button(
                                 onClick = {
+                                    /*
                                     overlayManager.Dialog(
 
                                         title = "my Title",
                                         text = "current counter :$currentCounter",
                                         onConfirm = { currentCounter++ },
+                                    )
+
+                                     */
+
+                                    overlayManager.InputDialog(
+
+                                        title = "current counter :$currentCounter",
+                                        onConfirm = { input ->
+                                            currentCounter += input.toInt()
+                                        },
                                     )
 
                                 },
