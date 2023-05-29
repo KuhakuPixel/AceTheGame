@@ -24,6 +24,7 @@ import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.GlobalConf
+import com.kuhakupixel.atg.ui.overlay.service.OverlayManager
 import com.kuhakupixel.atg.ui.util.ConfirmDialog
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.ErrorDialog
@@ -78,10 +79,6 @@ fun ProcessTable(
     onProcessSelected: (pid: Long, procName: String) -> Unit,
 ) {
 
-    var openConfirmDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
-    // the selected Process to Attach
-    var selectedPid: MutableState<Long> = remember { mutableStateOf(-1) }
-    var selectedProcNameStr: MutableState<String> = remember { mutableStateOf("") }
 
     CreateTable(
         modifier = Modifier.padding(16.dp),
@@ -90,13 +87,12 @@ fun ProcessTable(
         itemCount = processList.size,
         minEmptyItemCount = 50,
         onRowClicked = { rowIndex: Int ->
-            // when row is clicked
-            openConfirmDialog.value = true
-            // set params
-            selectedPid.value = processList[rowIndex]
-                .GetPidStr()
-                .toLong()
-            selectedProcNameStr.value = processList[rowIndex].GetName()
+            onProcessSelected(
+                processList[rowIndex]
+                    .GetPidStr()
+                    .toLong(),
+                processList[rowIndex].GetName(),
+            )
 
         },
         drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
@@ -108,14 +104,6 @@ fun ProcessTable(
             }
         }
     )
-    // only show dialog if asked to
-    if (openConfirmDialog.value) {
-        ConfirmDialog(
-            msg = "Attach to ${selectedPid.value} - ${selectedProcNameStr.value} ?",
-            onConfirm = { onProcessSelected(selectedPid.value, selectedProcNameStr.value) },
-            onClose = { openConfirmDialog.value = false }
-        )
-    }
 }
 
 @Composable
@@ -165,7 +153,7 @@ fun refreshProcList(ace: ACE?, processList: SnapshotStateList<ProcInfo>) {
 }
 
 @Composable
-fun ProcessMenu(globalConf: GlobalConf?) {
+fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
     val ace: ACE? = globalConf?.getAce()
     // list of processes that are gonna be shown
     val currentProcList = remember { SnapshotStateList<ProcInfo>() }
@@ -179,38 +167,41 @@ fun ProcessMenu(globalConf: GlobalConf?) {
     _ProcessMenu(
         currentProcList,
         onAttach = { pid: Long, procName: String ->
-            shouldAttach.value = true
-            pidToAttach.value = pid
-            procNameToAttach.value = procName
+            overlayManager!!.Dialog(
+                title = "Attach to ${pid} - ${procName} ? ", text = "",
+                onConfirm = {
+
+                    shouldAttach.value = true
+                    pidToAttach.value = pid
+                    procNameToAttach.value = procName
+                },
+            )
         },
         onRefreshClicked = { refreshProcList(ace, currentProcList) }
     )
     if (shouldAttach.value) {
-        // this should be called to close all the window
-        val closeDialog: () -> Unit = { shouldAttach.value = false }
-        //
         AttachToProcess(
             ace = ace, pid = pidToAttach.value,
             onAttachSuccess = {
-                InfoDialog(
-                    msg = "Attaching to ${procNameToAttach.value} is successful",
+                overlayManager!!.Dialog(
+                    title = "Attaching to ${procNameToAttach.value} is successful",
                     onConfirm = {},
-                    onClose = closeDialog,
+                    text = "",
                 )
                 attachedStatusString.value = "${pidToAttach.value} - ${procNameToAttach.value}"
             },
             onProcessNoExistAnymore = {
-                WarningDialog(
-                    msg = "Process ${procNameToAttach.value} is not running anymore, Can't attach",
+                overlayManager!!.Dialog(
+                    title = "Process ${procNameToAttach.value} is not running anymore, Can't attach",
                     onConfirm = {},
-                    onClose = closeDialog,
+                    text = "",
                 )
             },
             onAttachFailure = { msg: String ->
-                ErrorDialog(
-                    msg = msg,
+                overlayManager!!.Dialog(
+                    title = msg,
                     onConfirm = {},
-                    onClose = closeDialog,
+                    text = "",
                 )
             },
         )
@@ -243,5 +234,5 @@ fun PreviewTable() {
 @Composable
 @Preview
 fun ProcessMenuPreview() {
-    ProcessMenu(null)
+    ProcessMenu(null, null)
 }

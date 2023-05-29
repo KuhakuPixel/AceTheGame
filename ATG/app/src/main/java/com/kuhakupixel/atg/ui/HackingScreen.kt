@@ -36,7 +36,7 @@ fun HackingScreen(overlayManager: OverlayManager) {
             route = "Process",
             title = "Process",
             iconId = R.drawable.ic_process,
-            content = { ProcessMenu(globalConf) },
+            content = { ProcessMenu(globalConf, overlayManager = overlayManager) },
         ),
 
         BottomBarMenu(
