@@ -36,13 +36,12 @@ import com.kuhakupixel.atg.ui.util.WarningDialog
  * */
 private var attachedStatusString: MutableState<String> = mutableStateOf("None")
 
-@Composable
 private fun AttachToProcess(
     ace: ACE?,
     pid: Long,
-    onProcessNoExistAnymore: @Composable () -> Unit,
-    onAttachSuccess: @Composable () -> Unit,
-    onAttachFailure: @Composable (msg: String) -> Unit,
+    onProcessNoExistAnymore: () -> Unit,
+    onAttachSuccess: () -> Unit,
+    onAttachFailure: (msg: String) -> Unit,
 ) {
 
     // check if its still alive
@@ -160,52 +159,43 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
     //
     // initialize the list first
     refreshProcList(ace, currentProcList)
-    // params
-    val shouldAttach: MutableState<Boolean> = remember { mutableStateOf(false) }
-    val pidToAttach: MutableState<Long> = remember { mutableStateOf(0) }
-    val procNameToAttach: MutableState<String> = remember { mutableStateOf("") }
+    //
     _ProcessMenu(
         currentProcList,
         onAttach = { pid: Long, procName: String ->
             overlayManager!!.Dialog(
                 title = "Attach to ${pid} - ${procName} ? ", text = "",
                 onConfirm = {
-
-                    shouldAttach.value = true
-                    pidToAttach.value = pid
-                    procNameToAttach.value = procName
+                    AttachToProcess(
+                        ace = ace, pid = pid,
+                        onAttachSuccess = {
+                            overlayManager.Dialog(
+                                title = "Attaching to ${procName} is successful",
+                                onConfirm = {},
+                                text = "",
+                            )
+                            attachedStatusString.value = "${pid} - ${procName}"
+                        },
+                        onProcessNoExistAnymore = {
+                            overlayManager.Dialog(
+                                title = "Process ${procName} is not running anymore, Can't attach",
+                                onConfirm = {},
+                                text = "",
+                            )
+                        },
+                        onAttachFailure = { msg: String ->
+                            overlayManager.Dialog(
+                                title = msg,
+                                onConfirm = {},
+                                text = "",
+                            )
+                        },
+                    )
                 },
             )
         },
         onRefreshClicked = { refreshProcList(ace, currentProcList) }
     )
-    if (shouldAttach.value) {
-        AttachToProcess(
-            ace = ace, pid = pidToAttach.value,
-            onAttachSuccess = {
-                overlayManager!!.Dialog(
-                    title = "Attaching to ${procNameToAttach.value} is successful",
-                    onConfirm = {},
-                    text = "",
-                )
-                attachedStatusString.value = "${pidToAttach.value} - ${procNameToAttach.value}"
-            },
-            onProcessNoExistAnymore = {
-                overlayManager!!.Dialog(
-                    title = "Process ${procNameToAttach.value} is not running anymore, Can't attach",
-                    onConfirm = {},
-                    text = "",
-                )
-            },
-            onAttachFailure = { msg: String ->
-                overlayManager!!.Dialog(
-                    title = msg,
-                    onConfirm = {},
-                    text = "",
-                )
-            },
-        )
-    }
 
 }
 
