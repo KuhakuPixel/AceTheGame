@@ -2,6 +2,7 @@ package com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI
 
 import android.view.WindowManager
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,9 +25,9 @@ import com.kuhakupixel.atg.ui.theme.AtgTheme
 @Composable
 private fun DrawOverlayDialog(
     title: String,
-    body: @Composable () -> Unit,
     onConfirm: () -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    body: @Composable (modifier: Modifier) -> Unit,
 ) {
 
     AtgTheme(darkTheme = true) {
@@ -41,9 +42,20 @@ private fun DrawOverlayDialog(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
 
             ) {
-                Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                body()
-                Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                Text(
+                    title,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(0.1f),
+                )
+                body(Modifier.weight(0.8f))
+                // Cancel - Okay Button
+                Row(
+                    Modifier
+                        .weight(0.1f)
+                        .fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
                     Button(
                         onClick = onClose,
                     ) { Text("Cancel") }
@@ -94,7 +106,12 @@ open class OverlayDialog(
                     return createDialogOverlay {
                         DrawOverlayDialog(
                             title = title.value,
-                            body = body,
+                            body =
+                            { modifier: Modifier ->
+                                Box(modifier = modifier) {
+                                    body()
+                                }
+                            },
                             onConfirm = onConfirm,
                             onClose = { overlayViewController!!.disableView() },
                         )
@@ -103,7 +120,6 @@ open class OverlayDialog(
                 windowManager = windowManager,
             )
     }
-
 
 
     /**
