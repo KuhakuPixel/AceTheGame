@@ -49,6 +49,7 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
                 overlayManager!!.InputDialog(
                     title = "Edit value of $address",
                     onConfirm = { input: String ->
+
                         ace.WriteValueAtAddress(address, input)
                     }
                 )

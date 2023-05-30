@@ -2,12 +2,15 @@ package com.kuhakupixel.atg.ui.overlay.service
 
 import android.graphics.PixelFormat
 import android.view.WindowManager
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
 import com.kuhakupixel.atg.ui.theme.AtgTheme
+import com.kuhakupixel.atg.ui.util.NumberInputField
 
 class OverlayManager(
     private val windowManager: WindowManager,
@@ -103,7 +107,18 @@ class OverlayManager(
 
     @Composable
     private fun ATGDialog(title: String, text: String, onConfirm: () -> Unit, onClose: () -> Unit) {
-        _Dialog(title = title, body = { Text(text) }, onConfirm = onConfirm, onClose = onClose)
+        _Dialog(
+            title = title,
+            body = {
+                Text(
+                    text,
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                )
+
+            },
+            onConfirm = onConfirm, onClose = onClose,
+        )
     }
 
     private var inputDialogOnConfirm: (input: String) -> Unit = {}
@@ -118,15 +133,13 @@ class OverlayManager(
         _Dialog(
             title = title,
             body = {
-                TextField(
+                NumberInputField(
                     value = valueInput.value,
                     onValueChange = { value ->
                         valueInput.value = value
                     },
-                    label = { Text(text = "Value Input ...") },
-                    placeholder = { Text(text = "value ...") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true,
+                    label = "Value Input ...",
+                    placeholder = "value ...",
                 )
             },
             onClose = onClose,

@@ -43,8 +43,9 @@ fun HackingScreen(overlayManager: OverlayManager) {
             route = "Memory",
             title = "Memory",
             iconId = R.drawable.ic_memory,
-            content = { MemoryMenu(globalConf) },
-        ),
+            content = { MemoryMenu(globalConf, overlayManager = overlayManager) },
+
+            ),
 
         BottomBarMenu(
             route = "Address Table",

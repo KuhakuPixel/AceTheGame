@@ -37,10 +37,12 @@ import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.backend.ACEClient.InvalidCommandException
 import com.kuhakupixel.atg.ui.GlobalConf
+import com.kuhakupixel.atg.ui.overlay.service.OverlayManager
 import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.ErrorDialog
+import com.kuhakupixel.atg.ui.util.NumberInputField
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.min
@@ -67,7 +69,7 @@ private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(m
 private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches")
 
 @Composable
-fun MemoryMenu(globalConf: GlobalConf?) {
+fun MemoryMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
@@ -75,13 +77,17 @@ fun MemoryMenu(globalConf: GlobalConf?) {
             globalConf = globalConf,
             snackbarHostState = snackbarHostState,
             coroutineScope = coroutineScope,
+            overlayManager = overlayManager,
         )
     }
 }
 
 @Composable
 fun _MemoryMenu(
-    globalConf: GlobalConf?, snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope
+    globalConf: GlobalConf?,
+    snackbarHostState: SnackbarHostState,
+    coroutineScope: CoroutineScope,
+    overlayManager: OverlayManager?
 ) {
     val ace: ACE = (globalConf?.getAce())!!
     // ==================================
@@ -108,8 +114,6 @@ fun _MemoryMenu(
     val isAttached: Boolean = ace!!.IsAttached()
 
     // =================================
-    var openErrDialog: MutableState<Boolean> = remember { mutableStateOf(false) }
-    var errDialogMsg: MutableState<String> = remember { mutableStateOf("") }
 
     scanTypeEnabled.value = isAttached
     // only enable change value type at first scan
@@ -158,17 +162,22 @@ fun _MemoryMenu(
                     if (!initialScanDone.value) ace.SetNumType(valueType)
                     try {
                         // do the scan
-                        if (scanAgainstValue.value) ace.ScanAgainstValue(
-                            scanType,
-                            scanInputVal.value
-                        )
-                        else ace.ScanWithoutValue(scanType)
+                        if (scanAgainstValue.value) {
+                            ace.ScanAgainstValue(
+                                scanType,
+                                scanInputVal.value
+                            )
+                        } else {
+                            ace.ScanWithoutValue(scanType)
+                        }
                     } catch (e: InvalidCommandException) {
-                        errDialogMsg.value = e.stackTraceToString()
-                        openErrDialog.value = true
+                        overlayManager!!.Dialog(
+                            title = "Error",
+                            text = e.stackTraceToString(),
+                            onConfirm = {},
+                        )
                         return
                     }
-
 
                     // update matches table
                     UpdateMatches(ace = ace)
@@ -217,14 +226,6 @@ fun _MemoryMenu(
                     .fillMaxSize()
             )
         }
-    }
-    // show Error Dialog
-    if (openErrDialog.value) {
-        ErrorDialog(msg = errDialogMsg.value,
-            onConfirm = {},
-            onClose = { openErrDialog.value = false }
-
-        )
     }
 }
 
@@ -301,17 +302,15 @@ private fun MatchesSetting(
                 },
                 text = "Against value",
             )
-            TextField(
+            NumberInputField(
                 modifier = Modifier.weight(0.65f),
                 enabled = scanAgainstValue.value,
                 value = scanValue.value,
                 onValueChange = { value ->
-                    scanValue.value = value.replace("\n", "")
+                    scanValue.value = value
                 },
-                label = { Text(text = "Scan For") },
-                placeholder = { Text(text = "value ...") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
+                label = "Scan For",
+                placeholder = "value ...",
             )
         }
     }
@@ -385,5 +384,5 @@ private fun MatchesSetting(
 @Composable
 @Preview
 fun MemoryMenuPreview() {
-    MemoryMenu(null)
+    MemoryMenu(null, null)
 }
