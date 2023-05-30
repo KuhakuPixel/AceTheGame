@@ -24,12 +24,8 @@ import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlay.service.OverlayManager
-import com.kuhakupixel.atg.ui.util.ConfirmDialog
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
-import com.kuhakupixel.atg.ui.util.ErrorDialog
-import com.kuhakupixel.atg.ui.util.InfoDialog
-import com.kuhakupixel.atg.ui.util.WarningDialog
 
 /**
  * which process we are currently attached to?
