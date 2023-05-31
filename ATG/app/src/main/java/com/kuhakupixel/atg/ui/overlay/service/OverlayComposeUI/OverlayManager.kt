@@ -64,8 +64,18 @@ class OverlayManager(
         overlayInputDialog.show(title = title, onConfirm = onConfirm)
     }
 
-    fun ChoiceDialog(title: String, choices: List<String>, onConfirm: (input: String) -> Unit) {
-        overlayChoiceDialog.show(title = title, choices = choices, onConfirm = onConfirm)
+    fun ChoiceDialog(
+        title: String,
+        choices: List<String>,
+        onConfirm: (index: Int, input: String) -> Unit,
+        onClose: () -> Unit,
+    ) {
+        overlayChoiceDialog.show(
+            title = title,
+            choices = choices,
+            onConfirm = onConfirm,
+            onClose = onClose,
+        )
 
     }
 }

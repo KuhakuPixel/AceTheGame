@@ -86,8 +86,9 @@ open class OverlayDialog(
     ) -> OverlayViewHolder,
     private val windowManager: WindowManager,
 ) {
-    open val title: MutableState<String> = mutableStateOf("")
-    open var onConfirm: () -> Unit = {}
+    private val title: MutableState<String> = mutableStateOf("")
+    private var onConfirm: () -> Unit = {}
+    private var onClose: () -> Unit = {}
     private var overlayViewController: OverlayViewController? = null
 
     init {
@@ -113,7 +114,10 @@ open class OverlayDialog(
                                 }
                             },
                             onConfirm = onConfirm,
-                            onClose = { overlayViewController!!.disableView() },
+                            onClose = {
+                                onClose()
+                                overlayViewController!!.disableView()
+                            },
                         )
                     }
                 },
@@ -126,9 +130,10 @@ open class OverlayDialog(
      * open the dialog
      * */
 
-    open fun show(title: String, onConfirm: () -> Unit) {
+    open fun show(title: String, onConfirm: () -> Unit, onClose: () -> Unit = {}) {
         this.title.value = title
         this.onConfirm = onConfirm
+        this.onClose = onClose
         this.overlayViewController!!.enableView()
     }
 

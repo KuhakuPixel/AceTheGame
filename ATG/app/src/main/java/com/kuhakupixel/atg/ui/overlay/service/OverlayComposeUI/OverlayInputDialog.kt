@@ -35,6 +35,7 @@ class OverlayInputDialog(
             onConfirm = {
                 onConfirm(valueInput.value)
             },
+            onClose = {}
         )
     }
 

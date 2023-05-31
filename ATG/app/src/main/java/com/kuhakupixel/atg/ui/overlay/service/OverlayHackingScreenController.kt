@@ -11,11 +11,14 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.HackingScreen
 import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
 import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 import com.kuhakupixel.atg.ui.theme.AtgTheme
+import com.kuhakupixel.atg.ui.util.OverlayDropDown
 
 class OverlayHackingScreenController(
     val windowManager: WindowManager, val service: FloatingService, val onClosed: () -> Unit
@@ -28,6 +31,9 @@ class OverlayHackingScreenController(
     )
 
     var currentCounter = 0
+    val dropdownEnabled: MutableState<Boolean> = mutableStateOf(true)
+    val dropdownExpanded: MutableState<Boolean> = mutableStateOf(false)
+    val dropdownSelectedIdx: MutableState<Int> = mutableStateOf(0)
     private fun createOverlay(): OverlayViewHolder {
 
         val hackingScreen = OverlayViewHolder(
@@ -63,43 +69,14 @@ class OverlayHackingScreenController(
                             Button(onClick = onClosed) {
                                 Text("Close")
                             }
-                            // TODO: only for testing showing dialog
-                            Button(
-                                onClick = {
-                                    /*
-                                    overlayManager.Dialog(
-
-                                        title = "my Title",
-                                        text = "current counter :$currentCounter",
-                                        onConfirm = { currentCounter++ },
-                                    )
-
-                                     */
-
-                                    /*
-                                    overlayManager.InputDialog(
-
-                                        title = "current counter :$currentCounter",
-                                        onConfirm = { input ->
-                                            currentCounter += input.toInt()
-                                        },
-                                    )
-
-                                     */
-
-                                    overlayManager.ChoiceDialog(
-
-                                        title = "current counter :$currentCounter",
-                                        choices = listOf("1", "3", "5"),
-                                        onConfirm = { input ->
-                                            currentCounter += input.toInt()
-                                        },
-                                    )
-
-                                },
-                            ) {
-                                Text("Show Dialog")
-                            }
+                            OverlayDropDown(
+                                label = "Choice",
+                                expanded = dropdownExpanded,
+                                options = listOf("2", "3", "4"),
+                                selectedOptionIndex = dropdownSelectedIdx,
+                                enabled = dropdownEnabled,
+                                overlayManager = overlayManager,
+                            )
                         }
                         HackingScreen(overlayManager = overlayManager)
                     }
