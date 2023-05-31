@@ -48,10 +48,12 @@ class OverlayChoicesDialog(
 
     fun show(
         title: String, choices: List<String>,
+        chosenIndex: Int,
         onConfirm: (index: Int, input: String) -> Unit,
         onClose: () -> Unit,
     ) {
         this.choices.value = choices
+        this.chosenIndex.value = chosenIndex
         super.show(
             title = title,
             onConfirm = {

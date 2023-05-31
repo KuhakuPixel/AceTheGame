@@ -33,10 +33,10 @@ import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.backend.ACEClient.InvalidCommandException
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
-import com.kuhakupixel.atg.ui.util.ATGDropDown
 import com.kuhakupixel.atg.ui.util.CheckboxWithText
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
+import com.kuhakupixel.atg.ui.util.OverlayDropDown
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.min
@@ -186,6 +186,7 @@ fun _MemoryMenu(
                     initialScanDone.value = false
                 },
                 scanAgainstValue = scanAgainstValue,
+                overlayManager = overlayManager!!,
             )
 
         }
@@ -284,6 +285,7 @@ private fun MatchesSetting(
     //
     newScanEnabled: Boolean,
     newScanClicked: () -> Unit,
+    overlayManager: OverlayManager,
 ) {
     @Composable
     fun ScanInputField(scanValue: MutableState<String>, scanAgainstValue: MutableState<Boolean>) {
@@ -329,36 +331,83 @@ private fun MatchesSetting(
     }
 
     @Composable
-    fun ScanTypeDropDown(selectedOptionIndex: MutableState<Int>, enabled: MutableState<Boolean>) {
+    fun ScanTypeDropDown(
+        selectedOptionIndex: MutableState<Int>,
+        enabled: MutableState<Boolean>,
+        overlayManager: OverlayManager,
+    ) {
         val expanded = remember { mutableStateOf(false) }
         // default to "exact scan (=)"
-        ATGDropDown(
+        OverlayDropDown(
             enabled = enabled,
             label = "Scan Type",
             expanded = expanded,
             options = scanTypeList,
-            selectedOptionIndex = selectedOptionIndex,
+            selectedOptionIndex = selectedOptionIndex.value,
+            onShowOptions = fun(options: List<String>) {
+                overlayManager.overlayScanTypeDialog.show(
+                    title = "Value: ",
+                    choices = options,
+                    onConfirm = { index: Int, value: String ->
+                        selectedOptionIndex.value = index
+                    },
+                    onClose = {
+                        // after choice dialog is closed
+                        // we should also set expanded to false
+                        // so drop down will look closed
+                        expanded.value = false
+
+                    },
+                    chosenIndex = selectedOptionIndex.value
+                )
+            }
         )
     }
 
     @Composable
-    fun ValueTypeDropDown(selectedOptionIndex: MutableState<Int>, enabled: MutableState<Boolean>) {
+    fun ValueTypeDropDown(
+        selectedOptionIndex: MutableState<Int>,
+        enabled: MutableState<Boolean>,
+        overlayManager: OverlayManager,
+    ) {
         val expanded = remember { mutableStateOf(false) }
-        ATGDropDown(
+        OverlayDropDown(
             enabled = enabled,
             label = "Value Type",
             expanded = expanded,
             options = valueTypeList,
-            selectedOptionIndex = selectedOptionIndex,
+            selectedOptionIndex = selectedOptionIndex.value,
+            onShowOptions = fun(options: List<String>) {
+                overlayManager.overlayValueTypeDialog.show(
+                    title = "Value: ",
+                    choices = options,
+                    onConfirm = { index: Int, value: String ->
+                        selectedOptionIndex.value = index
+                    },
+                    onClose = {
+                        // after choice dialog is closed
+                        // we should also set expanded to false
+                        // so drop down will look closed
+                        expanded.value = false
+
+                    },
+                    chosenIndex = selectedOptionIndex.value
+                )
+            }
         )
     }
 
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
-        ScanTypeDropDown(scanTypeSelectedOptionIdx, enabled = scanTypeEnabled)
+        ScanTypeDropDown(
+            scanTypeSelectedOptionIdx,
+            enabled = scanTypeEnabled,
+            overlayManager = overlayManager,
+        )
         ValueTypeDropDown(
             valueTypeSelectedOptionIdx,
             // only allow to change type during initial scan
             enabled = valueTypeEnabled,
+            overlayManager = overlayManager,
         )
         ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
 

@@ -47,7 +47,13 @@ class OverlayManager(
         windowManager = windowManager
     )
 
-    private var overlayChoiceDialog = OverlayChoicesDialog(
+    // TODO: Fix This, Because its duplicate and ugly :(
+    val overlayScanTypeDialog = OverlayChoicesDialog(
+        createDialogOverlay = ::createDialogOverlay,
+        windowManager = windowManager
+    )
+
+    val overlayValueTypeDialog = OverlayChoicesDialog(
         createDialogOverlay = ::createDialogOverlay,
         windowManager = windowManager
     )
@@ -62,20 +68,5 @@ class OverlayManager(
 
     fun InputDialog(title: String, onConfirm: (input: String) -> Unit) {
         overlayInputDialog.show(title = title, onConfirm = onConfirm)
-    }
-
-    fun ChoiceDialog(
-        title: String,
-        choices: List<String>,
-        onConfirm: (index: Int, input: String) -> Unit,
-        onClose: () -> Unit,
-    ) {
-        overlayChoiceDialog.show(
-            title = title,
-            choices = choices,
-            onConfirm = onConfirm,
-            onClose = onClose,
-        )
-
     }
 }

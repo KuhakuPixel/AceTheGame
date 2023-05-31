@@ -69,14 +69,6 @@ class OverlayHackingScreenController(
                             Button(onClick = onClosed) {
                                 Text("Close")
                             }
-                            OverlayDropDown(
-                                label = "Choice",
-                                expanded = dropdownExpanded,
-                                options = listOf("2", "3", "4"),
-                                selectedOptionIndex = dropdownSelectedIdx,
-                                enabled = dropdownEnabled,
-                                overlayManager = overlayManager,
-                            )
                         }
                         HackingScreen(overlayManager = overlayManager)
                     }

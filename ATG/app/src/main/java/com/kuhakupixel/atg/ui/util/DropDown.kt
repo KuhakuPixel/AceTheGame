@@ -84,9 +84,9 @@ fun OverlayDropDown(
     label: String,
     expanded: MutableState<Boolean>,
     options: List<String>,
-    selectedOptionIndex: MutableState<Int>,
+    selectedOptionIndex: Int,
     enabled: MutableState<Boolean>,
-    overlayManager: OverlayManager,
+    onShowOptions: (options: List<String>) -> Unit,
 ) {
 
     ExposedDropdownMenuBox(
@@ -95,21 +95,8 @@ fun OverlayDropDown(
             if (enabled.value) {
                 expanded.value = !expanded.value
                 if (expanded.value) {
+                    onShowOptions(options)
                     //
-                    overlayManager.ChoiceDialog(
-                        title = "Value: ",
-                        choices = options,
-                        onConfirm = { index:Int, value:String ->
-                            selectedOptionIndex.value = index
-                        },
-                        onClose = {
-                            // after choice dialog is closed
-                            // we should also set expanded to false
-                            // so drop down will look closed
-                            expanded.value= false
-
-                        }
-                    )
                 }
             }
         },
@@ -119,7 +106,7 @@ fun OverlayDropDown(
             // The `menuAnchor` modifier must be passed to the text field for correctness.
             modifier = Modifier.menuAnchor(),
             readOnly = true,
-            value = options[selectedOptionIndex.value],
+            value = options[selectedOptionIndex],
             onValueChange = {},
             label = { Text(label) },
             trailingIcon = {
