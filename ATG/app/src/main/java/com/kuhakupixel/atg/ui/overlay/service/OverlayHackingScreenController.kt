@@ -76,9 +76,21 @@ class OverlayHackingScreenController(
 
                                      */
 
+                                    /*
                                     overlayManager.InputDialog(
 
                                         title = "current counter :$currentCounter",
+                                        onConfirm = { input ->
+                                            currentCounter += input.toInt()
+                                        },
+                                    )
+
+                                     */
+
+                                    overlayManager.ChoiceDialog(
+
+                                        title = "current counter :$currentCounter",
+                                        choices = listOf("1", "3", "5"),
                                         onConfirm = { input ->
                                             currentCounter += input.toInt()
                                         },

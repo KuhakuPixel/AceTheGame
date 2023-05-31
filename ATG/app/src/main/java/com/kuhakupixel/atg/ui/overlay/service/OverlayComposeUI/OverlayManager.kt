@@ -47,6 +47,11 @@ class OverlayManager(
         windowManager = windowManager
     )
 
+    private var overlayChoiceDialog = OverlayChoicesDialog(
+        createDialogOverlay = ::createDialogOverlay,
+        windowManager = windowManager
+    )
+
     init {
     }
 
@@ -57,5 +62,10 @@ class OverlayManager(
 
     fun InputDialog(title: String, onConfirm: (input: String) -> Unit) {
         overlayInputDialog.show(title = title, onConfirm = onConfirm)
+    }
+
+    fun ChoiceDialog(title: String, choices: List<String>, onConfirm: (input: String) -> Unit) {
+        overlayChoiceDialog.show(title = title, choices = choices, onConfirm = onConfirm)
+
     }
 }
