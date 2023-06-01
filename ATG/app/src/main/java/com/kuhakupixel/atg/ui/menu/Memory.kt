@@ -398,6 +398,8 @@ private fun MatchesSetting(
     }
 
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
+
+        ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
         ScanTypeDropDown(
             scanTypeSelectedOptionIdx,
             enabled = scanTypeEnabled,
@@ -409,8 +411,6 @@ private fun MatchesSetting(
             enabled = valueTypeEnabled,
             overlayManager = overlayManager,
         )
-        ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
-
         ScanButton(
             modifier = Modifier.fillMaxWidth(),
             nextScanEnabled = nextScanEnabled,
