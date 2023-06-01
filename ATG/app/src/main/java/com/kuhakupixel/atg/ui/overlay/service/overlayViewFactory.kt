@@ -1,14 +1,10 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import android.app.Service
 import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Recomposer
-import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.platform.compositionContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelStore
@@ -19,8 +15,6 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 // https://gist.github.com/handstandsam/6ecff2f39da72c0b38c07aa80bbb5a2f
 fun overlayViewFactory(

@@ -94,9 +94,9 @@ void ace_main() {
   // display_icon();
   if (getuid() != 0) {
     frontend_print(
-        "Device not rooted, without root most feautres will be broken\n");
+        "Device not rooted, without root most features will be broken\n");
   } else {
-    frontend_print("You are rooted, all feautres will work\n");
+    frontend_print("You are rooted, all features will work\n");
   }
 
   display_intro();
@@ -112,7 +112,7 @@ void attach_pid_cmd_handler(int pid, int port) {
 
 int main(int argc, char **argv) {
   /* parse args passed to program*/
-  CLI::App main_app{"ACE Engine, a game hacking tools for linux and android\n"
+  CLI::App main_app{"ACE Engine, a game hacking tool for linux and android\n"
                     "By Kuhaku Pixel"};
 
   //

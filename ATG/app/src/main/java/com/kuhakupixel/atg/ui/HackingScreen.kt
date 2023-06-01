@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
@@ -18,36 +15,38 @@ import com.kuhakupixel.atg.ui.menu.AddressTableMenu
 import com.kuhakupixel.atg.ui.menu.MemoryMenu
 import com.kuhakupixel.atg.ui.menu.ProcessMenu
 import com.kuhakupixel.atg.ui.menu.SettingsMenu
-import com.kuhakupixel.atg.ui.util.WarningDialog
-import com.topjohnwu.superuser.Shell
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HackingScreen() {
+fun HackingScreen(overlayManager: OverlayManager) {
     val navController = rememberNavController()
     var globalConf: GlobalConf = GlobalConf(LocalContext.current)
+
+
     // ============================ each menu in bottom nav ===================
     val menus = listOf(
         BottomBarMenu(
             route = "Process",
             title = "Process",
             iconId = R.drawable.ic_process,
-            content = { ProcessMenu(globalConf) },
+            content = { ProcessMenu(globalConf, overlayManager = overlayManager) },
         ),
 
         BottomBarMenu(
             route = "Memory",
             title = "Memory",
             iconId = R.drawable.ic_memory,
-            content = { MemoryMenu(globalConf) },
-        ),
+            content = { MemoryMenu(globalConf, overlayManager = overlayManager) },
+
+            ),
 
         BottomBarMenu(
             route = "Address Table",
             title = "Address Table",
             iconId = R.drawable.ic_table,
-            content = { AddressTableMenu(globalConf) },
+            content = { AddressTableMenu(globalConf, overlayManager = overlayManager) },
         ),
 
         BottomBarMenu(

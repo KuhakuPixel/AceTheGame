@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import android.graphics.PixelFormat
 import android.view.WindowManager
@@ -11,10 +11,14 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.HackingScreen
-import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 import com.kuhakupixel.atg.ui.theme.AtgTheme
+import com.kuhakupixel.atg.ui.util.OverlayDropDown
 
 class OverlayHackingScreenController(
     val windowManager: WindowManager, val service: FloatingService, val onClosed: () -> Unit
@@ -26,6 +30,10 @@ class OverlayHackingScreenController(
         name = "Hacking Screen",
     )
 
+    var currentCounter = 0
+    val dropdownEnabled: MutableState<Boolean> = mutableStateOf(true)
+    val dropdownExpanded: MutableState<Boolean> = mutableStateOf(false)
+    val dropdownSelectedIdx: MutableState<Int> = mutableStateOf(0)
     private fun createOverlay(): OverlayViewHolder {
 
         val hackingScreen = OverlayViewHolder(
@@ -43,7 +51,9 @@ class OverlayHackingScreenController(
             service = service,
             potraitOnly = false,
         )
+
         hackingScreen.setContent {
+            val overlayManager = OverlayManager(windowManager, service)
             // Text("hello world")
             AtgTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
@@ -60,7 +70,7 @@ class OverlayHackingScreenController(
                                 Text("Close")
                             }
                         }
-                        HackingScreen()
+                        HackingScreen(overlayManager = overlayManager)
                     }
                 }
             }

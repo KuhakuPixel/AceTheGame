@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton.service
+package com.kuhakupixel.atg.ui.overlay.service
 
 import android.content.Context.INPUT_SERVICE
 import android.graphics.PixelFormat
@@ -9,9 +9,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.kuhakupixel.atg.ui.overlaybutton.OVERLAY_BUTTON_SIZE_DP
-import com.kuhakupixel.atg.ui.overlaybutton.OverlayViewHolder
-import com.kuhakupixel.atg.ui.overlaybutton.logd
+import com.kuhakupixel.atg.ui.overlay.OVERLAY_BUTTON_SIZE_DP
+import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.logd
 
 val LocalServiceState = compositionLocalOf<ServiceState> { error("No ServiceState provided") }
 
@@ -26,8 +26,8 @@ class OverlayButtonController(
 
     private val density = service.resources.displayMetrics.density
     val timerSizePx = (OVERLAY_BUTTON_SIZE_DP * density).toInt()
-    private val fullScreenViewController = OverlayViewController(
-        createOverlayViewHolder = this::createFullscreenOverlay,
+    private val trashScreenViewController = OverlayViewController(
+        createOverlayViewHolder = this::createTrashScreenOverlay,
         windowManager = windowManager,
         name = "FullScreen"
     )
@@ -39,7 +39,7 @@ class OverlayButtonController(
     )
 
 
-    private fun createFullscreenOverlay(): OverlayViewHolder {
+    private fun createTrashScreenOverlay(): OverlayViewHolder {
 
         // https://developer.android.com/reference/android/view/WindowManager.LayoutParams#MaximumOpacity
         var alpha = 1f
@@ -67,7 +67,10 @@ class OverlayButtonController(
 
         fullscreenOverlay.setContent {
             CompositionLocalProvider(LocalServiceState provides service.state) {
-                OverlayContent(showOverlayButton = overlayButtonState.isVisible.value)
+                TrashContentScreen(
+                    showOverlayButton = overlayButtonState.isVisible.value,
+                    service.state,
+                )
             }
         }
 
@@ -115,7 +118,7 @@ class OverlayButtonController(
     override fun enableView() {
 
         logd("Init the controller ")
-        fullScreenViewController.enableView()
+        trashScreenViewController.enableView()
         overlayButtonViewController.enableView()
         overlayButtonState.isVisible.value = true
     }
@@ -125,7 +128,7 @@ class OverlayButtonController(
     }
 
     private fun exitOverlayButton() {
-        fullScreenViewController.disableView()
+        trashScreenViewController.disableView()
         overlayButtonViewController.disableView()
         overlayButtonState.isVisible.value = false
         service.stopSelf()

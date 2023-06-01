@@ -1,4 +1,4 @@
-package com.kuhakupixel.atg.ui.overlaybutton
+package com.kuhakupixel.atg.ui.overlay
 
 const val TRASH_SIZE_DP = 90
 const val OVERLAY_BUTTON_SIZE_DP = 85

@@ -9,6 +9,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 
 /**
  *  custom dropdown that can be enabled or disabled
@@ -66,5 +67,54 @@ fun ATGDropDown(
                 )
             }
         }
+    }
+}
+
+/**
+ * Dropdown specifically made for overlay window
+ * because I just found out that Jetpack compose Dropdown
+ * doesn't work (not showing the choices) in overlay window
+ *
+ * A workaround is to show the choices in another overlay window
+ * doesn't seem pretty but it works :D
+ * */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OverlayDropDown(
+    label: String,
+    expanded: MutableState<Boolean>,
+    options: List<String>,
+    selectedOptionIndex: Int,
+    enabled: MutableState<Boolean>,
+    onShowOptions: (options: List<String>) -> Unit,
+) {
+
+    ExposedDropdownMenuBox(
+        expanded = expanded.value,
+        onExpandedChange = {
+            if (enabled.value) {
+                expanded.value = !expanded.value
+                if (expanded.value) {
+                    onShowOptions(options)
+                    //
+                }
+            }
+        },
+    ) {
+        TextField(
+            enabled = enabled.value,
+            // The `menuAnchor` modifier must be passed to the text field for correctness.
+            modifier = Modifier.menuAnchor(),
+            readOnly = true,
+            value = options[selectedOptionIndex],
+            onValueChange = {},
+            label = { Text(label) },
+            trailingIcon = {
+                if (enabled.value) {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
+                }
+            },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
     }
 }
