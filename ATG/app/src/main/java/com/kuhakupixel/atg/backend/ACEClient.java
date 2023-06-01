@@ -49,6 +49,7 @@ public class ACEClient {
         Shell.Result result = Shell.cmd(cmdStr).exec();
         List<String> out = result.getOut();
         AssertValidCommand(out);
+        Log.i("ATG", String.format("Output received from engine command: \"%s\"", requestCmd));
         return out;
 
     }
