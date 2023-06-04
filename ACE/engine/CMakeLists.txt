@@ -11,6 +11,9 @@ macro(print_all_variables)
     endforeach()
 endmacro()
 
+
+# set binary output folder to Android assets folder
+# set(EXECUTABLE_OUTPUT_PATH      "${CMAKE_CURRENT_SOURCE_DIR}/../output_build")
 # set project name
 set (PROJECT_NAME "ACE")
 project(${PROJECT_NAME})

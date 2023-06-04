@@ -13,7 +13,12 @@ function(strip_bin_on_release bin_name)
 			add_custom_command(
 			  TARGET "${bin_name}" POST_BUILD
 			  COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
-			  ARGS --strip-all "${bin_name}"
+			  # we need to append it with the full path
+			  # because it expect the path to binary 
+			  # if we set EXECUTABLE_OUTPUT_PATH to a different location
+			  # then this strip function will fail if full path isn't provided
+			  # https://cmake.org/cmake/help/latest/variable/EXECUTABLE_OUTPUT_PATH.html
+			  ARGS --strip-all "${EXECUTABLE_OUTPUT_PATH}/${bin_name}"
 			)
 		else()
 			message(WARNING "Cannot find binary for stripping")

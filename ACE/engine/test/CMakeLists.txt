@@ -27,3 +27,5 @@ if(ANDROID)
 else()
 	target_link_libraries(${PROJECT_NAME} lib_ACE-static cppzmq-static)
 endif()
+
+strip_bin_on_release(${PROJECT_NAME})
