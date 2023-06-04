@@ -16,7 +16,7 @@ target_link_libraries(
 	PRIVATE cppzmq-static lib_ACE-static
 )
 
-strip_bin_on_release(${PROJECT_NAME})
+strip_target_on_release(${PROJECT_NAME})
 # ============================================= install options ========================
 
 install (TARGETS ${PROJECT_NAME}

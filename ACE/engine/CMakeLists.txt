@@ -125,7 +125,7 @@ add_subdirectory(program_utils/)
 add_executable(${PROJECT_NAME} src/main.cpp)
 # ===============================================================================
 if (STRIP_ON_RELEASE)
-	strip_bin_on_release(${PROJECT_NAME})
+	strip_target_on_release(${PROJECT_NAME})
 endif()
 # ===============================================================================
 # link against the library and add compile's options defined in common_flag

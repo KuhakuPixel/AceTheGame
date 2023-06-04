@@ -6,12 +6,12 @@ cmake_minimum_required(VERSION 3.12)
 option(STRIP_ON_RELEASE "Strip Binary on release" TRUE)
 # strip binary for release build
 # thanks https://stackoverflow.com/a/71236302/14073678
-function(strip_bin_on_release bin_name)
+function(strip_target_on_release target_name)
 	if (STRIP_ON_RELEASE)
 		if (NOT ${CMAKE_STRIP} STREQUAL "")
 			message("strip command found at ${CMAKE_STRIP}")
 			add_custom_command(
-			  TARGET "${bin_name}" POST_BUILD
+			  TARGET "${target_name}" POST_BUILD
 			  COMMAND $<$<CONFIG:release>:${CMAKE_STRIP}>
 			  # we need to append it with the full path
 			  # because it expect the path to binary 
@@ -19,11 +19,11 @@ function(strip_bin_on_release bin_name)
 			  # then this strip function will fail if full path isn't provided
 			  # https://cmake.org/cmake/help/latest/variable/EXECUTABLE_OUTPUT_PATH.html
 			  # https://stackoverflow.com/a/15886830/14073678
-			  ARGS --strip-all $<TARGET_FILE:${bin_name}>
+			  ARGS --strip-all $<TARGET_FILE:${target_name}>
 			)
 		else()
 			message(WARNING "Cannot find binary for stripping")
 		endif()
-		message("Stripped ${bin_name}")
+		message("Stripped ${target_name}")
 	endif()
 endfunction()
