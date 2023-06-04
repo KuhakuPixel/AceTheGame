@@ -18,7 +18,8 @@ function(strip_bin_on_release bin_name)
 			  # if we set EXECUTABLE_OUTPUT_PATH to a different location
 			  # then this strip function will fail if full path isn't provided
 			  # https://cmake.org/cmake/help/latest/variable/EXECUTABLE_OUTPUT_PATH.html
-			  ARGS --strip-all "${EXECUTABLE_OUTPUT_PATH}/${bin_name}"
+			  # https://stackoverflow.com/a/15886830/14073678
+			  ARGS --strip-all $<TARGET_FILE:${bin_name}>
 			)
 		else()
 			message(WARNING "Cannot find binary for stripping")
