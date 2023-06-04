@@ -264,7 +264,7 @@ void freeze_all_cmd_handler(const ACE_scanner<T> *scanner,
   // freeze all addresses
   scan_result.iterate_val(
 
-      [&](ADDR addr, int val) {
+      [&](ADDR addr, T val) {
         //
         freezer_manager->freeze_addr(addr);
       }
