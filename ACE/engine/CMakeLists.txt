@@ -11,9 +11,9 @@ macro(print_all_variables)
     endforeach()
 endmacro()
 
-
-# set binary output folder to Android assets folder
-# set(EXECUTABLE_OUTPUT_PATH      "${CMAKE_CURRENT_SOURCE_DIR}/../output_build")
+# recommended way of creating options to be passed by user
+# https://stackoverflow.com/questions/12896988/passing-an-argument-to-cmake-via-command-prompt
+SET(ANDROID_BINARY_OUTPUT_PATH "" CACHE PATH "Export program to a path for a ANDROID_ABI and put it in {PATH}/{ANDROID_ABI}")
 # set project name
 set (PROJECT_NAME "ACE")
 project(${PROJECT_NAME})
@@ -22,6 +22,17 @@ option(BUILD_OPTIONS "display the specified build options" FALSE)
 # =================================================================
 
 # =================================== if android build ============
+# can only export to a certain path if building for android
+message("ANDROID_BINARY_OUTPUT_PATH: ${ANDROID_BINARY_OUTPUT_PATH}")
+if (NOT "${ANDROID_BINARY_OUTPUT_PATH}" STREQUAL "")
+	if (ANDROID)
+		# set binary output folder to Android assets folder
+		set(EXECUTABLE_OUTPUT_PATH "${ANDROID_BINARY_OUTPUT_PATH}/${ANDROID_ABI}")
+	else()
+		message(FATAL_ERROR "Can only Set ANDROID_BINARY_OUTPUT_PATH if building for android")
+	endif()
+	
+endif()
 # https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-To-Write-Platform-Checks
 # https://stackoverflow.com/questions/9160335/os-specific-instructions-in-cmake-how-to
 if (ANDROID)
