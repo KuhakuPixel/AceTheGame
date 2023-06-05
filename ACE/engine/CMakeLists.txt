@@ -27,7 +27,7 @@ message("ANDROID_BINARY_OUTPUT_PATH: ${ANDROID_BINARY_OUTPUT_PATH}")
 if (NOT "${ANDROID_BINARY_OUTPUT_PATH}" STREQUAL "")
 	if (ANDROID)
 		# set binary output folder to Android assets folder
-		set(EXECUTABLE_OUTPUT_PATH "${ANDROID_BINARY_OUTPUT_PATH}/${ANDROID_ABI}")
+		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ANDROID_BINARY_OUTPUT_PATH}/${ANDROID_ABI}")
 	else()
 		message(FATAL_ERROR "Can only Set ANDROID_BINARY_OUTPUT_PATH if building for android")
 	endif()

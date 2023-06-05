@@ -18,6 +18,26 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "../../ACE/engine/CMakeLists.txt"
+        }
+    }
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                targets "ACE", "engine_client"
+                arguments "-DANDROID_PLATFORM=android-23", "-DANDROID_BINARY_OUTPUT_PATH=./src/main/assets/bin/ACE", "-DCMAKE_BUILD_TYPE=Release"
+                // the cpu arch we want to support :D
+                abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+            }
+        }
     }
 
     buildTypes {
