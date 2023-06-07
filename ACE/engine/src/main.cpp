@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
   int engine_server_port = ACE_global::engine_server_client_default_port;
   CLI::App *attach_pid_cmd =
       main_app.add_subcommand("attach-pid", attach_cmd_help);
-  attach_pid_cmd->add_option("--pid", pid_to_attach)->required();
+  attach_pid_cmd->add_option("<PID>", pid_to_attach)->required();
   attach_pid_cmd->add_option("--port", engine_server_port,
                              "default port: " +
                                  std::to_string(engine_server_port));
