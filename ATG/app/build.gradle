@@ -19,6 +19,25 @@ android {
             useSupportLibrary true
         }
     }
+    // ==================================== for building memory scanner/editor binary  ======================
+    // https://stackoverflow.com/questions/38917297/compile-and-use-abi-dependent-executable-binaries-in-android-with-android-studio
+    // https://developer.android.com/studio/projects/gradle-external-native-builds
+    externalNativeBuild {
+        cmake {
+            path "../../ACE/engine/CMakeLists.txt"
+        }
+    }
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                targets "ACE", "engine_client"
+                arguments "-DANDROID_PLATFORM=android-23", "-DACE_ANDROID_BINARY_ROOT_OUTPUT_DIR=./src/main/assets/bin/ACE", "-DCMAKE_BUILD_TYPE=Release"
+                // the cpu arch we want to support :D
+                abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+            }
+        }
+    }
+    // ============================================================================================
 
     buildTypes {
         release {
