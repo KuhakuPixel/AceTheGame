@@ -13,7 +13,7 @@ endmacro()
 
 # recommended way of creating options to be passed by user
 # https://stackoverflow.com/questions/12896988/passing-an-argument-to-cmake-via-command-prompt
-SET(ANDROID_BINARY_OUTPUT_PATH "" CACHE PATH "Export program to a path for a ANDROID_ABI and put it in {PATH}/{ANDROID_ABI}")
+SET(ACE_ANDROID_BINARY_ROOT_OUTPUT_DIR "" CACHE PATH "Export program to a path for a ANDROID_ABI and put it in {PATH}/{ANDROID_ABI}")
 # set project name
 set (PROJECT_NAME "ACE")
 project(${PROJECT_NAME})
@@ -23,13 +23,13 @@ option(BUILD_OPTIONS "display the specified build options" FALSE)
 
 # =================================== if android build ============
 # can only export to a certain path if building for android
-message("ANDROID_BINARY_OUTPUT_PATH: ${ANDROID_BINARY_OUTPUT_PATH}")
-if (NOT "${ANDROID_BINARY_OUTPUT_PATH}" STREQUAL "")
+message("ACE_ANDROID_BINARY_ROOT_OUTPUT_DIR: ${ACE_ANDROID_BINARY_ROOT_OUTPUT_DIR}")
+if (NOT "${ACE_ANDROID_BINARY_ROOT_OUTPUT_DIR}" STREQUAL "")
 	if (ANDROID)
 		# set binary output folder to Android assets folder
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ANDROID_BINARY_OUTPUT_PATH}/${ANDROID_ABI}")
+		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ACE_ANDROID_BINARY_ROOT_OUTPUT_DIR}/${ANDROID_ABI}")
 	else()
-		message(FATAL_ERROR "Can only Set ANDROID_BINARY_OUTPUT_PATH if building for android")
+		message(FATAL_ERROR "Can only Set ACE_ANDROID_BINARY_ROOT_OUTPUT_DIR if building for android")
 	endif()
 	
 endif()
