@@ -40,17 +40,6 @@ void frontend_invalid_command(bool print_to_stdout, const char *fmt, ...);
  * to frontend
  * */
 void frontend_mark_task_fail(const char *fmt, ...);
-/*
- * mark beggining of output for
- * frontend to pick up
- * */
-void frontend_mark_task_begin();
-
-/*
- * mark end of output for
- * frontend to pick up
- * */
-void frontend_mark_task_done();
 
 /*
  * mark a progress of a certain task
