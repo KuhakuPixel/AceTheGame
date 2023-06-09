@@ -50,8 +50,6 @@ const std::vector<Maps_pathname_type> ACE_global::mem_type_name_to_scan = {
 
 };
 
-bool ACE_global::use_gui_protocol = false;
-
 const char *ACE_global::license =
 #include "../../LICENSE_APPLIED"
     ;

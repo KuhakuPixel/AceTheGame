@@ -26,19 +26,11 @@ void run_input_loop(std::function<E_loop_statement(std::string)> on_input,
     linenoiseHistoryAdd(line);
 
     // =============================================
-    // tells frontend that task has started
-    // or done when gui_protocol is enabled
-
-    if (ACE_global::use_gui_protocol)
-      frontend_mark_task_begin();
     if (on_input(input_str) == E_loop_statement::break_) {
       // free resource
       linenoiseFree(line);
       break;
     }
-
-    if (ACE_global::use_gui_protocol)
-      frontend_mark_task_done();
     // free resource
     linenoiseFree(line);
   }

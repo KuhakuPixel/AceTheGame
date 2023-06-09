@@ -28,8 +28,6 @@ public:
   // compiler infos
   static const std::string cpp_compiler_name;
   static const std::string cpp_compiler_version;
-  // global settings
-  static bool use_gui_protocol;
   // license
   static const char *license;
   //

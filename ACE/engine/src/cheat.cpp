@@ -21,10 +21,6 @@
 
 void cheater_mode_loop(int pid) {
 
-  // tell frontend cheater mode is entered succsessfully
-  if (ACE_global::use_gui_protocol)
-    frontend_mark_task_done();
-
   cheat_session _cheat_session = cheat_session(pid, E_num_type::INT);
 
   auto on_input =

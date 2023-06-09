@@ -115,11 +115,6 @@ int main(int argc, char **argv) {
   CLI::App main_app{"ACE Engine, a game hacking tool for linux and android\n"
                     "By Kuhaku Pixel"};
 
-  //
-  main_app.add_option("--use-gui-protocol", ACE_global::use_gui_protocol,
-                      "enable engine's gui protocol\n"
-                      "for communication via stdin\n");
-
   // ============================ attach commands ============
   std::string attach_cmd_help =
       "attach to a process with pid for gui communication via zeromq\n";
