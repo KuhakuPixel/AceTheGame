@@ -1,6 +1,6 @@
-#include "../src/proc_stat.hpp"
-#include "../src/error.hpp"
-#include "../src/str_utils.hpp"
+#include "ACE/proc_stat.hpp"
+#include "ACE/error.hpp"
+#include "ACE/str_utils.hpp"
 #include "../third_party/catch.hpp"
 #include <spawn.h>
 #include <string.h>

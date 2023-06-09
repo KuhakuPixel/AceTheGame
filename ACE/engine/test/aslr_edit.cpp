@@ -1,5 +1,5 @@
-#include "../src/aslr_edit.hpp"
-#include "../src/file_utils.hpp"
+#include "ACE/aslr_edit.hpp"
+#include "ACE/file_utils.hpp"
 #include "../third_party/catch.hpp"
 
 /*

@@ -1,4 +1,4 @@
-#include "../src/to_frontend.hpp"
+#include "ACE/to_frontend.hpp"
 #include "../third_party/catch.hpp"
 
 TEST_CASE("frontend_print", "[to_frontend]") {

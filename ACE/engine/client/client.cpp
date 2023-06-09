@@ -1,8 +1,8 @@
-#include "../src/ACE_global.hpp"
-#include "../src/engine_client.hpp"
-#include "../src/input.hpp"
-#include "../src/main_cmd_creator.hpp"
-#include "../src/to_frontend.hpp"
+#include "ACE/ACE_global.hpp"
+#include "ACE/engine_client.hpp"
+#include "ACE/input.hpp"
+#include "ACE/main_cmd_creator.hpp"
+#include "ACE/to_frontend.hpp"
 #include "../third_party/CLI11.hpp"
 #include <iostream>
 #include <stdio.h>

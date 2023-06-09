@@ -1,5 +1,5 @@
-#include "../src/simulated_memory.hpp"
-#include "../src/ace_type.hpp"
+#include "ACE/simulated_memory.hpp"
+#include "ACE/ace_type.hpp"
 #include "../third_party/catch.hpp"
 #include "limits.h"
 

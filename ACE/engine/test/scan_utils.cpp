@@ -1,4 +1,4 @@
-#include "../src/scan_utils.hpp"
+#include "ACE/scan_utils.hpp"
 #include "../third_party/catch.hpp"
 
 TEST_CASE("get_nearest_aligned_addr", "[scanner]") {

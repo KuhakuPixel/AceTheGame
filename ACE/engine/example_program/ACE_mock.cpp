@@ -3,7 +3,6 @@
  * TODO: add program parameter
  * to support for different type of testing
  * */
-#include "../src/to_frontend.hpp"
 #include <string>
 
 int main(int argc, char **argv) {

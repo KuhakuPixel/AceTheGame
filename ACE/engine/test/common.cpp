@@ -1,4 +1,4 @@
-#include "../src/common.hpp"
+#include "ACE/common.hpp"
 #include "../third_party/catch.hpp"
 
 TEST_CASE("TINE_ACTION", "[COMMON]") {

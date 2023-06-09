@@ -1,6 +1,6 @@
-#include "../src/match_store.hpp"
-#include "../src/ace_type.hpp"
-#include "../src/scan_utils.hpp"
+#include "ACE/match_store.hpp"
+#include "ACE/ace_type.hpp"
+#include "ACE/scan_utils.hpp"
 #include "../third_party/catch.hpp"
 
 TEST_CASE("is_match_in_a_row unaligned", "[match_chunk]") {

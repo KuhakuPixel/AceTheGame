@@ -1,5 +1,5 @@
-#include "ACE_global.hpp"
-#include "error.hpp"
+#include "ACE/ACE_global.hpp"
+#include "ACE/error.hpp"
 #include <algorithm>
 #include <errno.h>  //For waitpid()
 #include <stdio.h>  //For waitpid()
@@ -51,16 +51,16 @@ const std::vector<Maps_pathname_type> ACE_global::mem_type_name_to_scan = {
 };
 
 const char *ACE_global::license =
-#include "../../LICENSE_APPLIED"
+#include "./LICENSE_APPLIED"
     ;
 
 const char *ACE_global::engine_credits =
-#include "../credits.txt"
+#include "./credits.txt"
     ;
 
 const char *ACE_global::intro_display =
 
-#include "../intro.txt"
+#include "./intro.txt"
     ;
 
 std::string ACE_global::ver_string(int major, int minor, int patch) {

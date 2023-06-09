@@ -1,6 +1,6 @@
-#include "../src/freeze.hpp"
-#include "../src/proc_create.hpp" // for proc_fork_busy_child
-#include "../src/proc_rw.hpp"
+#include "ACE/freeze.hpp"
+#include "ACE/proc_create.hpp" // for proc_fork_busy_child
+#include "ACE/proc_rw.hpp"
 #include "../third_party/catch.hpp"
 #include <signal.h> // for SIGKILL
 #include <unistd.h>

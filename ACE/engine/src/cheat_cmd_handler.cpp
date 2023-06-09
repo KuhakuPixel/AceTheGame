@@ -1,10 +1,10 @@
-#include "cheat_cmd_handler.hpp"
-#include "ace_type.hpp"
-#include "cheat_session.hpp"
-#include "common.hpp"
-#include "maps.hpp"
-#include "proc_rw.hpp"
-#include "to_frontend.hpp"
+#include "ACE/cheat_cmd_handler.hpp"
+#include "ACE/ace_type.hpp"
+#include "ACE/cheat_session.hpp"
+#include "ACE/common.hpp"
+#include "ACE/maps.hpp"
+#include "ACE/proc_rw.hpp"
+#include "ACE/to_frontend.hpp"
 #include <limits.h>
 #include <sys/types.h> //For ssize_t
 

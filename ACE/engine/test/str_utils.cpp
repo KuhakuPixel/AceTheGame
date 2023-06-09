@@ -1,5 +1,5 @@
-#include "../src/str_utils.hpp"
-#include "../src/ace_type.hpp"
+#include "ACE/str_utils.hpp"
+#include "ACE/ace_type.hpp"
 #include "../third_party/catch.hpp"
 #include <limits.h>
 #include <string>

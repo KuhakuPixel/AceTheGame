@@ -1,6 +1,6 @@
 
 
-#include "../src/math_util.hpp"
+#include "ACE/math_util.hpp"
 #include "../third_party/catch.hpp"
 
 TEST_CASE("pow_integral", "[math_util]") {

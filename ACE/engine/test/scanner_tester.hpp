@@ -24,15 +24,15 @@
  * */
 
 #pragma once
-#include "../src/error.hpp"
-#include "../src/file_utils.hpp"
-#include "../src/proc_create.hpp"
-#include "../src/proc_rw.hpp"
-#include "../src/ptrace.hpp"
-#include "../src/scan_utils.hpp"
-#include "../src/scanner.hpp"
-#include "../src/simulated_memory.hpp"
-#include "../src/str_utils.hpp"
+#include "ACE/error.hpp"
+#include "ACE/file_utils.hpp"
+#include "ACE/proc_create.hpp"
+#include "ACE/proc_rw.hpp"
+#include "ACE/ptrace.hpp"
+#include "ACE/scan_utils.hpp"
+#include "ACE/scanner.hpp"
+#include "ACE/simulated_memory.hpp"
+#include "ACE/str_utils.hpp"
 #include "../third_party/catch.hpp"
 #include <algorithm>
 #include <stdexcept>

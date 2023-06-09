@@ -89,6 +89,22 @@ set(lib_ACE_src
 add_library(lib_ACE SHARED ${lib_ACE_src})
 add_library(lib_ACE-static STATIC ${lib_ACE_src})
 
+# ============= Populating lib_ACE's Including Directories ============
+# so other project can include it easily  
+# https://stackoverflow.com/questions/48554758/why-create-an-include-directory-in-c-and-c-projects
+
+target_include_directories(lib_ACE
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+target_include_directories(lib_ACE-static
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+# =====================================================================
+
 # ============= link ace's library with dependencies
 # libraries that lib_ACE need
 set(lib_ACE_linked_libraries common_flag cppzmq-static linenoise-static)

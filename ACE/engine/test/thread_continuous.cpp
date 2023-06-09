@@ -1,4 +1,4 @@
-#include "../src/thread_continuous.hpp"
+#include "ACE/thread_continuous.hpp"
 #include "../third_party/catch.hpp"
 
 TEST_CASE("get_thread_running", "[thread_continuous]") {

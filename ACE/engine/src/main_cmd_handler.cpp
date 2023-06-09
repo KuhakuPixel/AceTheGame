@@ -1,10 +1,10 @@
-#include "main_cmd_handler.hpp"
-#include "ACE_global.hpp"
-#include "aslr_edit.hpp"
-#include "cheat.hpp"
-#include "file_utils.hpp"
-#include "proc_stat.hpp"
-#include "to_frontend.hpp"
+#include "ACE/main_cmd_handler.hpp"
+#include "ACE/ACE_global.hpp"
+#include "ACE/aslr_edit.hpp"
+#include "ACE/cheat.hpp"
+#include "ACE/file_utils.hpp"
+#include "ACE/proc_stat.hpp"
+#include "ACE/to_frontend.hpp"
 #include <algorithm>
 #include <unistd.h> // for getpid
 

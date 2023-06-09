@@ -1,5 +1,5 @@
-#include "ACE_jni.hpp"
-#include "thread_continuous.hpp"
+#include "ACE/ACE_jni.hpp"
+#include "ACE/thread_continuous.hpp"
 
 #ifdef __ANDROID__
 #include "ACE_global.hpp"
