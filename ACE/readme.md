@@ -135,6 +135,6 @@ to faccilitate the communication, so the apk only have to run
 of course, because we each piece simpler
 the system as a whole is less efficient, because now we have middleman
 though it shouldn't be a problem in most cases since the apk
-need to send many request quickly
+shouldn't need to send many request quickly
 
 
