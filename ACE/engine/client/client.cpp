@@ -42,9 +42,8 @@ int main(int argc, char **argv) {
     std::string reply = client.request(msg_to_server);
     printf("%s", reply.c_str());
   }
-
-  // if no argument is passed run as console app
-  if (argc == 1) {
+  // just run as console app
+  else {
     // run prompt
     auto on_input = [&](std::string input_str) -> E_loop_statement {
       // dont allow empty input
