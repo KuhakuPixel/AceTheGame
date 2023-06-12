@@ -40,6 +40,9 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 ## Dev Guide
 For build and project structure
 [DEV_GUIDE](./DEV_GUIDE.md)
+
+you can also use this as a library in your apk/project
+see the [docs here](./ACE/readme.md)
 ## Installation
 ### Prerequisite
 - adb program installed and can be run through the command prompt
