@@ -138,3 +138,72 @@ though it shouldn't be a problem in most cases since the apk
 shouldn't need to send many request quickly
 
 
+
+## Using it in your cpp project
+You can also use [ACE](./) directly in your cpp project 
+
+the recommended way is to include this repo as a submodule
+to your git repo, 
+
+check [this repository](https://github.com/KuhakuPixel/ACEAsLib) for complete example on how to use it in your cpp project
+
+```
+git submodule add https://github.com/KuhakuPixel/AceTheGame
+# getting the submodule of AceTheGame repo
+# https://stackoverflow.com/questions/4600835/adding-git-submodule-that-contains-another-submodule
+git submodule update --init --recursive
+```
+
+then in your `CMakeLists.txt` add the following
+
+```
+add_subdirectory(./AceTheGame/ACE/engine/)
+
+...
+
+# link with ACE's lib
+target_link_libraries(YOUR BINARY
+    PRIVATE lib_ACE-static
+)
+# or, if you prefer dynamic library
+
+target_link_libraries(YOUR BINARY
+    PRIVATE lib_ACE
+)
+
+```
+
+
+then you can send command request like `scan = 0`, `list`, pretty much the same
+as the command that you would send when using 
+[ACE](./) directly
+
+```
+#include "ACE/engine_client.hpp"
+#include "ACE/engine_serverhpp"
+#include <thread>
+
+int target_process_pid = 1234;
+int port = 56666;
+// start ACE's server
+std::thread server_thread = std::thread(){
+    [=](){
+        engine_server_start(target_process_pid, port)
+    }
+}
+// get the client to talk to the server
+engine_client client = engine_client(port);
+
+// get addresses whose value is 0
+client.request("scan = 0");
+
+// get addresses whose value has increased
+client.request("filter >");
+
+// list matches
+std::string reply = client.request("list");
+printf("%s\n", reply.c_str());
+
+// reset scan
+client.request("reset");
+```
