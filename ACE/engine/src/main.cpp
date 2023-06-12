@@ -1,12 +1,12 @@
 #include "../third_party/CLI11.hpp"
-#include "ACE_global.hpp"
-#include "engine_server.hpp"
-#include "input.hpp"
-#include "main_cmd_creator.hpp"
-#include "main_cmd_handler.hpp"
-#include "server.hpp"
-#include "str_utils.hpp"
-#include "to_frontend.hpp"
+#include "ACE/ACE_global.hpp"
+#include "ACE/engine_server.hpp"
+#include "ACE/input.hpp"
+#include "ACE/main_cmd_creator.hpp"
+#include "ACE/main_cmd_handler.hpp"
+#include "ACE/server.hpp"
+#include "ACE/str_utils.hpp"
+#include "ACE/to_frontend.hpp"
 #include <functional>
 #include <map>
 #include <stdbool.h>
@@ -115,11 +115,6 @@ int main(int argc, char **argv) {
   CLI::App main_app{"ACE Engine, a game hacking tool for linux and android\n"
                     "By Kuhaku Pixel"};
 
-  //
-  main_app.add_option("--use-gui-protocol", ACE_global::use_gui_protocol,
-                      "enable engine's gui protocol\n"
-                      "for communication via stdin\n");
-
   // ============================ attach commands ============
   std::string attach_cmd_help =
       "attach to a process with pid for gui communication via zeromq\n";
@@ -128,7 +123,7 @@ int main(int argc, char **argv) {
   int engine_server_port = ACE_global::engine_server_client_default_port;
   CLI::App *attach_pid_cmd =
       main_app.add_subcommand("attach-pid", attach_cmd_help);
-  attach_pid_cmd->add_option("--pid", pid_to_attach)->required();
+  attach_pid_cmd->add_option("<PID>", pid_to_attach)->required();
   attach_pid_cmd->add_option("--port", engine_server_port,
                              "default port: " +
                                  std::to_string(engine_server_port));

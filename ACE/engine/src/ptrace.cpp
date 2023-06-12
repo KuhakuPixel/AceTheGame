@@ -1,7 +1,7 @@
 
-#include "ptrace.hpp"
-#include "input.hpp"
-#include "to_frontend.hpp"
+#include "ACE/ptrace.hpp"
+#include "ACE/input.hpp"
+#include "ACE/to_frontend.hpp"
 
 #include <errno.h>      //For waitpid()
 #include <signal.h>     // For kill()

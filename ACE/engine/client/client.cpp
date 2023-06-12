@@ -1,9 +1,9 @@
-#include "../src/ACE_global.hpp"
-#include "../src/engine_client.hpp"
-#include "../src/input.hpp"
-#include "../src/main_cmd_creator.hpp"
-#include "../src/to_frontend.hpp"
 #include "../third_party/CLI11.hpp"
+#include "ACE/ACE_global.hpp"
+#include "ACE/engine_client.hpp"
+#include "ACE/input.hpp"
+#include "ACE/main_cmd_creator.hpp"
+#include "ACE/to_frontend.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -42,8 +42,7 @@ int main(int argc, char **argv) {
     std::string reply = client.request(msg_to_server);
     printf("%s", reply.c_str());
   }
-
-  // if no argument is passed run as console app
+  // just run as console app if no args passed
   if (argc == 1) {
     // run prompt
     auto on_input = [&](std::string input_str) -> E_loop_statement {
@@ -58,5 +57,6 @@ int main(int argc, char **argv) {
 
     run_input_loop(on_input, "Engine Server");
   }
+
   return 0;
 }

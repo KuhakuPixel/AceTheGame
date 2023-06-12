@@ -24,7 +24,7 @@ public class ACEServer {
                     assert (new File(path).exists());
 
                     System.out.println("Binary path is " + path);
-                    String[] cmds = new String[]{path, "attach-pid", "--pid", pid.toString(), "--port", portNum.toString()};
+                    String[] cmds = new String[]{path, "attach-pid", pid.toString(), "--port", portNum.toString()};
 
                     String cmd_string = String.join(" ", cmds);
                     System.out.printf("Running command %s\n", cmd_string);

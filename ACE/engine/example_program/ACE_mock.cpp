@@ -3,7 +3,6 @@
  * TODO: add program parameter
  * to support for different type of testing
  * */
-#include "../src/to_frontend.hpp"
 #include <string>
 
 int main(int argc, char **argv) {
@@ -24,9 +23,7 @@ int main(int argc, char **argv) {
       enter = getchar();
     }
     val++;
-    frontend_mark_task_begin();
     printf("%s\n", std::to_string(val).c_str());
-    frontend_mark_task_done();
   }
   return 0;
 }

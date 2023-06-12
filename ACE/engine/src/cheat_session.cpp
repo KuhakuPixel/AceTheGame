@@ -1,12 +1,12 @@
-#include "cheat_session.hpp"
+#include "ACE/cheat_session.hpp"
 #include "../third_party/CLI11.hpp"
-#include "ace_type.hpp"
-#include "cheat_cmd_handler.hpp"
-#include "common.hpp"
-#include "input.hpp"
-#include "proc_stat.hpp"
-#include "ptrace.hpp"
-#include "to_frontend.hpp"
+#include "ACE/ace_type.hpp"
+#include "ACE/cheat_cmd_handler.hpp"
+#include "ACE/common.hpp"
+#include "ACE/input.hpp"
+#include "ACE/proc_stat.hpp"
+#include "ACE/ptrace.hpp"
+#include "ACE/to_frontend.hpp"
 
 // =================================================
 template <typename T>

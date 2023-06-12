@@ -1,7 +1,7 @@
-#include "../src/ACE_global.hpp"
-#include "../src/engine_client.hpp"
-#include "../src/engine_server.hpp"
-#include "../src/proc_create.hpp"
+#include "ACE/ACE_global.hpp"
+#include "ACE/engine_client.hpp"
+#include "ACE/engine_server.hpp"
+#include "ACE/proc_create.hpp"
 #include "../third_party/catch.hpp"
 #include <stdlib.h>
 #include <thread>

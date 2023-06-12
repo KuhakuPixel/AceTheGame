@@ -2,9 +2,9 @@
 /*
  * adapted from hello world client inc++
  * */
-#include "engine_client.hpp"
-#include "ACE_global.hpp"
-#include "server.hpp"
+#include "ACE/engine_client.hpp"
+#include "ACE/ACE_global.hpp"
+#include "ACE/server.hpp"
 #include <stdlib.h>
 
 engine_client::engine_client(std::string client_binded_address) {

@@ -1,6 +1,6 @@
-#include "freeze.hpp"
-#include "common.hpp"
-#include "proc_rw.hpp"
+#include "ACE/freeze.hpp"
+#include "ACE/common.hpp"
+#include "ACE/proc_rw.hpp"
 
 template <typename T> freezer<T>::freezer(int program_pid) {
   this->program_pid = program_pid;

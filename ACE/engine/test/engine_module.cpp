@@ -1,4 +1,4 @@
-#include "../src/engine_module.hpp"
+#include "ACE/engine_module.hpp"
 #include "../third_party/catch.hpp"
 #include <unistd.h>
 TEST_CASE("engine_module", "[engine_module]") {

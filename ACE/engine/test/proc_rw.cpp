@@ -1,5 +1,5 @@
-#include "../src/proc_rw.hpp"
-#include "../src/proc_create.hpp" // for proc_fork_busy_child
+#include "ACE/proc_rw.hpp"
+#include "ACE/proc_create.hpp" // for proc_fork_busy_child
 #include "../third_party/catch.hpp"
 #include <limits.h>     // for INT_MAX
 #include <sys/signal.h> // for SIGKILL

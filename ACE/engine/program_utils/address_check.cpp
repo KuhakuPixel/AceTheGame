@@ -6,9 +6,9 @@
  * TODO: integrate this with the main program
  * */
 
-#include "../src/ace_type.hpp"
-#include "../src/file_utils.hpp"
-#include "../src/maps.hpp"
+#include "ACE/ace_type.hpp"
+#include "ACE/file_utils.hpp"
+#include "ACE/maps.hpp"
 #include "../third_party/CLI11.hpp"
 #include <stdio.h>
 

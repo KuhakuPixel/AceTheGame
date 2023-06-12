@@ -1,5 +1,5 @@
-#include "../src/ace_type.hpp"
-#include "../src/endian.hpp"
+#include "ACE/ace_type.hpp"
+#include "ACE/endian.hpp"
 #include "scanner_tester.hpp"
 #include <limits.h>
 #include <stdlib.h>

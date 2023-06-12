@@ -1,4 +1,4 @@
-#include "../src/maps.hpp"
+#include "ACE/maps.hpp"
 #include "../third_party/catch.hpp"
 // TODO: add test for special memory region with only one '['
 TEST_CASE("parse_proc_map_str", "[proc_map]") {

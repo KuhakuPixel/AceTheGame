@@ -1,7 +1,7 @@
-#include "../src/scanner.hpp"
-#include "../src/error.hpp"
-#include "../src/file_utils.hpp"
-#include "../src/str_utils.hpp"
+#include "ACE/scanner.hpp"
+#include "ACE/error.hpp"
+#include "ACE/file_utils.hpp"
+#include "ACE/str_utils.hpp"
 #include "../third_party/catch.hpp"
 #include "scanner_tester.hpp"
 #include <limits.h>
