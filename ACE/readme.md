@@ -121,7 +121,7 @@ because [jni can't run as root, you can only run native binary as root](https://
 for POC checkout [ATG](../ATG/)'s source code 
 
 ### Architecture
-![](./docs/backgend_apk_arch.png)
+![](./docs/backend_apk_arch.png)
 
 [ACE](./) used [ZMQ](https://github.com/zeromq/libzmq) for IPC via sockets
 so the client/apk will have to also use it in order to send/receive message
