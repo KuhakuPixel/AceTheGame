@@ -30,7 +30,7 @@ android {
     defaultConfig {
         externalNativeBuild {
             cmake {
-                targets "ACE", "engine_client"
+                targets "ACE", "ACE_attach_client", "ACE_util_client"
                 arguments "-DANDROID_PLATFORM=android-23", "-DACE_ANDROID_BINARY_ROOT_OUTPUT_DIR=./src/main/assets/bin/ACE", "-DCMAKE_BUILD_TYPE=Release"
                 // the cpu arch we want to support :D
                 abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'

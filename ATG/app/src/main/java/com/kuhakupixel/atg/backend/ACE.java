@@ -120,23 +120,23 @@ public class ACE {
      * for example, listing running processes, checking if a certain program is running
      * and etc
      * */
-    private final ACEClient mainACEClient;
+    private final ACEUtilClient aceUtilClient;
 
     /**
      * used when attached to process, to scan and edit its memory
      * */
-    private ACEClient attachACEClient;
+    private ACEAttachClient aceAttachClient;
     private final Context context;
     private final List<NumTypeInfo> availableNumTypes;
 
     public ACE(Context context) throws IOException {
         this.context = context;
-        this.mainACEClient = new ACEClient(context, Port.GetOpenPort());
+        this.aceUtilClient = new ACEUtilClient(context, Port.GetOpenPort());
         this.availableNumTypes = GetAvailableNumTypes();
     }
 
     public Boolean IsAttached() {
-        return attachACEClient != null;
+        return aceAttachClient != null;
     }
 
     private void AssertAttached() {
@@ -153,13 +153,13 @@ public class ACE {
         return serverThread;
     }
 
-    public ACEClient GetAttachACEClient() {
-        return this.attachACEClient;
+    public ACEAttachClient GetAttachACEClient() {
+        return this.aceAttachClient;
     }
 
     public void AttachToRunningServer(Integer port) throws IOException {
         AssertNoAttachInARow();
-        this.attachACEClient = new ACEClient(context, port);
+        this.aceAttachClient = new ACEAttachClient(context, port);
     }
 
     /**
@@ -178,7 +178,7 @@ public class ACE {
     public void DeAttach() throws InterruptedException {
         AssertAttached();
         // tell server to die
-        attachACEClient.Request("stop");
+        aceAttachClient.Request("stop");
         // only stop the server if we start one
         if (serverThread !=null) {
             // wait for server's thread to finish
@@ -186,7 +186,7 @@ public class ACE {
             serverThread.join();
             //
             serverThread = null;
-            attachACEClient = null;
+            aceAttachClient = null;
         }
     }
 
@@ -208,13 +208,13 @@ public class ACE {
     // =============== this commands require attach ===================
     public String CheaterCmd(String cmd) {
         AssertAttached();
-        String out = attachACEClient.Request(cmd);
+        String out = aceAttachClient.Request(cmd);
         return out;
     }
 
     public List<String> CheaterCmdAsList(String cmd) {
         AssertAttached();
-        return attachACEClient.RequestAsList(cmd);
+        return aceAttachClient.RequestAsList(cmd);
     }
 
     public Long GetAttachedPid() {
@@ -270,11 +270,11 @@ public class ACE {
 
     // =============== this commands don't require attach ===================
     public List<String> MainCmdAsList(String cmd) {
-        return this.mainACEClient.MainCmdAsList(cmd);
+        return this.aceUtilClient.RequestAsList(cmd);
     }
 
     public String MainCmd(String cmd) {
-        return this.mainACEClient.MainCmd(cmd);
+        return this.aceUtilClient.Request(cmd);
     }
 
     public List<ProcInfo> ListRunningProc() {
