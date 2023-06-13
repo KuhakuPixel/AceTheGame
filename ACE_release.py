@@ -20,8 +20,6 @@ LINUX_RELEASE_DIR = "./linux"
 ANDROID_RELEASE_DIR = "./android"
 CMAKELIST_PATH = "./ACE/engine/"
 BUILD_DIR = "./build"
-ACE_BIN_NAME = "ACE"
-ACE_CLIENT_BIN_NAME = "engine_client"
 
 def gen_make_and_make_ACE(
     build_dir: str,
