@@ -163,12 +163,19 @@ public class ACETest {
         for (int i = 0; i < attachDeattachCount; i++) {
             Process p = ProcUtil.RunBusyProgram();
             Long pid = ProcUtil.GetPid(p);
+            //
+            Assert.assertNull(ace.GetServerThread());
+            Assert.assertNull(ace.GetAttachACEClient());
             ace.Attach(pid);
+            //
             Assert.assertEquals(true, ace.IsAttached());
             Assert.assertEquals(pid, ace.GetAttachedPid());
             Assert.assertNotNull(ace.GetServerThread());
+            Assert.assertNotNull(ace.GetAttachACEClient());
+            //
             ace.DeAttach();
             Assert.assertNull(ace.GetServerThread());
+            Assert.assertNull(ace.GetAttachACEClient());
         }
     }
 
