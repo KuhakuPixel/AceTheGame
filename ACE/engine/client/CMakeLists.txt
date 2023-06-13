@@ -1,24 +1,29 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(engine_client)
+project(ACE_client)
 find_package(cppzmq)
 
 include(../cmake_utils/CMakeLists.txt)
-# ======================= client ==================
-add_executable(
-	${PROJECT_NAME}
-	client.cpp 
-)
+# ======================== binaries ===============
+set(client_programs ACE_attach_client ACE_util_client)
+foreach(program_name IN LISTS client_programs)
+	# get the source code of the program
+	set(program_name_src_file "${program_name}.cpp")
+	# ======================= client ==================
+	add_executable(
+		${program_name}
+		${program_name_src_file}
+	)
 
-#TODO: maybe link statically in the future
-target_link_libraries(
-	${PROJECT_NAME}
-	PRIVATE cppzmq-static lib_ACE-static
-)
+	target_link_libraries(
+		${program_name}
+		PRIVATE cppzmq-static lib_ACE-static
+	)
 
-strip_target_on_release(${PROJECT_NAME})
-# ============================================= install options ========================
+	strip_target_on_release(${program_name})
+	# ============================================= install options ========================
 
-install (TARGETS ${PROJECT_NAME}
-    DESTINATION bin)
-# ======================================================================================
+	install (TARGETS ${program_name}
+	    DESTINATION bin)
+	# ======================================================================================
+endforeach()

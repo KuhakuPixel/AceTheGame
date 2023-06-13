@@ -11,12 +11,8 @@
 int main(int argc, char **argv) {
 
   // ================ parse args =================
-  CLI::App app{"ACE engine client: client for communicating to ACE's server"};
-  // add ACE's main command to client
-  main_mode_options _main_mode_options = main_mode_options();
-  CLI::App *main_cmd = app.add_subcommand(
-      "main", "ACE's main command that doesn't require attach");
-  main_cmd_create(main_cmd, &_main_mode_options);
+  CLI::App app{"client for to ACE's server whose has been "
+               "attached to a process"};
   // --msg command
   std::string msg_to_server = "";
   CLI::Option *msg_option = app.add_option(

@@ -1,3 +1,2 @@
 # client
-
-client cli for communicating to ace engine's server
+client binaries for communicating to ace engine's server and common utilities
