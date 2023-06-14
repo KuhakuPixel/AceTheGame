@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.kuhakupixel.atg.backend.ACE;
-import com.kuhakupixel.atg.backend.ACEClient;
+import com.kuhakupixel.atg.backend.ACEAttachClient;
 import com.kuhakupixel.atg.backend.NumTypeInfo;
 import com.kuhakupixel.atg.backend.NumUtil;
 import com.kuhakupixel.atg.backend.ProcInfo;
@@ -90,7 +90,7 @@ public class ACETest {
             try {
                 ace.CheaterCmd(s);
                 Assert.fail();
-            } catch (ACEClient.InvalidCommandException e) {
+            } catch (ACEAttachClient.InvalidCommandException e) {
                 Assert.assertTrue(true);
             }
         }
@@ -99,7 +99,7 @@ public class ACETest {
             try {
                 ace.MainCmd(s);
                 Assert.fail();
-            } catch (ACEClient.InvalidCommandException e) {
+            } catch (ACEAttachClient.InvalidCommandException e) {
                 Assert.assertTrue(true);
             }
         }
@@ -119,7 +119,7 @@ public class ACETest {
         try {
             ace.CheaterCmd("scan = 0");
             Assert.assertTrue(true);
-        } catch (ACEClient.InvalidCommandException e) {
+        } catch (ACEAttachClient.InvalidCommandException e) {
             Assert.fail();
         }
         ace.DeAttach();
@@ -163,12 +163,19 @@ public class ACETest {
         for (int i = 0; i < attachDeattachCount; i++) {
             Process p = ProcUtil.RunBusyProgram();
             Long pid = ProcUtil.GetPid(p);
+            //
+            Assert.assertNull(ace.GetServerThread());
+            Assert.assertNull(ace.GetAttachACEClient());
             ace.Attach(pid);
+            //
             Assert.assertEquals(true, ace.IsAttached());
             Assert.assertEquals(pid, ace.GetAttachedPid());
             Assert.assertNotNull(ace.GetServerThread());
+            Assert.assertNotNull(ace.GetAttachACEClient());
+            //
             ace.DeAttach();
             Assert.assertNull(ace.GetServerThread());
+            Assert.assertNull(ace.GetAttachACEClient());
         }
     }
 

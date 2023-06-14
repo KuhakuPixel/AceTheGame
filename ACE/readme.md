@@ -17,14 +17,14 @@ a port can also be specified
 ./ACE attach-pid <PID TO ATTACH> --port 56666
 ```
 
-then to send message to the server, the [engine client](./engine/client/) can be 
+then to send message to the server, the [attach_client](./engine/client/) can be 
 used, the message is the same as what you would give as a normal user to 
 [ACE](./)
 
 note that the port must be the same as the one you provided when running [ACE](./)
 
 ```
-./engine_client --port 56666
+./attach_client --port 56666
 (Engine Server) scan = 0
 
 Found 8 regions to be scanned
@@ -71,17 +71,17 @@ Also, you can run it as a one time command and output by using
 `--msg` options
 
 ```
-./engine_client --msg "attached" --port 56666
+./attach_client --msg "attached" --port 56666
 attached_ok
 ```
 
 ```
-./engine_client --port 56666 --msg reset
+./attach_client --port 56666 --msg reset
 resetting all scan
 ```
 
 ```
-./engine_client --port 56666 --msg "scan = 0"
+./attach_client --port 56666 --msg "scan = 0"
 Found 8 regions to be scanned
 PROGRESS_BEGIN
 1/8
@@ -128,9 +128,9 @@ so the client/apk will have to also use it in order to send/receive message
 using `ZMQ` can be hard because of the implementation details on a certain 
 programming language (binding, and etc).
 
-Thats why `engine client` is used as the middleman
+Thats why `attach_client` is used as the middleman
 to faccilitate the communication, so the apk only have to run 
-`engine client` binary, without having to know/use `ZMQ`
+`attach_client` binary, without having to know/use `ZMQ`
 
 of course, because we each piece simpler
 the system as a whole is less efficient, because now we have middleman
@@ -179,7 +179,7 @@ as the command that you would send when using
 [ACE](./) directly
 
 ```
-#include "ACE/engine_client.hpp"
+#include "ACE/attach_client.hpp"
 #include "ACE/engine_serverhpp"
 #include <thread>
 
@@ -192,7 +192,7 @@ std::thread server_thread = std::thread(){
     }
 }
 // get the client to talk to the server
-engine_client client = engine_client(port);
+attach_client client = attach_client(port);
 
 // get addresses whose value is 0
 client.request("scan = 0");

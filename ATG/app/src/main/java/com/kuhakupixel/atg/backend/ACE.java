@@ -115,25 +115,28 @@ public class ACE {
      * if null means it isn't attached to anything
      */
     private Thread serverThread = null;
-    private final ACEClient client;
-    private final Integer portNum;
+    /**
+     * used for use cases that are unrelated to a specific process
+     * for example, listing running processes, checking if a certain program is running
+     * and etc
+     * */
+    private final ACEUtilClient aceUtilClient;
+
+    /**
+     * used when attached to process, to scan and edit its memory
+     * */
+    private ACEAttachClient aceAttachClient;
     private final Context context;
     private final List<NumTypeInfo> availableNumTypes;
 
-
-    public ACE(Context context, Integer portNum) throws IOException {
-        this.portNum = portNum;
+    public ACE(Context context) throws IOException {
         this.context = context;
-        this.client = new ACEClient(context, portNum);
+        this.aceUtilClient = new ACEUtilClient(context, Port.GetOpenPort());
         this.availableNumTypes = GetAvailableNumTypes();
     }
 
-    public ACE(Context context) throws IOException {
-        this(context, Port.GetOpenPort());
-    }
-
     public Boolean IsAttached() {
-        return serverThread != null;
+        return aceAttachClient != null;
     }
 
     private void AssertAttached() {
@@ -150,21 +153,41 @@ public class ACE {
         return serverThread;
     }
 
+    public ACEAttachClient GetAttachACEClient() {
+        return this.aceAttachClient;
+    }
+
+    public void AttachToRunningServer(Integer port) throws IOException {
+        AssertNoAttachInARow();
+        this.aceAttachClient = new ACEAttachClient(context, port);
+    }
+
+    /**
+     * this will create an ACE's server that is attached to process [pid]
+     * */
     public void Attach(Long pid) throws IOException {
         AssertNoAttachInARow();
-        this.serverThread = ACEServer.GetStarterThread(this.context, pid, this.portNum);
+        // start the server
+        Integer port = Port.GetOpenPort();
+        this.serverThread = ACEServer.GetStarterThread(this.context, pid, port);
         this.serverThread.start();
+        AttachToRunningServer(port);
     }
+
 
     public void DeAttach() throws InterruptedException {
         AssertAttached();
         // tell server to die
-        client.Request("stop");
-        // wait for server's thread to finish
-        // to make sure we are not attached anymore
-        serverThread.join();
-        //
-        serverThread = null;
+        aceAttachClient.Request("stop");
+        // only stop the server if we start one
+        if (serverThread !=null) {
+            // wait for server's thread to finish
+            // to make sure we are not attached anymore
+            serverThread.join();
+            //
+            serverThread = null;
+            aceAttachClient = null;
+        }
     }
 
     public Integer GetNumTypeBitSize(NumType numType) {
@@ -185,13 +208,13 @@ public class ACE {
     // =============== this commands require attach ===================
     public String CheaterCmd(String cmd) {
         AssertAttached();
-        String out = client.Request(cmd);
+        String out = aceAttachClient.Request(cmd);
         return out;
     }
 
     public List<String> CheaterCmdAsList(String cmd) {
         AssertAttached();
-        return client.RequestAsList(cmd);
+        return aceAttachClient.RequestAsList(cmd);
     }
 
     public Long GetAttachedPid() {
@@ -247,11 +270,11 @@ public class ACE {
 
     // =============== this commands don't require attach ===================
     public List<String> MainCmdAsList(String cmd) {
-        return this.client.MainCmdAsList(cmd);
+        return this.aceUtilClient.RequestAsList(cmd);
     }
 
     public String MainCmd(String cmd) {
-        return this.client.MainCmd(cmd);
+        return this.aceUtilClient.Request(cmd);
     }
 
     public List<ProcInfo> ListRunningProc() {
