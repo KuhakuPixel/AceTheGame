@@ -119,12 +119,12 @@ public class ACE {
      * used for use cases that are unrelated to a specific process
      * for example, listing running processes, checking if a certain program is running
      * and etc
-     * */
+     */
     private final ACEUtilClient aceUtilClient;
 
     /**
      * used when attached to process, to scan and edit its memory
-     * */
+     */
     private ACEAttachClient aceAttachClient;
     private final Context context;
     private final List<NumTypeInfo> availableNumTypes;
@@ -157,21 +157,21 @@ public class ACE {
         return this.aceAttachClient;
     }
 
-    public void AttachToRunningServer(Integer port) throws IOException {
+    public void ConnectToACEServer(Integer port) throws IOException {
         AssertNoAttachInARow();
         this.aceAttachClient = new ACEAttachClient(context, port);
     }
 
     /**
      * this will create an ACE's server that is attached to process [pid]
-     * */
+     */
     public void Attach(Long pid) throws IOException {
         AssertNoAttachInARow();
         // start the server
         Integer port = Port.GetOpenPort();
         this.serverThread = ACEServer.GetStarterThread(this.context, pid, port);
         this.serverThread.start();
-        AttachToRunningServer(port);
+        ConnectToACEServer(port);
     }
 
 
@@ -179,14 +179,14 @@ public class ACE {
         AssertAttached();
         // tell server to die
         aceAttachClient.Request("stop");
+        aceAttachClient = null;
         // only stop the server if we start one
-        if (serverThread !=null) {
+        if (serverThread != null) {
             // wait for server's thread to finish
             // to make sure we are not attached anymore
             serverThread.join();
             //
             serverThread = null;
-            aceAttachClient = null;
         }
     }
 

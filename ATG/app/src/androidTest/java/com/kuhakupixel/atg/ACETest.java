@@ -7,8 +7,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.kuhakupixel.atg.backend.ACE;
 import com.kuhakupixel.atg.backend.ACEAttachClient;
+import com.kuhakupixel.atg.backend.ACEServer;
 import com.kuhakupixel.atg.backend.NumTypeInfo;
 import com.kuhakupixel.atg.backend.NumUtil;
+import com.kuhakupixel.atg.backend.Port;
 import com.kuhakupixel.atg.backend.ProcInfo;
 import com.kuhakupixel.atg.backend.ProcUtil;
 
@@ -192,6 +194,79 @@ public class ACETest {
         p.destroy();
         Assert.assertFalse(ace.IsPidRunning(pid));
 
+    }
+
+    @Test
+    public void ConnectToACEServer() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        // start ACE server and connect to it
+        Integer port = Port.GetOpenPort();
+        Thread serverThread = ACEServer.GetStarterThread(context, pid, port);
+        serverThread.start();
+
+        //
+        Assert.assertEquals(false, ace.IsAttached());
+        Assert.assertNull(ace.GetAttachACEClient());
+        Assert.assertNull(ace.GetServerThread());
+        //
+        ace.ConnectToACEServer(port);
+        //
+        Assert.assertEquals(true, ace.IsAttached());
+        Assert.assertNotNull(ace.GetAttachACEClient());
+        Assert.assertNull(ace.GetServerThread());
+        //
+        ace.DeAttach();
+        //
+        Assert.assertNull(ace.GetAttachACEClient());
+        Assert.assertEquals(false, ace.IsAttached());
+        Assert.assertNull(ace.GetServerThread());
+
+        p.destroy();
+    }
+
+    @Test
+    public void ExceptionWhenConnectToACEServer() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        // attach in a row exception
+        {
+            ACE ace = new ACE(context);
+            // start ACE server and connect to it
+            Integer port = Port.GetOpenPort();
+            Thread serverThread = ACEServer.GetStarterThread(context, pid, port);
+            serverThread.start();
+
+            //
+            ace.ConnectToACEServer(port);
+            try {
+                ace.ConnectToACEServer(port);
+                Assert.fail();
+            } catch (ACE.AttachingInARowException e) {
+                Assert.assertTrue(true);
+            }
+        }
+        // DeAttach without attach
+        {
+            ACE ace = new ACE(context);
+            // start ACE server and connect to it
+            Integer port = Port.GetOpenPort();
+            Thread serverThread = ACEServer.GetStarterThread(context, pid, port);
+            serverThread.start();
+
+            try {
+                ace.DeAttach();
+                Assert.fail();
+            } catch (ACE.NoAttachException e) {
+                Assert.assertTrue(true);
+            }
+
+        }
+
+        p.destroy();
     }
 
     @Test
