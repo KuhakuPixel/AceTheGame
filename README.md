@@ -104,8 +104,8 @@ adb shell chmod +x /data/local/tmp/ACE
 #### Non-Rooted Device
 
 ```
-adb push ./engine_client /data/local/tmp
-adb shell chmod +x /data/local/tmp/engine_client 
+adb push ./attach_client /data/local/tmp
+adb shell chmod +x /data/local/tmp/attach_client 
 ```
 
 this binary will be used to scan and edit memory of the apk
@@ -313,10 +313,10 @@ the syntax of installing apk is
    ```
    cd /data/local/tmp
    ```
-3. run the engine client  
+3. run the attach_client  
  
    ```
-   ./engine_client
+   ./attach_client
    ```
    which should output
    ```

@@ -1,6 +1,6 @@
 #include "../third_party/CLI11.hpp"
 #include "ACE/ACE_global.hpp"
-#include "ACE/engine_client.hpp"
+#include "ACE/attach_client.hpp"
 #include "ACE/input.hpp"
 #include "ACE/main_cmd_creator.hpp"
 #include "ACE/to_frontend.hpp"
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
     return (app).exit(e);
   }
   // ==============================================
-  engine_client client = engine_client(port);
+  attach_client client = attach_client(port);
 
   // only output one time  request
   if (*msg_option) {

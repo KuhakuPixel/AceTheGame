@@ -2,25 +2,25 @@
 /*
  * adapted from hello world client inc++
  * */
-#include "ACE/engine_client.hpp"
+#include "ACE/attach_client.hpp"
 #include "ACE/ACE_global.hpp"
 #include "ACE/server.hpp"
 #include <stdlib.h>
 
-engine_client::engine_client(std::string client_binded_address) {
+attach_client::attach_client(std::string client_binded_address) {
   this->client_binded_address = client_binded_address;
   // connect the socket to address
   this->socket.connect(client_binded_address);
 }
-engine_client::engine_client(int port)
-    : engine_client::engine_client(
-          ACE_global::engine_client_base_zmq_address + std::to_string(port)
+attach_client::attach_client(int port)
+    : attach_client::attach_client(
+          ACE_global::attach_client_base_zmq_address + std::to_string(port)
 
       ) {
   // nothing
 }
 
-std::string engine_client::request(std::string msg) {
+std::string attach_client::request(std::string msg) {
   // make the request from string
   zmq::message_t request(msg.size());
   memcpy(request.data(), msg.c_str(), msg.size());
@@ -34,7 +34,7 @@ std::string engine_client::request(std::string msg) {
   return reply.to_string();
 }
 
-void engine_client::stop_server() {
+void attach_client::stop_server() {
   //
   this->request(server::stop_request_str);
 }

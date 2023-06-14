@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <zmq.hpp>
-class engine_client {
+class attach_client {
 private:
   std::string client_binded_address;
   const int io_thread_count = 1;
@@ -13,9 +13,9 @@ public:
   /*
    * [client_binded_address]: binded address of the client
    * */
-  engine_client(std::string client_binded_address);
+  attach_client(std::string client_binded_address);
   //
-  engine_client(int port);
+  attach_client(int port);
 
   /*
    * send message expecting reply

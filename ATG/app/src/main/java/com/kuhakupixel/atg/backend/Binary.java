@@ -19,8 +19,8 @@ public class Binary {
 
     public static final Map<Type, String> binaryNameToFileNameMap = new HashMap<Type, String>() {
         {
-            put(Type.attachClient, "ACE_attach_client");
-            put(Type.utilClient, "ACE_util_client");
+            put(Type.attachClient, "attach_client");
+            put(Type.utilClient, "util_client");
             put(Type.server, "ACE");
 
         }

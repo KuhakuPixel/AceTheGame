@@ -1,5 +1,5 @@
 #include "ACE/ACE_global.hpp"
-#include "ACE/engine_client.hpp"
+#include "ACE/attach_client.hpp"
 #include "ACE/engine_server.hpp"
 #include "ACE/proc_create.hpp"
 #include "../third_party/catch.hpp"
@@ -18,8 +18,8 @@ TEST_CASE("engine_server_client", "[engine_server_client]") {
 
   );
   //
-  engine_client client =
-      engine_client(ACE_global::engine_server_client_default_port);
+  attach_client client =
+      attach_client(ACE_global::engine_server_client_default_port);
   // test if client can connect to server
   REQUIRE("attached_ok\n" == client.request("attached"));
   // stop server and wait for thread to finish
