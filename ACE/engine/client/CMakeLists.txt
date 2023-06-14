@@ -17,7 +17,7 @@ foreach(program_name IN LISTS client_programs)
 
 	target_link_libraries(
 		${program_name}
-		PRIVATE cppzmq-static lib_ACE-static
+		PRIVATE lib_ACE-static
 	)
 
 	strip_target_on_release(${program_name})
