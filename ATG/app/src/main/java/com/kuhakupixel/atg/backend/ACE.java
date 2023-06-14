@@ -149,14 +149,6 @@ public class ACE {
             throw new AttachingInARowException("Cannot Attach without DeAttaching first");
     }
 
-    public Thread GetServerThread() {
-        return serverThread;
-    }
-
-    public ACEAttachClient GetAttachACEClient() {
-        return this.aceAttachClient;
-    }
-
     public void ConnectToACEServer(Integer port) throws IOException {
         AssertNoAttachInARow();
         this.aceAttachClient = new ACEAttachClient(context, port);
@@ -185,8 +177,6 @@ public class ACE {
             // wait for server's thread to finish
             // to make sure we are not attached anymore
             serverThread.join();
-            //
-            serverThread = null;
         }
     }
 

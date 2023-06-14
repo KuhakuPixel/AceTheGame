@@ -62,13 +62,8 @@ public class ACETest {
         // should be attached and we can get its pid
         Assert.assertEquals(true, ace.IsAttached());
         Assert.assertEquals(pid, ace.GetAttachedPid());
-        // we should have thread that runs the server
-        Assert.assertNotNull(ace.GetServerThread());
-
         ace.DeAttach();
-        // server's thread shouldn't exist anymore
-        Assert.assertNull(ace.GetServerThread());
-
+        Assert.assertEquals(false, ace.IsAttached());
 
     }
 
@@ -166,18 +161,13 @@ public class ACETest {
             Process p = ProcUtil.RunBusyProgram();
             Long pid = ProcUtil.GetPid(p);
             //
-            Assert.assertNull(ace.GetServerThread());
-            Assert.assertNull(ace.GetAttachACEClient());
             ace.Attach(pid);
             //
             Assert.assertEquals(true, ace.IsAttached());
             Assert.assertEquals(pid, ace.GetAttachedPid());
-            Assert.assertNotNull(ace.GetServerThread());
-            Assert.assertNotNull(ace.GetAttachACEClient());
             //
             ace.DeAttach();
-            Assert.assertNull(ace.GetServerThread());
-            Assert.assertNull(ace.GetAttachACEClient());
+            Assert.assertEquals(false, ace.IsAttached());
         }
     }
 
@@ -209,21 +199,14 @@ public class ACETest {
 
         //
         Assert.assertEquals(false, ace.IsAttached());
-        Assert.assertNull(ace.GetAttachACEClient());
-        Assert.assertNull(ace.GetServerThread());
         //
         ace.ConnectToACEServer(port);
         //
         Assert.assertEquals(true, ace.IsAttached());
-        Assert.assertNotNull(ace.GetAttachACEClient());
-        Assert.assertNull(ace.GetServerThread());
         //
         ace.DeAttach();
         //
-        Assert.assertNull(ace.GetAttachACEClient());
         Assert.assertEquals(false, ace.IsAttached());
-        Assert.assertNull(ace.GetServerThread());
-
         p.destroy();
     }
 
