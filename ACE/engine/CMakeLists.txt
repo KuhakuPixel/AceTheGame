@@ -89,6 +89,23 @@ set(lib_ACE_src
 add_library(lib_ACE SHARED ${lib_ACE_src})
 add_library(lib_ACE-static STATIC ${lib_ACE_src})
 
+# ============= link ace's library with dependencies
+#
+set(lib_ACE_linked_libraries common_flag cppzmq-static linenoise-static)
+
+message("linked libraries: ${lib_ACE_linked_libraries}")
+# add extra library to link to for android (logging and etc)
+if(ANDROID)
+	list(APPEND lib_ACE_linked_libraries android log)
+endif()
+
+# make it public, so other program can use the library that is linked to lib_ACE
+# if we don't make it public, the program linked with lib_ACE have to link
+# manually against cppzmq-static for example, which is not pretty :D
+target_link_libraries(lib_ACE PUBLIC ${lib_ACE_linked_libraries})
+target_link_libraries(lib_ACE-static PUBLIC ${lib_ACE_linked_libraries})
+
+
 # ============= Populating lib_ACE's Including Directories ============
 # so other project can include it easily  
 # https://stackoverflow.com/questions/48554758/why-create-an-include-directory-in-c-and-c-projects
@@ -104,19 +121,6 @@ target_include_directories(lib_ACE-static
 )
 
 # =====================================================================
-
-# ============= link ace's library with dependencies
-# libraries that lib_ACE need
-set(lib_ACE_linked_libraries common_flag cppzmq-static linenoise-static)
-
-message("linked libraries: ${lib_ACE_linked_libraries}")
-# add extra library to link to for android (logging and etc)
-if(ANDROID)
-	list(APPEND lib_ACE_linked_libraries android log)
-endif()
-
-target_link_libraries(lib_ACE PRIVATE ${lib_ACE_linked_libraries})
-target_link_libraries(lib_ACE-static PRIVATE ${lib_ACE_linked_libraries})
 
 # ================================================================================
 # for unit testing the the file's utils copy necessary files into the build
