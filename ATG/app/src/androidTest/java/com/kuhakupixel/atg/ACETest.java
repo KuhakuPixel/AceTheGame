@@ -94,7 +94,7 @@ public class ACETest {
         // for commands that don't require attach
         for (String s : invalidCmd) {
             try {
-                ace.MainCmd(s);
+                ace.UtilCmd(s);
                 Assert.fail();
             } catch (ACEAttachClient.InvalidCommandException e) {
                 Assert.assertTrue(true);
