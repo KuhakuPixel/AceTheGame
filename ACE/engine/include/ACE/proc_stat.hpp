@@ -28,3 +28,9 @@ std::vector<struct proc_info> list_processes();
  * check if process with [pid] is currently running
  * */
 bool proc_is_running(int pid);
+
+/*
+ * get process name of [pid]
+ * returns empty when no [pid] is running
+ * */
+std::string proc_get_pid_name(int pid);

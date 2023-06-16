@@ -40,6 +40,11 @@ void process_map_cmd_handler(int pid, bool ps_map_list_all) {
   frontend_print("------------------------------------\n");
 }
 
+void process_name_cmd_handler(int pid) {
+  std::string name = proc_get_pid_name(pid);
+  frontend_print("%s\n", name.c_str());
+}
+
 void process_is_running_handler(int pid) {
   bool is_running = proc_is_running(pid);
   printf("%s\n", is_running ? "true" : "false");

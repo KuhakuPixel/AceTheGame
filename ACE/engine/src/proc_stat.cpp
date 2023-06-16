@@ -124,3 +124,12 @@ bool proc_is_running(int pid) {
   }
   return false;
 }
+
+std::string proc_get_pid_name(int pid) {
+  std::vector<struct proc_info> processes_infos = list_processes();
+  for (size_t i = 0; i < processes_infos.size(); i++) {
+    if (processes_infos[i].pid == pid)
+      return processes_infos[i].proc_name;
+  }
+  return "";
+}
