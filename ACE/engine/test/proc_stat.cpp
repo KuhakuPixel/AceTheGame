@@ -1,7 +1,7 @@
 #include "ACE/proc_stat.hpp"
+#include "../third_party/catch.hpp"
 #include "ACE/error.hpp"
 #include "ACE/str_utils.hpp"
-#include "../third_party/catch.hpp"
 #include <spawn.h>
 #include <string.h>
 #include <string>
@@ -145,4 +145,11 @@ TEST_CASE("proc_is_running", "[proc_stat]") {
     break;
   }
   str_arr_free(args, argc);
+}
+
+TEST_CASE("proc_get_pid_name", "[proc_stat]") {
+  std::vector<struct proc_info> processes_infos = list_processes();
+  int pid = processes_infos[0].pid;
+  REQUIRE(processes_infos.size() > 0);
+  REQUIRE(processes_infos[0].proc_name == proc_get_pid_name(pid));
 }

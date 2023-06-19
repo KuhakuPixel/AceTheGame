@@ -119,12 +119,12 @@ public class ACE {
      * used for use cases that are unrelated to a specific process
      * for example, listing running processes, checking if a certain program is running
      * and etc
-     * */
+     */
     private final ACEUtilClient aceUtilClient;
 
     /**
      * used when attached to process, to scan and edit its memory
-     * */
+     */
     private ACEAttachClient aceAttachClient;
     private final Context context;
     private final List<NumTypeInfo> availableNumTypes;
@@ -149,29 +149,21 @@ public class ACE {
             throw new AttachingInARowException("Cannot Attach without DeAttaching first");
     }
 
-    public Thread GetServerThread() {
-        return serverThread;
-    }
-
-    public ACEAttachClient GetAttachACEClient() {
-        return this.aceAttachClient;
-    }
-
-    public void AttachToRunningServer(Integer port) throws IOException {
+    public void ConnectToACEServer(Integer port) throws IOException {
         AssertNoAttachInARow();
         this.aceAttachClient = new ACEAttachClient(context, port);
     }
 
     /**
      * this will create an ACE's server that is attached to process [pid]
-     * */
+     */
     public void Attach(Long pid) throws IOException {
         AssertNoAttachInARow();
         // start the server
         Integer port = Port.GetOpenPort();
         this.serverThread = ACEServer.GetStarterThread(this.context, pid, port);
         this.serverThread.start();
-        AttachToRunningServer(port);
+        ConnectToACEServer(port);
     }
 
 
@@ -179,14 +171,12 @@ public class ACE {
         AssertAttached();
         // tell server to die
         aceAttachClient.Request("stop");
+        aceAttachClient = null;
         // only stop the server if we start one
-        if (serverThread !=null) {
+        if (serverThread != null) {
             // wait for server's thread to finish
             // to make sure we are not attached anymore
             serverThread.join();
-            //
-            serverThread = null;
-            aceAttachClient = null;
         }
     }
 
@@ -269,18 +259,18 @@ public class ACE {
     }
 
     // =============== this commands don't require attach ===================
-    public List<String> MainCmdAsList(String cmd) {
+    public List<String> UtilCmdAsList(String cmd) {
         return this.aceUtilClient.RequestAsList(cmd);
     }
 
-    public String MainCmd(String cmd) {
+    public String UtilCmd(String cmd) {
         return this.aceUtilClient.Request(cmd);
     }
 
     public List<ProcInfo> ListRunningProc() {
         List<ProcInfo> runningProcs = new ArrayList<ProcInfo>();
         // use --reverse so newest process will be shown first
-        List<String> runningProcsInfoStr = MainCmdAsList("ps ls --reverse");
+        List<String> runningProcsInfoStr = UtilCmdAsList("ps ls --reverse");
         // parse each string
         for (String procInfoStr : runningProcsInfoStr) {
             runningProcs.add(new ProcInfo(procInfoStr));
@@ -290,7 +280,7 @@ public class ACE {
 
     public boolean IsPidRunning(Long pid) {
         String[] cmdArr = new String[]{"ps", "is_running", pid.toString()};
-        String boolStr = MainCmd(String.join(" ", cmdArr));
+        String boolStr = UtilCmd(String.join(" ", cmdArr));
         assert (boolStr.equals("true") || boolStr.equals("false"));
         return Boolean.parseBoolean(boolStr);
     }
@@ -305,7 +295,7 @@ public class ACE {
         List<NumTypeInfo> numTypeInfos = new ArrayList<NumTypeInfo>();
         String[] cmdArr = new String[]{"info", "type"};
 
-        List<String> out = MainCmdAsList(String.join(" ", cmdArr));
+        List<String> out = UtilCmdAsList(String.join(" ", cmdArr));
         for (String s : out) {
             String[] splitted = s.split(" ");
             assert 2 == splitted.length;
@@ -325,7 +315,7 @@ public class ACE {
         // etc
         List<Operator> availableOperators = new ArrayList<Operator>();
         String[] cmdArr = new String[]{"info", "operator"};
-        List<String> out = MainCmdAsList(String.join(" ", cmdArr));
+        List<String> out = UtilCmdAsList(String.join(" ", cmdArr));
         for (String s : out)
             availableOperators.add(operatorEnumToSymbolBiMap.inverse().get(s));
         return availableOperators;

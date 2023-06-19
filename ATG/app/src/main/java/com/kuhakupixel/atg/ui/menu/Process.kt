@@ -1,9 +1,12 @@
 package com.kuhakupixel.atg.ui.menu
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -75,17 +78,14 @@ fun ProcessTable(
 ) {
 
 
-    CreateTable(
-        modifier = Modifier.padding(16.dp),
+    CreateTable(modifier = Modifier.padding(16.dp),
         colNames = listOf("Pid", "Name"),
         colWeights = listOf(0.3f, 0.7f),
         itemCount = processList.size,
         minEmptyItemCount = 50,
         onRowClicked = { rowIndex: Int ->
             onProcessSelected(
-                processList[rowIndex]
-                    .GetPidStr()
-                    .toLong(),
+                processList[rowIndex].GetPidStr().toLong(),
                 processList[rowIndex].GetName(),
             )
 
@@ -97,33 +97,45 @@ fun ProcessTable(
             if (colIndex == 1) {
                 Text(text = processList[rowIndex].GetName(), modifier = cellModifier)
             }
-        }
-    )
+        })
 }
 
 @Composable
 private fun _ProcessMenu(
     runningProcState: SnapshotStateList<ProcInfo>,
     onRefreshClicked: () -> Unit,
+    onConnectToACEServerClicked: () -> Unit,
     onAttach: (pid: Long, procName: String) -> Unit,
 
 
     ) {
 
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Column() {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             Spacer(modifier = Modifier.height(10.dp))
             Text("Selected process: ${attachedStatusString.value}")
             Spacer(modifier = Modifier.height(10.dp))
-            Button(onClick = onRefreshClicked, modifier = Modifier.padding(start = 10.dp)) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_refresh),
-                    contentDescription = "Refresh",
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = onRefreshClicked, modifier = Modifier.padding(start = 10.dp)) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_refresh),
+                        contentDescription = "Refresh",
+                    )
+                }
+
+                Button(
+                    onClick = onConnectToACEServerClicked,
+                    modifier = Modifier.padding(start = 10.dp)
+                ) {
+                    Text("Connect to ACE Server")
+                }
             }
 
             ProcessTable(
@@ -142,14 +154,13 @@ fun refreshProcList(ace: ACE?, processList: SnapshotStateList<ProcInfo>) {
     // grab new one and add to the list
     val runningProcs: List<ProcInfo>? = ace!!.ListRunningProc()
     if (runningProcs != null) {
-        for (proc in runningProcs)
-            processList.add(proc)
+        for (proc in runningProcs) processList.add(proc)
     }
 }
 
 @Composable
 fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
-    val ace: ACE? = globalConf?.getAce()
+    val ace: ACE = globalConf?.getAce()!!
     // list of processes that are gonna be shown
     val currentProcList = remember { SnapshotStateList<ProcInfo>() }
     //
@@ -190,7 +201,21 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
                 },
             )
         },
-        onRefreshClicked = { refreshProcList(ace, currentProcList) }
+        onRefreshClicked = { refreshProcList(ace, currentProcList) },
+        onConnectToACEServerClicked = {
+
+            overlayManager!!.InputDialog(
+                "Port: ",
+                onConfirm = { input: String ->
+                    val port = input.toInt()
+                    if (ace.IsAttached())
+                        ace.DeAttach()
+                    ace.ConnectToACEServer(port)
+                    attachedStatusString.value = "${ace.GetAttachedPid()} - ACE's Engine Server"
+                },
+            )
+
+        },
     )
 
 }
