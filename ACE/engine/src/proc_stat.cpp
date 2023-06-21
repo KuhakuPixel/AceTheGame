@@ -62,6 +62,7 @@ struct proc_info parse_proc_stat_line(std::string line) {
 
 struct proc_info parse_proc_stat_file(const char *path_to_stat) {
   struct proc_info ps_info;
+
   std::vector<std::string> stat_file = read_file(path_to_stat);
 
   if (stat_file.size() == 1) {

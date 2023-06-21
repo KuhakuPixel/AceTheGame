@@ -96,9 +96,19 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
       ->required();
   ps_name_cmd->callback(
 
-      [=]() -> void {
-        process_name_cmd_handler(current_options_ptr->pid);
-      }
+      [=]() -> void { process_name_cmd_handler(current_options_ptr->pid); }
+
+  );
+
+  // stat
+  CLI::App *ps_stat_cmd = ps_cmd->add_subcommand("stat", "stat of process");
+
+  ps_stat_cmd
+      ->add_option("<PID>", current_options_ptr->pid, "<pid> of the process")
+      ->required();
+  ps_stat_cmd->callback(
+
+      [=]() -> void { process_stat_cmd_handler(current_options_ptr->pid); }
 
   );
 

@@ -45,6 +45,12 @@ void process_name_cmd_handler(int pid) {
   frontend_print("%s\n", name.c_str());
 }
 
+void process_stat_cmd_handler(int pid) {
+  proc_info p_info = get_proc_info(pid);
+  std::string desc = proc_state_to_desc_map.at(p_info.state).c_str();
+  frontend_print("%c: %s\n", p_info.state, desc.c_str());
+}
+
 void process_is_running_handler(int pid) {
   bool is_running = proc_is_running(pid);
   printf("%s\n", is_running ? "true" : "false");

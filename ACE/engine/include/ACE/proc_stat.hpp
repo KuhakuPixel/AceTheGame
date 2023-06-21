@@ -4,8 +4,26 @@
 
 #pragma once
 #include "ace_type.hpp"
+#include <map>
 #include <string>
 #include <vector>
+
+static const std::map<char, std::string> proc_state_to_desc_map = {
+    {'R', "Running"},
+    {'S', "Sleeping in an interruptible wait"},
+    {'D', "Waiting in uninterruptible disk sleep"},
+    {'Z', "Zombie"},
+    {'T', "Stopped (on a signal) or (before Linux 2.6.33) trace stopped"},
+    {'t', "Tracing stop (Linux 2.6.33 onward)"},
+    {'W', "Paging (only before Linux 2.6.0)"},
+    {'X', "Dead (from Linux 2.6.0 onward)"},
+    {'x', "Dead (Linux 2.6.33 to 3.13 only)"},
+    {'K', "Wakekill (Linux 2.6.33 to 3.13 only)"},
+    {'W', "Waking (Linux 2.6.33 to 3.13 only)"},
+    {'P', "Parked (Linux 3.9 to 3.13 only)"},
+
+};
+
 struct proc_info {
   std::string proc_name;
   int pid;
@@ -18,6 +36,7 @@ struct proc_info {
 
 struct proc_info parse_proc_stat_line(std::string line);
 
+struct proc_info get_proc_info(int pid);
 struct proc_info parse_proc_stat_file(const char *path_to_stat);
 /*
  * get all running processes's info
