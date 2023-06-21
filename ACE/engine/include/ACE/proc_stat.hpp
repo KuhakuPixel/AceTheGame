@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#define INVALID_PROC_PID -1
+
 static const std::map<char, std::string> proc_state_to_desc_map = {
     {'R', "Running"},
     {'S', "Sleeping in an interruptible wait"},
@@ -41,8 +43,7 @@ struct proc_info get_proc_info(int pid);
 /**
  * parse a proc/[pid]/stat file and return proc_info
  * if file doesn't exist or parsing fails for any other reason
- * will return proc_info.pid of 0
-:wa!
+ * will return proc_info.pid of [INVALID_PROC_PID]
  * */
 struct proc_info parse_proc_stat_file(const char *path_to_stat);
 

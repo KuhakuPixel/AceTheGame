@@ -2,12 +2,14 @@
 #include "../third_party/catch.hpp"
 #include "ACE/error.hpp"
 #include "ACE/str_utils.hpp"
+#include <limits.h>
 #include <spawn.h>
 #include <string.h>
 #include <string>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
+
 TEST_CASE("parse_proc_stat_line", "[proc_stat]") {
 
   /*
@@ -97,6 +99,16 @@ TEST_CASE("parse_proc_stat_file", "[proc_stat]") {
   REQUIRE(7254 == ps_info.ppid);
   REQUIRE(9585 == ps_info.pgrp);
   REQUIRE(492875 == ps_info.start_time);
+}
+
+TEST_CASE("get_proc_info", "[proc_stat]") {
+
+  // trying to parse a /proc/<pid>/stat that doesn't exist
+
+  // in linux maximum process count is only 32768 (32 bit) and 2^22 (4 million)
+  // on 64 system, so we can safely pid with INT_MAX (2^31) will never exist
+  struct proc_info ps_info = get_proc_info(INT_MAX);
+  REQUIRE(INVALID_PROC_PID == ps_info.pid);
 }
 
 TEST_CASE("proc_is_running", "[proc_stat]") {

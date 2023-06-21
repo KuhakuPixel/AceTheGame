@@ -62,9 +62,9 @@ struct proc_info parse_proc_stat_line(std::string line) {
 
 struct proc_info parse_proc_stat_file(const char *path_to_stat) {
   struct proc_info ps_info;
-  ps_info.pid = 0;
+  ps_info.pid = INVALID_PROC_PID;
 
-  // [path_to_stat] doesnt existm, just return now
+  // [path_to_stat] doesnt exist, just return now
   if (!file_exist(path_to_stat))
     return ps_info;
   // read and parse te file
@@ -78,7 +78,7 @@ struct proc_info parse_proc_stat_file(const char *path_to_stat) {
   else {
 
     ps_info.proc_name = "";
-    ps_info.pid = 0;
+    ps_info.pid = INVALID_PROC_PID;
   }
   return ps_info;
 }
@@ -111,7 +111,7 @@ std::vector<struct proc_info> list_processes() {
           proc_info p_info = get_proc_info(pid);
           // make sure the parsing is a success by checking
           // if the returned pid is not sure
-          if (p_info.pid != 0)
+          if (p_info.pid != INVALID_PROC_PID)
             processes_info.push_back(p_info);
         }
       }
