@@ -1,12 +1,14 @@
 #include "ACE/file_utils.hpp"
 #include "ACE/error.hpp"
 #include <dirent.h>
+#include <filesystem>
 #include <fstream>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+
 /*
  * Read a file and return std::vector<std::string> (each string corresponds to
  * each line)
@@ -109,7 +111,11 @@ void write_file(const char *file_name, std::vector<std::string> content) {
 void write_file(const char *file_name, std::string content) {
   write_file(file_name, std::vector<std::string>{content});
 }
-std::vector<std::string> list_directories(const char *current_dir) {
+
+std::vector<std::string>
+list_directories(const char *current_dir,
+                 std::function<void(std::string dir_name)> on_each_iteration) {
+
   /*
    *
    * list all files : https://stackoverflow.com/a/4204758/14073678
@@ -117,26 +123,23 @@ std::vector<std::string> list_directories(const char *current_dir) {
    *  https://man7.org/linux/man-pages/man2/stat.2.html
    * */
   std::vector<std::string> directories = {};
-  struct dirent *dir;
-  DIR *d = opendir(current_dir);
-  if (d) {
-    while ((dir = readdir(d)) != NULL) {
-      // we need to append the file name with `current_dir` because
-      // dir->d_name only returns filename without the path
-      std::string path_name =
-          std::string(current_dir) + "/" + std::string(dir->d_name);
-      struct stat stat_s;
-      // stat return information about `path_name`
-      // which is given in `stat_s`
-      // return 0 on success
-      if (stat(path_name.c_str(), &stat_s) == 0 && S_ISDIR(stat_s.st_mode)) {
-        if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0)
-          directories.push_back(std::string(dir->d_name));
+
+  // https://stackoverflow.com/a/38463871/14073678
+  // https://stackoverflow.com/a/37494654/14073678
+
+  for (const auto &entry : std::filesystem::directory_iterator(current_dir)) {
+    if (entry.is_directory()) {
+      // get only directory name
+      std::string full_path_str = entry.path();
+      std::filesystem::path p = std::filesystem::path(full_path_str);
+      std::string dir_name = p.filename().string();
+      // callback and push to list
+      if (on_each_iteration != NULL) {
+        on_each_iteration(dir_name);
       }
+      directories.push_back(dir_name);
     }
-    closedir(d);
-  } else
-    error_exit("Directory %s is not found , Fatal error\n", current_dir);
+  }
   return directories;
 }
 

@@ -6,6 +6,7 @@
 void process_map_cmd_handler(int pid, bool ps_map_list_all);
 
 void process_name_cmd_handler(int pid);
+void process_stat_cmd_handler(int pid);
 
 void process_is_running_handler(int pid);
 

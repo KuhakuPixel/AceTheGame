@@ -62,6 +62,12 @@ struct proc_info parse_proc_stat_line(std::string line) {
 
 struct proc_info parse_proc_stat_file(const char *path_to_stat) {
   struct proc_info ps_info;
+  ps_info.pid = INVALID_PROC_PID;
+
+  // [path_to_stat] doesnt exist, just return now
+  if (!file_exist(path_to_stat))
+    return ps_info;
+  // read and parse te file
   std::vector<std::string> stat_file = read_file(path_to_stat);
 
   if (stat_file.size() == 1) {
@@ -72,10 +78,16 @@ struct proc_info parse_proc_stat_file(const char *path_to_stat) {
   else {
 
     ps_info.proc_name = "";
-    ps_info.pid = 0;
+    ps_info.pid = INVALID_PROC_PID;
   }
   return ps_info;
 }
+struct proc_info get_proc_info(int pid) {
+  char path_to_stat[200];
+  snprintf(path_to_stat, 199, "/proc/%d/stat", pid);
+  return parse_proc_stat_file(path_to_stat);
+}
+
 std::vector<struct proc_info> list_processes() {
   /*
    * use posix's /proc filesystem to get all runnning
@@ -89,30 +101,22 @@ std::vector<struct proc_info> list_processes() {
 
   std::vector<struct proc_info> processes_info = {};
 
-  std::vector<std::string> dirs_at_proc = list_directories("/proc/");
+  std::vector<std::string> dirs_at_proc = list_directories(
 
-  for (size_t i = 0; i < dirs_at_proc.size(); i++) {
-    std::string current_dir = dirs_at_proc[i].c_str();
-    if (str_is_numeric(current_dir.c_str())) {
-      int pid = std::stoi(current_dir);
-      //
-      char path_to_stat[200];
-      snprintf(path_to_stat, 199, "/proc/%d/stat", pid);
+      "/proc/",
 
-      /*
-       * after we list directory at /proc/, some process might be killed
-       * before we reach execution here but still recored in [dirs_at_proc]
-       *
-       *
-       * therefore we need to check if the file still exist before we parse
-       * the file
-       * */
-      if (!file_exist(path_to_stat))
-        continue;
-      struct proc_info current_proc_info = parse_proc_stat_file(path_to_stat);
-      processes_info.push_back(current_proc_info);
-    }
-  }
+      [&processes_info](std::string dir_name) {
+        if (str_is_numeric(dir_name.c_str())) {
+          int pid = std::stoi(dir_name);
+          proc_info p_info = get_proc_info(pid);
+          // make sure the parsing is a success by checking
+          // if the returned pid is not sure
+          if (p_info.pid != INVALID_PROC_PID)
+            processes_info.push_back(p_info);
+        }
+      }
+
+  );
   return processes_info;
 }
 

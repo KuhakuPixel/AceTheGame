@@ -17,11 +17,9 @@ public class ACEBaseClient {
     }
 
     String binaryPath = "";
-    Integer port;
 
-    public ACEBaseClient(Context context, Integer port, Binary.Type type) throws IOException {
+    public ACEBaseClient(Context context, Binary.Type type) throws IOException {
         this.binaryPath = Binary.GetBinPath(context, type);
-        this.port = port;
     }
 
     public void AssertValidCommand(List<String> out) throws InvalidCommandException {

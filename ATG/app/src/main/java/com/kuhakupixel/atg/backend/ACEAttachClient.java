@@ -7,8 +7,11 @@ import java.util.List;
 
 public class ACEAttachClient extends ACEBaseClient {
 
+    Integer port;
+
     public ACEAttachClient(Context context, Integer port) throws IOException {
-        super(context,port,Binary.Type.attachClient);
+        super(context, Binary.Type.attachClient);
+        this.port = port;
     }
 
     public List<String> RequestAsList(String requestCmd) throws InvalidCommandException {

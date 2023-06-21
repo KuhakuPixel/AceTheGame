@@ -131,7 +131,7 @@ public class ACE {
 
     public ACE(Context context) throws IOException {
         this.context = context;
-        this.aceUtilClient = new ACEUtilClient(context, Port.GetOpenPort());
+        this.aceUtilClient = new ACEUtilClient(context);
         this.availableNumTypes = GetAvailableNumTypes();
     }
 
