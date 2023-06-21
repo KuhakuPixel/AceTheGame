@@ -111,7 +111,10 @@ void write_file(const char *file_name, std::vector<std::string> content) {
 void write_file(const char *file_name, std::string content) {
   write_file(file_name, std::vector<std::string>{content});
 }
-std::vector<std::string> list_directories(const char *current_dir) {
+
+std::vector<std::string>
+list_directories(const char *current_dir,
+                 std::function<void(std::string dir_name)> on_each_iteration) {
 
   /*
    *
@@ -126,9 +129,14 @@ std::vector<std::string> list_directories(const char *current_dir) {
 
   for (const auto &entry : std::filesystem::directory_iterator(current_dir)) {
     if (entry.is_directory()) {
+      // get only directory name
       std::string full_path_str = entry.path();
       std::filesystem::path p = std::filesystem::path(full_path_str);
       std::string dir_name = p.filename().string();
+      // callback and push to list
+      if (on_each_iteration != NULL) {
+        on_each_iteration(dir_name);
+      }
       directories.push_back(dir_name);
     }
   }
