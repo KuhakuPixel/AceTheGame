@@ -62,7 +62,12 @@ struct proc_info parse_proc_stat_line(std::string line) {
 
 struct proc_info parse_proc_stat_file(const char *path_to_stat) {
   struct proc_info ps_info;
+  ps_info.pid = 0;
 
+  // [path_to_stat] doesnt existm, just return now
+  if (!file_exist(path_to_stat))
+    return ps_info;
+  // read and parse te file
   std::vector<std::string> stat_file = read_file(path_to_stat);
 
   if (stat_file.size() == 1) {
@@ -103,8 +108,11 @@ std::vector<struct proc_info> list_processes() {
       [&processes_info](std::string dir_name) {
         if (str_is_numeric(dir_name.c_str())) {
           int pid = std::stoi(dir_name);
-
-          processes_info.push_back(get_proc_info(pid));
+          proc_info p_info = get_proc_info(pid);
+          // make sure the parsing is a success by checking
+          // if the returned pid is not sure
+          if (p_info.pid != 0)
+            processes_info.push_back(p_info);
         }
       }
 

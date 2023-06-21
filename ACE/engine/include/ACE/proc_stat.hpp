@@ -37,7 +37,15 @@ struct proc_info {
 struct proc_info parse_proc_stat_line(std::string line);
 
 struct proc_info get_proc_info(int pid);
+
+/**
+ * parse a proc/[pid]/stat file and return proc_info
+ * if file doesn't exist or parsing fails for any other reason
+ * will return proc_info.pid of 0
+:wa!
+ * */
 struct proc_info parse_proc_stat_file(const char *path_to_stat);
+
 /*
  * get all running processes's info
  * */
