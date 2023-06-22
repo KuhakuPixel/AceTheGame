@@ -35,7 +35,7 @@ void list_cmd_handler(const ACE_scanner<T> *scanner, size_t list_max_count) {
           val_display = swap_endian<T>(val);
         //
 
-        frontend_print("0x%llx %s\n", addr,
+        frontend::print("0x%llx %s\n", addr,
                        std::to_string(val_display).c_str());
       },
 
@@ -47,26 +47,26 @@ void list_cmd_handler(const ACE_scanner<T> *scanner, size_t list_max_count) {
 template <typename T>
 void matchcount_cmd_handler(const ACE_scanner<T> *scanner) {
   const match_storage<T> &scan_res = scanner->get_current_scan_result();
-  frontend_print("%zu\n", scan_res.get_matches_count());
+  frontend::print("%zu\n", scan_res.get_matches_count());
 }
 
 void pid_cmd_handler(int pid) {
   //
-  frontend_print("%d\n", pid);
+  frontend::print("%d\n", pid);
 }
 template <typename T>
 void filter_cmd_handler(ACE_scanner<T> *scanner,
                         Scan_Utils::E_operator_type operator_type,
                         const cheat_mode_config *cheat_config) {
   if (!cheat_config->initial_scan_done)
-    frontend_print("WARN: no initial scan has been setup\n");
+    frontend::print("WARN: no initial scan has been setup\n");
 
   double filter_time = -1;
   TIME_ACTION({ scanner->filter_val(operator_type); }, &filter_time);
 
-  frontend_print("current matches: %zu\n",
+  frontend::print("current matches: %zu\n",
                  scanner->get_current_scan_result().get_matches_count());
-  frontend_print("Done in: %lf s\n", filter_time);
+  frontend::print("Done in: %lf s\n", filter_time);
 }
 
 template <typename T>
@@ -100,7 +100,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
             if (is_suitable || cheat_config->scan_all_region)
               segments_to_scan.push_back(proc_mem_segments[i]);
           }
-          frontend_print("Found %zu regions to be scanned\n",
+          frontend::print("Found %zu regions to be scanned\n",
                          segments_to_scan.size());
           // =================================================================
           // do scan
@@ -121,9 +121,9 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
 
   );
 
-  frontend_print("current matches: %zu\n",
+  frontend::print("current matches: %zu\n",
                  scanner->get_current_scan_result().get_matches_count());
-  frontend_print("Done in: %lf s\n", scan_time);
+  frontend::print("Done in: %lf s\n", scan_time);
 }
 template <typename T>
 void write_cmd_handler(ACE_scanner<T> *scanner, T val_to_write) {
@@ -145,9 +145,9 @@ void readat_cmd_handler(proc_rw<T> *process_rw, ADDR address) {
   T read_val = process_rw->retrieve_val((byte *)address);
 
   if (errno != 0)
-    frontend_print("error while reading: %s\n", strerror(errno));
+    frontend::print("error while reading: %s\n", strerror(errno));
   else
-    frontend_print("%s\n", std::to_string(read_val).c_str());
+    frontend::print("%s\n", std::to_string(read_val).c_str());
 }
 
 template <typename T>
@@ -163,17 +163,17 @@ void read_arr_cmd_handler(proc_rw<T> *process_rw, ADDR address,
 
   // check for some warnings/error
   if (errno != 0) {
-    frontend_print("WARN: an error occured %s (%d)\n", strerror(errno), errno);
+    frontend::print("WARN: an error occured %s (%d)\n", strerror(errno), errno);
   }
   if (successfull_read_length != read_length) {
-    frontend_print("WARN: cannot read %zu bytes as requested\n", read_length);
-    frontend_print("WARN: only read %zu bytes\n", successfull_read_length);
+    frontend::print("WARN: cannot read %zu bytes as requested\n", read_length);
+    frontend::print("WARN: only read %zu bytes\n", successfull_read_length);
   }
 
   // print out the read memory
   for (size_t i = 0; i < successfull_read_length; i++) {
-    frontend_print("0x%llx ", address + i);
-    frontend_print("%s\n", std::to_string(mem_buff[i]).c_str());
+    frontend::print("0x%llx ", address + i);
+    frontend::print("%s\n", std::to_string(mem_buff[i]).c_str());
   }
 
   // free allocated memory
@@ -189,7 +189,7 @@ void writeat_cmd_handler(proc_rw<T> *process_rw, ADDR address, T val_to_write) {
   ssize_t ret_val = process_rw->write_val((byte *)address, (T)val_to_write);
 
   if (errno != 0 && ret_val == -1) {
-    frontend_print("Error while writting at %p: %s\n", (byte *)address,
+    frontend::print("Error while writting at %p: %s\n", (byte *)address,
                    strerror(errno));
     return;
   }
@@ -198,11 +198,11 @@ template <typename T>
 void update_cmd_handler(ACE_scanner<T> *scanner,
                         const cheat_mode_config *cheat_config) {
   if (!cheat_config->initial_scan_done) {
-    frontend_print("WARN: No initial scan is done\n");
+    frontend::print("WARN: No initial scan is done\n");
     return;
   }
   scanner->update_current_scan_result();
-  frontend_print("Done updating value!\n");
+  frontend::print("Done updating value!\n");
 }
 
 template <typename T>
@@ -219,13 +219,13 @@ void scan_level_cmd_handler(ACE_scanner<T> *scanner,
   std::string new_scan_level_val =
       Scan_Utils::E_scan_level_to_str.at(scan_level);
 
-  frontend_print("set scan level to %s\n", new_scan_level_val.c_str());
+  frontend::print("set scan level to %s\n", new_scan_level_val.c_str());
 }
 
 void type_cmd_handler(E_num_type scan_type,
                       cheat_cmd_ret *cheater_on_line_ret_ptr) {
   cheater_on_line_ret_ptr->set_next_scan_type(scan_type);
-  frontend_print("set scan level to %s\n",
+  frontend::print("set scan level to %s\n",
                  E_num_type_to_str_map.at(scan_type).c_str());
 }
 
@@ -233,7 +233,7 @@ template <typename T>
 void freeze_at_cmd_handler(freezer<T> *freezer_manager, ADDR addr) {
   int ret_val = freezer_manager->freeze_addr(addr);
   if (ret_val != 0) {
-    frontend_print("Fail to freeze address %lld\n", addr);
+    frontend::print("Fail to freeze address %lld\n", addr);
     return;
   }
 }
@@ -243,7 +243,7 @@ void freeze_at_val_cmd_handler(freezer<T> *freezer_manager, ADDR addr,
                                T num_val) {
   int ret_val = freezer_manager->freeze_addr_with_val(addr, num_val);
   if (ret_val != 0) {
-    frontend_print("Fail to freeze address %lld\n", addr);
+    frontend::print("Fail to freeze address %lld\n", addr);
     return;
   }
 }
@@ -252,7 +252,7 @@ template <typename T>
 void unfreeze_at_cmd_handler(freezer<T> *freezer_manager, ADDR addr) {
   int ret_val = freezer_manager->unfreeze_addr(addr);
   if (ret_val != 0) {
-    frontend_print("Fail to stop freezing address %lld\n", addr);
+    frontend::print("Fail to stop freezing address %lld\n", addr);
     return;
   }
 }
@@ -270,7 +270,7 @@ void freeze_all_cmd_handler(const ACE_scanner<T> *scanner,
       }
 
   );
-  frontend_print("freezed all scan's result\n");
+  frontend::print("freezed all scan's result\n");
 }
 template <typename T>
 void freeze_list_cmd_handler(const freezer<T> *freezer_manager) {
@@ -283,15 +283,15 @@ void freeze_list_cmd_handler(const freezer<T> *freezer_manager) {
 
   // print out all addresses
   for (auto it = freeze_maps.begin(); it != freeze_maps.end(); it++) {
-    frontend_print("0x%llx\n", it->first);
-    frontend_print("==========================\n");
+    frontend::print("0x%llx\n", it->first);
+    frontend::print("==========================\n");
   }
 }
 
 template <typename T>
 void unfreeze_all_cmd_handler(freezer<T> *freezer_manager) {
   freezer_manager->stop_all();
-  frontend_print("all previously freezed value stopped\n");
+  frontend::print("all previously freezed value stopped\n");
 }
 
 /*

@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
   try {
     (app).parse(argc, argv);
   } catch (const CLI::ParseError &e) {
-    frontend_handle_cli_parse_error(true, e);
+    frontend::handle_cli_parse_error(true, e);
     return (app).exit(e);
   }
   return 0;

@@ -51,7 +51,7 @@ public:
    * whoose input are sent with [input_str]
    *
    * and then the output can be captured
-   * by optionally by using [frontend_pop_output]
+   * by optionally by using [frontend::pop_output]
    * from [to_frontend.hpp]
    *
    * */

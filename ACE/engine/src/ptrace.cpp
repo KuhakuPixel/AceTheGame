@@ -35,7 +35,7 @@ int ptrace_attach_pid(int pid, bool force_stop) {
   // All ptrace() operations that fail return -1, the exceptions are
   // PTRACE_PEEK* operations
   if (ptrace(PTRACE_ATTACH, pid, NULL, NULL) == -1) {
-    frontend_mark_task_fail("Error while attaching %s\n", strerror(errno));
+    frontend::mark_task_fail("Error while attaching %s\n", strerror(errno));
     return -1;
   }
   if (force_stop) {
@@ -51,7 +51,7 @@ int ptrace_attach_pid(int pid, bool force_stop) {
      * */
 
     if (kill(pid, SIGSTOP) == -1) {
-      frontend_mark_task_fail("Cannot force stop with SIGSTOP: %s\n",
+      frontend::mark_task_fail("Cannot force stop with SIGSTOP: %s\n",
                               strerror(errno));
       return -1;
     }
@@ -62,9 +62,9 @@ int ptrace_attach_pid(int pid, bool force_stop) {
   // (sent by signal)
   int status;
   if (waitpid(pid, &status, 0) == -1 || !WIFSTOPPED(status)) {
-    frontend_mark_task_fail("Error while waiting for process to stop: %s\n",
+    frontend::mark_task_fail("Error while waiting for process to stop: %s\n",
                             strerror(errno));
-    frontend_mark_task_fail("Error code: %d\n", errno);
+    frontend::mark_task_fail("Error code: %d\n", errno);
     return -1;
   }
 
@@ -80,7 +80,7 @@ int ptrace_deattach_pid(int pid, bool force_stop) {
      * for us
      * */
     if (kill(pid, SIGCONT) == -1) {
-      frontend_mark_task_fail(
+      frontend::mark_task_fail(
           "Cannot continue process while deattaching with SIGCONT: %s\n",
           strerror(errno));
       return -1;
@@ -88,7 +88,7 @@ int ptrace_deattach_pid(int pid, bool force_stop) {
   }
 
   if (ptrace(PTRACE_DETACH, pid, NULL, NULL) == -1) {
-    frontend_mark_task_fail("Error while deattaching: %s\n", strerror(errno));
+    frontend::mark_task_fail("Error while deattaching: %s\n", strerror(errno));
     return -1;
   }
 
