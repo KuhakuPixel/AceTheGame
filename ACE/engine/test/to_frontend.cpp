@@ -83,3 +83,16 @@ TEST_CASE("frontend_peek_output", "[to_frontend]") {
     REQUIRE("hello world great Mars" == frontend_output_buff);
   }
 }
+
+TEST_CASE("frontend_log", "[to_frontend]") {
+  {
+    // reset output buffer just in case
+    frontend_output_buff = "";
+    frontend_log("GoodBye");
+    // shouldn't store anything to buffer
+    REQUIRE("" == frontend_output_buff);
+    // it should be copied to the output buffer
+    frontend_print("hello world");
+    REQUIRE("hello world" == frontend_peek_output());
+  }
+}

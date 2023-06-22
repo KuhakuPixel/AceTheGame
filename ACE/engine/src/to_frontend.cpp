@@ -17,7 +17,8 @@ std::string frontend_pop_output() {
 
 std::string frontend_peek_output() { return frontend_output_buff; }
 
-void frontend_print_core(bool print_to_stdout, const char *fmt, va_list args) {
+void frontend_print_core(bool print_to_stdout, bool store_to_buff,
+                         const char *fmt, va_list args) {
 
   char buffer[frontend_buff_size];
   // put args to buffer
@@ -30,14 +31,23 @@ void frontend_print_core(bool print_to_stdout, const char *fmt, va_list args) {
   __android_log_print(ANDROID_LOG_DEBUG, "ACE", "%s", buffer);
 #endif
   // put to buffer
-  frontend_output_buff += std::string(buffer);
+  if (store_to_buff)
+    frontend_output_buff += std::string(buffer);
 }
 
 void frontend_print(const char *fmt, ...) {
   // put args to bufer
   va_list args;
   va_start(args, fmt);
-  frontend_print_core(true, fmt, args);
+  frontend_print_core(true, true, fmt, args);
+  va_end(args);
+}
+
+void frontend_log(const char *fmt, ...) {
+  // put args to bufer
+  va_list args;
+  va_start(args, fmt);
+  frontend_print_core(true, false, fmt, args);
   va_end(args);
 }
 
@@ -45,7 +55,7 @@ void _frontend_print(bool print_to_stdout, const char *fmt, ...) {
   // put args to bufer
   va_list args;
   va_start(args, fmt);
-  frontend_print_core(print_to_stdout, fmt, args);
+  frontend_print_core(print_to_stdout, true, fmt, args);
   va_end(args);
 }
 
@@ -53,7 +63,7 @@ void frontend_invalid_command(bool print_to_stdout, const char *fmt, ...) {
   _frontend_print(print_to_stdout, "INVALID_COMMAND\n");
   va_list args;
   va_start(args, fmt);
-  frontend_print_core(print_to_stdout, fmt, args);
+  frontend_print_core(print_to_stdout, true, fmt, args);
   va_end(args);
 }
 void frontend_mark_task_fail(const char *fmt, ...) {
@@ -61,7 +71,7 @@ void frontend_mark_task_fail(const char *fmt, ...) {
   frontend_print("FAIL\n");
   va_list args;
   va_start(args, fmt);
-  frontend_print_core(true, fmt, args);
+  frontend_print_core(true, true, fmt, args);
   va_end(args);
 }
 

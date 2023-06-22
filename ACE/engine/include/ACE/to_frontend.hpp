@@ -27,9 +27,21 @@ std::string frontend_pop_output();
  * */
 std::string frontend_peek_output();
 
+/**
+ * ACE's main function for printing to frontend and logging
+ *
+ * [print_to_stdout]: print the string to stdout
+ * [store_to_buff]: store the string to a buffer, which then
+ * 		    can be read using [frontend_pop_output]
+ * 		    or [frontend_peek_output]
+ * */
+void frontend_print_core(bool print_to_stdout, bool store_to_buff,
+                         const char *fmt, va_list args);
+
 void _frontend_print(bool print_to_stdout, const char *fmt, ...);
 void frontend_print(const char *fmt, ...);
 
+void frontend_log(const char *fmt, ...);
 /*
  * tells frontend invalid command is sent
  * */
