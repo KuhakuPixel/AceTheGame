@@ -80,7 +80,7 @@ E_loop_statement main_mode_on_each_input(std::string input_str) {
     (app).parse(c_str_arr_length, c_str_arr);
     str_arr_free(c_str_arr, c_str_arr_length);
   } catch (const CLI::ParseError &e) {
-    frontend_handle_cli_parse_error(true, e);
+    frontend_handle_cli_parse_error(false, e);
     (app).exit(e);
     str_arr_free(c_str_arr, c_str_arr_length);
     //
