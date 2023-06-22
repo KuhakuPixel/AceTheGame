@@ -147,7 +147,7 @@ void main_cmd_create(CLI::App *app, main_mode_options *current_options_ptr) {
 
       [=]() -> void {
         //
-        frontend_print("attached_none\n");
+        frontend::print("attached_none\n");
       }
 
   );

@@ -20,38 +20,38 @@ void display_icon() {
   // generated using this cool repo
   // https://github.com/qeesung/image2ascii
   // clang-format off
-  frontend_print("@@@@@@@@@@@@@@@88@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@@@@@@tfft@@@@@@@@@@@@@@@@@@@@@@@@@@@880GCf1i;;;f@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@@@@@@1fft@@@@@@@@@@@@@@@@@@@80GCLft1;:,,,;1fC08@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@@@80@@08@@@@@@@@@@@@GiGGCLfftt1i;:;itLG8@@@@@@@@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@8ttfi8@@tf@@@@@@@8C1:ifttt1i:,,;1fCGGCLt1;i1L8@@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@1;0L,;0@tt@@@@@@ttLLLti:.,,:;i1ft1i:,.  ,G8@@@@@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@8LfLG,8@@@@@@@GifGC1i:.;fLLLft1;:.. ..,.:@80GC8@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@@@@@:L@@@@@Gt:.,;:::,,L0L1i;;:..,,,;:. ..,... G@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@@@0;f@@@@G;.,:ii;:,:,0G11:.;;::::::tL1;,  .,..@@@@@@@@@@@\n");
-  frontend_print("@@@@@@@@@@f;G@@@0L.:i1i:,,,,::Cii;,,:::::::,.:tLfi:. ..ii;;:C@@@@@\n");
-  frontend_print("@@@@@@@@Lif@@@@L1,;t;,.;;.::,,,::,..,:;;;iii;,.1ftLLi..... :8@@@@@\n");
-  frontend_print("@@@@@@Lit8@@@8f,i::,.0C,::::,:,,,,:;ittt1i;iii:;t1,tC1 ..,.0@@@@@@\n");
-  frontend_print("@@@@Cif@@0tttiit1;:.,;:,i1i:,.,:;:,i1;;;;:,...,,:ii:1f1, ..::itt0@\n");
-  frontend_print("@@@1i08Ci::,1tf1tt1ii1ii1ii.. .:i;;....,.:;,....,,;;1ftf,..    :0@\n");
-  frontend_print("@@i1@@1 :t;;ttt:iffftfi;1.;. :,i;;f1:   ifi,1;...::::1:f1..,..f@@@\n");
-  frontend_print("@C:@@@t :1i1fffft1ii::iiG,1t:,.ii;i;.iLt1i,;1t: ..:::.:tf,. ;8@@@@\n");
-  frontend_print("@L;@@@G:..;;:,,.,;1ffG@@8.G@1,::;t1,L@@@G;1ff1: ...,;,:1t, .:tG@@@\n");
-  frontend_print("@8,C@@@@C1.,tttL80@@@@@@;1@i:,:1tt,G@@@@@@,;;:;. ..,::::1:.,   :0@\n");
-  frontend_print("@@G:L@@@81..C@@@L::t8@0;i@G,i;.i1:i@@@@@8iiLti;,,,,..,:::,.. ,iL8@\n");
-  frontend_print("@@@811Lt  ,. ,;: ,, .,..11LG;:;:i,L@@@@C;,i;:;ii1tt1;,,:,,,:L@@@@@\n");
-  frontend_print("@@@@@8f ,it1: :,.:;;:,. .1;@C;:;1C@@@G11t1,;1tf1:;1tft;,,::.;1C0@@\n");
-  frontend_print("@@@@@@8..,1;. ,. ,,,;11i:t:C@@8@@@@@t:L0t,1tttitt;;11ifi.tf..  :0@\n");
-  frontend_print("@@@@@@@1 ... ;t; .:;;iitff1;G8@@@@@t.fLi,:;ii;;1ffttf,iC:;L,.,L@@@\n");
-  frontend_print("@@@@@@@8. . ,8@@: ,:;;111tt1i1tL8@1;1::;1iitt1;i;ii1ti:1,:f:..,i0@\n");
-  frontend_print("@@@@@@@@G:.:G@@@0ffCf;,,:::iftii1;;Gt:;it1ftt1tii1i,1f11;,1,..;L8@\n");
-  frontend_print("@@@@@@@@@@8@@@@@@@@@@@8t ,::;iiiffi;,111t,;;:it1i,.,itti::f1.C@@@@\n");
-  frontend_print("@@@@@@@@@@@@@@@@@@@@@@@C:;,,::i1tfi.i11tt1ii;;,.. .::it1;,ifi10@@@\n");
-  frontend_print("@@@@@@@@@@@@@@@@@@@@@@@@0:,..:::;i1;1ti;i1i:,,. ...,::,it:;LCi i8@\n");
-  frontend_print("@@@@@@@@@@@@@@@@@@@@@@@@@@8L;.,:::;::;,:.,,:i11....,,,:::::;i;tG@@\n");
-  frontend_print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Gi,,,:,..,:i11111ti...,,:::::11,1@@@@\n");
-  frontend_print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@0Li.;1tLCCCCf1ii1i. ....,,,,:;::C@@\n");
-  frontend_print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@C088000008GCCCCCftttfffffffLft0@\n");
+  frontend::print("@@@@@@@@@@@@@@@88@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@@@@@@tfft@@@@@@@@@@@@@@@@@@@@@@@@@@@880GCf1i;;;f@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@@@@@@1fft@@@@@@@@@@@@@@@@@@@80GCLft1;:,,,;1fC08@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@@@80@@08@@@@@@@@@@@@GiGGCLfftt1i;:;itLG8@@@@@@@@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@8ttfi8@@tf@@@@@@@8C1:ifttt1i:,,;1fCGGCLt1;i1L8@@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@1;0L,;0@tt@@@@@@ttLLLti:.,,:;i1ft1i:,.  ,G8@@@@@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@8LfLG,8@@@@@@@GifGC1i:.;fLLLft1;:.. ..,.:@80GC8@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@@@@@:L@@@@@Gt:.,;:::,,L0L1i;;:..,,,;:. ..,... G@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@@@0;f@@@@G;.,:ii;:,:,0G11:.;;::::::tL1;,  .,..@@@@@@@@@@@\n");
+  frontend::print("@@@@@@@@@@f;G@@@0L.:i1i:,,,,::Cii;,,:::::::,.:tLfi:. ..ii;;:C@@@@@\n");
+  frontend::print("@@@@@@@@Lif@@@@L1,;t;,.;;.::,,,::,..,:;;;iii;,.1ftLLi..... :8@@@@@\n");
+  frontend::print("@@@@@@Lit8@@@8f,i::,.0C,::::,:,,,,:;ittt1i;iii:;t1,tC1 ..,.0@@@@@@\n");
+  frontend::print("@@@@Cif@@0tttiit1;:.,;:,i1i:,.,:;:,i1;;;;:,...,,:ii:1f1, ..::itt0@\n");
+  frontend::print("@@@1i08Ci::,1tf1tt1ii1ii1ii.. .:i;;....,.:;,....,,;;1ftf,..    :0@\n");
+  frontend::print("@@i1@@1 :t;;ttt:iffftfi;1.;. :,i;;f1:   ifi,1;...::::1:f1..,..f@@@\n");
+  frontend::print("@C:@@@t :1i1fffft1ii::iiG,1t:,.ii;i;.iLt1i,;1t: ..:::.:tf,. ;8@@@@\n");
+  frontend::print("@L;@@@G:..;;:,,.,;1ffG@@8.G@1,::;t1,L@@@G;1ff1: ...,;,:1t, .:tG@@@\n");
+  frontend::print("@8,C@@@@C1.,tttL80@@@@@@;1@i:,:1tt,G@@@@@@,;;:;. ..,::::1:.,   :0@\n");
+  frontend::print("@@G:L@@@81..C@@@L::t8@0;i@G,i;.i1:i@@@@@8iiLti;,,,,..,:::,.. ,iL8@\n");
+  frontend::print("@@@811Lt  ,. ,;: ,, .,..11LG;:;:i,L@@@@C;,i;:;ii1tt1;,,:,,,:L@@@@@\n");
+  frontend::print("@@@@@8f ,it1: :,.:;;:,. .1;@C;:;1C@@@G11t1,;1tf1:;1tft;,,::.;1C0@@\n");
+  frontend::print("@@@@@@8..,1;. ,. ,,,;11i:t:C@@8@@@@@t:L0t,1tttitt;;11ifi.tf..  :0@\n");
+  frontend::print("@@@@@@@1 ... ;t; .:;;iitff1;G8@@@@@t.fLi,:;ii;;1ffttf,iC:;L,.,L@@@\n");
+  frontend::print("@@@@@@@8. . ,8@@: ,:;;111tt1i1tL8@1;1::;1iitt1;i;ii1ti:1,:f:..,i0@\n");
+  frontend::print("@@@@@@@@G:.:G@@@0ffCf;,,:::iftii1;;Gt:;it1ftt1tii1i,1f11;,1,..;L8@\n");
+  frontend::print("@@@@@@@@@@8@@@@@@@@@@@8t ,::;iiiffi;,111t,;;:it1i,.,itti::f1.C@@@@\n");
+  frontend::print("@@@@@@@@@@@@@@@@@@@@@@@C:;,,::i1tfi.i11tt1ii;;,.. .::it1;,ifi10@@@\n");
+  frontend::print("@@@@@@@@@@@@@@@@@@@@@@@@0:,..:::;i1;1ti;i1i:,,. ...,::,it:;LCi i8@\n");
+  frontend::print("@@@@@@@@@@@@@@@@@@@@@@@@@@8L;.,:::;::;,:.,,:i11....,,,:::::;i;tG@@\n");
+  frontend::print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Gi,,,:,..,:i11111ti...,,:::::11,1@@@@\n");
+  frontend::print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@0Li.;1tLCCCCf1ii1i. ....,,,,:;::C@@\n");
+  frontend::print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@C088000008GCCCCCftttfffffffLft0@\n");
   // clang-format on
 }
 
@@ -80,7 +80,7 @@ E_loop_statement main_mode_on_each_input(std::string input_str) {
     (app).parse(c_str_arr_length, c_str_arr);
     str_arr_free(c_str_arr, c_str_arr_length);
   } catch (const CLI::ParseError &e) {
-    frontend_handle_cli_parse_error(true, e);
+    frontend::handle_cli_parse_error(false, e);
     (app).exit(e);
     str_arr_free(c_str_arr, c_str_arr_length);
     //
@@ -93,10 +93,10 @@ void ace_main() {
 
   // display_icon();
   if (getuid() != 0) {
-    frontend_print(
+    frontend::print(
         "Device not rooted, without root most features will be broken\n");
   } else {
-    frontend_print("You are rooted, all features will work\n");
+    frontend::print("You are rooted, all features will work\n");
   }
 
   display_intro();

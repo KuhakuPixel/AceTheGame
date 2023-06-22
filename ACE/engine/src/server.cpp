@@ -1,6 +1,6 @@
 #include "ACE/server.hpp"
+#include "ACE/to_frontend.hpp"
 #include <zmq.hpp>
-
 const std::string server::stop_request_str = "stop";
 
 server::server(
@@ -15,8 +15,8 @@ server::server(
 
 void server::start() {
 
-  printf("starting server at address %s\n",
-         this->server_binded_address.c_str());
+  frontend::log("starting server at address %s\n",
+                this->server_binded_address.c_str());
 
   zmq::context_t context(2);
   zmq::socket_t socket(context, zmq::socket_type::rep);

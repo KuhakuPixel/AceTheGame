@@ -156,7 +156,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
       [&]() {
         scanner->clear_current_scan_result();
         cheat_config->initial_scan_done = false;
-        frontend_print("resetting all scan\n");
+        frontend::print("resetting all scan\n");
       }
 
   );
@@ -372,7 +372,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
 
       [&]() -> void {
         //
-        frontend_print("attached_ok\n");
+        frontend::print("attached_ok\n");
       }
 
   );
@@ -479,7 +479,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
     (app).parse(c_str_arr_length, c_str_arr);
     str_arr_free(c_str_arr, c_str_arr_length);
   } catch (const CLI::ParseError &e) {
-    frontend_handle_cli_parse_error(false, e);
+    frontend::handle_cli_parse_error(false, e);
     (app).exit(e);
     str_arr_free(c_str_arr, c_str_arr_length);
     //
@@ -502,7 +502,7 @@ cheat_session::cheater_mode_on_each_input(
   // check if process [pid] is still running
 
   if (!proc_is_running(pid)) {
-    frontend_mark_task_fail("Process %d doesn't exist anymore\n", pid);
+    frontend::mark_task_fail("Process %d doesn't exist anymore\n", pid);
 
     _cheat_cmd_ret.loop_statement = E_loop_statement::break_;
     return _cheat_cmd_ret;
@@ -531,14 +531,14 @@ cheat_session::cheater_mode_on_each_input(
 
     // check if any ptrace attach of deattach failed
     if (ptrace_attach_ret == -1) {
-      frontend_mark_task_fail("Fail to attach, exiting cheater mode\n");
+      frontend::mark_task_fail("Fail to attach, exiting cheater mode\n");
 
       _cheat_cmd_ret.loop_statement = E_loop_statement::break_;
       return _cheat_cmd_ret;
     }
 
     if (ptrace_deattach_ret == -1) {
-      frontend_mark_task_fail("Fail to deattach, exiting cheater mode\n");
+      frontend::mark_task_fail("Fail to deattach, exiting cheater mode\n");
 
       _cheat_cmd_ret.loop_statement = E_loop_statement::break_;
       return _cheat_cmd_ret;
