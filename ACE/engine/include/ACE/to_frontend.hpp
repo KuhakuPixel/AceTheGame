@@ -15,25 +15,24 @@ private:
 
 public:
   /*
-   * return current frontend output
-   * made by print
+   * return current frontend buffer
    * and clear it out
    * */
-  static std::string pop_output();
+  static std::string pop_buff();
 
   /*
    * return current frontend output buffer
    * without clearing it
    * */
-  static std::string peek_output();
+  static std::string get_buff();
 
   /**
    * ACE's main function for printing to frontend and logging
    *
    * [print_to_stdout]: print the string to stdout
    * [store_to_buff]: store the string to a buffer, which then
-   * 		    can be read using [pop_output]
-   * 		    or [peek_output]
+   * 		    can be read using [pop_buff]
+   * 		    or [get_buff]
    * */
   static void print_core(bool print_to_stdout, bool store_to_buff,
                          const char *fmt, va_list args);

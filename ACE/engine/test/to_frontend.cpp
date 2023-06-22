@@ -3,73 +3,73 @@
 
 TEST_CASE("frontend::print", "[to_frontend]") {
 
-  frontend::pop_output();
+  frontend::pop_buff();
 
   // it should be copied to the output buffer
   frontend::print("hello world");
-  REQUIRE("hello world" == frontend::peek_output());
+  REQUIRE("hello world" == frontend::get_buff());
 
-  // messages should be appended to the frontend::peek_output()
+  // messages should be appended to the frontend::get_buff()
   frontend::print(" mars");
-  REQUIRE("hello world mars" == frontend::peek_output());
+  REQUIRE("hello world mars" == frontend::get_buff());
 
   frontend::print(" jupiter");
-  REQUIRE("hello world mars jupiter" == frontend::peek_output());
+  REQUIRE("hello world mars jupiter" == frontend::get_buff());
 }
 
-TEST_CASE("frontend::pop_output", "[to_frontend]") {
+TEST_CASE("frontend::pop_buff", "[to_frontend]") {
   {
 
-    frontend::pop_output();
+    frontend::pop_buff();
 
     // it should be copied to the output buffer
     frontend::print("hello world");
-    REQUIRE("hello world" == frontend::peek_output());
-    REQUIRE("hello world" == frontend::pop_output());
-    // after frontend::pop_output, buffer should be emptied out
-    REQUIRE("" == frontend::peek_output());
+    REQUIRE("hello world" == frontend::get_buff());
+    REQUIRE("hello world" == frontend::pop_buff());
+    // after frontend::pop_buff, buffer should be emptied out
+    REQUIRE("" == frontend::get_buff());
   }
 
   {
 
-    frontend::pop_output();
+    frontend::pop_buff();
     //
     frontend::print("hello");
     frontend::print(" world");
     frontend::print(" great");
-    REQUIRE("hello world great" == frontend::peek_output());
-    REQUIRE("hello world great" == frontend::pop_output());
-    REQUIRE("" == frontend::peek_output());
+    REQUIRE("hello world great" == frontend::get_buff());
+    REQUIRE("hello world great" == frontend::pop_buff());
+    REQUIRE("" == frontend::get_buff());
 
     //
     frontend::print("Mars");
-    REQUIRE("Mars" == frontend::pop_output());
-    REQUIRE("" == frontend::peek_output());
+    REQUIRE("Mars" == frontend::pop_buff());
+    REQUIRE("" == frontend::get_buff());
   }
 }
 
-TEST_CASE("frontend::peek_output", "[to_frontend]") {
+TEST_CASE("frontend::get_buff", "[to_frontend]") {
 
   {
-    frontend::pop_output();
+    frontend::pop_buff();
     frontend::print("hello");
-    REQUIRE("hello" == frontend::peek_output());
+    REQUIRE("hello" == frontend::get_buff());
     frontend::print(" world");
-    REQUIRE("hello world" == frontend::peek_output());
+    REQUIRE("hello world" == frontend::get_buff());
     frontend::print(" great");
-    REQUIRE("hello world great" == frontend::peek_output());
+    REQUIRE("hello world great" == frontend::get_buff());
   }
 }
 
 TEST_CASE("frontend::log", "[to_frontend]") {
   {
 
-    frontend::pop_output();
+    frontend::pop_buff();
     frontend::log("GoodBye");
     // shouldn't store anything to buffer
-    REQUIRE("" == frontend::peek_output());
+    REQUIRE("" == frontend::get_buff());
     // it should be copied to the output buffer
     frontend::print("hello world");
-    REQUIRE("hello world" == frontend::peek_output());
+    REQUIRE("hello world" == frontend::get_buff());
   }
 }

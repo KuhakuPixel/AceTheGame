@@ -9,13 +9,13 @@
 
 std::string frontend::output_buff = "";
 
-std::string frontend::pop_output() {
-  std::string tmp = frontend::peek_output();
+std::string frontend::pop_buff() {
+  std::string tmp = frontend::get_buff();
   frontend::output_buff = "";
   return tmp;
 }
 
-std::string frontend::peek_output() { return frontend::output_buff; }
+std::string frontend::get_buff() { return frontend::output_buff; }
 
 void frontend::print_core(bool print_to_stdout, bool store_to_buff,
                           const char *fmt, va_list args) {
