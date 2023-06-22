@@ -94,7 +94,7 @@ public class ACETest {
         // for commands that don't require attach
         for (String s : invalidCmd) {
             try {
-                ace.UtilCmd(s);
+                ace.UtilCmd(new String[]{s});
                 Assert.fail();
             } catch (ACEAttachClient.InvalidCommandException e) {
                 Assert.assertTrue(true);
@@ -231,6 +231,9 @@ public class ACETest {
             } catch (ACE.AttachingInARowException e) {
                 Assert.assertTrue(true);
             }
+            // DeAttach and stop server
+            ace.DeAttach();
+            serverThread.join();
         }
         // DeAttach without attach
         {
@@ -247,13 +250,18 @@ public class ACETest {
                 Assert.assertTrue(true);
             }
 
+            // Connect to DeAttach and stop server
+            ace.ConnectToACEServer(port);
+            ace.DeAttach();
+            serverThread.join();
+
         }
 
         p.destroy();
     }
 
     @Test
-    public void AttachInARowException() throws IOException {
+    public void AttachInARowException() throws IOException, InterruptedException {
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ACE ace = new ACE(context);
@@ -268,6 +276,7 @@ public class ACETest {
         } catch (ACE.AttachingInARowException e) {
             Assert.assertTrue(true);
         }
+        ace.DeAttach();
         // cleanup
         p.destroy();
 

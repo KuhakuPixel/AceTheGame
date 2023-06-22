@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.topjohnwu.superuser.Shell;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -29,22 +31,20 @@ public class ACEBaseClient {
         }
     }
 
-    public List<String> RequestAsList(String requestCmd) throws InvalidCommandException {
+    public List<String> RequestAsList(String[] requestCmd) throws InvalidCommandException {
 
-        Log.i("ATG", String.format("Command to Engine: \"%s\"", requestCmd));
+        Log.i("ATG", String.format("Command to Engine: \"%s\"", String.join(" ", requestCmd)));
         //
-        String[] cmdArr = new String[]{this.binaryPath, requestCmd};
-        String cmdStr = String.join(" ", cmdArr);
+        String[] cmdArr = ArrayUtils.addAll(new String[]{this.binaryPath}, requestCmd);
         // run command
-        Shell.Result result = Shell.cmd(cmdStr).exec();
-        List<String> out = result.getOut();
+        List<String> out = Command.RunCmd(cmdArr);
         AssertValidCommand(out);
-        Log.i("ATG", String.format("Output received from engine command: \"%s\"", requestCmd));
+        Log.i("ATG", String.format("Output received from engine command: \"%s\"", String.join(" ", requestCmd)));
         return out;
 
     }
 
-    public String Request(String requestCmd) throws InvalidCommandException {
+    public String Request(String[] requestCmd) throws InvalidCommandException {
 
         String outStr = String.join("\n", RequestAsList(requestCmd));
         return outStr;

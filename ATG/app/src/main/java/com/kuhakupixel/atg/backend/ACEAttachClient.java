@@ -16,12 +16,8 @@ public class ACEAttachClient extends ACEBaseClient {
 
     public List<String> RequestAsList(String requestCmd) throws InvalidCommandException {
 
-        // wrap it inside quotes just in case
-        // that [requestCmd] contains space
-        requestCmd = String.format("\"%s\"", requestCmd);
         String[] cmdArr = new String[]{"--port", this.port.toString(), "--msg", requestCmd};
-        String cmdStr = String.join(" ", cmdArr);
-        return super.RequestAsList(cmdStr);
+        return super.RequestAsList(cmdArr);
 
     }
 
