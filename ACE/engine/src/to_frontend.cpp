@@ -10,7 +10,7 @@
 std::string frontend::output_buff = "";
 
 std::string frontend::pop_output() {
-  std::string tmp = frontend::output_buff;
+  std::string tmp = frontend::peek_output();
   frontend::output_buff = "";
   return tmp;
 }
@@ -18,7 +18,7 @@ std::string frontend::pop_output() {
 std::string frontend::peek_output() { return frontend::output_buff; }
 
 void frontend::print_core(bool print_to_stdout, bool store_to_buff,
-                         const char *fmt, va_list args) {
+                          const char *fmt, va_list args) {
 
   char buffer[frontend::buff_size];
   // put args to buffer
@@ -82,7 +82,7 @@ void frontend::mark_progress(size_t current, size_t max) {
 }
 
 void frontend::handle_cli_parse_error(bool print_to_stdout,
-                                     const CLI::ParseError &e) {
+                                      const CLI::ParseError &e) {
   /**
    * tells error to frontend if only not calling for help
    * */

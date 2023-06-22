@@ -5,7 +5,7 @@
 #include <string>
 
 class frontend {
-public:
+private:
   static const size_t buff_size = 10000;
   /*
    * output buffer for the frontend
@@ -13,6 +13,7 @@ public:
    * */
   static std::string output_buff;
 
+public:
   /*
    * return current frontend output
    * made by print
