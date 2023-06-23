@@ -37,7 +37,7 @@ public class ACEBaseClient {
         //
         String[] cmdArr = ArrayUtils.addAll(new String[]{this.binaryPath}, requestCmd);
         // run command
-        List<String> out = Command.RunCmd(cmdArr);
+        List<String> out = Root.sudo(cmdArr);
         AssertValidCommand(out);
         Log.i("ATG", String.format("Output received from engine command: \"%s\"", String.join(" ", requestCmd)));
         return out;
