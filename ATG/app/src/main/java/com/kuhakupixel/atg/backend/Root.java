@@ -68,7 +68,6 @@ public class Root {
 class Closer {
     public static void closeSilently(Closeable x) {
         try {
-            Log.d("ATG", "closing: " + x);
             x.close();
         } catch (Throwable e) {
             Log.e("ATG", e.toString());
