@@ -2,6 +2,8 @@ package com.kuhakupixel.atg.backend;
 
 import android.util.Log;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.DataOutputStream;
@@ -51,7 +53,11 @@ public class Root {
             Closer.closeSilently(outputStream);
             Closer.closeSilently(response);
         }
-        return Arrays.asList(res.split("\\n"));
+        // return an empty list, if output is empty
+        if (StringUtils.isEmpty(res))
+            return new ArrayList<String>();
+        else
+            return Arrays.asList(res.split("\\n"));
     }
 
     public static String readFully(InputStream is) throws IOException {

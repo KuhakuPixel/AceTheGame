@@ -381,6 +381,7 @@ public class ACETest {
         ace.Attach(pid);
         // shouldn't have any matches before scan
         Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        Assert.assertEquals(0, ace.ListMatches(maxMatchesCount).size());
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
         // get matches
         List<ACE.MatchInfo> matches = ace.ListMatches(maxMatchesCount);

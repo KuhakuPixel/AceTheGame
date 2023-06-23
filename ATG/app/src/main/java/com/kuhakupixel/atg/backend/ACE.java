@@ -244,7 +244,9 @@ public class ACE {
         List<String> matchesStr = CheaterCmdAsList(cmd);
         for (String s : matchesStr) {
             String[] splitted = s.split(" ");
-            assert (splitted.length == 2);
+            if (splitted.length != 2) {
+                throw new IllegalArgumentException(String.format("unexpected Output when listing matches: \"%s\"", s));
+            }
             matches.add(new MatchInfo(splitted[0], splitted[1]));
         }
         return matches;
