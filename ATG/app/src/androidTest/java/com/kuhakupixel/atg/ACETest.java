@@ -85,7 +85,7 @@ public class ACETest {
         // for commands that requires attach
         for (String s : invalidCmd) {
             try {
-                ace.CheaterCmd(s);
+                ace.CheaterCmd(new String[]{s});
                 Assert.fail();
             } catch (ACEAttachClient.InvalidCommandException e) {
                 Assert.assertTrue(true);
@@ -114,7 +114,7 @@ public class ACETest {
         ace.Attach(pid);
         // valid command
         try {
-            ace.CheaterCmd("scan = 0");
+            ace.CheaterCmd(new String[]{"scan = 0"});
             Assert.assertTrue(true);
         } catch (ACEAttachClient.InvalidCommandException e) {
             Assert.fail();

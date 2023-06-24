@@ -163,7 +163,7 @@ public class ACE {
     public void DeAttach() throws InterruptedException {
         AssertAttached();
         // tell server to die
-        aceAttachClient.Request("stop");
+        aceAttachClient.Request(new String[]{"stop"});
         aceAttachClient = null;
         // only stop the server if we start one
         if (serverThread != null) {
@@ -188,49 +188,46 @@ public class ACE {
 
 
     // =============== this commands require attach ===================
-    public String CheaterCmd(String cmd) {
+    public String CheaterCmd(String[] cmd) {
         AssertAttached();
         String out = aceAttachClient.Request(cmd);
         return out;
     }
 
-    public List<String> CheaterCmdAsList(String cmd) {
+    public List<String> CheaterCmdAsList(String[] cmd) {
         AssertAttached();
         return aceAttachClient.RequestAsList(cmd);
     }
 
     public Long GetAttachedPid() {
-        String pidStr = CheaterCmd("pid");
+        String pidStr = CheaterCmd(new String[]{"pid"});
         return Long.parseLong(pidStr);
     }
 
     public void SetNumType(NumType type) {
-        CheaterCmd("config type " + type.toString());
+        CheaterCmd(new String[]{"config", "type", type.toString()});
     }
 
     public void ScanAgainstValue(Operator operator, String numValStr) {
-        String cmd = String.format("scan %s %s", operatorEnumToSymbolBiMap.get(operator), numValStr);
-        CheaterCmd(cmd);
+        CheaterCmd(new String[]{"scan", operatorEnumToSymbolBiMap.get(operator), numValStr});
 
     }
 
     public void ScanWithoutValue(Operator operator) {
-        String cmd = String.format("filter %s", operatorEnumToSymbolBiMap.get(operator));
-        CheaterCmd(cmd);
+        CheaterCmd(new String[]{"filter", operatorEnumToSymbolBiMap.get(operator)});
     }
 
     public void WriteValueAtAddress(String address, String value) {
-        String cmd = String.format("writeat %s %s", address, value);
-        CheaterCmd(cmd);
+        CheaterCmd(new String[]{"writeat", address, value});
     }
 
     public Integer GetMatchCount() {
-        Integer count = Integer.parseInt(CheaterCmd("matchcount"));
-        return count;
+        return Integer.parseInt(CheaterCmd(new String[]{"matchcount"}));
+
     }
 
     public void ResetMatches() {
-        CheaterCmd("reset");
+        CheaterCmd(new String[]{"reset"});
     }
 
     public List<MatchInfo> ListMatches(Integer maxCount) {
@@ -240,8 +237,7 @@ public class ACE {
          * */
 
         List<MatchInfo> matches = new ArrayList<MatchInfo>();
-        String cmd = String.format("list --max-count %d", maxCount);
-        List<String> matchesStr = CheaterCmdAsList(cmd);
+        List<String> matchesStr = CheaterCmdAsList(new String[]{"list", "--max-count", maxCount.toString()});
         for (String s : matchesStr) {
             String[] splitted = s.split(" ");
             if (splitted.length != 2) {
