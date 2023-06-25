@@ -11,7 +11,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
-import com.kuhakupixel.atg.ui.util.NumberInputField
 
 class OverlayChoicesDialog(
     createDialogOverlay: (
