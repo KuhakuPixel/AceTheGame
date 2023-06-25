@@ -49,13 +49,7 @@ public class ACE {
 
 
     public enum Operator {
-        greater,
-        less,
-        equal,
-        greaterEqual,
-        lessEqual,
-        notEqual,
-        unknown,
+        greater, less, equal, greaterEqual, lessEqual, notEqual, unknown,
     }
 
     public enum NumType {
@@ -68,8 +62,7 @@ public class ACE {
         }
 
         public static NumType fromString(String s) {
-            if (s.charAt(0) != '_')
-                s = "_" + s;
+            if (s.charAt(0) != '_') s = "_" + s;
             return NumType.valueOf(s);
 
         }
@@ -170,7 +163,7 @@ public class ACE {
     public void DeAttach() throws InterruptedException {
         AssertAttached();
         // tell server to die
-        aceAttachClient.Request("stop");
+        aceAttachClient.Request(new String[]{"stop"});
         aceAttachClient = null;
         // only stop the server if we start one
         if (serverThread != null) {
@@ -183,8 +176,7 @@ public class ACE {
     public Integer GetNumTypeBitSize(NumType numType) {
         Integer bitSize = null;
         for (NumTypeInfo typeInfo : this.availableNumTypes) {
-            if (typeInfo.GetName().equals(numType.toString()))
-                bitSize = typeInfo.GetBitSize();
+            if (typeInfo.GetName().equals(numType.toString())) bitSize = typeInfo.GetBitSize();
         }
         return bitSize;
     }
@@ -196,49 +188,46 @@ public class ACE {
 
 
     // =============== this commands require attach ===================
-    public String CheaterCmd(String cmd) {
+    public String CheaterCmd(String[] cmd) {
         AssertAttached();
         String out = aceAttachClient.Request(cmd);
         return out;
     }
 
-    public List<String> CheaterCmdAsList(String cmd) {
+    public List<String> CheaterCmdAsList(String[] cmd) {
         AssertAttached();
         return aceAttachClient.RequestAsList(cmd);
     }
 
     public Long GetAttachedPid() {
-        String pidStr = CheaterCmd("pid");
+        String pidStr = CheaterCmd(new String[]{"pid"});
         return Long.parseLong(pidStr);
     }
 
     public void SetNumType(NumType type) {
-        CheaterCmd("config type " + type.toString());
+        CheaterCmd(new String[]{"config", "type", type.toString()});
     }
 
     public void ScanAgainstValue(Operator operator, String numValStr) {
-        String cmd = String.format("scan %s %s", operatorEnumToSymbolBiMap.get(operator), numValStr);
-        CheaterCmd(cmd);
+        CheaterCmd(new String[]{"scan", operatorEnumToSymbolBiMap.get(operator), numValStr});
 
     }
 
     public void ScanWithoutValue(Operator operator) {
-        String cmd = String.format("filter %s", operatorEnumToSymbolBiMap.get(operator));
-        CheaterCmd(cmd);
+        CheaterCmd(new String[]{"filter", operatorEnumToSymbolBiMap.get(operator)});
     }
 
     public void WriteValueAtAddress(String address, String value) {
-        String cmd = String.format("writeat %s %s", address, value);
-        CheaterCmd(cmd);
+        CheaterCmd(new String[]{"writeat", address, value});
     }
 
     public Integer GetMatchCount() {
-        Integer count = Integer.parseInt(CheaterCmd("matchcount"));
-        return count;
+        return Integer.parseInt(CheaterCmd(new String[]{"matchcount"}));
+
     }
 
     public void ResetMatches() {
-        CheaterCmd("reset");
+        CheaterCmd(new String[]{"reset"});
     }
 
     public List<MatchInfo> ListMatches(Integer maxCount) {
@@ -248,29 +237,30 @@ public class ACE {
          * */
 
         List<MatchInfo> matches = new ArrayList<MatchInfo>();
-        String cmd = String.format("list --max-count %d", maxCount);
-        List<String> matchesStr = CheaterCmdAsList(cmd);
+        List<String> matchesStr = CheaterCmdAsList(new String[]{"list", "--max-count", maxCount.toString()});
         for (String s : matchesStr) {
             String[] splitted = s.split(" ");
-            assert (splitted.length == 2);
+            if (splitted.length != 2) {
+                throw new IllegalArgumentException(String.format("unexpected Output when listing matches: \"%s\"", s));
+            }
             matches.add(new MatchInfo(splitted[0], splitted[1]));
         }
         return matches;
     }
 
     // =============== this commands don't require attach ===================
-    public List<String> UtilCmdAsList(String cmd) {
+    public List<String> UtilCmdAsList(String[] cmd) {
         return this.aceUtilClient.RequestAsList(cmd);
     }
 
-    public String UtilCmd(String cmd) {
+    public String UtilCmd(String[] cmd) {
         return this.aceUtilClient.Request(cmd);
     }
 
     public List<ProcInfo> ListRunningProc() {
         List<ProcInfo> runningProcs = new ArrayList<ProcInfo>();
         // use --reverse so newest process will be shown first
-        List<String> runningProcsInfoStr = UtilCmdAsList("ps ls --reverse");
+        List<String> runningProcsInfoStr = UtilCmdAsList(new String[]{"ps", "ls", "--reverse"});
         // parse each string
         for (String procInfoStr : runningProcsInfoStr) {
             runningProcs.add(new ProcInfo(procInfoStr));
@@ -279,8 +269,7 @@ public class ACE {
     }
 
     public boolean IsPidRunning(Long pid) {
-        String[] cmdArr = new String[]{"ps", "is_running", pid.toString()};
-        String boolStr = UtilCmd(String.join(" ", cmdArr));
+        String boolStr = UtilCmd(new String[]{"ps", "is_running", pid.toString()});
         assert (boolStr.equals("true") || boolStr.equals("false"));
         return Boolean.parseBoolean(boolStr);
     }
@@ -293,9 +282,7 @@ public class ACE {
      */
     public List<NumTypeInfo> GetAvailableNumTypes() {
         List<NumTypeInfo> numTypeInfos = new ArrayList<NumTypeInfo>();
-        String[] cmdArr = new String[]{"info", "type"};
-
-        List<String> out = UtilCmdAsList(String.join(" ", cmdArr));
+        List<String> out = UtilCmdAsList(new String[]{"info", "type"});
         for (String s : out) {
             String[] splitted = s.split(" ");
             assert 2 == splitted.length;
@@ -314,8 +301,7 @@ public class ACE {
         // >=
         // etc
         List<Operator> availableOperators = new ArrayList<Operator>();
-        String[] cmdArr = new String[]{"info", "operator"};
-        List<String> out = UtilCmdAsList(String.join(" ", cmdArr));
+        List<String> out = UtilCmdAsList(new String[]{"info", "operator"});
         for (String s : out)
             availableOperators.add(operatorEnumToSymbolBiMap.inverse().get(s));
         return availableOperators;

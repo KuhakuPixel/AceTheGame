@@ -10,6 +10,8 @@ android {
     defaultConfig {
         applicationId "com.kuhakupixel.atg"
         minSdk 26
+        // can't run binary without root if targetSdk > 28
+        // true
         targetSdk 33
         versionCode 1
         versionName "1.0"

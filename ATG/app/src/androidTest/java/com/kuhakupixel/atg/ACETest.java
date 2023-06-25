@@ -85,7 +85,7 @@ public class ACETest {
         // for commands that requires attach
         for (String s : invalidCmd) {
             try {
-                ace.CheaterCmd(s);
+                ace.CheaterCmd(new String[]{s});
                 Assert.fail();
             } catch (ACEAttachClient.InvalidCommandException e) {
                 Assert.assertTrue(true);
@@ -94,7 +94,7 @@ public class ACETest {
         // for commands that don't require attach
         for (String s : invalidCmd) {
             try {
-                ace.UtilCmd(s);
+                ace.UtilCmd(new String[]{s});
                 Assert.fail();
             } catch (ACEAttachClient.InvalidCommandException e) {
                 Assert.assertTrue(true);
@@ -114,7 +114,7 @@ public class ACETest {
         ace.Attach(pid);
         // valid command
         try {
-            ace.CheaterCmd("scan = 0");
+            ace.CheaterCmd(new String[]{"scan = 0"});
             Assert.assertTrue(true);
         } catch (ACEAttachClient.InvalidCommandException e) {
             Assert.fail();
@@ -231,6 +231,9 @@ public class ACETest {
             } catch (ACE.AttachingInARowException e) {
                 Assert.assertTrue(true);
             }
+            // DeAttach and stop server
+            ace.DeAttach();
+            serverThread.join();
         }
         // DeAttach without attach
         {
@@ -247,13 +250,18 @@ public class ACETest {
                 Assert.assertTrue(true);
             }
 
+            // Connect to DeAttach and stop server
+            ace.ConnectToACEServer(port);
+            ace.DeAttach();
+            serverThread.join();
+
         }
 
         p.destroy();
     }
 
     @Test
-    public void AttachInARowException() throws IOException {
+    public void AttachInARowException() throws IOException, InterruptedException {
 
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ACE ace = new ACE(context);
@@ -268,6 +276,7 @@ public class ACETest {
         } catch (ACE.AttachingInARowException e) {
             Assert.assertTrue(true);
         }
+        ace.DeAttach();
         // cleanup
         p.destroy();
 
@@ -372,6 +381,7 @@ public class ACETest {
         ace.Attach(pid);
         // shouldn't have any matches before scan
         Assert.assertEquals((Integer) 0, ace.GetMatchCount());
+        Assert.assertEquals(0, ace.ListMatches(maxMatchesCount).size());
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0");
         // get matches
         List<ACE.MatchInfo> matches = ace.ListMatches(maxMatchesCount);

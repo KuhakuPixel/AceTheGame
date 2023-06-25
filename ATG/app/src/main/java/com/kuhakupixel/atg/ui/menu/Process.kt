@@ -1,13 +1,10 @@
 package com.kuhakupixel.atg.ui.menu
 
-import androidx.compose.foundation.layout.Arrangement
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -20,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -100,6 +98,49 @@ fun ProcessTable(
         })
 }
 
+
+@Composable
+private fun _ProcessMenuContent(
+    runningProcState: SnapshotStateList<ProcInfo>,
+    onRefreshClicked: () -> Unit,
+    onConnectToACEServerClicked: () -> Unit,
+    onAttach: (pid: Long, procName: String) -> Unit,
+    buttonContainer: @Composable (
+        content: @Composable () -> Unit
+    ) -> Unit
+
+) {
+    if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        Text("Selected process: ${attachedStatusString.value}")
+    }
+    buttonContainer {
+
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Text("Selected process: ${attachedStatusString.value}")
+        }
+        Button(onClick = onRefreshClicked, modifier = Modifier.padding(start = 10.dp)) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_refresh),
+                contentDescription = "Refresh",
+            )
+        }
+
+        Button(
+            onClick = onConnectToACEServerClicked,
+            modifier = Modifier.padding(start = 10.dp)
+        ) {
+            Text("Connect to ACE Server")
+        }
+    }
+
+
+    ProcessTable(
+        processList = runningProcState,
+        onProcessSelected = onAttach,
+    )
+
+}
+
 @Composable
 private fun _ProcessMenu(
     runningProcState: SnapshotStateList<ProcInfo>,
@@ -114,34 +155,37 @@ private fun _ProcessMenu(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text("Selected process: ${attachedStatusString.value}")
-            Spacer(modifier = Modifier.height(10.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(onClick = onRefreshClicked, modifier = Modifier.padding(start = 10.dp)) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_refresh),
-                        contentDescription = "Refresh",
-                    )
-                }
 
-                Button(
-                    onClick = onConnectToACEServerClicked,
-                    modifier = Modifier.padding(start = 10.dp)
-                ) {
-                    Text("Connect to ACE Server")
-                }
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                _ProcessMenuContent(
+                    runningProcState = runningProcState,
+                    onRefreshClicked = onRefreshClicked,
+                    onConnectToACEServerClicked = onConnectToACEServerClicked,
+                    onAttach = onAttach,
+                    buttonContainer = { content ->
+                        Row(content = { content() })
+                    }
+                )
             }
 
-            ProcessTable(
-                processList = runningProcState,
-                onProcessSelected = onAttach,
-            )
+        } else {
+            Row(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                _ProcessMenuContent(
+                    runningProcState = runningProcState,
+                    onRefreshClicked = onRefreshClicked,
+                    onConnectToACEServerClicked = onConnectToACEServerClicked,
+                    onAttach = onAttach,
+                    buttonContainer = { content ->
+                        Column(content = { content() })
+                    }
+                )
+            }
+
         }
     }
 }

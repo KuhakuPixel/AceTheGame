@@ -1,34 +1,39 @@
 package com.kuhakupixel.atg.backend;
 
-import java.io.DataOutputStream;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Root {
 
     /*
-    * Run [strings] as sudo
-    * credits: https://stackoverflow.com/a/26654728/14073678
-    * */
-    public static void sudo(String...strings) throws IOException {
-        try{
-            Process su = Runtime.getRuntime().exec("su");
-            DataOutputStream outputStream = new DataOutputStream(su.getOutputStream());
+     * Run [strings] as sudo
+     * credits: https://stackoverflow.com/a/26654728/14073678
+     * */
+    public static List<String> sudo(String[] cmd) {
+        List<String> res = new ArrayList<String>();
+        try {
+            String[] fullCmd = ArrayUtils.addAll(new String[]{"su", "--command"}, cmd);
+            Process su = Runtime.getRuntime().exec(fullCmd);
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(su.getInputStream()));
 
-            for (String s : strings) {
-                outputStream.writeBytes(s+"\n");
-                outputStream.flush();
-            }
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(su.getErrorStream()));
 
-            outputStream.writeBytes("exit\n");
-            outputStream.flush();
-            try {
-                su.waitFor();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            outputStream.close();
-        }catch(IOException e){
+            String s;
+            while ((s = stdInput.readLine()) != null)
+                res.add(s);
+            while ((s = stdError.readLine()) != null)
+                res.add(s);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        return res;
     }
 }
