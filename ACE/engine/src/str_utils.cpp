@@ -4,9 +4,6 @@
 #include <limits.h>
 #include <string.h>
 
-const char *E_strtol_convert_res_str(E_strtol_convert_res val) {
-  return E_strtol_convert_res_to_str_map.at(val).c_str();
-}
 std::vector<std::string> str_split(std::string str, std::string delimeter) {
 
   /*
@@ -158,111 +155,6 @@ bool str_is_numeric(const char *str) {
   return true;
 }
 
-E_strtol_convert_res str_check_strtol(const char *str, E_num_type num_type,
-                                      int base, long *val_ptr) {
-
-  if (str == NULL)
-    return E_strtol_convert_res::str_is_NULL;
-  // pointer to additional chars
-  char *endptr = NULL;
-  // variable holding return
-  long number = 0;
-
-  /* reset errno to 0
-   * because some function in library might set this
-   * */
-  errno = 0;
-
-  /* call to strtol assigning return to number */
-  number = strtol(str, &endptr, base);
-  if (val_ptr != NULL)
-    *val_ptr = number;
-
-  /* test return to number and errno values */
-  if (str == endptr)
-    return E_strtol_convert_res::non_numeric;
-  /*
-   * check for overflow of different num type
-   * */
-
-  if (errno == ERANGE) {
-
-    /*
-     * number can't be less than LONG_MIN since
-     * if string is underflow, it only convert
-     * to LONG_MIN even if string is lower than that
-     * with errno set as ERANGE
-     *
-     * so an "=" operator on overflow or underflow check
-     * is needed
-     *
-     * */
-    if (num_type == E_num_type::LONG && number <= LONG_MIN)
-      return E_strtol_convert_res::underflow;
-    if (num_type == E_num_type::LONG && number >= LONG_MAX)
-      return E_strtol_convert_res::overflow;
-    /*
-     * need to also check overflow for int
-     * if the long and int has the same size
-     *
-     * example: on a 32 bit system
-     * REF: https://www.open-std.org/JTC1/SC22/WG14/www/docs/n1256.pdf
-     * page 22
-     */
-    if (sizeof(int) == sizeof(long)) {
-      if (num_type == E_num_type::INT && number <= INT_MIN)
-        return E_strtol_convert_res::underflow;
-      if (num_type == E_num_type::INT && number >= INT_MAX)
-        return E_strtol_convert_res::overflow;
-    }
-  }
-
-  /*
-   * check overflow/underflow for other type's size that are less
-   * than a long in case
-   * strtol didn't set errno to ERANGE
-   * */
-
-  if (num_type == E_num_type::BYTE && number < SCHAR_MIN)
-    return E_strtol_convert_res::underflow;
-  if (num_type == E_num_type::BYTE && number > SCHAR_MAX)
-    return E_strtol_convert_res::overflow;
-
-  if (num_type == E_num_type::SHORT && number < SHRT_MIN)
-    return E_strtol_convert_res::underflow;
-  if (num_type == E_num_type::SHORT && number > SHRT_MAX)
-    return E_strtol_convert_res::overflow;
-
-  if (num_type == E_num_type::INT && number < INT_MIN)
-    return E_strtol_convert_res::underflow;
-  if (num_type == E_num_type::INT && number > INT_MAX)
-    return E_strtol_convert_res::overflow;
-
-  /* not in all c99 implementations - gcc OK */
-  if (errno == EINVAL)
-    return E_strtol_convert_res::base_contain_unsuported_valn;
-  /*
-   * endptr should be set to one over the
-   * last numeric character of [str]
-   * interpreted by strtol,
-   *
-   * if endptr reached to the end, then it means
-   * everything is numeric, else its non numeric
-   * */
-  else if (errno == 0 && str && (*endptr) == 0)
-    return E_strtol_convert_res::possible;
-  else if (errno == 0 && str && (*endptr) != 0)
-    return E_strtol_convert_res::non_numeric;
-
-  return E_strtol_convert_res::unknown_error;
-}
-
-E_strtol_convert_res str_check_strtol(const std::string &str,
-                                      E_num_type num_type, int base,
-                                      long *val_ptr) {
-
-  return str_check_strtol(str.c_str(), num_type, base, val_ptr);
-}
 char **str_vector_to_c_str_arr_new(const std::vector<std::string> &vec,
                                    size_t *str_arr_count) {
 
