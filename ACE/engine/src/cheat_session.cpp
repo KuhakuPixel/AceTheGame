@@ -451,16 +451,22 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   CLI::App *config_type_cmd =
       config_cmd->add_subcommand("type", "change type of type\n");
 
-  config_type_cmd->add_option("<VALUE>", cheat_args.num_scan_type)
-      ->required()
-      ->transform(CLI::CheckedTransformer(num_type_str_to_E_num_type_map,
-                                          CLI::ignore_case));
+  CLI::Option *config_type_opt =
+      config_type_cmd->add_option("<VALUE>", cheat_args.num_scan_type)
+          ->transform(CLI::CheckedTransformer(num_type_str_to_E_num_type_map,
+                                              CLI::ignore_case));
 
   config_type_cmd->callback(
 
       [&]() {
         //
-        type_cmd_handler(cheat_args.num_scan_type, &_cheat_cmd_ret);
+        if (config_type_opt->count() == 0) {
+          std::string num_type_str =
+              E_num_type_to_str_map.at(this->current_scan_type);
+          frontend::print("%s\n", num_type_str.c_str());
+        } else {
+          type_cmd_handler(cheat_args.num_scan_type, &_cheat_cmd_ret);
+        }
       }
 
   );
