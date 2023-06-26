@@ -48,7 +48,6 @@ private val valueTypeList: MutableList<String> = mutableListOf()
 
 // ==================== selected scan options ==============================
 private var scanInputVal: MutableState<String> = mutableStateOf("")
-private var scanAgainstValue: MutableState<Boolean> = mutableStateOf(true)
 
 private val scanTypeSelectedOptionIdx = mutableStateOf(0)
 private val valueTypeSelectedOptionIdx = mutableStateOf(0)
@@ -155,14 +154,20 @@ fun _MemoryMenu(
                     // set the value type
                     if (!initialScanDone.value) ace.SetNumType(valueType)
                     try {
-                        // do the scan
-                        if (scanAgainstValue.value) {
+                        /**
+                         * scan against a value if input value
+                         * is not empty
+                         * and scan without value otherwise
+                         * (picking addresses whose value stayed the same, increased and etc)
+                         * */
+
+                        if (scanInputVal.value.isBlank()) {
+                            ace.ScanWithoutValue(scanType)
+                        } else {
                             ace.ScanAgainstValue(
                                 scanType,
                                 scanInputVal.value
                             )
-                        } else {
-                            ace.ScanWithoutValue(scanType)
                         }
                     } catch (e: InvalidCommandException) {
                         overlayManager!!.Dialog(
@@ -185,7 +190,6 @@ fun _MemoryMenu(
                     UpdateMatches(ace = ace)
                     initialScanDone.value = false
                 },
-                scanAgainstValue = scanAgainstValue,
                 overlayManager = overlayManager!!,
             )
 
@@ -281,26 +285,15 @@ private fun MatchesSetting(
     nextScanEnabled: Boolean,
     nextScanClicked: () -> Unit,
     //
-    scanAgainstValue: MutableState<Boolean>,
-    //
     newScanEnabled: Boolean,
     newScanClicked: () -> Unit,
     overlayManager: OverlayManager,
 ) {
     @Composable
-    fun ScanInputField(scanValue: MutableState<String>, scanAgainstValue: MutableState<Boolean>) {
+    fun ScanInputField(scanValue: MutableState<String>) {
         Row() {
-            CheckboxWithText(
-                modifier = Modifier.weight(0.45f),
-                checked = scanAgainstValue.value,
-                onCheckedChange = { value ->
-                    scanAgainstValue.value = value
-                },
-                text = "Against value",
-            )
             NumberInputField(
                 modifier = Modifier.weight(0.65f),
-                enabled = scanAgainstValue.value,
                 value = scanValue.value,
                 onValueChange = { value ->
                     scanValue.value = value
@@ -399,7 +392,7 @@ private fun MatchesSetting(
 
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
 
-        ScanInputField(scanValue = scanInputVal, scanAgainstValue = scanAgainstValue)
+        ScanInputField(scanValue = scanInputVal)
         ScanTypeDropDown(
             scanTypeSelectedOptionIdx,
             enabled = scanTypeEnabled,
