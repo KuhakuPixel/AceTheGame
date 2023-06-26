@@ -114,12 +114,12 @@ struct cheat_cmd_ret {
 private:
   //
   bool should_change_type = false;
-  E_num_type scan_type_to_change_to = E_num_type::INT;
+  E_num_type num_type_to_change_to = E_num_type::INT;
 
 public:
   E_loop_statement loop_statement = E_loop_statement::continue_;
-  void set_next_scan_type(E_num_type num_type);
+  void set_next_num_type(E_num_type num_type);
   bool get_should_change_type();
   void set_should_change_type(bool val);
-  E_num_type get_scan_type_to_change_to();
+  E_num_type get_num_type_to_change_to();
 };

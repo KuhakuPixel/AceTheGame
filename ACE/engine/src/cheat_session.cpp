@@ -452,7 +452,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
       config_cmd->add_subcommand("type", "change type of type\n");
 
   CLI::Option *config_type_opt =
-      config_type_cmd->add_option("<VALUE>", cheat_args.num_scan_type)
+      config_type_cmd->add_option("<VALUE>", cheat_args.num_type)
           ->transform(CLI::CheckedTransformer(num_type_str_to_E_num_type_map,
                                               CLI::ignore_case));
 
@@ -462,10 +462,10 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
         //
         if (config_type_opt->count() == 0) {
           std::string num_type_str =
-              E_num_type_to_str_map.at(this->current_scan_type);
+              E_num_type_to_str_map.at(this->current_num_type);
           frontend::print("%s\n", num_type_str.c_str());
         } else {
-          type_cmd_handler(cheat_args.num_scan_type, &_cheat_cmd_ret);
+          type_cmd_handler(cheat_args.num_type, &_cheat_cmd_ret);
         }
       }
 
@@ -561,10 +561,10 @@ cheat_session::cheater_mode_on_each_input(
   // else return value of _cheat_cmd
   return _cheat_cmd_ret;
 }
-cheat_session::cheat_session(int pid, E_num_type current_scan_type) {
+cheat_session::cheat_session(int pid, E_num_type current_num_type) {
 
   this->pid = pid;
-  this->current_scan_type = current_scan_type;
+  this->current_num_type = current_num_type;
   // initialize engine modules for all types
   this->engine_module_ptr_int = new engine_module<int>(pid);
   this->engine_module_ptr_long = new engine_module<long>(pid);
@@ -590,8 +590,8 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
    * */
   if (this->current_cheat_cmd_ret.get_should_change_type()) {
     // change the scan type
-    this->current_scan_type =
-        this->current_cheat_cmd_ret.get_scan_type_to_change_to();
+    this->current_num_type =
+        this->current_cheat_cmd_ret.get_num_type_to_change_to();
     //
     // we don't want the next call to this function
     // to "change scan type" so we  reset
@@ -599,7 +599,7 @@ E_loop_statement cheat_session::on_each_input(std::string input_str) {
   }
 
   // then switch to the type to use
-  switch (this->current_scan_type) {
+  switch (this->current_num_type) {
   case E_num_type::INT: {
     this->current_cheat_cmd_ret = this->cheater_mode_on_each_input<int>(
 
