@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
+import com.kuhakupixel.atg.backend.ACEBaseClient
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
@@ -46,8 +47,15 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
                 overlayManager!!.InputDialog(
                     title = "Edit value of $address",
                     onConfirm = { input: String ->
-
-                        ace.WriteValueAtAddress(address, input)
+                        try {
+                            ace.WriteValueAtAddress(address, input)
+                        } catch (e: ACEBaseClient.InvalidCommandException) {
+                            overlayManager!!.Dialog(
+                                title = "Error",
+                                text = e.stackTraceToString(),
+                                onConfirm = {},
+                            )
+                        }
                     }
                 )
             }
