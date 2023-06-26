@@ -208,6 +208,14 @@ public class ACE {
         CheaterCmd(new String[]{"config", "type", type.toString()});
     }
 
+    /**
+     * get current type that ACE use
+     * */
+    public NumType GetNumType() {
+        String typeStr = CheaterCmd(new String[]{"config", "type"});
+        return NumType.fromString(typeStr);
+    }
+
     public void ScanAgainstValue(Operator operator, String numValStr) {
         CheaterCmd(new String[]{"scan", operatorEnumToSymbolBiMap.get(operator), numValStr});
 

@@ -134,9 +134,9 @@ public class ACETest {
         // shouldn't throw any exception ...
         for (ACE.NumType numType : ACE.NumType.values()) {
             ace.SetNumType(numType);
+            Assert.assertEquals(numType, ace.GetNumType());
         }
         ace.DeAttach();
-
 
     }
 
