@@ -19,6 +19,17 @@ Folder 				| Description
 [Modder](./Modder) 		| Attaching a memory scanner and editor service in the apk itself so you can read/write memory without root
 [ATG](./ATG) 	 		| Mobile Apk GUI For Memory scaner and editor (will be similiar like Game Guardian), this uses [ACE](./ACE/) for memory scanning/editing
 
+## Seeing Logs
+
+`ACE` and `ATG` write to [adb logcat](https://developer.android.com/tools/logcat)
+which can be seen by running  in your terminal
+```
+adb logcat -s "ACE", "ATG"
+``` 
+
+it contains logging information like commands that `ATG` sent to `ACE`
+
+this can help debug bugs that involve communication between the two
 ## Making Release
 
 ### With Docker
