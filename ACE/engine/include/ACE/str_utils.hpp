@@ -4,38 +4,6 @@
 #include <unordered_map>
 #include <vector>
 
-enum class E_strtol_convert_res {
-  possible,
-  underflow,
-  overflow,
-  non_numeric,
-  base_contain_unsuported_valn,
-  unknown_error,
-  str_is_NULL,
-};
-
-static const std::unordered_map<E_strtol_convert_res, std::string>
-    E_strtol_convert_res_to_str_map =
-
-        {
-            {E_strtol_convert_res::possible, "Conversion is possible"},
-            {E_strtol_convert_res::underflow, "Conversion underflow"},
-            {E_strtol_convert_res::overflow, "Conversion overflow"},
-            {E_strtol_convert_res::non_numeric, "Converting non-numeric"},
-            {E_strtol_convert_res::base_contain_unsuported_valn,
-             "Cannot convert: base contains unsupported value"},
-            {E_strtol_convert_res::unknown_error,
-             "Unknown error for conversion"},
-            {E_strtol_convert_res::str_is_NULL,
-             "Converting NULL string to number"},
-
-};
-
-/*
- * get string representation of [E_strtol_convert_res]
- * */
-const char *E_strtol_convert_res_str(E_strtol_convert_res val);
-
 /*
  * return string from [str] between [first_c] and [second_c]
  *
@@ -72,26 +40,6 @@ std::string str_extract_between_chars(
  * */
 std::vector<std::string> str_split(std::string str, std::string delimeter);
 bool str_is_numeric(const char *str);
-
-/*
- * check if [str] can be converted to number of type [E_num_type]
- * with c's strtol correctly without errors
- * if it is possible, it will return
- * E_strtol_convert_res::possible
- *
- * write results of `strtol` to [val_ptr] if its not a NULL pointer
- * (this function may still write to [val_ptr] even if conversion failed
- *
- * so caller needs to check
- * if E_strtol_convert_res::possible is returned before using
- * that value
- * */
-E_strtol_convert_res str_check_strtol(const char *str, E_num_type num_type,
-                                      int base, long *val_ptr = NULL);
-
-E_strtol_convert_res str_check_strtol(const std::string &str,
-                                      E_num_type num_type, int base,
-                                      long *val_ptr = NULL);
 /*
  * get substr from `index_1` to `index_2` in str
  * both indexes are inclusive

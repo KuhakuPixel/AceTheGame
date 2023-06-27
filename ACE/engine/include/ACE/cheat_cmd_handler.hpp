@@ -28,7 +28,7 @@ template <typename T> struct cheat_mode_args {
   ADDR addr_to_freeze_or_unfreeze;
   E_endian_scan_type endian_scan_type;
   Scan_Utils::E_scan_level scan_level_type;
-  E_num_type num_scan_type;
+  E_num_type num_type;
 
   size_t list_max_count;
   size_t read_arr_read_length;
@@ -83,7 +83,7 @@ template <typename T>
 void scan_level_cmd_handler(ACE_scanner<T> *scanner,
                             Scan_Utils::E_scan_level scan_level);
 
-void type_cmd_handler(E_num_type scan_type,
+void type_cmd_handler(E_num_type num_type,
                       cheat_cmd_ret *cheater_on_line_ret_ptr);
 template <typename T>
 void freeze_at_cmd_handler(freezer<T> *freezer_manager, ADDR addr);

@@ -222,11 +222,11 @@ void scan_level_cmd_handler(ACE_scanner<T> *scanner,
   frontend::print("set scan level to %s\n", new_scan_level_val.c_str());
 }
 
-void type_cmd_handler(E_num_type scan_type,
+void type_cmd_handler(E_num_type num_type,
                       cheat_cmd_ret *cheater_on_line_ret_ptr) {
-  cheater_on_line_ret_ptr->set_next_scan_type(scan_type);
-  frontend::print("set scan level to %s\n",
-                 E_num_type_to_str_map.at(scan_type).c_str());
+  cheater_on_line_ret_ptr->set_next_num_type(num_type);
+  frontend::print("set num type to %s\n",
+                 E_num_type_to_str_map.at(num_type).c_str());
 }
 
 template <typename T>

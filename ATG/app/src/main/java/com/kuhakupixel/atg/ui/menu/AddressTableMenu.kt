@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
+import com.kuhakupixel.atg.backend.ACEBaseClient
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
@@ -42,12 +43,19 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
                 .padding(16.dp),
             savedAddressList = savedAddresList,
             ace = ace,
-            onAddressClicked = { address: String ->
+            onAddressClicked = { numType: NumType, address: String ->
                 overlayManager!!.InputDialog(
                     title = "Edit value of $address",
                     onConfirm = { input: String ->
-
-                        ace.WriteValueAtAddress(address, input)
+                        try {
+                            ace.WriteValueAtAddress(numType, address, input)
+                        } catch (e: ACEBaseClient.InvalidCommandException) {
+                            overlayManager!!.Dialog(
+                                title = "Error",
+                                text = e.stackTraceToString(),
+                                onConfirm = {},
+                            )
+                        }
                     }
                 )
             }
@@ -60,7 +68,7 @@ fun SavedAddressesTable(
     modifier: Modifier = Modifier,
     savedAddressList: SnapshotStateList<AddressInfo>,
     ace: ACE,
-    onAddressClicked: (address: String) -> Unit
+    onAddressClicked: (numType: NumType, address: String) -> Unit
 ) {
 
     CreateTable(
@@ -70,7 +78,10 @@ fun SavedAddressesTable(
         itemCount = savedAddressList.size,
         minEmptyItemCount = 50,
         onRowClicked = { rowIndex: Int ->
-            onAddressClicked(savedAddressList[rowIndex].matchInfo.address)
+            onAddressClicked(
+                savedAddressList[rowIndex].numType,
+                savedAddressList[rowIndex].matchInfo.address
+            )
         },
         drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
             if (colIndex == 0) {

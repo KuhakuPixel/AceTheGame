@@ -21,7 +21,7 @@ private:
   engine_module<byte> *engine_module_ptr_byte = NULL;
   engine_module<float> *engine_module_ptr_float = NULL;
 
-  E_num_type current_scan_type;
+  E_num_type current_num_type;
   //
   struct cheat_cmd_ret current_cheat_cmd_ret;
 
@@ -40,10 +40,10 @@ private:
 
 public:
   /*
-  * [current_scan_type]: the current scan type to be used
+  * [current_num_type]: the current scan type to be used
                          which can be changed later on
   */
-  cheat_session(int pid, E_num_type current_scan_type);
+  cheat_session(int pid, E_num_type current_num_type);
   ~cheat_session();
 
   /*

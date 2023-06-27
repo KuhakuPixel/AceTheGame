@@ -1,5 +1,6 @@
 package com.kuhakupixel.atg.backend;
 
+import android.app.Notification;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,10 @@ public class ACE {
 
     }
 
+
+    public interface IActionOnType {
+        public void Action(ACE self);
+    }
 
     public enum Operator {
         greater, less, equal, greaterEqual, lessEqual, notEqual, unknown,
@@ -208,6 +213,28 @@ public class ACE {
         CheaterCmd(new String[]{"config", "type", type.toString()});
     }
 
+    /**
+     * get current type that ACE use
+     */
+    public NumType GetNumType() {
+        String typeStr = CheaterCmd(new String[]{"config", "type"});
+        return NumType.fromString(typeStr);
+    }
+
+    /**
+     * run code/function when type is set to [numType]
+     * after done, the type will be set to the previous one
+     */
+    public void ActionOnType(NumType numType, IActionOnType action) {
+        NumType prevType = GetNumType();
+        // set type first before writing
+        if (prevType != numType)
+            SetNumType(numType);
+        action.Action(this);
+        if (prevType != numType)
+            SetNumType(prevType);
+    }
+
     public void ScanAgainstValue(Operator operator, String numValStr) {
         CheaterCmd(new String[]{"scan", operatorEnumToSymbolBiMap.get(operator), numValStr});
 
@@ -217,8 +244,14 @@ public class ACE {
         CheaterCmd(new String[]{"filter", operatorEnumToSymbolBiMap.get(operator)});
     }
 
-    public void WriteValueAtAddress(String address, String value) {
-        CheaterCmd(new String[]{"writeat", address, value});
+    public void WriteValueAtAddress(NumType numType, String address, String value) {
+
+        this.ActionOnType(numType,
+
+                self -> {
+                    self.CheaterCmd(new String[]{"writeat", address, value});
+                }
+        );
     }
 
     public Integer GetMatchCount() {
