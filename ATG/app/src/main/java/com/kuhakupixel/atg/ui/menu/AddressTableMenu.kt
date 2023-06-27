@@ -43,12 +43,12 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
                 .padding(16.dp),
             savedAddressList = savedAddresList,
             ace = ace,
-            onAddressClicked = { address: String ->
+            onAddressClicked = { numType: NumType, address: String ->
                 overlayManager!!.InputDialog(
                     title = "Edit value of $address",
                     onConfirm = { input: String ->
                         try {
-                            ace.WriteValueAtAddress(address, input)
+                            ace.WriteValueAtAddress(numType, address, input)
                         } catch (e: ACEBaseClient.InvalidCommandException) {
                             overlayManager!!.Dialog(
                                 title = "Error",
@@ -68,7 +68,7 @@ fun SavedAddressesTable(
     modifier: Modifier = Modifier,
     savedAddressList: SnapshotStateList<AddressInfo>,
     ace: ACE,
-    onAddressClicked: (address: String) -> Unit
+    onAddressClicked: (numType: NumType, address: String) -> Unit
 ) {
 
     CreateTable(
@@ -78,7 +78,10 @@ fun SavedAddressesTable(
         itemCount = savedAddressList.size,
         minEmptyItemCount = 50,
         onRowClicked = { rowIndex: Int ->
-            onAddressClicked(savedAddressList[rowIndex].matchInfo.address)
+            onAddressClicked(
+                savedAddressList[rowIndex].numType,
+                savedAddressList[rowIndex].matchInfo.address
+            )
         },
         drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
             if (colIndex == 0) {

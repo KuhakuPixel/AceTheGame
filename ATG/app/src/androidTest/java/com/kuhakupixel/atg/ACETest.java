@@ -419,5 +419,33 @@ public class ACETest {
         ace.DeAttach();
     }
 
+    @Test
+    public void ActionOnType() throws IOException, InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ACE ace = new ACE(context);
+        Process p = ProcUtil.RunBusyProgram();
+        Long pid = ProcUtil.GetPid(p);
+        ace.Attach(pid);
+        // ==========
+        ACE.NumType defaultType = ACE.NumType._int;
+
+        for (ACE.NumType numType : ACE.NumType.values()) {
+            ace.ActionOnType(numType,
+                    self -> {
+                        // make sure type has been set, when we are running
+                        // the callback
+                        Assert.assertEquals(numType, self.GetNumType());
+                    }
+            );
+            // make sure type is reset
+            Assert.assertEquals(defaultType, ace.GetNumType());
+
+        }
+
+        // ====================
+        ace.DeAttach();
+
+    }
+
 
 }
