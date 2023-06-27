@@ -1,7 +1,7 @@
 # ChangeLog
 
-## [0.0.1]
-Initial Alpha release
+## [0.0.8]
+Initial Alpha release of ATG apk
 
 ### Fixed
 - Nasty Freezing bug in low end device after doing a couple of scan 
