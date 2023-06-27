@@ -23,6 +23,13 @@ for discussion, suggestion and question
 feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
 ## Showcase
+### Gui Apk
+![](./assets/showcase/ATG_1.png)
+
+
+
+![](./assets/showcase/ATG_2.png)
+
 ### infinite coin 
 
 ![](./assets/showcase/inf_coin.gif)
@@ -37,90 +44,15 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
 ![](./assets/showcase/freezed_health.gif)
 
-## Dev Guide
-For build and project structure
-[DEV_GUIDE](./DEV_GUIDE.md)
-
-you can also use this as a library in your apk/project
-see the [docs here](./ACE/readme.md)
-## Installation
-### Prerequisite
-- adb program installed and can be run through the command prompt
- [adb download](https://developer.android.com/studio/command-line/adb)
-
-### Installing memory scanner and editor to device
-- [download latest release of AceTheGame](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
-  and unzip the file to get `release` folder
-
-  inside the `release` folder, the structure should look like 
-  ```
-
-	├── android
-	│   ├── arm64-v8a
-	│   │   ├── bin
-	│   │   ├── include
-	│   │   ├── lib
-	│   │   └── share
-	│   ├── armeabi-v7a
-	│   │   ├── bin
-	│   │   ├── include
-	│   │   ├── lib
-	│   │   └── share
-	│   ├── x86
-	│   │   ├── bin
-	│   │   ├── include
-	│   │   ├── lib
-	│   │   └── share
-	│   └── x86_64
-	│       ├── bin
-	│       ├── include
-	│       ├── lib
-	│       └── share
-	├── linux
-	│   ├── bin
-	│   ├── include
-	│   ├── lib
-	│   └── share
-	└── modder
-	    ├── bin
-	    └── lib
-
-  ```
-- open the terminal and go to the directory
-  of your specific architecture
-  ```
-  ./android/[ARCH]/bin
-  ```
-
-  for example if your arch is `arm64-v8` then `cd`
-  to directory of `./android/arm64-v8a/bin`
-
-#### Rooted Device
-
-```
-adb push ./ACE /data/local/tmp
-adb shell chmod +x /data/local/tmp/ACE 
-```
-#### Non-Rooted Device
-
-```
-adb push ./attach_client /data/local/tmp
-adb shell chmod +x /data/local/tmp/attach_client 
-```
-
-this binary will be used to scan and edit memory of the apk
-
-#### Optional:
-for alternative install directory that is available in android
-look [here](https://android.stackexchange.com/questions/45554/running-own-executable-on-android-shell)
-
 ## Usage
 (this is only a brief tutorial about scanning,
  for more in depth and real practice visit [here](./tutorial/))
 
 Notes: type command `-h` to list all available commands
 
-[video tutorial](https://www.youtube.com/watch?v=UlGm1nFxRzA)
+[ATG Gui Apk video tutorial](https://www.youtube.com/watch?v=UlGm1nFxRzA)
+
+[ACE Binary (CLI only) video tutorial](https://www.youtube.com/watch?v=UlGm1nFxRzA)
 
 ### Rooted Device
 open up adb shell and go to the program location
@@ -348,3 +280,81 @@ the syntax of installing apk is
    ```
    (Engine Server) write 1000 
    ```
+
+you can also use this as a library in your apk/project
+see the [docs here](./ACE/readme.md)
+## Installation
+### Prerequisite
+- adb program installed and can be run through the command prompt
+ [adb download](https://developer.android.com/studio/command-line/adb)
+
+### Installing memory scanner and editor to device
+- [download latest release of AceTheGame](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
+  and unzip the file to get `release` folder
+
+  inside the `release` folder, the structure should look like 
+  ```
+
+	├── android
+	│   ├── arm64-v8a
+	│   │   ├── bin
+	│   │   ├── include
+	│   │   ├── lib
+	│   │   └── share
+	│   ├── armeabi-v7a
+	│   │   ├── bin
+	│   │   ├── include
+	│   │   ├── lib
+	│   │   └── share
+	│   ├── x86
+	│   │   ├── bin
+	│   │   ├── include
+	│   │   ├── lib
+	│   │   └── share
+	│   └── x86_64
+	│       ├── bin
+	│       ├── include
+	│       ├── lib
+	│       └── share
+	├── linux
+	│   ├── bin
+	│   ├── include
+	│   ├── lib
+	│   └── share
+	└── modder
+	    ├── bin
+	    └── lib
+
+  ```
+- open the terminal and go to the directory
+  of your specific architecture
+  ```
+  ./android/[ARCH]/bin
+  ```
+
+  for example if your arch is `arm64-v8` then `cd`
+  to directory of `./android/arm64-v8a/bin`
+
+#### Rooted Device
+
+```
+adb push ./ACE /data/local/tmp
+adb shell chmod +x /data/local/tmp/ACE 
+```
+#### Non-Rooted Device
+
+```
+adb push ./attach_client /data/local/tmp
+adb shell chmod +x /data/local/tmp/attach_client 
+```
+
+this binary will be used to scan and edit memory of the apk
+
+#### Optional:
+for alternative install directory that is available in android
+look [here](https://android.stackexchange.com/questions/45554/running-own-executable-on-android-shell)
+
+
+## Developer Guide
+For build and project structure
+[DEV_GUIDE](./DEV_GUIDE.md)
