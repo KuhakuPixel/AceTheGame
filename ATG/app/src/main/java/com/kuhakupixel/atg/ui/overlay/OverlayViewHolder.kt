@@ -14,7 +14,6 @@ class OverlayViewHolder(
     private val params: WindowManager.LayoutParams,
     val alpha: Float,
     val service: FloatingService,
-    val potraitOnly: Boolean = false,
 ) {
 
     private var view: ComposeView? = null
@@ -64,8 +63,6 @@ class OverlayViewHolder(
         // not touchable so it won't block input when disabled
         params.flags = originalWindowFlag
         // lock if potrait only
-        if (potraitOnly)
-            params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         windowManager.updateViewLayout(view, params)
     }
 

@@ -29,10 +29,6 @@ class OverlayHackingScreenController(
         name = "Hacking Screen",
     )
 
-    var currentCounter = 0
-    val dropdownEnabled: MutableState<Boolean> = mutableStateOf(true)
-    val dropdownExpanded: MutableState<Boolean> = mutableStateOf(false)
-    val dropdownSelectedIdx: MutableState<Int> = mutableStateOf(0)
     private fun createOverlay(): OverlayViewHolder {
 
         val hackingScreen = OverlayViewHolder(
@@ -48,7 +44,6 @@ class OverlayHackingScreenController(
             ),
             alpha = 0.9f,
             service = service,
-            potraitOnly = false,
         )
 
         hackingScreen.setContent {
