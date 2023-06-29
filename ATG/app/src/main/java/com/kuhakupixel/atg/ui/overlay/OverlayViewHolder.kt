@@ -20,16 +20,13 @@ class OverlayViewHolder(
 
     val originalWindowFlag: Int
     val originalWindowAlpha: Float
-    val originalScreenOrientation: Int
 
     init {
         params.gravity = Gravity.TOP or Gravity.LEFT
         params.alpha = alpha
-        //
         // save original params
         originalWindowFlag = params.flags
         originalWindowAlpha = params.alpha
-        originalScreenOrientation = params.screenOrientation
     }
 
     fun getParams(): WindowManager.LayoutParams {
@@ -48,8 +45,6 @@ class OverlayViewHolder(
     }
 
     fun disable() {
-        // make sure so screen is not locked up to one orientation
-        params.screenOrientation = originalScreenOrientation
         // set not visible
         params.alpha = 0f
         // not touchable so it won't block input when disabled
