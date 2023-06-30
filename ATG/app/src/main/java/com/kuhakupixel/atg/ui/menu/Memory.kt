@@ -337,7 +337,7 @@ private fun MatchesSetting(
             options = scanTypeList,
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
-                overlayManager.overlayScanTypeDialog.show(
+                overlayManager.getChoicesDialog().show(
                     title = "Value: ",
                     choices = options,
                     onConfirm = { index: Int, value: String ->
@@ -370,7 +370,7 @@ private fun MatchesSetting(
             options = valueTypeList,
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
-                overlayManager.overlayValueTypeDialog.show(
+                overlayManager.getChoicesDialog().show(
                     title = "Value: ",
                     choices = options,
                     onConfirm = { index: Int, value: String ->

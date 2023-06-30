@@ -17,7 +17,7 @@ class OverlayManager(
         content: @Composable () -> Unit,
     ): OverlayViewHolder {
 
-        val hackingScreen = OverlayViewHolder(
+        val dialogViewHolder = OverlayViewHolder(
             windowManager = windowManager,
             params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -32,26 +32,16 @@ class OverlayManager(
             service = service,
         )
 
-        hackingScreen.setContent {
+        dialogViewHolder.setContent {
             content()
         }
 
-        return hackingScreen
+        return dialogViewHolder
     }
-
-    // TODO: Fix This, Because its duplicate and ugly :(
-    val overlayScanTypeDialog = OverlayChoicesDialog(
-        createDialogOverlay = ::createDialogOverlay,
-        windowManager = windowManager
-    )
-
-    val overlayValueTypeDialog = OverlayChoicesDialog(
-        createDialogOverlay = ::createDialogOverlay,
-        windowManager = windowManager
-    )
 
     init {
     }
+
     fun getInfoDialog(): OverlayInfoDialog {
         return OverlayInfoDialog(
             createDialogOverlay = ::createDialogOverlay,
@@ -61,6 +51,13 @@ class OverlayManager(
 
     fun getInputDialog(): OverlayInputDialog {
         return OverlayInputDialog(
+            createDialogOverlay = ::createDialogOverlay,
+            windowManager = windowManager
+        )
+    }
+
+    fun getChoicesDialog(): OverlayChoicesDialog {
+        return OverlayChoicesDialog(
             createDialogOverlay = ::createDialogOverlay,
             windowManager = windowManager
         )
