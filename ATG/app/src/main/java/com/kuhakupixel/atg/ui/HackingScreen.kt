@@ -15,7 +15,7 @@ import com.kuhakupixel.atg.ui.menu.AddressTableMenu
 import com.kuhakupixel.atg.ui.menu.MemoryMenu
 import com.kuhakupixel.atg.ui.menu.ProcessMenu
 import com.kuhakupixel.atg.ui.menu.SettingsMenu
-import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
+import com.kuhakupixel.atg.ui.overlay.OverlayManager
 
 
 @OptIn(ExperimentalMaterial3Api::class)

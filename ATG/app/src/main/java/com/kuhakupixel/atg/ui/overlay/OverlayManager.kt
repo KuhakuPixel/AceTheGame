@@ -1,10 +1,12 @@
-package com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI
+package com.kuhakupixel.atg.ui.overlay
 
 import android.graphics.PixelFormat
 import android.view.WindowManager
 import androidx.compose.runtime.Composable
-import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
 import com.kuhakupixel.atg.ui.overlay.service.FloatingService
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayChoicesDialog
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayInfoDialog
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayInputDialog
 
 class OverlayManager(
     private val windowManager: WindowManager,

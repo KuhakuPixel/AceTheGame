@@ -32,8 +32,7 @@ import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
-import com.kuhakupixel.atg.ui.util.CheckboxWithText
+import com.kuhakupixel.atg.ui.overlay.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
 import com.kuhakupixel.atg.ui.util.OverlayDropDown
