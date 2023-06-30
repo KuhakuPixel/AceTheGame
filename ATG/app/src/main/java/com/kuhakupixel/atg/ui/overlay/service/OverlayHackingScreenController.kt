@@ -63,21 +63,22 @@ class OverlayHackingScreenController(
                                 Text("Close")
                             }
 
+                            /*
                             Button(
 
                                 onClick = {
-                                    val infoDialog: OverlayInfoDialog =
-                                        overlayManager.getInfoDialog()
-                                    infoDialog.show(
+                                    overlayManager.getInputDialog().show(
                                         "Hello",
-                                        text = "Test",
-                                        onConfirm = {}
+                                        onConfirm = { input: String ->
+
+                                        }
                                     )
                                 }
 
                             ) {
                                 Text("Dialog Test")
                             }
+                             */
                         }
                         HackingScreen(overlayManager = overlayManager)
                     }
