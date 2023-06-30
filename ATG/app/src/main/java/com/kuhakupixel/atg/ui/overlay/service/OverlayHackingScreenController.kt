@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.HackingScreen
 import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayInfoDialog
 import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 
@@ -62,6 +63,22 @@ class OverlayHackingScreenController(
                         ) {
                             Button(onClick = onClosed) {
                                 Text("Close")
+                            }
+
+                            Button(
+
+                                onClick = {
+                                    val infoDialog: OverlayInfoDialog =
+                                        overlayManager.getInfoDialog()
+                                    infoDialog.show(
+                                        "Hello",
+                                        text = "Test",
+                                        onConfirm = {}
+                                    )
+                                }
+
+                            ) {
+                                Text("Dialog Test")
                             }
                         }
                         HackingScreen(overlayManager = overlayManager)

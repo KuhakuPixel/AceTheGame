@@ -69,4 +69,11 @@ class OverlayManager(
     fun InputDialog(title: String, onConfirm: (input: String) -> Unit) {
         overlayInputDialog.show(title = title, onConfirm = onConfirm)
     }
+
+    fun getInfoDialog(): OverlayInfoDialog {
+        return OverlayInfoDialog(
+            createDialogOverlay = ::createDialogOverlay,
+            windowManager = windowManager
+        )
+    }
 }

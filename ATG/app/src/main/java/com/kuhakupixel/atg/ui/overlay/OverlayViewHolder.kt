@@ -1,6 +1,5 @@
 package com.kuhakupixel.atg.ui.overlay
 
-import android.content.pm.ActivityInfo
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.compose.runtime.Composable
@@ -44,21 +43,19 @@ class OverlayViewHolder(
         windowManager.updateViewLayout(view, params)
     }
 
-    fun disable() {
-        // set not visible
-        params.alpha = 0f
-        // not touchable so it won't block input when disabled
-        params.flags =
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        windowManager.updateViewLayout(view, params)
-    }
-
-    fun enable() {
-        params.alpha = originalWindowAlpha
-        // not touchable so it won't block input when disabled
-        params.flags = originalWindowFlag
-        // lock if potrait only
-        windowManager.updateViewLayout(view, params)
+    fun setVisible(visible: Boolean) {
+        if (visible) {
+            params.alpha = originalWindowAlpha
+            // not touchable so it won't block input when disabled
+            params.flags = originalWindowFlag
+            windowManager.updateViewLayout(view, params)
+        } else {
+            params.alpha = 0f
+            // not touchable so it won't block input when disabled
+            params.flags =
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            windowManager.updateViewLayout(view, params)
+        }
     }
 
     fun setContent(content: @Composable (composeView: ComposeView) -> Unit = {}) {

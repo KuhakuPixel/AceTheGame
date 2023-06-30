@@ -122,6 +122,7 @@ open class OverlayDialog(
                     }
                 },
                 windowManager = windowManager,
+                disableByDestroy = true,
             )
     }
 
