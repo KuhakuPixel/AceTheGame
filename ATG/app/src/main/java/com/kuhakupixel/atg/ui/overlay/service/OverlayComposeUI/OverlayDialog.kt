@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
+import com.kuhakupixel.atg.ui.overlay.service.OverlayEnableDisableMode
 import com.kuhakupixel.atg.ui.overlay.service.OverlayViewController
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 
@@ -122,7 +123,7 @@ open class OverlayDialog(
                     }
                 },
                 windowManager = windowManager,
-                disableByDestroy = true,
+                enableDisableMode = OverlayEnableDisableMode.CREATE_AND_DESTROY,
             )
     }
 
