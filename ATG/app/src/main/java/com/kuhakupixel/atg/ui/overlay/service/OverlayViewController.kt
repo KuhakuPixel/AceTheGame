@@ -18,6 +18,7 @@ class OverlayViewController(
     val disableByDestroy: Boolean = false,
 ) : OverlayInterface {
     private var viewHolder: OverlayViewHolder? = null
+    private var enabledCount = 0
 
     init {
         if (!disableByDestroy) {
@@ -32,11 +33,30 @@ class OverlayViewController(
         if (!disableByDestroy) {
             viewHolder!!.setVisible(true)
         } else {
+            /**
+             * prevent reuse  (enable, disable  and then enable again)
+             * in the same instance because the code is not thread safe
+             *
+             * so instead to reuse, a new instance is needed everytime
+             *
+             * (I find the bug, where I have a button that shows a dialog (with close button
+             * that destroy the dialog it self) and find that if I happens to click the show
+             * dialog button twice, before the dialog even show, then there can be a bug
+             * where the dialog created isn't attached to WindowManager for some reason
+             * therefore when trying to destroy it, it will cause crash (not attached to windowmanager exception)
+             *
+             * cannot explain why this happened but it happened, so I need it to be this way
+             * to prevent that
+             * */
+            if (enabledCount >= 1)
+                throw IllegalStateException("Cannot reuse this view controller because it is not thread safe , a new instance is needed ")
+            //
             viewHolder = createOverlayViewHolder()
             logd("${name}: adding view ${viewHolder!!.getView()}")
             windowManager.addView(viewHolder!!.getView(), viewHolder!!.getParams())
             Log.d("ATG", "View Spawned")
         }
+        enabledCount++
     }
 
     override fun disableView() {
