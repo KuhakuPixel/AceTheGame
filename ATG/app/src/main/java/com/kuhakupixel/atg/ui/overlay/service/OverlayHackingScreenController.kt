@@ -11,12 +11,11 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.HackingScreen
 import com.kuhakupixel.atg.ui.overlay.OverlayViewHolder
-import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
+import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayInfoDialog
+import com.kuhakupixel.atg.ui.overlay.OverlayManager
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 
 class OverlayHackingScreenController(
@@ -29,10 +28,6 @@ class OverlayHackingScreenController(
         name = "Hacking Screen",
     )
 
-    var currentCounter = 0
-    val dropdownEnabled: MutableState<Boolean> = mutableStateOf(true)
-    val dropdownExpanded: MutableState<Boolean> = mutableStateOf(false)
-    val dropdownSelectedIdx: MutableState<Int> = mutableStateOf(0)
     private fun createOverlay(): OverlayViewHolder {
 
         val hackingScreen = OverlayViewHolder(
@@ -48,7 +43,6 @@ class OverlayHackingScreenController(
             ),
             alpha = 0.9f,
             service = service,
-            potraitOnly = false,
         )
 
         hackingScreen.setContent {
@@ -68,6 +62,23 @@ class OverlayHackingScreenController(
                             Button(onClick = onClosed) {
                                 Text("Close")
                             }
+
+                            /*
+                            Button(
+
+                                onClick = {
+                                    overlayManager.getInputDialog().show(
+                                        "Hello",
+                                        onConfirm = { input: String ->
+
+                                        }
+                                    )
+                                }
+
+                            ) {
+                                Text("Dialog Test")
+                            }
+                             */
                         }
                         HackingScreen(overlayManager = overlayManager)
                     }

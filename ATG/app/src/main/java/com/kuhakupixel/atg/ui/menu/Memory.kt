@@ -32,8 +32,7 @@ import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlay.service.OverlayComposeUI.OverlayManager
-import com.kuhakupixel.atg.ui.util.CheckboxWithText
+import com.kuhakupixel.atg.ui.overlay.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
 import com.kuhakupixel.atg.ui.util.OverlayDropDown
@@ -170,7 +169,7 @@ fun _MemoryMenu(
                             )
                         }
                     } catch (e: InvalidCommandException) {
-                        overlayManager!!.Dialog(
+                        overlayManager!!.getInfoDialog().show(
                             title = "Error",
                             text = e.stackTraceToString(),
                             onConfirm = {},
@@ -338,7 +337,7 @@ private fun MatchesSetting(
             options = scanTypeList,
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
-                overlayManager.overlayScanTypeDialog.show(
+                overlayManager.getChoicesDialog().show(
                     title = "Value: ",
                     choices = options,
                     onConfirm = { index: Int, value: String ->
@@ -371,7 +370,7 @@ private fun MatchesSetting(
             options = valueTypeList,
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
-                overlayManager.overlayValueTypeDialog.show(
+                overlayManager.getChoicesDialog().show(
                     title = "Value: ",
                     choices = options,
                     onConfirm = { index: Int, value: String ->

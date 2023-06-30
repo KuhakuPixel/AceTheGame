@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.kuhakupixel.atg.ui.overlay.OverlayPermission
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 import com.topjohnwu.superuser.Shell
 
@@ -22,14 +23,6 @@ class MainActivity : ComponentActivity() {
     /**
      * returns true if permission is given, false otherwise
      * */
-    fun askForOverlayPermission() {
-        // if not construct intent to request permi
-        val intent = Intent(
-            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.parse("package:" + applicationContext.packageName)
-        )
-        startActivityForResult(intent, 0)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +39,15 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        //HackingScreen()
-                        MainScreen(askForOverlayPermission = { askForOverlayPermission() })
+                        MainScreen(
+                            askForOverlayPermission = {
+
+                                OverlayPermission.askForOverlayPermission(
+                                    context = applicationContext,
+                                    componentActivity = this,
+                                )
+                            },
+                        )
                     }
                 }
             }
