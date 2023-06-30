@@ -170,7 +170,7 @@ fun _MemoryMenu(
                             )
                         }
                     } catch (e: InvalidCommandException) {
-                        overlayManager!!.Dialog(
+                        overlayManager!!.getInfoDialog().show(
                             title = "Error",
                             text = e.stackTraceToString(),
                             onConfirm = {},

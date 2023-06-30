@@ -37,16 +37,6 @@ class OverlayManager(
         return hackingScreen
     }
 
-    private var overlayInputDialog = OverlayInputDialog(
-        createDialogOverlay = ::createDialogOverlay,
-        windowManager = windowManager
-    )
-
-    private var overlayInfoDialog = OverlayInfoDialog(
-        createDialogOverlay = ::createDialogOverlay,
-        windowManager = windowManager
-    )
-
     // TODO: Fix This, Because its duplicate and ugly :(
     val overlayScanTypeDialog = OverlayChoicesDialog(
         createDialogOverlay = ::createDialogOverlay,
@@ -60,18 +50,15 @@ class OverlayManager(
 
     init {
     }
-
-    fun Dialog(title: String, text: String, onConfirm: () -> Unit) {
-        overlayInfoDialog.show(title = title, text = text, onConfirm = onConfirm)
-
-    }
-
-    fun InputDialog(title: String, onConfirm: (input: String) -> Unit) {
-        overlayInputDialog.show(title = title, onConfirm = onConfirm)
-    }
-
     fun getInfoDialog(): OverlayInfoDialog {
         return OverlayInfoDialog(
+            createDialogOverlay = ::createDialogOverlay,
+            windowManager = windowManager
+        )
+    }
+
+    fun getInputDialog(): OverlayInputDialog {
+        return OverlayInputDialog(
             createDialogOverlay = ::createDialogOverlay,
             windowManager = windowManager
         )

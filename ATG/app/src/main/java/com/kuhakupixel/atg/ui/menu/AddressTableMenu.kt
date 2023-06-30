@@ -44,13 +44,13 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
             savedAddressList = savedAddresList,
             ace = ace,
             onAddressClicked = { numType: NumType, address: String ->
-                overlayManager!!.InputDialog(
+                overlayManager!!.getInputDialog().show(
                     title = "Edit value of $address",
                     onConfirm = { input: String ->
                         try {
                             ace.WriteValueAtAddress(numType, address, input)
                         } catch (e: ACEBaseClient.InvalidCommandException) {
-                            overlayManager!!.Dialog(
+                            overlayManager!!.getInfoDialog().show(
                                 title = "Error",
                                 text = e.stackTraceToString(),
                                 onConfirm = {},

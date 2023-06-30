@@ -214,13 +214,13 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
     _ProcessMenu(
         currentProcList,
         onAttach = { pid: Long, procName: String ->
-            overlayManager!!.Dialog(
+            overlayManager!!.getInfoDialog().show(
                 title = "Attach to ${pid} - ${procName} ? ", text = "",
                 onConfirm = {
                     AttachToProcess(
                         ace = ace, pid = pid,
                         onAttachSuccess = {
-                            overlayManager.Dialog(
+                            overlayManager!!.getInfoDialog().show(
                                 title = "Attaching to ${procName} is successful",
                                 onConfirm = {},
                                 text = "",
@@ -228,14 +228,14 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
                             attachedStatusString.value = "${pid} - ${procName}"
                         },
                         onProcessNoExistAnymore = {
-                            overlayManager.Dialog(
+                            overlayManager!!.getInfoDialog().show(
                                 title = "Process ${procName} is not running anymore, Can't attach",
                                 onConfirm = {},
                                 text = "",
                             )
                         },
                         onAttachFailure = { msg: String ->
-                            overlayManager.Dialog(
+                            overlayManager!!.getInfoDialog().show(
                                 title = msg,
                                 onConfirm = {},
                                 text = "",
@@ -248,7 +248,7 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
         onRefreshClicked = { refreshProcList(ace, currentProcList) },
         onConnectToACEServerClicked = {
 
-            overlayManager!!.InputDialog(
+            overlayManager!!.getInputDialog().show(
                 "Port: ",
                 onConfirm = { input: String ->
                     val port = input.toInt()
