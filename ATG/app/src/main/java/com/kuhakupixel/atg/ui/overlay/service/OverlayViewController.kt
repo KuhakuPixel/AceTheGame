@@ -74,8 +74,12 @@ class OverlayViewController(
                  * cannot explain why this happened but it happened, so I need it to be this way
                  * to prevent that
                  * */
-                if (enabledCount >= 1)
-                    throw IllegalStateException("Cannot reuse this view controller because it is not thread safe , a new instance is needed ")
+                if (enabledCount >= 1) {
+                    throw IllegalStateException(
+                        "Cannot reuse this view controller when [enableDisableMode] is set to [${this.enableDisableMode.toString()}] " +
+                                "because it is not thread safe when creating/destroying, a new instance is needed "
+                    )
+                }
                 //
                 viewHolder = createOverlayViewHolder()
                 logd("${name}: adding view ${viewHolder!!.getView()}")
