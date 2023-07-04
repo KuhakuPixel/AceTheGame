@@ -1,7 +1,5 @@
 package com.kuhakupixel.atg;
 
-import static org.junit.Assert.assertEquals;
-
 import android.content.Context;
 import android.content.res.AssetManager;
 

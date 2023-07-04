@@ -32,10 +32,12 @@ import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlay.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
 import com.kuhakupixel.atg.ui.util.OverlayDropDown
+import com.kuhakupixel.libuberalles.overlay.OverlayContext
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayChoicesDialog
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.min
@@ -61,7 +63,7 @@ private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(m
 private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches")
 
 @Composable
-fun MemoryMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
+fun MemoryMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
@@ -69,7 +71,7 @@ fun MemoryMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
             globalConf = globalConf,
             snackbarHostState = snackbarHostState,
             coroutineScope = coroutineScope,
-            overlayManager = overlayManager,
+            overlayContext = overlayContext,
         )
     }
 }
@@ -79,7 +81,7 @@ fun _MemoryMenu(
     globalConf: GlobalConf?,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
-    overlayManager: OverlayManager?
+    overlayContext: OverlayContext?
 ) {
     val ace: ACE = (globalConf?.getAce())!!
     // ==================================
@@ -169,7 +171,7 @@ fun _MemoryMenu(
                             )
                         }
                     } catch (e: InvalidCommandException) {
-                        overlayManager!!.getInfoDialog().show(
+                        OverlayInfoDialog(overlayContext!!).show(
                             title = "Error",
                             text = e.stackTraceToString(),
                             onConfirm = {},
@@ -189,7 +191,7 @@ fun _MemoryMenu(
                     UpdateMatches(ace = ace)
                     initialScanDone.value = false
                 },
-                overlayManager = overlayManager!!,
+                overlayContext = overlayContext!!,
             )
 
         }
@@ -286,7 +288,7 @@ private fun MatchesSetting(
     //
     newScanEnabled: Boolean,
     newScanClicked: () -> Unit,
-    overlayManager: OverlayManager,
+    overlayContext: OverlayContext,
 ) {
     @Composable
     fun ScanInputField(scanValue: MutableState<String>) {
@@ -326,7 +328,7 @@ private fun MatchesSetting(
     fun ScanTypeDropDown(
         selectedOptionIndex: MutableState<Int>,
         enabled: MutableState<Boolean>,
-        overlayManager: OverlayManager,
+        overlayContext: OverlayContext,
     ) {
         val expanded = remember { mutableStateOf(false) }
         // default to "exact scan (=)"
@@ -337,7 +339,7 @@ private fun MatchesSetting(
             options = scanTypeList,
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
-                overlayManager.getChoicesDialog().show(
+                OverlayChoicesDialog(overlayContext!!).show(
                     title = "Value: ",
                     choices = options,
                     onConfirm = { index: Int, value: String ->
@@ -360,7 +362,7 @@ private fun MatchesSetting(
     fun ValueTypeDropDown(
         selectedOptionIndex: MutableState<Int>,
         enabled: MutableState<Boolean>,
-        overlayManager: OverlayManager,
+        overlayContext: OverlayContext,
     ) {
         val expanded = remember { mutableStateOf(false) }
         OverlayDropDown(
@@ -370,7 +372,7 @@ private fun MatchesSetting(
             options = valueTypeList,
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
-                overlayManager.getChoicesDialog().show(
+                OverlayChoicesDialog(overlayContext!!).show(
                     title = "Value: ",
                     choices = options,
                     onConfirm = { index: Int, value: String ->
@@ -395,13 +397,13 @@ private fun MatchesSetting(
         ScanTypeDropDown(
             scanTypeSelectedOptionIdx,
             enabled = scanTypeEnabled,
-            overlayManager = overlayManager,
+            overlayContext = overlayContext,
         )
         ValueTypeDropDown(
             valueTypeSelectedOptionIdx,
             // only allow to change type during initial scan
             enabled = valueTypeEnabled,
-            overlayManager = overlayManager,
+            overlayContext = overlayContext,
         )
         ScanButton(
             modifier = Modifier.fillMaxWidth(),

@@ -14,8 +14,8 @@ import com.kuhakupixel.atg.backend.Port;
 import com.kuhakupixel.atg.backend.ProcInfo;
 import com.kuhakupixel.atg.backend.ProcUtil;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.*;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;

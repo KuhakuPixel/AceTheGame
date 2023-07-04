@@ -25,8 +25,10 @@ import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlay.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
+import com.kuhakupixel.libuberalles.overlay.OverlayContext
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInputDialog
 
 /**
  * which process we are currently attached to?
@@ -203,7 +205,7 @@ fun refreshProcList(ace: ACE?, processList: SnapshotStateList<ProcInfo>) {
 }
 
 @Composable
-fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
+fun ProcessMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
     val ace: ACE = globalConf?.getAce()!!
     // list of processes that are gonna be shown
     val currentProcList = remember { SnapshotStateList<ProcInfo>() }
@@ -214,13 +216,13 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
     _ProcessMenu(
         currentProcList,
         onAttach = { pid: Long, procName: String ->
-            overlayManager!!.getInfoDialog().show(
+            OverlayInfoDialog(overlayContext!!).show(
                 title = "Attach to ${pid} - ${procName} ? ", text = "",
                 onConfirm = {
                     AttachToProcess(
                         ace = ace, pid = pid,
                         onAttachSuccess = {
-                            overlayManager!!.getInfoDialog().show(
+                            OverlayInfoDialog(overlayContext).show(
                                 title = "Attaching to ${procName} is successful",
                                 onConfirm = {},
                                 text = "",
@@ -228,14 +230,14 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
                             attachedStatusString.value = "${pid} - ${procName}"
                         },
                         onProcessNoExistAnymore = {
-                            overlayManager!!.getInfoDialog().show(
+                            OverlayInfoDialog(overlayContext).show(
                                 title = "Process ${procName} is not running anymore, Can't attach",
                                 onConfirm = {},
                                 text = "",
                             )
                         },
                         onAttachFailure = { msg: String ->
-                            overlayManager!!.getInfoDialog().show(
+                            OverlayInfoDialog(overlayContext).show(
                                 title = msg,
                                 onConfirm = {},
                                 text = "",
@@ -248,7 +250,7 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
         onRefreshClicked = { refreshProcList(ace, currentProcList) },
         onConnectToACEServerClicked = {
 
-            overlayManager!!.getInputDialog().show(
+            OverlayInputDialog(overlayContext!!).show(
                 "Port: ",
                 onConfirm = { input: String ->
                     val port = input.toInt()
