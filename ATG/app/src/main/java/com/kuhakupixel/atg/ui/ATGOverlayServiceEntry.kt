@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
 import com.kuhakupixel.libuberalles.overlay.service.OverlayDraggableButtonController
-import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInputDialog
 import com.kuhakupixel.libuberalles.ui.overlay.service.OverlayServiceEntry
 
 class ATGOverlayServiceEntry : OverlayServiceEntry() {

@@ -1,6 +1,5 @@
 package com.kuhakupixel.atg.backend;
 
-import android.app.Notification;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
