@@ -15,8 +15,10 @@ import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACEBaseClient
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlay.OverlayManager
 import com.kuhakupixel.atg.ui.util.CreateTable
+import com.kuhakupixel.libuberalles.overlay.OverlayContext
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInputDialog
 
 class AddressInfo(val matchInfo: MatchInfo, val numType: NumType) {
 }
@@ -28,7 +30,7 @@ fun AddressTableAddAddress(matchInfo: MatchInfo, numType: NumType) {
 }
 
 @Composable
-fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
+fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
 
     val ace: ACE = globalConf!!.getAce()
     Column(
@@ -44,13 +46,13 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayManager: OverlayManager?) {
             savedAddressList = savedAddresList,
             ace = ace,
             onAddressClicked = { numType: NumType, address: String ->
-                overlayManager!!.getInputDialog().show(
+                OverlayInputDialog(overlayContext!!).show(
                     title = "Edit value of $address",
                     onConfirm = { input: String ->
                         try {
                             ace.WriteValueAtAddress(numType, address, input)
                         } catch (e: ACEBaseClient.InvalidCommandException) {
-                            overlayManager!!.getInfoDialog().show(
+                            OverlayInfoDialog(overlayContext!!).show(
                                 title = "Error",
                                 text = e.stackTraceToString(),
                                 onConfirm = {},

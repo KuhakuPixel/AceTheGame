@@ -92,6 +92,9 @@ dependencies {
     // navigation with compose
     def nav_version = "2.5.3"
     implementation "androidx.navigation:navigation-compose:$nav_version"
+    //
+    def libUberAllesVersion = '0.0.2'
+    implementation "com.github.KuhakuPixel:UberAlles:${libUberAllesVersion}"
     // ========================= for communication with ACE ===============
     // apache commons
     implementation 'commons-io:commons-io:2.6'

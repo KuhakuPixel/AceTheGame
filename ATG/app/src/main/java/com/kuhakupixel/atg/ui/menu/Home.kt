@@ -2,7 +2,6 @@ package com.kuhakupixel.atg.ui.menu
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,10 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.kuhakupixel.atg.ui.ATGOverlayServiceEntry
 import com.kuhakupixel.atg.ui.GlobalConf
-import com.kuhakupixel.atg.ui.overlay.INTENT_COMMAND
-import com.kuhakupixel.atg.ui.overlay.INTENT_COMMAND_OVERLAY_BUTTON_CREATE
-import com.kuhakupixel.atg.ui.overlay.service.FloatingService
 import com.kuhakupixel.atg.ui.util.ConfirmDialog
 
 
@@ -40,7 +37,7 @@ fun HomeMenu(globalConf: GlobalConf?, askForOverlayPermission: () -> Unit) {
                     return
                 }
                 //
-                startOverlayButton(context)
+                startOverlayServiceEntry(context)
             },
         ) {
             Text(
@@ -61,9 +58,8 @@ fun HomeMenu(globalConf: GlobalConf?, askForOverlayPermission: () -> Unit) {
     }
 }
 
-fun startOverlayButton(context: Context) {
-    val intent = Intent(context.applicationContext, FloatingService::class.java)
-    intent.putExtra(INTENT_COMMAND, INTENT_COMMAND_OVERLAY_BUTTON_CREATE)
+fun startOverlayServiceEntry(context: Context) {
+    val intent = Intent(context.applicationContext, ATGOverlayServiceEntry::class.java)
     context.startForegroundService(intent)
 
 }

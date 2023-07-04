@@ -13,8 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.kuhakupixel.atg.ui.overlay.OverlayPermission
 import com.kuhakupixel.atg.ui.theme.AtgTheme
+import com.kuhakupixel.libuberalles.overlay.OverlayPermission
 import com.topjohnwu.superuser.Shell
 
 
