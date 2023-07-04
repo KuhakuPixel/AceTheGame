@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
 import com.kuhakupixel.libuberalles.overlay.service.OverlayDraggableButtonController
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInputDialog
 import com.kuhakupixel.libuberalles.ui.overlay.service.OverlayServiceEntry
 
 class ATGOverlayServiceEntry : OverlayServiceEntry() {
@@ -23,6 +25,7 @@ class ATGOverlayServiceEntry : OverlayServiceEntry() {
         // close the overlay button and open hacking menu
         overlayDraggableButtonController.disableView()
         overlayHackingScreenController.enableView()
+
     }
 
     var enableOverlayButton = true
@@ -48,8 +51,6 @@ class ATGOverlayServiceEntry : OverlayServiceEntry() {
                 windowManager = windowManager,
                 service = this,
                 onClick = {
-                    // make sure to not allow double click
-                    // to avoid crash
                     if (enableOverlayButton) {
                         onOverlayButtonClick()
                         enableOverlayButton = false
@@ -63,7 +64,7 @@ class ATGOverlayServiceEntry : OverlayServiceEntry() {
                 trashSizeDp = TRASH_SIZE_DP
 
             ) {
-
+                Text("ATG")
             }
         overlayHackingScreenController =
             OverlayHackingScreenController(
