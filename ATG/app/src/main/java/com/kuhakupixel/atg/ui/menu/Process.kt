@@ -28,7 +28,7 @@ import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
-import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInputDialog
+import com.kuhakupixel.atg.ui.OverlayInputDialog
 
 /**
  * which process we are currently attached to?
