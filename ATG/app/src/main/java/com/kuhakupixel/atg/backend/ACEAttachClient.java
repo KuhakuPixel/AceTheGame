@@ -1,8 +1,6 @@
 package com.kuhakupixel.atg.backend;
 
 
-import static com.kuhakupixel.atg.backend.ACEBaseClient.AssertValidCommand;
-
 import org.apache.commons.lang3.StringUtils;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -14,14 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException;
-
-public class ACEAttachClient implements Closeable {
+public class ACEAttachClient extends ACEBaseClient implements Closeable {
 
     private final ZContext context = new ZContext();
     private final ZMQ.Socket socket;
 
-    public ACEAttachClient(Integer port) throws IOException, InterruptedException {
+    public ACEAttachClient(Integer port) throws InterruptedException {
         socket = context.createSocket(SocketType.REQ);
         // need to do networking stuff on new thread to avoid
         // Network on main thread exception
@@ -34,8 +30,8 @@ public class ACEAttachClient implements Closeable {
 
     }
 
-    public List<String> RequestAsList(String[] requestCmd) throws InvalidCommandException {
-
+    @Override
+    public List<String> SendCommand(String[] requestCmd) {
 
         String requestCmdStr = String.join(" ", requestCmd);
         socket.send(requestCmdStr.getBytes(ZMQ.CHARSET), 0);
@@ -45,15 +41,8 @@ public class ACEAttachClient implements Closeable {
             return new ArrayList<String>();
         } else {
             List<String> res = Arrays.asList(outStr.split("\n"));
-            AssertValidCommand(res);
             return res;
         }
-
-
-    }
-
-    public String Request(String[] requestCmd) {
-        return String.join(" ", RequestAsList(requestCmd));
     }
 
     @Override
