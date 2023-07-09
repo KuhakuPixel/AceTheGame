@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ACEBaseClient {
 
-    public class InvalidCommandException extends RuntimeException {
+    public static class InvalidCommandException extends RuntimeException {
         public InvalidCommandException(String msg) {
             super(msg);
         }
@@ -22,7 +22,7 @@ public class ACEBaseClient {
         this.binaryPath = Binary.GetBinPath(context, type);
     }
 
-    public void AssertValidCommand(List<String> out) throws InvalidCommandException {
+    public static void AssertValidCommand(List<String> out) throws InvalidCommandException {
         if (out.size() > 0) {
             if (out.get(0).equals("INVALID_COMMAND"))
                 throw new InvalidCommandException("Invalid Command: " + String.join("\n", out));

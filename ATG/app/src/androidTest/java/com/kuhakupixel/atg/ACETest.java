@@ -7,6 +7,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.kuhakupixel.atg.backend.ACE;
 import com.kuhakupixel.atg.backend.ACEAttachClient;
+import com.kuhakupixel.atg.backend.ACEBaseClient;
+import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException;
 import com.kuhakupixel.atg.backend.ACEServer;
 import com.kuhakupixel.atg.backend.NumTypeInfo;
 import com.kuhakupixel.atg.backend.NumUtil;
@@ -87,7 +89,7 @@ public class ACETest {
             try {
                 ace.CheaterCmd(new String[]{s});
                 Assert.fail();
-            } catch (ACEAttachClient.InvalidCommandException e) {
+            } catch (InvalidCommandException e) {
                 Assert.assertTrue(true);
             }
         }
@@ -96,7 +98,7 @@ public class ACETest {
             try {
                 ace.UtilCmd(new String[]{s});
                 Assert.fail();
-            } catch (ACEAttachClient.InvalidCommandException e) {
+            } catch (InvalidCommandException e) {
                 Assert.assertTrue(true);
             }
         }
@@ -116,7 +118,7 @@ public class ACETest {
         try {
             ace.CheaterCmd(new String[]{"scan = 0"});
             Assert.assertTrue(true);
-        } catch (ACEAttachClient.InvalidCommandException e) {
+        } catch (InvalidCommandException e) {
             Assert.fail();
         }
         ace.DeAttach();
