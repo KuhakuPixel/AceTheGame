@@ -1,13 +1,41 @@
 
 # ROADMAP
 
-## Android GUI For Ace ENgine
+## ATG
 
-Will be done by starting the engine process as root
-and then communicate through the gui via ipc using ZMQ 
-### non rooted
-listen and send request to the port started by ace engine
-for scan and editting memory
-### rooted
-list and select a process and just scan and editting memory
+### More descriptive name for `Scan Type`
 
+like cheat engine, where the name of scan type
+is `Exact Scan`, `Less than` and etc are more readable
+than `=`, `<`
+
+### Option to add address manually to address table
+
+### Option to add all matches to address table
+
+### Option to Pause while scanning
+
+### Freeze value of an address
+
+### Display progress bar on when scanning 
+currently in the apk, when doing scanning
+the apk will freeze/wait until it finish
+
+### show value of an address in real time 
+
+### Undo
+add an option to limit matches count
+that can be undo-ed so it won't consume
+too much memory
+
+### Debugger
+A Hard one for sure, probably gonna use lldb
+
+## ACE
+### Use data-format like json for communication
+currently messages sent by `ACE` 
+'s status are hard to know because it only sent
+the "raw" message
+
+like when giving request, its hard to know
+if the request is a success or failure

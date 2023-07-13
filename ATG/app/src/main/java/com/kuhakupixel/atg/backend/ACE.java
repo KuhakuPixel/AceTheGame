@@ -146,15 +146,15 @@ public class ACE {
             throw new AttachingInARowException("Cannot Attach without DeAttaching first");
     }
 
-    public void ConnectToACEServer(Integer port) throws IOException {
+    public void ConnectToACEServer(Integer port) throws IOException, InterruptedException {
         AssertNoAttachInARow();
-        this.aceAttachClient = new ACEAttachClient(context, port);
+        this.aceAttachClient = new ACEAttachClient(port);
     }
 
     /**
      * this will create an ACE's server that is attached to process [pid]
      */
-    public void Attach(Long pid) throws IOException {
+    public void Attach(Long pid) throws IOException, InterruptedException {
         AssertNoAttachInARow();
         // start the server
         Integer port = Port.GetOpenPort();
@@ -168,6 +168,7 @@ public class ACE {
         AssertAttached();
         // tell server to die
         aceAttachClient.Request(new String[]{"stop"});
+        aceAttachClient.close();
         aceAttachClient = null;
         // only stop the server if we start one
         if (serverThread != null) {

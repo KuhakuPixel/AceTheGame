@@ -1,14 +1,18 @@
 package com.kuhakupixel.atg.ui
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.ui.theme.AtgTheme
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
-import com.kuhakupixel.libuberalles.overlay.service.OverlayDraggableButtonController
+import com.kuhakupixel.libuberalles.overlay.service.OverlayDraggableViewController
 import com.kuhakupixel.libuberalles.ui.overlay.service.OverlayServiceEntry
 
 class ATGOverlayServiceEntry : OverlayServiceEntry() {
@@ -16,7 +20,7 @@ class ATGOverlayServiceEntry : OverlayServiceEntry() {
     private val OVERLAY_BUTTON_DEFAULT_SIZE_DP = 85
 
     // todo make private
-    lateinit var overlayDraggableButtonController: OverlayDraggableButtonController
+    lateinit var overlayDraggableButtonController: OverlayDraggableViewController
 
     lateinit var overlayHackingScreenController: OverlayHackingScreenController
 
@@ -46,15 +50,9 @@ class ATGOverlayServiceEntry : OverlayServiceEntry() {
             },
         )
         overlayDraggableButtonController =
-            OverlayDraggableButtonController(
+            OverlayDraggableViewController(
                 windowManager = windowManager,
                 service = this,
-                onClick = {
-                    if (enableOverlayButton) {
-                        onOverlayButtonClick()
-                        enableOverlayButton = false
-                    }
-                },
                 onDestroyed = {
                     Log.d("ATG", "Button Destroyed")
                     this.stopSelf()
@@ -63,7 +61,16 @@ class ATGOverlayServiceEntry : OverlayServiceEntry() {
                 trashSizeDp = TRASH_SIZE_DP
 
             ) {
-                Text("ATG")
+                Image(
+                    painter = painterResource(R.drawable.icon),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable {
+
+                            onOverlayButtonClick()
+                        },
+                )
             }
         overlayHackingScreenController =
             OverlayHackingScreenController(
@@ -80,8 +87,7 @@ class ATGOverlayServiceEntry : OverlayServiceEntry() {
 
     }
 
-    override fun onWindowShown() {
-        super.onWindowShown()
+    override fun onOverlayServiceStarted() {
         overlayDraggableButtonController.enableView()
     }
 
