@@ -563,14 +563,17 @@ cheat_session::cheater_mode_on_each_input(
 }
 cheat_session::cheat_session(int pid, E_num_type current_num_type) {
 
+  auto on_scan_progress = [](size_t current, size_t max) {
+    frontend::mark_progress(current, max);
+  };
   this->pid = pid;
   this->current_num_type = current_num_type;
   // initialize engine modules for all types
-  this->engine_module_ptr_int = new engine_module<int>(pid);
-  this->engine_module_ptr_long = new engine_module<long>(pid);
-  this->engine_module_ptr_short = new engine_module<short>(pid);
-  this->engine_module_ptr_byte = new engine_module<byte>(pid);
-  this->engine_module_ptr_float = new engine_module<float>(pid);
+  this->engine_module_ptr_int = new engine_module<int>(pid, on_scan_progress);
+  this->engine_module_ptr_long = new engine_module<long>(pid, on_scan_progress);
+  this->engine_module_ptr_short = new engine_module<short>(pid, on_scan_progress);
+  this->engine_module_ptr_byte = new engine_module<byte>(pid, on_scan_progress);
+  this->engine_module_ptr_float = new engine_module<float>(pid, on_scan_progress);
 }
 
 cheat_session::~cheat_session() {

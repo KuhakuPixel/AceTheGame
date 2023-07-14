@@ -24,6 +24,7 @@
  * */
 
 #pragma once
+#include "../third_party/catch.hpp"
 #include "ACE/error.hpp"
 #include "ACE/file_utils.hpp"
 #include "ACE/proc_create.hpp"
@@ -33,7 +34,6 @@
 #include "ACE/scanner.hpp"
 #include "ACE/simulated_memory.hpp"
 #include "ACE/str_utils.hpp"
-#include "../third_party/catch.hpp"
 #include <algorithm>
 #include <stdexcept>
 #include <string.h>
@@ -160,7 +160,8 @@ public:
     // create child process to be traced
     this->tracee_pid = proc_fork_busy_child();
     // init
-    this->scanner = new ACE_scanner<T>(tracee_pid);
+    this->scanner =
+        new ACE_scanner<T>(tracee_pid, [](size_t current, size_t max) {});
     this->process_rw = new proc_rw<T>(tracee_pid);
   }
 

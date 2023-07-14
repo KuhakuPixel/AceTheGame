@@ -10,8 +10,11 @@
 
 // #include <valgrind/valgrind.h>
 
-template <typename T> ACE_scanner<T>::ACE_scanner(int pid) {
+template <typename T>
+ACE_scanner<T>::ACE_scanner(
+    int pid, std::function<void(size_t current, size_t max)> on_scan_progress) {
   this->process_rw = new proc_rw<T>(pid);
+  this->on_scan_progress = on_scan_progress;
 };
 
 template <typename T> ACE_scanner<T>::~ACE_scanner() {
@@ -296,15 +299,13 @@ void ACE_scanner<T>::initial_scan(byte *addr_start, byte *addr_end,
 template <typename T>
 void ACE_scanner<T>::initial_scan_multiple(
     const std::vector<struct mem_segment> &segments_to_scan,
-    Scan_Utils::E_operator_type operator_type, T value_to_find,
-    std::function<void(size_t current, size_t max)> on_progress) {
-  // TODO: add print for debug, show the memory segments for each scan
-  // add callback for display
-  // before and after a scan
+    Scan_Utils::E_operator_type operator_type, T value_to_find) {
+
+  // reset current scan
   this->current_scan_result.clear();
   for (size_t i = 0; i < segments_to_scan.size(); i++) {
     // show progress
-    on_progress(i + 1, segments_to_scan.size());
+    this->on_scan_progress(i + 1, segments_to_scan.size());
     // do scan
     this->append_initial_scan((byte *)segments_to_scan[i].address_start,
                               (byte *)segments_to_scan[i].address_end,

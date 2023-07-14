@@ -55,6 +55,8 @@ private:
   const size_t one_mega_byte = pow_integral(2, 20);
   const size_t max_chunk_read_size = one_mega_byte;
   proc_rw<T> *process_rw = NULL;
+  std::function<void(size_t current, size_t max)> on_scan_progress = NULL;
+
   // TODO: handle different scan level in consequent scan
   // 	   this current options only effect initial scan
   /*
@@ -90,7 +92,8 @@ private:
                             bool compare_with_new_value, T cmp_val);
 
 public:
-  ACE_scanner(int pid);
+  ACE_scanner(int pid,
+              std::function<void(size_t current, size_t max)> on_scan_progress);
   ~ACE_scanner();
 
   /*
@@ -116,10 +119,10 @@ public:
   /*
    * do a scan on multiple range of addresses
    * */
-  void initial_scan_multiple(
-      const std::vector<struct mem_segment> &segments_to_scan,
-      Scan_Utils::E_operator_type operator_type, T value_to_find,
-      std::function<void(size_t current, size_t max)> on_progress = {});
+  void
+  initial_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
+                        Scan_Utils::E_operator_type operator_type,
+                        T value_to_find);
 
   /*
    * find value [value_to_find] from [addr_start] to [addr_end]

@@ -106,10 +106,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
           // do scan
           scanner->initial_scan_multiple(
 
-              segments_to_scan, operator_type, num_to_find,
-              [](size_t current, size_t max) {
-                frontend::mark_progress(current, max);
-              }
+              segments_to_scan, operator_type, num_to_find
 
           );
           // mark initial scan has been done

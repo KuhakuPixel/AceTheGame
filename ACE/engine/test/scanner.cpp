@@ -1,8 +1,8 @@
 #include "ACE/scanner.hpp"
+#include "../third_party/catch.hpp"
 #include "ACE/error.hpp"
 #include "ACE/file_utils.hpp"
 #include "ACE/str_utils.hpp"
-#include "../third_party/catch.hpp"
 #include "scanner_tester.hpp"
 #include <limits.h>
 #include <list>
@@ -11,8 +11,9 @@
                     //
 TEST_CASE("set_scan_level", "[scanner]") {
   int current_pid = getpid();
+  auto on_scan_progress = [](size_t current, size_t max) {};
   {
-    ACE_scanner<int> scanner = ACE_scanner<int>(current_pid);
+    ACE_scanner<int> scanner = ACE_scanner<int>(current_pid, on_scan_progress);
 
     //
     scanner.set_scan_level(Scan_Utils::E_scan_level::aligned_only);
@@ -36,7 +37,7 @@ TEST_CASE("set_scan_level", "[scanner]") {
   }
 
   {
-    ACE_scanner<short> scanner = ACE_scanner<short>(current_pid);
+    ACE_scanner<short> scanner = ACE_scanner<short>(current_pid, on_scan_progress);
 
     //
     scanner.set_scan_level(Scan_Utils::E_scan_level::aligned_only);
@@ -60,7 +61,7 @@ TEST_CASE("set_scan_level", "[scanner]") {
   }
 
   {
-    ACE_scanner<byte> scanner = ACE_scanner<byte>(current_pid);
+    ACE_scanner<byte> scanner = ACE_scanner<byte>(current_pid, on_scan_progress);
 
     //
     scanner.set_scan_level(Scan_Utils::E_scan_level::aligned_only);
