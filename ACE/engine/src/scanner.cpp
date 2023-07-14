@@ -12,9 +12,11 @@
 
 template <typename T>
 ACE_scanner<T>::ACE_scanner(
-    int pid, std::function<void(size_t current, size_t max)> on_scan_progress) {
+    int pid, std::function<void(size_t current, size_t max)> on_scan_progress,
+    size_t match_count_per_progress) {
   this->process_rw = new proc_rw<T>(pid);
   this->on_scan_progress = on_scan_progress;
+  this->match_count_per_progress = match_count_per_progress;
 };
 
 template <typename T> ACE_scanner<T>::~ACE_scanner() {
@@ -186,6 +188,7 @@ void ACE_scanner<T>::_filter_from_cmp_val(
   size_t mem_buff_size = this->max_chunk_read_size;
   byte *mem_buff = (byte *)malloc(mem_buff_size);
 
+  size_t scan_progress_idx = 1;
   auto on_each_chunk = [&](const match_chunk_prop<T> &chunk_prop) {
     // ====================== scan param =======================
     chunk_scan_prop<T> scan_prop;
@@ -207,8 +210,8 @@ void ACE_scanner<T>::_filter_from_cmp_val(
         scan_prop,
 
         [&](ADDR addr, T new_val) {
+          // add result if match
           T prev_val = chunk_prop.get_val_at_addr(addr, this->scan_level);
-          //
           if (compare_with_new_value) {
             if (Scan_Utils::value_compare<T>(new_val, operator_type, prev_val))
               new_scan_result.add_match(addr, new_val);
@@ -216,6 +219,16 @@ void ACE_scanner<T>::_filter_from_cmp_val(
             if (Scan_Utils::value_compare<T>(new_val, operator_type, cmp_val))
               new_scan_result.add_match(addr, new_val);
           }
+
+          // show progress
+          if (scan_progress_idx % this->match_count_per_progress == 0) {
+            this->on_scan_progress(
+                scan_progress_idx / this->match_count_per_progress,
+
+                this->current_scan_result.get_matches_count() /
+                    this->match_count_per_progress);
+          }
+          scan_progress_idx++;
         },
 
         mem_buff, mem_buff_size

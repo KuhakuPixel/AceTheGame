@@ -54,6 +54,7 @@ template <typename T> class ACE_scanner {
 private:
   const size_t one_mega_byte = pow_integral(2, 20);
   const size_t max_chunk_read_size = one_mega_byte;
+  size_t match_count_per_progress;
   proc_rw<T> *process_rw = NULL;
   std::function<void(size_t current, size_t max)> on_scan_progress = NULL;
 
@@ -92,8 +93,13 @@ private:
                             bool compare_with_new_value, T cmp_val);
 
 public:
+  /**
+   * [match_count_per_progress]: show progress by calling [on_progress] on
+   * every [match_count_per_progress] matches for next scan
+   * */
   ACE_scanner(int pid,
-              std::function<void(size_t current, size_t max)> on_scan_progress);
+              std::function<void(size_t current, size_t max)> on_scan_progress,
+              size_t match_count_per_progress = 1000000);
   ~ACE_scanner();
 
   /*
