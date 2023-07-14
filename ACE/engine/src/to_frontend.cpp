@@ -76,9 +76,7 @@ void frontend::mark_task_fail(const char *fmt, ...) {
 }
 
 void frontend::mark_progress(size_t current, size_t max) {
-  frontend::print("PROGRESS_BEGIN\n");
   frontend::print("%zu/%zu\n", current, max);
-  frontend::print("PROGRESS_END\n");
 }
 
 void frontend::handle_cli_parse_error(bool print_to_stdout,
