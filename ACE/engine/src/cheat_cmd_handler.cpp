@@ -36,7 +36,7 @@ void list_cmd_handler(const ACE_scanner<T> *scanner, size_t list_max_count) {
         //
 
         frontend::print("0x%llx %s\n", addr,
-                       std::to_string(val_display).c_str());
+                        std::to_string(val_display).c_str());
       },
 
       display_count
@@ -65,7 +65,7 @@ void filter_cmd_handler(ACE_scanner<T> *scanner,
   TIME_ACTION({ scanner->filter_val(operator_type); }, &filter_time);
 
   frontend::print("current matches: %zu\n",
-                 scanner->get_current_scan_result().get_matches_count());
+                  scanner->get_current_scan_result().get_matches_count());
   frontend::print("Done in: %lf s\n", filter_time);
 }
 
@@ -101,11 +101,17 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
               segments_to_scan.push_back(proc_mem_segments[i]);
           }
           frontend::print("Found %zu regions to be scanned\n",
-                         segments_to_scan.size());
+                          segments_to_scan.size());
           // =================================================================
           // do scan
-          scanner->initial_scan_multiple(segments_to_scan, operator_type,
-                                         num_to_find);
+          scanner->initial_scan_multiple(
+
+              segments_to_scan, operator_type, num_to_find,
+              [](size_t current, size_t max) {
+                frontend::mark_progress(current, max);
+              }
+
+          );
           // mark initial scan has been done
           // so subsequent scan or filter operation know
           // about it
@@ -122,7 +128,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
   );
 
   frontend::print("current matches: %zu\n",
-                 scanner->get_current_scan_result().get_matches_count());
+                  scanner->get_current_scan_result().get_matches_count());
   frontend::print("Done in: %lf s\n", scan_time);
 }
 template <typename T>
@@ -190,7 +196,7 @@ void writeat_cmd_handler(proc_rw<T> *process_rw, ADDR address, T val_to_write) {
 
   if (errno != 0 && ret_val == -1) {
     frontend::print("Error while writting at %p: %s\n", (byte *)address,
-                   strerror(errno));
+                    strerror(errno));
     return;
   }
 }
@@ -226,7 +232,7 @@ void type_cmd_handler(E_num_type num_type,
                       cheat_cmd_ret *cheater_on_line_ret_ptr) {
   cheater_on_line_ret_ptr->set_next_num_type(num_type);
   frontend::print("set num type to %s\n",
-                 E_num_type_to_str_map.at(num_type).c_str());
+                  E_num_type_to_str_map.at(num_type).c_str());
 }
 
 template <typename T>

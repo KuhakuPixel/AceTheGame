@@ -116,10 +116,10 @@ public:
   /*
    * do a scan on multiple range of addresses
    * */
-  void
-  initial_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
-                        Scan_Utils::E_operator_type operator_type,
-                        T value_to_find);
+  void initial_scan_multiple(
+      const std::vector<struct mem_segment> &segments_to_scan,
+      Scan_Utils::E_operator_type operator_type, T value_to_find,
+      std::function<void(size_t current, size_t max)> on_progress = {});
 
   /*
    * find value [value_to_find] from [addr_start] to [addr_end]

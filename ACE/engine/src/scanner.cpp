@@ -124,20 +124,12 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
        * this memory is retrieved from
        * */
 
-      // frontend::print("load at %p until %p\n", i, i + expected_load_size);
+      // reset errno
       errno = 0;
       actual_load_size = this->process_rw->read_mem_new(
           i, expected_load_size, mem_buff, scan_prop.read_mem_method);
-      // something is seriously wrong when this functions receives
-      // address ranges (checkout the maps file of the proc and it can be
-      // seen that the read is out of bound),TODO: fix this shit
+      // something wrong with read, just move on to next address
       if (errno != 0) {
-        // char err_buff[300];
-        // snprintf(err_buff, sizeof(err_buff),
-        //          "error read at %p with readsize %zu: %d (%s)", i,
-        //          expected_load_size, errno, strerror(errno));
-        // frontend::print("WARN: %s\n", err_buff);
-        // throw std::runtime_error(err_buff);
         continue;
       }
       // set next load address
@@ -158,13 +150,6 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
 
         throw std::logic_error(buff);
       }
-      /*
-      if (actual_load_size != expected_load_size) {
-        frontend::print("=============== err =========\n");
-        frontend::print("expected_load_size: %zu bytes\n", expected_load_size);
-        frontend::print("actual_load_size: %zu bytes\n", actual_load_size);
-      }
-      */
       if (actual_load_size == 0)
         continue;
       loaded_mem.store_mem(mem_buff, actual_load_size, i);
@@ -213,9 +198,6 @@ void ACE_scanner<T>::_filter_from_cmp_val(
     // non existent region)
     scan_prop.read_mem_method =
         Scan_Utils::E_read_mem_method::with_process_vm_readv;
-    // frontend::print("start %p, end %p\n", scan_prop.addr_start,
-    // scan_prop.addr_end);
-
     // ============================================
     this->read_chunk_and_add_matches(
 
@@ -314,24 +296,16 @@ void ACE_scanner<T>::initial_scan(byte *addr_start, byte *addr_end,
 template <typename T>
 void ACE_scanner<T>::initial_scan_multiple(
     const std::vector<struct mem_segment> &segments_to_scan,
-    Scan_Utils::E_operator_type operator_type, T value_to_find) {
+    Scan_Utils::E_operator_type operator_type, T value_to_find,
+    std::function<void(size_t current, size_t max)> on_progress) {
   // TODO: add print for debug, show the memory segments for each scan
   // add callback for display
   // before and after a scan
   this->current_scan_result.clear();
   for (size_t i = 0; i < segments_to_scan.size(); i++) {
-    //  frontend::print("scanning %zu/%zu (%s) -> %llu bytes\n", i + 1,
-    //         segments_to_scan.size(),
-    //         segments_to_scan[i].mem_type_str.c_str(),
-    //         segments_to_scan[i].address_end -
-    //         segments_to_scan[i].address_start);
-    //
-
-    frontend::mark_progress(i + 1, segments_to_scan.size());
-
-    // frontend::print("%s\n",
-    // segments_to_scan[i].get_displayable_str().c_str());
-
+    // show progress
+    on_progress(i + 1, segments_to_scan.size());
+    // do scan
     this->append_initial_scan((byte *)segments_to_scan[i].address_start,
                               (byte *)segments_to_scan[i].address_end,
                               operator_type, value_to_find);
@@ -362,7 +336,7 @@ void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
         // error on write
         if (errno != 0 && ret_val == -1) {
           frontend::print("Error while writting matches at %p: %s\n",
-                         (byte *)addr, strerror(errno));
+                          (byte *)addr, strerror(errno));
         }
       }
 
