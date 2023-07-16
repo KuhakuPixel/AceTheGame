@@ -1,8 +1,11 @@
 #include "../third_party/CLI11.hpp"
+#include "../third_party/json.hpp"
 #include "ACE/server.hpp"
 #include "ACE/str_utils.hpp"
 #include "zmq.hpp"
 #include <string>
+
+using json = nlohmann::json;
 
 int main(int argc, char **argv) {
   printf("args: ");
@@ -29,6 +32,7 @@ int main(int argc, char **argv) {
     size_t index = 0;
     int val = 0;
     std::string output = "";
+    std::string error_output = "";
 
     // ============================ command creation ==============
     CLI::App app{""};
@@ -82,13 +86,17 @@ int main(int argc, char **argv) {
       (app).parse(c_str_arr_length, c_str_arr);
       str_arr_free(c_str_arr, c_str_arr_length);
     } catch (const CLI::ParseError &e) {
-      output = std::string(e.what());
+      error_output = std::string(e.what());
       (app).exit(e);
       str_arr_free(c_str_arr, c_str_arr_length);
       //
     };
+    json output_json = {
+        {"output", output},
+        {"error", error_output},
+    };
     // ===============================================================
-    return output;
+    return output_json.dump();
   };
 
   server _server = server(port, on_input);

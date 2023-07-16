@@ -1,11 +1,15 @@
+#include "../third_party/json.hpp"
 #include "ACE/attach_client.hpp"
 #include "ACE/str_utils.hpp"
+#include <exception>
+#include <stdexcept>
 #include <string.h>
 #include <string>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
 
+using json = nlohmann::json;
 /**
  * for controlling [mock_program]
  * */
@@ -57,8 +61,14 @@ public:
     }
   }
   std::string request(std::string msg) {
-    //
-    return _attach_client->request(msg);
+
+    std::string json_str = _attach_client->request(msg);
+    json j = json::parse(json_str);
+    if (j["error"] != "") {
+      throw std::runtime_error(j["error"]);
+    }
+
+    return j["output"];
   }
 
   ~mock_program_controller() {
