@@ -27,13 +27,13 @@ static const std::map<char, std::string> proc_state_to_desc_map = {
 };
 
 struct proc_info {
-  std::string proc_name;
-  int pid;
-  char state;
-  int ppid;
+  std::string proc_name = "";
+  int pid = 0;
+  char state = (char)0;
+  int ppid = 0;
   // process group id of the processes
-  int pgrp;
-  ULL start_time;
+  int pgrp = 0;
+  ULL start_time = 0;
 };
 
 struct proc_info parse_proc_stat_line(std::string line);
