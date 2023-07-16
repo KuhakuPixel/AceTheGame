@@ -23,6 +23,7 @@ TEST_CASE("mock_program_controller_exception", "[mock_program_controller]") {
     REQUIRE(true);
   }
 }
+
 TEST_CASE("mock_program_controller", "[mock_program_controller]") {
   /**
    * some stress test to see if in the end the [port] will be freed

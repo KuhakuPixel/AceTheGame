@@ -29,6 +29,7 @@ public:
       exit(EXIT_FAILURE);
     }
     case 0: {
+      E_num_type num_type = get_E_num_type_from_T<T>();
       /**
        * run the mock program with execve
        * */
@@ -40,6 +41,8 @@ public:
           std::to_string(port),
           "--arr_size",
           std::to_string(arr_size),
+          "--type",
+          E_num_type_to_str_map.at(num_type),
       };
       size_t mock_program_args_length = 0;
       char **mock_program_args = str_vector_to_c_str_arr_nulled_new(

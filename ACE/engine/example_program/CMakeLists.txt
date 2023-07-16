@@ -11,8 +11,3 @@ add_executable(rev_endian rev_endian.cpp)
 target_link_libraries(rev_endian lib_ACE)
 
 # ============================================= install options ========================
-
-# Binaries
-install (TARGETS ACE_mock DESTINATION bin)
-# ======================================================================================
-

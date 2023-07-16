@@ -1,36 +1,20 @@
 #include "../third_party/CLI11.hpp"
 #include "../third_party/json.hpp"
+#include "ACE/ace_type.hpp"
 #include "ACE/server.hpp"
 #include "ACE/str_utils.hpp"
 #include "zmq.hpp"
+#include <stdlib.h>
 #include <string>
 
 using json = nlohmann::json;
 
-int main(int argc, char **argv) {
-  printf("args: ");
-  for (int i = 0; i < argc; i++) {
-    printf("%s, ", argv[i]);
-  }
-  printf("\n");
-  int port = -1;
-  size_t arr_size = 0;
+template <typename T> void run_loop(int port, size_t arr_size) {
 
-  CLI::App app{"For Unit Testing"};
-  app.add_option("--port", port)->required();
-  app.add_option("--arr_size", arr_size, "amount of memory for testing")
-      ->required();
-
-  try {
-    (app).parse(argc, argv);
-  } catch (const CLI::ParseError &e) {
-    return (app).exit(e);
-  }
-
-  int *arr = (int *)malloc(sizeof(int) * arr_size);
-  auto on_input = [&arr](std::string input) -> std::string {
+  T *arr = (T *)calloc(arr_size, sizeof(T));
+  auto on_input = [&arr, arr_size](std::string input) -> std::string {
     size_t index = 0;
-    int val = 0;
+    T val = 0;
     std::string output = "";
     std::string error_output = "";
 
@@ -56,8 +40,34 @@ int main(int argc, char **argv) {
 
         [&]() {
           //
-          printf("set index %zu to %d\n", index, val);
+          if (index > arr_size) {
+            char err_buff[200];
+            snprintf(err_buff, sizeof(err_buff), "index %zu is out of bound\n",
+                     index);
+            error_output = std::string(err_buff);
+            return;
+          }
           arr[index] = val;
+        }
+
+    );
+
+    // increment
+    CLI::App *inc_val_at_idx_cmd = app.add_subcommand("increment_val_at_idx");
+    inc_val_at_idx_cmd->add_option("--index", index)->required();
+    inc_val_at_idx_cmd->add_option("--value", val)->required();
+    inc_val_at_idx_cmd->callback(
+
+        [&]() {
+          //
+          if (index > arr_size) {
+            char err_buff[200];
+            snprintf(err_buff, sizeof(err_buff), "index %zu is out of bound\n",
+                     index);
+            error_output = std::string(err_buff);
+            return;
+          }
+          arr[index] += val;
         }
 
     );
@@ -68,7 +78,13 @@ int main(int argc, char **argv) {
     get_val_at_idx_cmd->callback(
 
         [&]() {
-          //
+          if (index > arr_size) {
+            char err_buff[200];
+            snprintf(err_buff, sizeof(err_buff), "index %zu is out of bound\n",
+                     index);
+            error_output = std::string(err_buff);
+            return;
+          }
           output = std::to_string(arr[index]);
         }
 
@@ -102,6 +118,51 @@ int main(int argc, char **argv) {
   server _server = server(port, on_input);
   _server.start();
   free(arr);
+}
+
+int main(int argc, char **argv) {
+  printf("args: ");
+  for (int i = 0; i < argc; i++) {
+    printf("%s, ", argv[i]);
+  }
+  printf("\n");
+  int port = -1;
+  size_t arr_size = 0;
+  E_num_type num_type;
+
+  CLI::App app{"For Unit Testing"};
+  app.add_option("--port", port)->required();
+  app.add_option("--arr_size", arr_size, "amount of memory for testing")
+      ->required();
+
+  app.add_option("--type", num_type, "number type")
+      ->required()
+      ->transform(CLI::CheckedTransformer(num_type_str_to_E_num_type_map,
+                                          CLI::ignore_case));
+
+  try {
+    (app).parse(argc, argv);
+  } catch (const CLI::ParseError &e) {
+    return (app).exit(e);
+  }
+
+  switch (num_type) {
+  case E_num_type::BYTE:
+    run_loop<byte>(port, arr_size);
+    break;
+  case E_num_type::SHORT:
+    run_loop<short>(port, arr_size);
+    break;
+  case E_num_type::INT:
+    run_loop<int>(port, arr_size);
+    break;
+  case E_num_type::LONG:
+    run_loop<long>(port, arr_size);
+    break;
+  case E_num_type::FLOAT:
+    run_loop<float>(port, arr_size);
+    break;
+  }
 
   return 0;
 }
