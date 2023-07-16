@@ -157,6 +157,7 @@ add_test(NAME test_ace COMMAND test_ace)
 add_subdirectory(example_program/)
 # 
 add_subdirectory(program_utils/)
+add_subdirectory(mock_program/)
 
 # ===============================================================================
 # build main program
