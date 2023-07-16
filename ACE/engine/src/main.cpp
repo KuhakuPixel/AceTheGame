@@ -138,21 +138,11 @@ int main(int argc, char **argv) {
   );
 
   //
-  bool attach_self = false;
-  main_app.add_flag("--attach-self", attach_self,
-                    attach_cmd_help + "\n" +
-                        "(not important for unit testing only)");
   // ================================================================
 
   CLI11_PARSE(main_app, argc, argv);
   // any request to run as server?
-  if (attach_self) {
-    engine_server_start(getpid(),
-                        ACE_global::engine_server_client_default_port);
-    return 0;
-  }
-
-  else if (main_app.got_subcommand(attach_pid_cmd)) {
+  if (main_app.got_subcommand(attach_pid_cmd)) {
     return 0;
   }
 
