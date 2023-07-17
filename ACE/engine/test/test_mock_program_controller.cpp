@@ -38,6 +38,29 @@ TEST_CASE("mock_program_controller_exception", "[mock_program_controller]") {
   }
 }
 
+TEST_CASE("mock_program_controller.get_expected_found_addresses",
+          "[mock_program_controller]") {
+
+  size_t arr_length = 1000;
+  int val_to_find = 0;
+  /**
+   * sending invalid command should throw exception
+   * */
+  mock_program_controller<int> mock_controller =
+      mock_program_controller<int>(arr_length, val_to_find);
+  // setup
+  mock_controller.setup_val_to_find(0);
+  mock_controller.setup_val_to_find(665);
+  mock_controller.setup_val_to_find(666);
+  mock_controller.setup_val_to_find(999);
+  // inc
+  //
+  std::vector<std::string> addresses =
+      mock_controller.get_expected_found_addresses();
+
+  REQUIRE(4 == addresses.size());
+}
+
 TEST_CASE("mock_program_controller.increment", "[mock_program_controller]") {
 
   size_t arr_length = 1000;
