@@ -354,7 +354,7 @@ TEST_CASE("action", "[scanner]") {
     REQUIRE(tester.get_expected_found_addresses() == found_addresses);
   }
 
-  // 2 tests below prevent [filter_from_cmp_val]'s bug
+  // 2 tests below prevent [next_scan]'s bug
   // when it doesn't update filter result with a new value
   //
   // When new value is not updated after a scan:

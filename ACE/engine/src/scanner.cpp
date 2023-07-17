@@ -176,7 +176,7 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
   }
 }
 template <typename T>
-void ACE_scanner<T>::_filter_from_cmp_val(
+void ACE_scanner<T>::_next_scan(
     Scan_Utils::E_operator_type operator_type, bool compare_with_new_value,
     T cmp_val) {
 
@@ -327,13 +327,13 @@ void ACE_scanner<T>::new_scan_multiple(
 }
 
 template <typename T>
-void ACE_scanner<T>::filter_from_cmp_val(
+void ACE_scanner<T>::next_scan(
     Scan_Utils::E_operator_type operator_type, T cmp_val) {
-  this->_filter_from_cmp_val(operator_type, false, cmp_val);
+  this->_next_scan(operator_type, false, cmp_val);
 }
 template <typename T>
-void ACE_scanner<T>::filter_val(Scan_Utils::E_operator_type operator_type) {
-  this->_filter_from_cmp_val(operator_type, true, 0);
+void ACE_scanner<T>::next_scan(Scan_Utils::E_operator_type operator_type) {
+  this->_next_scan(operator_type, true, 0);
 }
 template <typename T>
 void ACE_scanner<T>::write_val_to_current_scan_results(T val) {

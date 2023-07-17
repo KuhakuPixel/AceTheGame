@@ -89,7 +89,7 @@ private:
    * else: compare old value with new value in that address
    *
    * */
-  void _filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
+  void _next_scan(Scan_Utils::E_operator_type operator_type,
                             bool compare_with_new_value, T cmp_val);
 
 public:
@@ -200,13 +200,13 @@ public:
    * else: compare old value with new value in that address
    *
    * */
-  void filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
+  void next_scan(Scan_Utils::E_operator_type operator_type,
                            T cmp_val);
 
   /*
    * should be called after `scanner_find_val`
    * */
-  void filter_val(Scan_Utils::E_operator_type operator_type);
+  void next_scan(Scan_Utils::E_operator_type operator_type);
 
   void write_val_to_current_scan_results(T val);
 };

@@ -287,12 +287,12 @@ public:
 
   void scanner_filter(Scan_Utils::E_operator_type operator_type) {
 
-    this->scanner->filter_val(operator_type);
+    this->scanner->next_scan(operator_type);
   }
 
   void scanner_filter_on_value(Scan_Utils::E_operator_type operator_type,
                                T value) {
-    this->scanner->filter_from_cmp_val(operator_type, value);
+    this->scanner->next_scan(operator_type, value);
   }
 
   void scanner_update_current_scan_result() {

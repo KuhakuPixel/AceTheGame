@@ -62,7 +62,7 @@ void filter_cmd_handler(ACE_scanner<T> *scanner,
     frontend::print("WARN: no initial scan has been setup\n");
 
   double filter_time = -1;
-  TIME_ACTION({ scanner->filter_val(operator_type); }, &filter_time);
+  TIME_ACTION({ scanner->next_scan(operator_type); }, &filter_time);
 
   frontend::print("current matches: %zu\n",
                   scanner->get_current_scan_result().get_matches_count());
@@ -116,7 +116,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
         }
 
         else {
-          scanner->filter_from_cmp_val(operator_type, num_to_find);
+          scanner->next_scan(operator_type, num_to_find);
         }
       },
 
