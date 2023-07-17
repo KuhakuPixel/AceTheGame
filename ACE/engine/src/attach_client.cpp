@@ -7,17 +7,13 @@
 #include "ACE/server.hpp"
 #include <stdlib.h>
 
-attach_client::attach_client(std::string client_binded_address) {
-  this->client_binded_address = client_binded_address;
+attach_client::attach_client(int port) {
+  // nothing
+  std::string client_binded_address =
+      this->attach_client_base_zmq_address + std::to_string(port);
+
   // connect the socket to address
   this->socket.connect(client_binded_address);
-}
-attach_client::attach_client(int port)
-    : attach_client::attach_client(
-          ACE_global::attach_client_base_zmq_address + std::to_string(port)
-
-      ) {
-  // nothing
 }
 
 std::string attach_client::request(std::string msg) {

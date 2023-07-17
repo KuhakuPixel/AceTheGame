@@ -10,8 +10,13 @@
 
 // #include <valgrind/valgrind.h>
 
-template <typename T> ACE_scanner<T>::ACE_scanner(int pid) {
+template <typename T>
+ACE_scanner<T>::ACE_scanner(
+    int pid, std::function<void(size_t current, size_t max)> on_scan_progress,
+    size_t match_count_per_progress) {
   this->process_rw = new proc_rw<T>(pid);
+  this->on_scan_progress = on_scan_progress;
+  this->match_count_per_progress = match_count_per_progress;
 };
 
 template <typename T> ACE_scanner<T>::~ACE_scanner() {
@@ -124,20 +129,12 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
        * this memory is retrieved from
        * */
 
-      // frontend::print("load at %p until %p\n", i, i + expected_load_size);
+      // reset errno
       errno = 0;
       actual_load_size = this->process_rw->read_mem_new(
           i, expected_load_size, mem_buff, scan_prop.read_mem_method);
-      // something is seriously wrong when this functions receives
-      // address ranges (checkout the maps file of the proc and it can be
-      // seen that the read is out of bound),TODO: fix this shit
+      // something wrong with read, just move on to next address
       if (errno != 0) {
-        // char err_buff[300];
-        // snprintf(err_buff, sizeof(err_buff),
-        //          "error read at %p with readsize %zu: %d (%s)", i,
-        //          expected_load_size, errno, strerror(errno));
-        // frontend::print("WARN: %s\n", err_buff);
-        // throw std::runtime_error(err_buff);
         continue;
       }
       // set next load address
@@ -158,13 +155,6 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
 
         throw std::logic_error(buff);
       }
-      /*
-      if (actual_load_size != expected_load_size) {
-        frontend::print("=============== err =========\n");
-        frontend::print("expected_load_size: %zu bytes\n", expected_load_size);
-        frontend::print("actual_load_size: %zu bytes\n", actual_load_size);
-      }
-      */
       if (actual_load_size == 0)
         continue;
       loaded_mem.store_mem(mem_buff, actual_load_size, i);
@@ -186,7 +176,7 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
   }
 }
 template <typename T>
-void ACE_scanner<T>::_filter_from_cmp_val(
+void ACE_scanner<T>::_next_scan(
     Scan_Utils::E_operator_type operator_type, bool compare_with_new_value,
     T cmp_val) {
 
@@ -198,6 +188,7 @@ void ACE_scanner<T>::_filter_from_cmp_val(
   size_t mem_buff_size = this->max_chunk_read_size;
   byte *mem_buff = (byte *)malloc(mem_buff_size);
 
+  size_t scan_progress_idx = 1;
   auto on_each_chunk = [&](const match_chunk_prop<T> &chunk_prop) {
     // ====================== scan param =======================
     chunk_scan_prop<T> scan_prop;
@@ -213,17 +204,14 @@ void ACE_scanner<T>::_filter_from_cmp_val(
     // non existent region)
     scan_prop.read_mem_method =
         Scan_Utils::E_read_mem_method::with_process_vm_readv;
-    // frontend::print("start %p, end %p\n", scan_prop.addr_start,
-    // scan_prop.addr_end);
-
     // ============================================
     this->read_chunk_and_add_matches(
 
         scan_prop,
 
         [&](ADDR addr, T new_val) {
+          // add result if match
           T prev_val = chunk_prop.get_val_at_addr(addr, this->scan_level);
-          //
           if (compare_with_new_value) {
             if (Scan_Utils::value_compare<T>(new_val, operator_type, prev_val))
               new_scan_result.add_match(addr, new_val);
@@ -231,6 +219,16 @@ void ACE_scanner<T>::_filter_from_cmp_val(
             if (Scan_Utils::value_compare<T>(new_val, operator_type, cmp_val))
               new_scan_result.add_match(addr, new_val);
           }
+
+          // show progress
+          if (scan_progress_idx % this->match_count_per_progress == 0) {
+            this->on_scan_progress(
+                scan_progress_idx / this->match_count_per_progress,
+
+                this->current_scan_result.get_matches_count() /
+                    this->match_count_per_progress);
+          }
+          scan_progress_idx++;
         },
 
         mem_buff, mem_buff_size
@@ -246,7 +244,7 @@ void ACE_scanner<T>::_filter_from_cmp_val(
 }
 
 template <typename T>
-void ACE_scanner<T>::append_initial_scan(
+void ACE_scanner<T>::append_new_scan(
     byte *addr_start, byte *addr_end, Scan_Utils::E_operator_type operator_type,
     T value_to_find) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
@@ -305,47 +303,37 @@ void ACE_scanner<T>::append_initial_scan(
 }
 
 template <typename T>
-void ACE_scanner<T>::initial_scan(byte *addr_start, byte *addr_end,
+void ACE_scanner<T>::new_scan(byte *addr_start, byte *addr_end,
                                   Scan_Utils::E_operator_type operator_type,
                                   T value_to_find) {
   this->current_scan_result.clear();
-  this->append_initial_scan(addr_start, addr_end, operator_type, value_to_find);
+  this->append_new_scan(addr_start, addr_end, operator_type, value_to_find);
 }
 template <typename T>
-void ACE_scanner<T>::initial_scan_multiple(
+void ACE_scanner<T>::new_scan_multiple(
     const std::vector<struct mem_segment> &segments_to_scan,
     Scan_Utils::E_operator_type operator_type, T value_to_find) {
-  // TODO: add print for debug, show the memory segments for each scan
-  // add callback for display
-  // before and after a scan
+
+  // reset current scan
   this->current_scan_result.clear();
   for (size_t i = 0; i < segments_to_scan.size(); i++) {
-    //  frontend::print("scanning %zu/%zu (%s) -> %llu bytes\n", i + 1,
-    //         segments_to_scan.size(),
-    //         segments_to_scan[i].mem_type_str.c_str(),
-    //         segments_to_scan[i].address_end -
-    //         segments_to_scan[i].address_start);
-    //
-
-    frontend::mark_progress(i + 1, segments_to_scan.size());
-
-    // frontend::print("%s\n",
-    // segments_to_scan[i].get_displayable_str().c_str());
-
-    this->append_initial_scan((byte *)segments_to_scan[i].address_start,
+    // show progress
+    this->on_scan_progress(i + 1, segments_to_scan.size());
+    // do scan
+    this->append_new_scan((byte *)segments_to_scan[i].address_start,
                               (byte *)segments_to_scan[i].address_end,
                               operator_type, value_to_find);
   }
 }
 
 template <typename T>
-void ACE_scanner<T>::filter_from_cmp_val(
+void ACE_scanner<T>::next_scan(
     Scan_Utils::E_operator_type operator_type, T cmp_val) {
-  this->_filter_from_cmp_val(operator_type, false, cmp_val);
+  this->_next_scan(operator_type, false, cmp_val);
 }
 template <typename T>
-void ACE_scanner<T>::filter_val(Scan_Utils::E_operator_type operator_type) {
-  this->_filter_from_cmp_val(operator_type, true, 0);
+void ACE_scanner<T>::next_scan(Scan_Utils::E_operator_type operator_type) {
+  this->_next_scan(operator_type, true, 0);
 }
 template <typename T>
 void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
@@ -362,7 +350,7 @@ void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
         // error on write
         if (errno != 0 && ret_val == -1) {
           frontend::print("Error while writting matches at %p: %s\n",
-                         (byte *)addr, strerror(errno));
+                          (byte *)addr, strerror(errno));
         }
       }
 

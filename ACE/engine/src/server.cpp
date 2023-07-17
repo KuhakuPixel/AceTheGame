@@ -4,12 +4,13 @@
 const std::string server::stop_request_str = "stop";
 
 server::server(
-    std::string server_binded_address,
+    int port,
     std::function<std::string(std::string input_str)> on_input_received
 
 ) {
 
-  this->server_binded_address = server_binded_address;
+  this->server_binded_address =
+      this->server_base_zmq_address + std::to_string(port);
   this->on_input_received = on_input_received;
 }
 

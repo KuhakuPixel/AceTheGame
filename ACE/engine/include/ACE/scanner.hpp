@@ -54,7 +54,10 @@ template <typename T> class ACE_scanner {
 private:
   const size_t one_mega_byte = pow_integral(2, 20);
   const size_t max_chunk_read_size = one_mega_byte;
+  size_t match_count_per_progress;
   proc_rw<T> *process_rw = NULL;
+  std::function<void(size_t current, size_t max)> on_scan_progress = NULL;
+
   // TODO: handle different scan level in consequent scan
   // 	   this current options only effect initial scan
   /*
@@ -86,11 +89,17 @@ private:
    * else: compare old value with new value in that address
    *
    * */
-  void _filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
+  void _next_scan(Scan_Utils::E_operator_type operator_type,
                             bool compare_with_new_value, T cmp_val);
 
 public:
-  ACE_scanner(int pid);
+  /**
+   * [match_count_per_progress]: show progress by calling [on_progress] on
+   * every [match_count_per_progress] matches for next scan
+   * */
+  ACE_scanner(int pid,
+              std::function<void(size_t current, size_t max)> on_scan_progress,
+              size_t match_count_per_progress = 1000000);
   ~ACE_scanner();
 
   /*
@@ -117,7 +126,7 @@ public:
    * do a scan on multiple range of addresses
    * */
   void
-  initial_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
+  new_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
                         Scan_Utils::E_operator_type operator_type,
                         T value_to_find);
 
@@ -176,14 +185,14 @@ public:
    * if the system has them
    *
    * */
-  void append_initial_scan(byte *addr_start, byte *addr_end,
+  void append_new_scan(byte *addr_start, byte *addr_end,
                            Scan_Utils::E_operator_type operator_type,
                            T value_to_find);
 
   /*
-   * clear current scan result before call to [append_initial_scan]
+   * clear current scan result before call to [append_new_scan]
    * */
-  void initial_scan(byte *addr_start, byte *addr_end,
+  void new_scan(byte *addr_start, byte *addr_end,
                     Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*
@@ -191,13 +200,13 @@ public:
    * else: compare old value with new value in that address
    *
    * */
-  void filter_from_cmp_val(Scan_Utils::E_operator_type operator_type,
+  void next_scan(Scan_Utils::E_operator_type operator_type,
                            T cmp_val);
 
   /*
    * should be called after `scanner_find_val`
    * */
-  void filter_val(Scan_Utils::E_operator_type operator_type);
+  void next_scan(Scan_Utils::E_operator_type operator_type);
 
   void write_val_to_current_scan_results(T val);
 };

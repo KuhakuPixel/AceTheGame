@@ -101,7 +101,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
                      "comparator like '<' ,'>'")
         ->required()
         ->transform(CLI::CheckedTransformer(
-            Scan_Utils::filter_str_to_E_operator_type_map));
+            Scan_Utils::operator_str_to_E_operator_type_map));
 
     scan_cmd
         ->add_option("<VALUE>", cheat_args.num_val,
@@ -124,22 +124,22 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   }
 
   // ================== filter command ================================
-  std::vector<std::string> filter_cmd_names = {"f", "filter"};
-  for (size_t i = 0; i < filter_cmd_names.size(); i++) {
-    CLI::App *filter_cmd =
-        app.add_subcommand(filter_cmd_names[i],
+  std::vector<std::string> next_scan_cmd_names = {"f", "filter"};
+  for (size_t i = 0; i < next_scan_cmd_names.size(); i++) {
+    CLI::App *next_scan_cmd =
+        app.add_subcommand(next_scan_cmd_names[i],
                            "filter current value in scan against an opertator");
 
-    filter_cmd
+    next_scan_cmd
         ->add_option("<COMPARISON>", cheat_args.operator_type,
                      "comparator like '<' ,'>'")
         ->required()
         ->transform(CLI::CheckedTransformer(
-            Scan_Utils::filter_str_to_E_operator_type_map));
-    filter_cmd->callback(
+            Scan_Utils::operator_str_to_E_operator_type_map));
+    next_scan_cmd->callback(
 
         [&]() {
-          filter_cmd_handler<T>(scanner, cheat_args.operator_type,
+          next_scan_cmd_handler<T>(scanner, cheat_args.operator_type,
                                 cheat_config);
         }
 
@@ -155,7 +155,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
 
       [&]() {
         scanner->clear_current_scan_result();
-        cheat_config->initial_scan_done = false;
+        cheat_config->new_scan_done = false;
         frontend::print("resetting all scan\n");
       }
 
@@ -563,14 +563,19 @@ cheat_session::cheater_mode_on_each_input(
 }
 cheat_session::cheat_session(int pid, E_num_type current_num_type) {
 
+  auto on_scan_progress = [](size_t current, size_t max) {
+    frontend::mark_progress(current, max);
+  };
   this->pid = pid;
   this->current_num_type = current_num_type;
   // initialize engine modules for all types
-  this->engine_module_ptr_int = new engine_module<int>(pid);
-  this->engine_module_ptr_long = new engine_module<long>(pid);
-  this->engine_module_ptr_short = new engine_module<short>(pid);
-  this->engine_module_ptr_byte = new engine_module<byte>(pid);
-  this->engine_module_ptr_float = new engine_module<float>(pid);
+  this->engine_module_ptr_int = new engine_module<int>(pid, on_scan_progress);
+  this->engine_module_ptr_long = new engine_module<long>(pid, on_scan_progress);
+  this->engine_module_ptr_short =
+      new engine_module<short>(pid, on_scan_progress);
+  this->engine_module_ptr_byte = new engine_module<byte>(pid, on_scan_progress);
+  this->engine_module_ptr_float =
+      new engine_module<float>(pid, on_scan_progress);
 }
 
 cheat_session::~cheat_session() {

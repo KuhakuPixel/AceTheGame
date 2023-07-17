@@ -1,9 +1,12 @@
 #include "ACE/engine_module.hpp"
 #include "ACE/common.hpp"
-template <typename T> engine_module<T>::engine_module(int pid) {
+
+template <typename T>
+engine_module<T>::engine_module(
+    int pid, std::function<void(size_t current, size_t max)> on_scan_progress) {
 
   // initialize module
-  this->scanner_ptr = new ACE_scanner<T>(pid);
+  this->scanner_ptr = new ACE_scanner<T>(pid, on_scan_progress);
   this->freezer_ptr = new freezer<T>(pid);
   this->process_rw = new proc_rw<T>(pid);
   // TODO: add constructor for cheat_mode_config

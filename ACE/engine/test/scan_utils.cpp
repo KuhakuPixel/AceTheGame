@@ -273,25 +273,25 @@ TEST_CASE("Scan_Utils::value_compare_decimal", "[scan_utils]") {
                       4.2, Scan_Utils::E_operator_type::unknown, -1.1));
 }
 
-TEST_CASE("Scan_Utils::filter_str_to_E_operator_type_map", "[scanner]") {
+TEST_CASE("Scan_Utils::operator_str_to_E_operator_type_map", "[scanner]") {
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count("="));
+  REQUIRE(1 == Scan_Utils::operator_str_to_E_operator_type_map.count("="));
   REQUIRE(Scan_Utils::E_operator_type::equal ==
-          Scan_Utils::filter_str_to_E_operator_type_map.at("="));
+          Scan_Utils::operator_str_to_E_operator_type_map.at("="));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count(">"));
+  REQUIRE(1 == Scan_Utils::operator_str_to_E_operator_type_map.count(">"));
   REQUIRE(Scan_Utils::E_operator_type::greater ==
-          Scan_Utils::filter_str_to_E_operator_type_map.at(">"));
+          Scan_Utils::operator_str_to_E_operator_type_map.at(">"));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count(">="));
+  REQUIRE(1 == Scan_Utils::operator_str_to_E_operator_type_map.count(">="));
   REQUIRE(Scan_Utils::E_operator_type::greater_equal ==
-          Scan_Utils::filter_str_to_E_operator_type_map.at(">="));
+          Scan_Utils::operator_str_to_E_operator_type_map.at(">="));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count("<"));
+  REQUIRE(1 == Scan_Utils::operator_str_to_E_operator_type_map.count("<"));
   REQUIRE(Scan_Utils::E_operator_type::less ==
-          Scan_Utils::filter_str_to_E_operator_type_map.at("<"));
+          Scan_Utils::operator_str_to_E_operator_type_map.at("<"));
 
-  REQUIRE(1 == Scan_Utils::filter_str_to_E_operator_type_map.count("<="));
+  REQUIRE(1 == Scan_Utils::operator_str_to_E_operator_type_map.count("<="));
   REQUIRE(Scan_Utils::E_operator_type::less_equal ==
-          Scan_Utils::filter_str_to_E_operator_type_map.at("<="));
+          Scan_Utils::operator_str_to_E_operator_type_map.at("<="));
 }

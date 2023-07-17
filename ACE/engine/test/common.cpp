@@ -1,7 +1,7 @@
 #include "ACE/common.hpp"
 #include "../third_party/catch.hpp"
 
-TEST_CASE("TINE_ACTION", "[COMMON]") {
+TEST_CASE("TIME_ACTION", "[COMMON]") {
 
   /*
    * mark all variables here as volatile
@@ -14,7 +14,7 @@ TEST_CASE("TINE_ACTION", "[COMMON]") {
 
     TIME_ACTION(
         {
-          volatile int sum = 0;
+          int sum = 0;
           sum++;
         },
         &time_sec);
@@ -25,8 +25,8 @@ TEST_CASE("TINE_ACTION", "[COMMON]") {
 
     TIME_ACTION(
         {
-          volatile int sum = 0;
-          for (volatile int i = 0; i < 1000; i++)
+          int sum = 0;
+          for (int i = 0; i < 1000; i++)
             sum++;
         },
         &time_sec);
@@ -40,14 +40,14 @@ TEST_CASE("TINE_ACTION", "[COMMON]") {
     double *NULL_PTR = NULL;
     TIME_ACTION(
         {
-          volatile int sum = 0;
+          int sum = 0;
           sum++;
         },
         NULL_PTR);
 
     TIME_ACTION(
         {
-          volatile int sum = 0;
+          int sum = 0;
           for (int i = 0; i < 1000; i++)
             sum++;
         },

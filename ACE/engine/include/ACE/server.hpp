@@ -6,6 +6,7 @@ class server {
 private:
   std::string server_binded_address;
   std::function<std::string(std::string input_str)> on_input_received;
+  const std::string server_base_zmq_address = "tcp://*:";
 
 public:
   // message to send to stop the server
@@ -21,7 +22,7 @@ public:
    * server can be stopped by sending "stop"
    *
    * */
-  server(std::string server_binded_address,
+  server(int port,
 
          std::function<std::string(std::string input_str)> on_input_received);
   void start();

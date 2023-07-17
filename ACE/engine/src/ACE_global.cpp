@@ -89,6 +89,3 @@ const std::string ACE_global::cpp_compiler_version =
 #endif
 
 const int ACE_global::engine_server_client_default_port = 56666;
-const std::string ACE_global::engine_server_base_zmq_address = "tcp://*:";
-const std::string ACE_global::attach_client_base_zmq_address =
-    "tcp://127.0.0.1:";

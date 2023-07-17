@@ -36,9 +36,6 @@ public:
 
   // ================ attach_client server ========================
   static const int engine_server_client_default_port;
-  // zmq base address without port
-  static const std::string engine_server_base_zmq_address;
-  static const std::string attach_client_base_zmq_address;
 
 private:
   // Disallow creating an instance of this object

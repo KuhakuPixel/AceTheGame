@@ -7,6 +7,8 @@
 #include "input.hpp"
 #include <limits.h>
 #include <string>
+#include <typeindex>
+#include <typeinfo>
 #include <unordered_map>
 
 typedef unsigned long long int ULL;
@@ -99,6 +101,22 @@ static const std::unordered_map<std::string, E_endian_scan_type>
         {"swapped", E_endian_scan_type::swapped},
 
 };
+
+/*
+ * Get [E_num_type] from template T
+ * */
+template <typename T> E_num_type get_E_num_type_from_T() {
+
+  std::unordered_map<std::type_index, E_num_type> type_names;
+
+  type_names[std::type_index(typeid(byte))] = E_num_type::BYTE;
+  type_names[std::type_index(typeid(short))] = E_num_type::SHORT;
+  type_names[std::type_index(typeid(int))] = E_num_type::INT;
+  type_names[std::type_index(typeid(long))] = E_num_type::LONG;
+  type_names[std::type_index(typeid(float))] = E_num_type::FLOAT;
+
+  return type_names[std::type_index(typeid(T))];
+}
 
 /*
  * return value for every cheater mode operation

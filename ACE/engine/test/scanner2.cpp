@@ -14,15 +14,15 @@ TEST_CASE("chunk_int_scan_1", "[real_scan]") {
   ScannerTester::ACE_scanner_tester<int> tester =
       ScannerTester::ACE_scanner_tester<int>(
           INT_VAL_TO_FIND, 1000, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
 
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(666);
   tester.setup_val_to_find(999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+  tester.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                  INT_VAL_TO_FIND);
 
   std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
@@ -40,7 +40,7 @@ TEST_CASE("chunk_int_scan_2", "[real_scan]") {
   ScannerTester::ACE_scanner_tester<int> tester =
       ScannerTester::ACE_scanner_tester<int>(
           INT_VAL_TO_FIND, 100000, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
 
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(666);
@@ -49,8 +49,8 @@ TEST_CASE("chunk_int_scan_2", "[real_scan]") {
   //  tester.setup_val_to_find(4999999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+  tester.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                  INT_VAL_TO_FIND);
 
   std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
@@ -66,7 +66,7 @@ TEST_CASE("chunk_not_equal", "[real_scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 1000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros);
+            ScannerTester::new_scan_Data_Type::with_zeros);
 
     tester.setup_val_to_find(0);
     tester.setup_val_to_find(1);
@@ -76,7 +76,7 @@ TEST_CASE("chunk_not_equal", "[real_scanner]") {
     tester.setup_val_to_find(999);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::not_equal, 0);
+    tester.new_scan(Scan_Utils::E_operator_type::not_equal, 0);
 
     std::vector<struct Scan_Utils::addr_and_value<short>> scan_results =
         tester.get_current_scan_results();
@@ -96,7 +96,7 @@ TEST_CASE("chunk_int_scan_3", "[real_scan]") {
   ScannerTester::ACE_scanner_tester<int> tester =
       ScannerTester::ACE_scanner_tester<int>(
           INT_VAL_TO_FIND, 4234321, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
 
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(666);
@@ -108,8 +108,8 @@ TEST_CASE("chunk_int_scan_3", "[real_scan]") {
   tester.setup_val_to_find(4234320);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+  tester.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                  INT_VAL_TO_FIND);
 
   std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
@@ -127,7 +127,7 @@ TEST_CASE("chunk_LL_scan_1", "[real_scan]") {
   ScannerTester::ACE_scanner_tester<LL> tester =
       ScannerTester::ACE_scanner_tester<LL>(
           LL_VAL_TO_FIND, 4234321, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
 
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(666);
@@ -139,8 +139,8 @@ TEST_CASE("chunk_LL_scan_1", "[real_scan]") {
   tester.setup_val_to_find(4234320);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, LL_VAL_TO_FIND);
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+  tester.new_scan(Scan_Utils::E_operator_type::equal, LL_VAL_TO_FIND);
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                  LL_VAL_TO_FIND);
 
   std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
@@ -148,7 +148,7 @@ TEST_CASE("chunk_LL_scan_1", "[real_scan]") {
   REQUIRE(tester.get_expected_found_addresses() == found_addresses);
 }
 
-TEST_CASE("chunk_int_scan_and_filter", "[real_scan]") {
+TEST_CASE("chunk_int_scan_and_next_scan", "[real_scan]") {
 
   const short VAL_TO_FIND = 0;
 
@@ -157,18 +157,18 @@ TEST_CASE("chunk_int_scan_and_filter", "[real_scan]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 4134112, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros);
+            ScannerTester::new_scan_Data_Type::with_zeros);
 
     tester.setup_val_to_find(999);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
     REQUIRE(found_addresses.size() > 1);
 
     tester.increment_setupped_val(1);
-    tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal, 1);
+    tester.scanner_next_scan(Scan_Utils::E_operator_type::equal, 1);
 
     found_addresses = tester.get_current_scan_addresses();
     REQUIRE(found_addresses.size() == 1);
@@ -188,15 +188,15 @@ TEST_CASE("reverse_endian_scan", "[real_scan]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             swap_endian<short>(VAL_TO_FIND), 1000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros);
+            ScannerTester::new_scan_Data_Type::with_zeros);
 
     tester.scanner_set_endian_scan_type(E_endian_scan_type::swapped);
 
     tester.setup_val_to_find(999);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
-    tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                    VAL_TO_FIND);
 
     std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
@@ -209,7 +209,7 @@ TEST_CASE("reverse_endian_scan", "[real_scan]") {
     ScannerTester::ACE_scanner_tester<long> tester =
         ScannerTester::ACE_scanner_tester<long>(
             swap_endian<long>(VAL_TO_FIND), 5000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros);
+            ScannerTester::new_scan_Data_Type::with_zeros);
 
     tester.scanner_set_endian_scan_type(E_endian_scan_type::swapped);
 
@@ -220,8 +220,8 @@ TEST_CASE("reverse_endian_scan", "[real_scan]") {
     tester.setup_val_to_find(4999);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
-    tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                    VAL_TO_FIND);
 
     std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
@@ -234,7 +234,7 @@ TEST_CASE("reverse_endian_scan", "[real_scan]") {
     ScannerTester::ACE_scanner_tester<int> tester =
         ScannerTester::ACE_scanner_tester<int>(
             swap_endian<int>(VAL_TO_FIND), 5000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros);
+            ScannerTester::new_scan_Data_Type::with_zeros);
 
     tester.scanner_set_endian_scan_type(E_endian_scan_type::swapped);
 
@@ -245,14 +245,14 @@ TEST_CASE("reverse_endian_scan", "[real_scan]") {
     tester.setup_val_to_find(4999);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     // other filter
-    tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+    tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                    VAL_TO_FIND);
-    tester.scanner_filter_on_value(Scan_Utils::E_operator_type::greater,
+    tester.scanner_next_scan(Scan_Utils::E_operator_type::greater,
                                    VAL_TO_FIND - 1);
-    tester.scanner_filter_on_value(Scan_Utils::E_operator_type::less,
+    tester.scanner_next_scan(Scan_Utils::E_operator_type::less,
                                    VAL_TO_FIND + 1);
 
     //
@@ -267,21 +267,21 @@ TEST_CASE("reverse_endian_scan_write", "[writter]") {
   ScannerTester::ACE_scanner_tester<int> tester =
       ScannerTester::ACE_scanner_tester<int>(
           swap_endian<int>(VAL_TO_FIND), 5000, "",
-          ScannerTester::Initial_Scan_Data_Type::with_zeros);
+          ScannerTester::new_scan_Data_Type::with_zeros);
 
   tester.scanner_set_endian_scan_type(E_endian_scan_type::swapped);
 
   tester.setup_val_to_find(4999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   // other filter
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::equal,
                                  VAL_TO_FIND);
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::greater,
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::greater,
                                  VAL_TO_FIND - 1);
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::less,
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::less,
                                  VAL_TO_FIND + 1);
 
   // write and check if it has been written
@@ -292,7 +292,7 @@ TEST_CASE("reverse_endian_scan_write", "[writter]") {
   // check if it has been written
   // when we scan for = 666 it should still
   // have 1 match
-  tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal, 666);
+  tester.scanner_next_scan(Scan_Utils::E_operator_type::equal, 666);
 
   std::vector<struct Scan_Utils::addr_and_value<int>> current_scan_res =
       tester.get_current_scan_results();
