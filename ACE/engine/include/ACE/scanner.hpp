@@ -52,6 +52,7 @@ template <typename T> struct chunk_scan_prop {
 template <typename T> class ACE_scanner {
 
 private:
+  const int pid;
   const size_t one_mega_byte = pow_integral(2, 20);
   const size_t max_chunk_read_size = one_mega_byte;
   size_t match_count_per_progress;
@@ -128,6 +129,18 @@ public:
   void
   new_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
                     Scan_Utils::E_operator_type operator_type, T value_to_find);
+
+  /**
+   * [on_mem_segments_found]: called when all suitable memory segments
+   * 			      are found
+   * */
+  void new_scan_multiple(
+      Scan_Utils::E_operator_type operator_type, T value_to_find,
+      std::function<
+          void(const std::vector<struct mem_segment> &segments_to_scan)>
+          on_mem_segments_found = {}
+
+  );
 
   /*
    * find value [value_to_find] from [addr_start] to [addr_end]

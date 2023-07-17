@@ -13,7 +13,8 @@
 template <typename T>
 ACE_scanner<T>::ACE_scanner(
     int pid, std::function<void(size_t current, size_t max)> on_scan_progress,
-    size_t match_count_per_progress) {
+    size_t match_count_per_progress)
+    : pid(pid) {
   this->process_rw = new proc_rw<T>(pid);
   this->on_scan_progress = on_scan_progress;
   this->match_count_per_progress = match_count_per_progress;
@@ -323,6 +324,32 @@ void ACE_scanner<T>::new_scan_multiple(
                           (byte *)segments_to_scan[i].address_end,
                           operator_type, value_to_find);
   }
+}
+
+template <typename T>
+void ACE_scanner<T>::new_scan_multiple(
+    Scan_Utils::E_operator_type operator_type, T value_to_find,
+    std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
+        on_mem_segments_found
+
+) {
+
+  //  ================= find memory mapped regions to scan =============
+  char path_to_maps[200];
+  snprintf(path_to_maps, 199, "/proc/%d/maps", this->pid);
+  // get all mem segments of program with pid [cheat_config->pid]
+  std::vector<struct mem_segment> proc_mem_segments =
+      parse_proc_map_file(path_to_maps);
+  //
+  std::vector<struct mem_segment> segments_to_scan = {};
+  for (size_t i = 0; i < proc_mem_segments.size(); i++) {
+    bool is_suitable = mem_segment_is_suitable(proc_mem_segments[i]);
+    if (is_suitable)
+      segments_to_scan.push_back(proc_mem_segments[i]);
+  }
+  // =================================================================
+  on_mem_segments_found(segments_to_scan);
+  this->new_scan_multiple(segments_to_scan, operator_type, value_to_find);
 }
 
 template <typename T>

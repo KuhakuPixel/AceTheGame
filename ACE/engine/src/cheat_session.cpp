@@ -381,6 +381,8 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
       app.add_subcommand("config", "set various options regarding scans");
 
   // ============== scan_all_region ========
+  // TODO: use enum
+  /*
   CLI::App *config_scan_all_region_cmd = config_cmd->add_subcommand(
       "scan_all_region",
 
@@ -390,6 +392,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   config_scan_all_region_cmd
       ->add_option("<VALUE>", cheat_config->scan_all_region)
       ->required();
+      */
   // =============== endian ===============
   CLI::App *config_endian_cmd = config_cmd->add_subcommand(
       "endian",

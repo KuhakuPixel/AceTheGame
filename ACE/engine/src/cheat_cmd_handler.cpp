@@ -86,27 +86,14 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
         if (!cheat_config->new_scan_done) {
 
           // TODO: add test on how well this is?
-          //  ================= find memory mapped regions to scan =============
-          char path_to_maps[200];
-          snprintf(path_to_maps, 199, "/proc/%d/maps", cheat_config->pid);
-          // get all mem segments of program with pid [cheat_config->pid]
-          std::vector<struct mem_segment> proc_mem_segments =
-              parse_proc_map_file(path_to_maps);
-          //
-          std::vector<struct mem_segment> segments_to_scan = {};
-          for (size_t i = 0; i < proc_mem_segments.size(); i++) {
-            bool is_suitable = mem_segment_is_suitable(proc_mem_segments[i]);
-
-            if (is_suitable || cheat_config->scan_all_region)
-              segments_to_scan.push_back(proc_mem_segments[i]);
-          }
-          frontend::print("Found %zu regions to be scanned\n",
-                          segments_to_scan.size());
-          // =================================================================
-          // do scan
           scanner->new_scan_multiple(
 
-              segments_to_scan, operator_type, num_to_find
+              operator_type, num_to_find,
+
+              [](const std::vector<struct mem_segment> &segments_to_scan) {
+                frontend::print("Found %zu regions to be scanned\n",
+                                segments_to_scan.size());
+              }
 
           );
           // mark initial scan has been done
