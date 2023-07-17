@@ -176,9 +176,8 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
   }
 }
 template <typename T>
-void ACE_scanner<T>::_next_scan(
-    Scan_Utils::E_operator_type operator_type, bool compare_with_new_value,
-    T cmp_val) {
+void ACE_scanner<T>::_next_scan(Scan_Utils::E_operator_type operator_type,
+                                bool compare_with_new_value, T cmp_val) {
 
   if (this->endian_scan_type == E_endian_scan_type::swapped)
     cmp_val = swap_endian(cmp_val);
@@ -244,9 +243,9 @@ void ACE_scanner<T>::_next_scan(
 }
 
 template <typename T>
-void ACE_scanner<T>::append_new_scan(
-    byte *addr_start, byte *addr_end, Scan_Utils::E_operator_type operator_type,
-    T value_to_find) {
+void ACE_scanner<T>::append_new_scan(byte *addr_start, byte *addr_end,
+                                     Scan_Utils::E_operator_type operator_type,
+                                     T value_to_find) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
     value_to_find = swap_endian(value_to_find);
 
@@ -304,8 +303,8 @@ void ACE_scanner<T>::append_new_scan(
 
 template <typename T>
 void ACE_scanner<T>::new_scan(byte *addr_start, byte *addr_end,
-                                  Scan_Utils::E_operator_type operator_type,
-                                  T value_to_find) {
+                              Scan_Utils::E_operator_type operator_type,
+                              T value_to_find) {
   this->current_scan_result.clear();
   this->append_new_scan(addr_start, addr_end, operator_type, value_to_find);
 }
@@ -321,14 +320,14 @@ void ACE_scanner<T>::new_scan_multiple(
     this->on_scan_progress(i + 1, segments_to_scan.size());
     // do scan
     this->append_new_scan((byte *)segments_to_scan[i].address_start,
-                              (byte *)segments_to_scan[i].address_end,
-                              operator_type, value_to_find);
+                          (byte *)segments_to_scan[i].address_end,
+                          operator_type, value_to_find);
   }
 }
 
 template <typename T>
-void ACE_scanner<T>::next_scan(
-    Scan_Utils::E_operator_type operator_type, T cmp_val) {
+void ACE_scanner<T>::next_scan(Scan_Utils::E_operator_type operator_type,
+                               T cmp_val) {
   this->_next_scan(operator_type, false, cmp_val);
 }
 template <typename T>

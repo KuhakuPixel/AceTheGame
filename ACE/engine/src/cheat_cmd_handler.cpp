@@ -56,8 +56,8 @@ void pid_cmd_handler(int pid) {
 }
 template <typename T>
 void next_scan_cmd_handler(ACE_scanner<T> *scanner,
-                        Scan_Utils::E_operator_type operator_type,
-                        const cheat_mode_config *cheat_config) {
+                           Scan_Utils::E_operator_type operator_type,
+                           const cheat_mode_config *cheat_config) {
   if (!cheat_config->new_scan_done)
     frontend::print("WARN: no initial scan has been setup\n");
 
@@ -310,7 +310,7 @@ void unfreeze_all_cmd_handler(freezer<T> *freezer_manager) {
   template void matchcount_cmd_handler<TYPE>(                                  \
       const ACE_scanner<TYPE> *scanner);                                       \
                                                                                \
-  template void next_scan_cmd_handler<TYPE>(                                      \
+  template void next_scan_cmd_handler<TYPE>(                                   \
       ACE_scanner<TYPE> * scanner, Scan_Utils::E_operator_type operator_type,  \
       const cheat_mode_config *cheat_config);                                  \
                                                                                \

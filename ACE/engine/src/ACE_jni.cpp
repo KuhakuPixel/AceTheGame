@@ -1,9 +1,9 @@
 
 #ifdef __ANDROID__
 #include "ACE/ACE_jni.hpp"
-#include "ACE/thread_continuous.hpp"
 #include "ACE/ACE_global.hpp"
 #include "ACE/engine_server.hpp"
+#include "ACE/thread_continuous.hpp"
 #include <string>
 #include <unistd.h>
 

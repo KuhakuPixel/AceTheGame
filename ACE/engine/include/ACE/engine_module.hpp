@@ -18,7 +18,8 @@ public:
   proc_rw<T> *process_rw = NULL;
   cheat_mode_config _cheat_mode_config;
 
-  engine_module(int pid,
-                std::function<void(size_t current, size_t max)> on_scan_progress);
+  engine_module(
+      int pid,
+      std::function<void(size_t current, size_t max)> on_scan_progress);
   ~engine_module();
 };

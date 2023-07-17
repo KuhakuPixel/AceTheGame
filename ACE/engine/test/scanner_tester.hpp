@@ -138,8 +138,7 @@ public:
         new Simulated_Memory<T>(simulated_mem_length, sizeof(T));
 
     // load generated data from file to simulated memory
-    if (init_simulated_memory_type ==
-        new_scan_Data_Type::with_generated_val) {
+    if (init_simulated_memory_type == new_scan_Data_Type::with_generated_val) {
       std::vector<int> loaded_num_datas =
           this->load_mock_scan_data(pregenerated_num_path);
 
@@ -290,8 +289,7 @@ public:
     this->scanner->next_scan(operator_type);
   }
 
-  void scanner_next_scan(Scan_Utils::E_operator_type operator_type,
-                               T value) {
+  void scanner_next_scan(Scan_Utils::E_operator_type operator_type, T value) {
     this->scanner->next_scan(operator_type, value);
   }
 

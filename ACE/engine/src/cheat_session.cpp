@@ -140,7 +140,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
 
         [&]() {
           next_scan_cmd_handler<T>(scanner, cheat_args.operator_type,
-                                cheat_config);
+                                   cheat_config);
         }
 
     );

@@ -6,10 +6,10 @@
  * TODO: integrate this with the main program
  * */
 
+#include "../third_party/CLI11.hpp"
 #include "ACE/ace_type.hpp"
 #include "ACE/file_utils.hpp"
 #include "ACE/maps.hpp"
-#include "../third_party/CLI11.hpp"
 #include <stdio.h>
 
 int main(int argc, char **argv) {

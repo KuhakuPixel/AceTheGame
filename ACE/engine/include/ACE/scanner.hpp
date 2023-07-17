@@ -90,7 +90,7 @@ private:
    *
    * */
   void _next_scan(Scan_Utils::E_operator_type operator_type,
-                            bool compare_with_new_value, T cmp_val);
+                  bool compare_with_new_value, T cmp_val);
 
 public:
   /**
@@ -127,8 +127,7 @@ public:
    * */
   void
   new_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
-                        Scan_Utils::E_operator_type operator_type,
-                        T value_to_find);
+                    Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*
    * find value [value_to_find] from [addr_start] to [addr_end]
@@ -186,22 +185,21 @@ public:
    *
    * */
   void append_new_scan(byte *addr_start, byte *addr_end,
-                           Scan_Utils::E_operator_type operator_type,
-                           T value_to_find);
+                       Scan_Utils::E_operator_type operator_type,
+                       T value_to_find);
 
   /*
    * clear current scan result before call to [append_new_scan]
    * */
   void new_scan(byte *addr_start, byte *addr_end,
-                    Scan_Utils::E_operator_type operator_type, T value_to_find);
+                Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*
    * if [compare_with_new_value] is false: compare old value with [cmp_val]
    * else: compare old value with new value in that address
    *
    * */
-  void next_scan(Scan_Utils::E_operator_type operator_type,
-                           T cmp_val);
+  void next_scan(Scan_Utils::E_operator_type operator_type, T cmp_val);
 
   /*
    * should be called after `scanner_find_val`

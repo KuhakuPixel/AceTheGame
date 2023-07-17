@@ -1,7 +1,7 @@
 #include "ACE/match_store.hpp"
+#include "../third_party/catch.hpp"
 #include "ACE/ace_type.hpp"
 #include "ACE/scan_utils.hpp"
-#include "../third_party/catch.hpp"
 
 TEST_CASE("is_match_in_a_row unaligned", "[match_chunk]") {
   match_storage<int> m_storage =

@@ -1,6 +1,6 @@
 #include "ACE/simulated_memory.hpp"
-#include "ACE/ace_type.hpp"
 #include "../third_party/catch.hpp"
+#include "ACE/ace_type.hpp"
 #include "limits.h"
 
 TEST_CASE("get_addr_start_and_end", "[simulated_memory]") {

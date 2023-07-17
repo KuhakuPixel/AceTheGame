@@ -1,7 +1,7 @@
 #include "ACE/freeze.hpp"
+#include "../third_party/catch.hpp"
 #include "ACE/proc_create.hpp" // for proc_fork_busy_child
 #include "ACE/proc_rw.hpp"
-#include "../third_party/catch.hpp"
 #include <signal.h> // for SIGKILL
 #include <unistd.h>
 
