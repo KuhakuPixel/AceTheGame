@@ -244,7 +244,7 @@ void ACE_scanner<T>::_filter_from_cmp_val(
 }
 
 template <typename T>
-void ACE_scanner<T>::append_initial_scan(
+void ACE_scanner<T>::append_new_scan(
     byte *addr_start, byte *addr_end, Scan_Utils::E_operator_type operator_type,
     T value_to_find) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
@@ -303,14 +303,14 @@ void ACE_scanner<T>::append_initial_scan(
 }
 
 template <typename T>
-void ACE_scanner<T>::initial_scan(byte *addr_start, byte *addr_end,
+void ACE_scanner<T>::new_scan(byte *addr_start, byte *addr_end,
                                   Scan_Utils::E_operator_type operator_type,
                                   T value_to_find) {
   this->current_scan_result.clear();
-  this->append_initial_scan(addr_start, addr_end, operator_type, value_to_find);
+  this->append_new_scan(addr_start, addr_end, operator_type, value_to_find);
 }
 template <typename T>
-void ACE_scanner<T>::initial_scan_multiple(
+void ACE_scanner<T>::new_scan_multiple(
     const std::vector<struct mem_segment> &segments_to_scan,
     Scan_Utils::E_operator_type operator_type, T value_to_find) {
 
@@ -320,7 +320,7 @@ void ACE_scanner<T>::initial_scan_multiple(
     // show progress
     this->on_scan_progress(i + 1, segments_to_scan.size());
     // do scan
-    this->append_initial_scan((byte *)segments_to_scan[i].address_start,
+    this->append_new_scan((byte *)segments_to_scan[i].address_start,
                               (byte *)segments_to_scan[i].address_end,
                               operator_type, value_to_find);
   }

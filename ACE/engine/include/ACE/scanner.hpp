@@ -126,7 +126,7 @@ public:
    * do a scan on multiple range of addresses
    * */
   void
-  initial_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
+  new_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
                         Scan_Utils::E_operator_type operator_type,
                         T value_to_find);
 
@@ -185,14 +185,14 @@ public:
    * if the system has them
    *
    * */
-  void append_initial_scan(byte *addr_start, byte *addr_end,
+  void append_new_scan(byte *addr_start, byte *addr_end,
                            Scan_Utils::E_operator_type operator_type,
                            T value_to_find);
 
   /*
-   * clear current scan result before call to [append_initial_scan]
+   * clear current scan result before call to [append_new_scan]
    * */
-  void initial_scan(byte *addr_start, byte *addr_end,
+  void new_scan(byte *addr_start, byte *addr_end,
                     Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*

@@ -40,7 +40,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 namespace ScannerTester {
-enum class Initial_Scan_Data_Type {
+enum class new_scan_Data_Type {
 
   // initialize generated array with pregenerated value at a file
   with_generated_val,
@@ -123,7 +123,7 @@ private:
 public:
   ACE_scanner_tester(T initial_value_to_scan, size_t simulated_mem_length,
                      const char *pregenerated_num_path,
-                     Initial_Scan_Data_Type init_simulated_memory_type
+                     new_scan_Data_Type init_simulated_memory_type
 
   ) {
 
@@ -139,7 +139,7 @@ public:
 
     // load generated data from file to simulated memory
     if (init_simulated_memory_type ==
-        Initial_Scan_Data_Type::with_generated_val) {
+        new_scan_Data_Type::with_generated_val) {
       std::vector<int> loaded_num_datas =
           this->load_mock_scan_data(pregenerated_num_path);
 
@@ -254,12 +254,12 @@ public:
    * since this tester uses a Simulated_Memory
    * it is impossible for the caller of this tester to pass the starting
    * and ending address of the Simulated_Memory (since it is private to
-   * tester's caller) required by scanner's initial_scan or initial_scan
+   * tester's caller) required by scanner's new_scan or new_scan
    * function
    *
    * */
 
-  void initial_scan(Scan_Utils::E_operator_type operator_type, T val_scan) {
+  void new_scan(Scan_Utils::E_operator_type operator_type, T val_scan) {
 
     int ptrace_attach_ret = 0;
     int ptrace_deattach_ret = 0;
@@ -268,7 +268,7 @@ public:
         this->tracee_pid,
 
         {
-          this->scanner->initial_scan(
+          this->scanner->new_scan(
               (byte *)this->simulated_memory->get_addr_start(),
               (byte *)this->simulated_memory->get_addr_end(), operator_type,
               val_scan);

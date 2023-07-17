@@ -155,7 +155,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
 
       [&]() {
         scanner->clear_current_scan_result();
-        cheat_config->initial_scan_done = false;
+        cheat_config->new_scan_done = false;
         frontend::print("resetting all scan\n");
       }
 
@@ -571,9 +571,11 @@ cheat_session::cheat_session(int pid, E_num_type current_num_type) {
   // initialize engine modules for all types
   this->engine_module_ptr_int = new engine_module<int>(pid, on_scan_progress);
   this->engine_module_ptr_long = new engine_module<long>(pid, on_scan_progress);
-  this->engine_module_ptr_short = new engine_module<short>(pid, on_scan_progress);
+  this->engine_module_ptr_short =
+      new engine_module<short>(pid, on_scan_progress);
   this->engine_module_ptr_byte = new engine_module<byte>(pid, on_scan_progress);
-  this->engine_module_ptr_float = new engine_module<float>(pid, on_scan_progress);
+  this->engine_module_ptr_float =
+      new engine_module<float>(pid, on_scan_progress);
 }
 
 cheat_session::~cheat_session() {

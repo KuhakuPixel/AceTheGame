@@ -14,7 +14,7 @@
 //
 
 struct cheat_mode_config {
-  bool initial_scan_done = false;
+  bool new_scan_done = false;
   int pid = -1;
   bool scan_all_region = false;
   bool pause_while_scan = false;

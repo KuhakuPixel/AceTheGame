@@ -97,14 +97,14 @@ TEST_CASE("int_scan_1", "[scanner]") {
   ScannerTester::ACE_scanner_tester<int> tester =
       ScannerTester::ACE_scanner_tester<int>(
           INT_VAL_TO_FIND, 1000, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
 
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(666);
   tester.setup_val_to_find(999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  INT_VAL_TO_FIND);
 
@@ -123,14 +123,14 @@ TEST_CASE("int_scan_2", "[scanner]") {
   ScannerTester::ACE_scanner_tester<int> tester =
       ScannerTester::ACE_scanner_tester<int>(
           INT_VAL_TO_FIND, 1000, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(665);
   tester.setup_val_to_find(666);
   tester.setup_val_to_find(999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  INT_VAL_TO_FIND);
 
@@ -149,7 +149,7 @@ TEST_CASE("int_scan_3", "[scanner]") {
   ScannerTester::ACE_scanner_tester<int> tester =
       ScannerTester::ACE_scanner_tester<int>(
           INT_VAL_TO_FIND, 10000, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(6666);
   tester.setup_val_to_find(9996);
@@ -159,7 +159,7 @@ TEST_CASE("int_scan_3", "[scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  INT_VAL_TO_FIND);
 
@@ -180,12 +180,12 @@ TEST_CASE("short_scan_0", "[scanner]") {
   ScannerTester::ACE_scanner_tester<short> tester =
       ScannerTester::ACE_scanner_tester<short>(
           VAL_TO_FIND, 10000, generated_int_data_path,
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+          ScannerTester::new_scan_Data_Type::with_generated_val);
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(9999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  VAL_TO_FIND);
 
@@ -204,7 +204,7 @@ TEST_CASE("short_scan_1", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 241234, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros);
+            ScannerTester::new_scan_Data_Type::with_zeros);
     tester.setup_val_to_find(0);
     tester.setup_val_to_find(1);
     tester.setup_val_to_find(2);
@@ -213,7 +213,7 @@ TEST_CASE("short_scan_1", "[scanner]") {
     tester.setup_val_to_find(9999);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
     tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                    VAL_TO_FIND);
 
@@ -224,7 +224,7 @@ TEST_CASE("short_scan_1", "[scanner]") {
   }
 }
 
-TEST_CASE("initial_scan_not_equal", "[scanner]") {
+TEST_CASE("new_scan_not_equal", "[scanner]") {
 
   const short VAL_TO_FIND = 123;
 
@@ -232,7 +232,7 @@ TEST_CASE("initial_scan_not_equal", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 1000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros);
+            ScannerTester::new_scan_Data_Type::with_zeros);
 
     tester.setup_val_to_find(0);
     tester.setup_val_to_find(1);
@@ -242,7 +242,7 @@ TEST_CASE("initial_scan_not_equal", "[scanner]") {
     tester.setup_val_to_find(999);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::not_equal, 0);
+    tester.new_scan(Scan_Utils::E_operator_type::not_equal, 0);
 
     std::vector<struct Scan_Utils::addr_and_value<short>> scan_results =
         tester.get_current_scan_results();
@@ -307,7 +307,7 @@ TEST_CASE("action", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
@@ -315,7 +315,7 @@ TEST_CASE("action", "[scanner]") {
 
     //
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                    VAL_TO_FIND);
@@ -335,13 +335,13 @@ TEST_CASE("action", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
     tester.setup_val_to_find(666);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
     tester.scanner_filter(Scan_Utils::E_operator_type::greater);
@@ -373,14 +373,14 @@ TEST_CASE("action", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
     tester.setup_val_to_find(666);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     // do actions and filters
     tester.increment_setupped_val(1);
@@ -401,14 +401,14 @@ TEST_CASE("action", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
     tester.setup_val_to_find(666);
 
     //
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     // do actions and filters
     tester.increment_setupped_val(-1);
@@ -441,13 +441,13 @@ TEST_CASE("action2", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
     tester.setup_val_to_find(666);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
 
@@ -469,13 +469,13 @@ TEST_CASE("action2", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
     tester.setup_val_to_find(9999);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(-1);
 
@@ -494,13 +494,13 @@ TEST_CASE("action2", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
     tester.setup_val_to_find(9999);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(-1);
     tester.increment_setupped_val(-1);
@@ -551,13 +551,13 @@ TEST_CASE("action_decimal", "[scanner]") {
     ScannerTester::ACE_scanner_tester<float> tester =
         ScannerTester::ACE_scanner_tester<float>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
     tester.setup_val_to_find(666);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
 
@@ -581,7 +581,7 @@ TEST_CASE("action_decimal", "[scanner]") {
     ScannerTester::ACE_scanner_tester<float> tester =
         ScannerTester::ACE_scanner_tester<float>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
@@ -589,7 +589,7 @@ TEST_CASE("action_decimal", "[scanner]") {
     tester.setup_val_to_find(666);
     tester.setup_val_to_find(667);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
 
@@ -627,7 +627,7 @@ TEST_CASE("scan_filter_not_equal", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
@@ -635,7 +635,7 @@ TEST_CASE("scan_filter_not_equal", "[scanner]") {
     tester.setup_val_to_find(666);
     tester.setup_val_to_find(1000);
     tester.setup_val_to_find(9999);
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     //
     tester.increment_setupped_val(1);
@@ -670,7 +670,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
@@ -679,7 +679,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
      * */
     tester.setup_val_to_find(666);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
     tester.scanner_filter(Scan_Utils::E_operator_type::greater);
@@ -705,7 +705,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
@@ -714,7 +714,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
      * */
     tester.setup_val_to_find(666);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
     tester.scanner_filter(Scan_Utils::E_operator_type::greater);
@@ -740,7 +740,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
     ScannerTester::ACE_scanner_tester<short> tester =
         ScannerTester::ACE_scanner_tester<short>(
             VAL_TO_FIND, 10000, "",
-            ScannerTester::Initial_Scan_Data_Type::with_zeros
+            ScannerTester::new_scan_Data_Type::with_zeros
 
         );
 
@@ -749,7 +749,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
      * */
     tester.setup_val_to_find(666);
 
-    tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
     tester.scanner_filter(Scan_Utils::E_operator_type::greater);
@@ -796,13 +796,13 @@ TEST_CASE("short_scan_2", "[scanner]") {
       ScannerTester::ACE_scanner_tester<short> tester =
           ScannerTester::ACE_scanner_tester<short>(
               VAL_TO_FIND, 10000, generated_int_data_path,
-              ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+              ScannerTester::new_scan_Data_Type::with_generated_val);
       tester.setup_val_to_find(0);
       tester.setup_val_to_find(666);
       tester.setup_val_to_find(9999);
 
       //
-      tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+      tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
       tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                      VAL_TO_FIND);
       // do actions and filters
@@ -827,12 +827,12 @@ TEST_CASE("short_scan_2", "[scanner]") {
       ScannerTester::ACE_scanner_tester<short> tester =
           ScannerTester::ACE_scanner_tester<short>(
               VAL_TO_FIND, 10000, generated_int_data_path,
-              ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+              ScannerTester::new_scan_Data_Type::with_generated_val);
       tester.setup_val_to_find(0);
       tester.setup_val_to_find(666);
       tester.setup_val_to_find(9999);
 
-      tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+      tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
       tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                      VAL_TO_FIND);
       // do actions and filters
@@ -850,13 +850,13 @@ TEST_CASE("short_scan_2", "[scanner]") {
       ScannerTester::ACE_scanner_tester<short> tester =
           ScannerTester::ACE_scanner_tester<short>(
               VAL_TO_FIND, 10000, generated_int_data_path,
-              ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+              ScannerTester::new_scan_Data_Type::with_generated_val);
 
       tester.setup_val_to_find(0);
       tester.setup_val_to_find(666);
       tester.setup_val_to_find(9999);
 
-      tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+      tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
       tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                      VAL_TO_FIND);
       // do actions and filters
@@ -877,13 +877,13 @@ TEST_CASE("short_scan_2", "[scanner]") {
       ScannerTester::ACE_scanner_tester<short> tester =
           ScannerTester::ACE_scanner_tester<short>(
               VAL_TO_FIND, 10000, generated_int_data_path,
-              ScannerTester::Initial_Scan_Data_Type::with_generated_val);
+              ScannerTester::new_scan_Data_Type::with_generated_val);
 
       tester.setup_val_to_find(0);
       tester.setup_val_to_find(666);
       tester.setup_val_to_find(9999);
 
-      tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+      tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
       tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                      VAL_TO_FIND);
       // do actions and filters
@@ -907,7 +907,7 @@ TEST_CASE("new_short_scan_3", "[new_scanner]") {
       ScannerTester::ACE_scanner_tester<short>(
           VAL_TO_FIND, 1000, generated_int_data_path,
 
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val
+          ScannerTester::new_scan_Data_Type::with_generated_val
 
       );
 
@@ -915,7 +915,7 @@ TEST_CASE("new_short_scan_3", "[new_scanner]") {
   tester.setup_val_to_find(666);
   tester.setup_val_to_find(999);
 
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  VAL_TO_FIND);
 
@@ -936,7 +936,7 @@ TEST_CASE("LL_scan_1", "[new_scanner]") {
       ScannerTester::ACE_scanner_tester<LL>(
           VAL_TO_FIND, 1000, generated_int_data_path,
 
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val
+          ScannerTester::new_scan_Data_Type::with_generated_val
 
       );
 
@@ -945,7 +945,7 @@ TEST_CASE("LL_scan_1", "[new_scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  VAL_TO_FIND);
 
@@ -969,7 +969,7 @@ TEST_CASE("LL_scan_2", "[new_scanner]") {
       ScannerTester::ACE_scanner_tester<LL>(
           VAL_TO_FIND, 1000, generated_int_data_path,
 
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val
+          ScannerTester::new_scan_Data_Type::with_generated_val
 
       );
 
@@ -978,7 +978,7 @@ TEST_CASE("LL_scan_2", "[new_scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  VAL_TO_FIND);
 
@@ -999,7 +999,7 @@ TEST_CASE("LL_scan_3", "[new_scanner]") {
       ScannerTester::ACE_scanner_tester<LL>(
           VAL_TO_FIND, 10000, generated_int_data_path,
 
-          ScannerTester::Initial_Scan_Data_Type::with_generated_val
+          ScannerTester::new_scan_Data_Type::with_generated_val
 
       );
 
@@ -1008,7 +1008,7 @@ TEST_CASE("LL_scan_3", "[new_scanner]") {
   tester.setup_val_to_find(9999);
 
   //
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
   tester.scanner_filter_on_value(Scan_Utils::E_operator_type::equal,
                                  VAL_TO_FIND);
 
@@ -1028,13 +1028,13 @@ TEST_CASE("writter", "[writter]") {
   ScannerTester::ACE_scanner_tester<short> tester =
       ScannerTester::ACE_scanner_tester<short>(
           VAL_TO_FIND, 10000, "",
-          ScannerTester::Initial_Scan_Data_Type::with_zeros
+          ScannerTester::new_scan_Data_Type::with_zeros
 
       );
 
   tester.setup_val_to_find(666);
 
-  tester.initial_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  tester.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   tester.increment_setupped_val(1);
   tester.scanner_filter(Scan_Utils::E_operator_type::greater);

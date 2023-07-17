@@ -58,7 +58,7 @@ template <typename T>
 void filter_cmd_handler(ACE_scanner<T> *scanner,
                         Scan_Utils::E_operator_type operator_type,
                         const cheat_mode_config *cheat_config) {
-  if (!cheat_config->initial_scan_done)
+  if (!cheat_config->new_scan_done)
     frontend::print("WARN: no initial scan has been setup\n");
 
   double filter_time = -1;
@@ -83,7 +83,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
   TIME_ACTION(
 
       {
-        if (!cheat_config->initial_scan_done) {
+        if (!cheat_config->new_scan_done) {
 
           // TODO: add test on how well this is?
           //  ================= find memory mapped regions to scan =============
@@ -104,7 +104,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
                           segments_to_scan.size());
           // =================================================================
           // do scan
-          scanner->initial_scan_multiple(
+          scanner->new_scan_multiple(
 
               segments_to_scan, operator_type, num_to_find
 
@@ -112,7 +112,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
           // mark initial scan has been done
           // so subsequent scan or filter operation know
           // about it
-          cheat_config->initial_scan_done = true;
+          cheat_config->new_scan_done = true;
         }
 
         else {
@@ -200,7 +200,7 @@ void writeat_cmd_handler(proc_rw<T> *process_rw, ADDR address, T val_to_write) {
 template <typename T>
 void update_cmd_handler(ACE_scanner<T> *scanner,
                         const cheat_mode_config *cheat_config) {
-  if (!cheat_config->initial_scan_done) {
+  if (!cheat_config->new_scan_done) {
     frontend::print("WARN: No initial scan is done\n");
     return;
   }
