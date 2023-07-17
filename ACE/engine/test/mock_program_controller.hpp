@@ -19,10 +19,14 @@ private:
   const std::string prog_path = "./mock_program/mock_program";
   attach_client *_attach_client = NULL;
   int runned_prog_pid = -1;
+  T val_to_find;
+
+  std::vector<size_t> setupped_val_at_indexes = {};
 
 public:
-  mock_program_controller(size_t arr_size, int port = 56665) {
+  mock_program_controller(size_t arr_size, T val_to_find, int port = 56665) {
     this->_attach_client = new attach_client(port);
+    this->val_to_find = val_to_find;
     int pid = fork();
     switch (pid) {
     case -1: {
@@ -63,6 +67,7 @@ public:
     }
     }
   }
+  int get_prog_pid() { return this->runned_prog_pid; }
   std::string request(std::string msg) {
 
     std::string json_str = _attach_client->request(msg);
@@ -72,6 +77,43 @@ public:
     }
 
     return j["output"];
+  }
+
+  void setup_val_to_find(size_t i) {
+    char buff[200];
+    snprintf(buff, sizeof(buff), "set --index %zu --value %s", i,
+             std::to_string(this->val_to_find).c_str());
+    request(std::string(buff));
+
+    this->setupped_val_at_indexes.push_back(i);
+  }
+
+  void increment_setupped_val(T val) {
+
+    for (size_t i : this->setupped_val_at_indexes) {
+      char buff[200];
+      snprintf(buff, sizeof(buff), "increment --index %zu --value %s", i,
+               std::to_string(val).c_str());
+      request(std::string(buff));
+    }
+  }
+  std::vector<std::string> get_setupped_val() {
+    std::vector<std::string> vals_str = {};
+    for (size_t i : this->setupped_val_at_indexes) {
+      char buff[200];
+      snprintf(buff, sizeof(buff), "get --index %zu", i);
+      vals_str.push_back(request(std::string(buff)));
+    }
+    return vals_str;
+  }
+  std::vector<std::string> get_expected_found_addresses() {
+    std::vector<std::string> addresses = {};
+    for (size_t i : this->setupped_val_at_indexes) {
+      char buff[200];
+      snprintf(buff, sizeof(buff), "get_addr --index %zu", i);
+      addresses.push_back(request(std::string(buff)));
+    }
+    return addresses;
   }
 
   ~mock_program_controller() {
