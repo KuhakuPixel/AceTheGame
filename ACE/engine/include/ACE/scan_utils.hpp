@@ -27,7 +27,7 @@ enum class E_read_mem_method {
 };
 
 static const std::unordered_map<std::string, Scan_Utils::E_operator_type>
-    filter_str_to_E_operator_type_map = {
+    operator_str_to_E_operator_type_map = {
         {">", Scan_Utils::E_operator_type::greater},
         {"<", Scan_Utils::E_operator_type::less},
         {"=", Scan_Utils::E_operator_type::equal},

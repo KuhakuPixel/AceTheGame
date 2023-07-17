@@ -285,12 +285,12 @@ public:
 
   // ==============================================================
 
-  void scanner_filter(Scan_Utils::E_operator_type operator_type) {
+  void scanner_next_scan(Scan_Utils::E_operator_type operator_type) {
 
     this->scanner->next_scan(operator_type);
   }
 
-  void scanner_filter_on_value(Scan_Utils::E_operator_type operator_type,
+  void scanner_next_scan(Scan_Utils::E_operator_type operator_type,
                                T value) {
     this->scanner->next_scan(operator_type, value);
   }

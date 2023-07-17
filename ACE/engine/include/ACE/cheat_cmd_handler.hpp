@@ -45,7 +45,7 @@ void matchcount_cmd_handler(const ACE_scanner<T> *scanner);
 void pid_cmd_handler(int pid);
 
 template <typename T>
-void filter_cmd_handler(ACE_scanner<T> *scanner,
+void next_scan_cmd_handler(ACE_scanner<T> *scanner,
                         Scan_Utils::E_operator_type operator_type,
                         const cheat_mode_config *cheat_config);
 

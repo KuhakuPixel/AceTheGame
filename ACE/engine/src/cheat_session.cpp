@@ -101,7 +101,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
                      "comparator like '<' ,'>'")
         ->required()
         ->transform(CLI::CheckedTransformer(
-            Scan_Utils::filter_str_to_E_operator_type_map));
+            Scan_Utils::operator_str_to_E_operator_type_map));
 
     scan_cmd
         ->add_option("<VALUE>", cheat_args.num_val,
@@ -124,22 +124,22 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   }
 
   // ================== filter command ================================
-  std::vector<std::string> filter_cmd_names = {"f", "filter"};
-  for (size_t i = 0; i < filter_cmd_names.size(); i++) {
-    CLI::App *filter_cmd =
-        app.add_subcommand(filter_cmd_names[i],
+  std::vector<std::string> next_scan_cmd_names = {"f", "filter"};
+  for (size_t i = 0; i < next_scan_cmd_names.size(); i++) {
+    CLI::App *next_scan_cmd =
+        app.add_subcommand(next_scan_cmd_names[i],
                            "filter current value in scan against an opertator");
 
-    filter_cmd
+    next_scan_cmd
         ->add_option("<COMPARISON>", cheat_args.operator_type,
                      "comparator like '<' ,'>'")
         ->required()
         ->transform(CLI::CheckedTransformer(
-            Scan_Utils::filter_str_to_E_operator_type_map));
-    filter_cmd->callback(
+            Scan_Utils::operator_str_to_E_operator_type_map));
+    next_scan_cmd->callback(
 
         [&]() {
-          filter_cmd_handler<T>(scanner, cheat_args.operator_type,
+          next_scan_cmd_handler<T>(scanner, cheat_args.operator_type,
                                 cheat_config);
         }
 
