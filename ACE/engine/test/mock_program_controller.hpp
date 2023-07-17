@@ -66,7 +66,20 @@ public:
       this->runned_prog_pid = pid;
     }
     }
+
+    /**
+     * make sure wait until program is running
+     * because if we try to read its memory
+     * immediately, we won't be able to read anything (read length that is
+     * successfull is 0), and it will hang during the scan
+     *
+     * I don't know the reasons, but probably due to race condition
+     *
+     * this seems hacky but it works
+     * */
+    assert("1" == this->request("is_running"));
   }
+
   int get_prog_pid() { return this->runned_prog_pid; }
   std::string request(std::string msg) {
 

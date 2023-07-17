@@ -3,12 +3,14 @@
 #include "ACE/error.hpp"
 #include "ACE/file_utils.hpp"
 #include "ACE/str_utils.hpp"
+#include "mock_program_controller.hpp"
 #include "scanner_tester.hpp"
 #include <limits.h>
 #include <list>
 #include <stdlib.h>
 #include <unistd.h> // for getpid
                     //
+
 TEST_CASE("set_scan_level", "[scanner]") {
   int current_pid = getpid();
   auto on_scan_progress = [](size_t current, size_t max) {};
@@ -91,25 +93,29 @@ TEST_CASE("set_scan_level", "[scanner]") {
 
 TEST_CASE("int_scan_1", "[scanner]") {
 
-  const char generated_int_data_path[] =
-      "test_files/scan_init_files/INT_1000_data";
-
   const int INT_VAL_TO_FIND = 1234567;
+  mock_program_controller<int> tester =
+      mock_program_controller<int>(1000, INT_VAL_TO_FIND);
 
-  ScannerTester::ACE_scanner_tester<int> tester =
-      ScannerTester::ACE_scanner_tester<int>(
-          INT_VAL_TO_FIND, 1000, generated_int_data_path,
-          ScannerTester::new_scan_Data_Type::with_generated_val);
+  ACE_scanner<int> scanner =
+      ACE_scanner<int>(tester.get_prog_pid(), [](size_t current, size_t max) {
+        printf("%zu/%zu\n", current, max);
+      });
 
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(666);
   tester.setup_val_to_find(999);
 
-  //
-  tester.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
-  tester.scanner_next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
+  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal,
+                            INT_VAL_TO_FIND);
 
-  std::vector<ADDR> found_addresses = tester.get_current_scan_addresses();
+  tester.increment_setupped_val(+1);
+  scanner.next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND + 1);
+
+  tester.increment_setupped_val(+1);
+  scanner.next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND + 2);
+
+  std::vector<std::string> found_addresses = scanner.get_matches_addresses();
   REQUIRE(found_addresses.size() == 3);
   REQUIRE(tester.get_expected_found_addresses() == found_addresses);
 }

@@ -330,9 +330,7 @@ template <typename T>
 void ACE_scanner<T>::new_scan_multiple(
     Scan_Utils::E_operator_type operator_type, T value_to_find,
     std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
-        on_mem_segments_found
-
-) {
+        on_mem_segments_found) {
 
   //  ================= find memory mapped regions to scan =============
   char path_to_maps[200];
@@ -348,7 +346,11 @@ void ACE_scanner<T>::new_scan_multiple(
       segments_to_scan.push_back(proc_mem_segments[i]);
   }
   // =================================================================
-  on_mem_segments_found(segments_to_scan);
+
+  if (on_mem_segments_found != nullptr) {
+    on_mem_segments_found(segments_to_scan);
+  }
+
   this->new_scan_multiple(segments_to_scan, operator_type, value_to_find);
 }
 
@@ -381,6 +383,20 @@ void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
       }
 
   );
+}
+
+template <typename T>
+std::vector<std::string> ACE_scanner<T>::get_matches_addresses() {
+  std::vector<std::string> matches_addresses = {};
+  this->get_current_scan_result().iterate_val(
+
+      [&matches_addresses](ADDR addr, int val) {
+        //
+        matches_addresses.push_back(std::to_string(addr));
+      }
+
+  );
+  return matches_addresses;
 }
 
 // explicit template instantiations

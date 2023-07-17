@@ -138,7 +138,7 @@ public:
       Scan_Utils::E_operator_type operator_type, T value_to_find,
       std::function<
           void(const std::vector<struct mem_segment> &segments_to_scan)>
-          on_mem_segments_found = {}
+          on_mem_segments_found = nullptr
 
   );
 
@@ -220,4 +220,10 @@ public:
   void next_scan(Scan_Utils::E_operator_type operator_type);
 
   void write_val_to_current_scan_results(T val);
+
+  /*
+   * get matches address in string format
+   * the address will be in base 10
+   * */
+  std::vector<std::string> get_matches_addresses();
 };
