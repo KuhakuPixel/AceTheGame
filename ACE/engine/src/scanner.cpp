@@ -69,6 +69,23 @@ const match_storage<T> &ACE_scanner<T>::get_current_scan_result() const {
   return this->current_scan_result;
 }
 
+template <typename T>
+std::vector<Scan_Utils::addr_and_value<T>>
+ACE_scanner<T>::get_current_scan_result_as_vector() const {
+
+  std::vector<struct Scan_Utils::addr_and_value<T>> addr_and_values = {};
+  this->current_scan_result.iterate_val(
+
+      [&](ADDR addr, int val) {
+        //
+        addr_and_values.push_back(Scan_Utils::addr_and_value<T>(addr, val));
+      }
+
+  );
+
+  return addr_and_values;
+}
+
 template <typename T> void ACE_scanner<T>::clear_current_scan_result() {
   this->current_scan_result.clear();
 }

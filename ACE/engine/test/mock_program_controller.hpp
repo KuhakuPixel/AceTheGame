@@ -27,13 +27,14 @@ public:
   mock_program_controller(size_t arr_size, T val_to_find, int port = 56665) {
     this->_attach_client = new attach_client(port);
     this->val_to_find = val_to_find;
+    E_num_type num_type = get_E_num_type_from_T<T>();
+
     int pid = fork();
     switch (pid) {
     case -1: {
       exit(EXIT_FAILURE);
     }
     case 0: {
-      E_num_type num_type = get_E_num_type_from_T<T>();
       /**
        * run the mock program with execve
        * */

@@ -116,6 +116,15 @@ public:
   E_endian_scan_type get_endian_scan_type() const;
 
   const match_storage<T> &get_current_scan_result() const;
+
+  /*
+   * get matches as vector of address and value
+   * (takes a long time, for performance, use [get_current_scan_result])
+   * because this func copies the result from [get_current_scan_result]
+   * */
+  std::vector<Scan_Utils::addr_and_value<T>>
+  get_current_scan_result_as_vector() const;
+
   void clear_current_scan_result();
   /*
    * update the value of all addresses with newer value
