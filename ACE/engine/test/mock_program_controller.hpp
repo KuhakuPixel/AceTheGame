@@ -21,7 +21,7 @@ private:
   int runned_prog_pid = -1;
 
 public:
-  mock_program_controller(int port, size_t arr_size) {
+  mock_program_controller(size_t arr_size, int port = 56665) {
     this->_attach_client = new attach_client(port);
     int pid = fork();
     switch (pid) {
