@@ -9,7 +9,7 @@ add_compile_options(-Wall -Werror)
 # Add an executable
 add_executable(${PROJECT_NAME} test_main.cpp maps.cpp file_utils.cpp test_mock_program_controller.cpp
                                str_utils.cpp proc_stat.cpp scanner.cpp 
-			       simulated_memory.cpp common.cpp proc_rw.cpp endian.cpp
+			       common.cpp proc_rw.cpp endian.cpp
 			       aslr_edit.cpp scan_utils.cpp thread_continuous.cpp
 			       freeze.cpp match_store.cpp math_util.cpp to_frontend.cpp
 			       engine_module.cpp engine_server_client.cpp)
