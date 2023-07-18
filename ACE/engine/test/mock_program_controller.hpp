@@ -78,7 +78,13 @@ public:
      *
      * this seems hacky but it works
      * */
-    assert("1" == this->request("is_running"));
+    if (this->request("is_running") == "1") {
+      // need to have this so the compiler won't freaking remove the
+      // request instruction in the name of optimization
+      printf("mock_program with pid %d is started\n", this->runned_prog_pid);
+    } else {
+      throw std::runtime_error("Unexpected reply from mock_program");
+    }
   }
 
   int get_prog_pid() { return this->runned_prog_pid; }
