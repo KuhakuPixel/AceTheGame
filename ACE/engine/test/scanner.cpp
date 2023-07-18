@@ -107,8 +107,7 @@ TEST_CASE("int_scan_1", "[scanner]") {
   tester.setup_val_to_find(666);
   tester.setup_val_to_find(999);
 
-  scanner.new_scan(Scan_Utils::E_operator_type::equal,
-                            INT_VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
 
   tester.increment_setupped_val(+1);
   scanner.next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND + 1);
@@ -140,8 +139,7 @@ TEST_CASE("int_scan_2", "[scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  scanner.new_scan(Scan_Utils::E_operator_type::equal,
-                            INT_VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
   scanner.next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
 
   tester.increment_setupped_val(-1);
@@ -170,8 +168,7 @@ TEST_CASE("scan_and_reset_scan", "[scanner]") {
   tester.setup_val_to_find(999);
 
   REQUIRE(false == scanner.get_new_scan_done());
-  scanner.new_scan(Scan_Utils::E_operator_type::equal,
-                            INT_VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
   REQUIRE(true == scanner.get_new_scan_done());
 
   tester.increment_setupped_val(+1);

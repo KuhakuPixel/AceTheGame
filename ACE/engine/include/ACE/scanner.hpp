@@ -84,10 +84,9 @@ private:
   match_storage<T> current_scan_result =
       match_storage<T>(Scan_Utils::E_scan_level::aligned_only);
 
-  void read_chunk_and_add_matches(
-      chunk_scan_prop<T> scan_prop,
-      std::function<void(ADDR addr, T new_val)> on_each_iteration,
-      byte *mem_buff, size_t mem_buff_size);
+  void read_chunk(chunk_scan_prop<T> scan_prop,
+                  std::function<void(ADDR addr, T new_val)> on_each_iteration,
+                  byte *mem_buff, size_t mem_buff_size);
 
   /*
    * if [compare_with_new_value] is false: compare old value with [cmp_val]
@@ -144,19 +143,17 @@ public:
   /*
    * do a scan on multiple range of addresses
    * */
-  void
-  new_scan(const std::vector<struct mem_segment> &segments_to_scan,
-                    Scan_Utils::E_operator_type operator_type, T value_to_find);
+  void new_scan(const std::vector<struct mem_segment> &segments_to_scan,
+                Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /**
    * [on_mem_segments_found]: called when all suitable memory segments
    * 			      are found
    * */
-  void new_scan(
-      Scan_Utils::E_operator_type operator_type, T value_to_find,
-      std::function<
-          void(const std::vector<struct mem_segment> &segments_to_scan)>
-          on_mem_segments_found = nullptr
+  void new_scan(Scan_Utils::E_operator_type operator_type, T value_to_find,
+                std::function<void(
+                    const std::vector<struct mem_segment> &segments_to_scan)>
+                    on_mem_segments_found = nullptr
 
   );
 
@@ -215,9 +212,9 @@ public:
    * if the system has them
    *
    * */
-  void append_new_scan(byte *addr_start, byte *addr_end,
-                       Scan_Utils::E_operator_type operator_type,
-                       T value_to_find);
+  void _new_scan(byte *addr_start, byte *addr_end,
+                 Scan_Utils::E_operator_type operator_type, T value_to_find,
+                 std::function<void(ADDR addr, T new_val)> on_match_found);
 
   /*
    * if [compare_with_new_value] is false: compare old value with [cmp_val]
