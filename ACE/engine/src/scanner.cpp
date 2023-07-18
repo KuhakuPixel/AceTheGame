@@ -60,6 +60,16 @@ Scan_Utils::E_scan_level ACE_scanner<T>::get_scan_level() {
 }
 
 template <typename T>
+void ACE_scanner<T>::set_region_level(Scan_Utils::E_region_level region_level) {
+  this->region_level = region_level;
+}
+
+template <typename T>
+Scan_Utils::E_region_level ACE_scanner<T>::get_region_level() {
+  return this->region_level;
+}
+
+template <typename T>
 E_endian_scan_type ACE_scanner<T>::get_endian_scan_type() const {
   return this->endian_scan_type;
 }
@@ -349,19 +359,8 @@ void ACE_scanner<T>::new_scan_multiple(
     std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
         on_mem_segments_found) {
 
-  //  ================= find memory mapped regions to scan =============
-  char path_to_maps[200];
-  snprintf(path_to_maps, 199, "/proc/%d/maps", this->pid);
-  // get all mem segments of program with pid [cheat_config->pid]
-  std::vector<struct mem_segment> proc_mem_segments =
-      parse_proc_map_file(path_to_maps);
-  //
-  std::vector<struct mem_segment> segments_to_scan = {};
-  for (size_t i = 0; i < proc_mem_segments.size(); i++) {
-    bool is_suitable = mem_segment_is_suitable(proc_mem_segments[i]);
-    if (is_suitable)
-      segments_to_scan.push_back(proc_mem_segments[i]);
-  }
+  std::vector<struct mem_segment> segments_to_scan =
+      mem_segment_get_regions_for_scan(this->pid, this->get_region_level());
   // =================================================================
 
   if (on_mem_segments_found != nullptr) {

@@ -71,6 +71,9 @@ private:
    *
    **/
   Scan_Utils::E_scan_level scan_level = Scan_Utils::E_scan_level::aligned_only;
+  //
+  Scan_Utils::E_region_level region_level =
+      Scan_Utils::E_region_level::all_read_write;
   // step size of the loop
   // during each iteration  of a scan
   size_t scan_step_size = sizeof(T);
@@ -109,9 +112,12 @@ public:
   void set_endian_scan_type(E_endian_scan_type val);
 
   size_t get_scan_step_size();
-  void set_scan_level(Scan_Utils::E_scan_level scan_level);
 
+  void set_scan_level(Scan_Utils::E_scan_level scan_level);
   Scan_Utils::E_scan_level get_scan_level();
+
+  void set_region_level(Scan_Utils::E_region_level region_level);
+  Scan_Utils::E_region_level get_region_level();
 
   E_endian_scan_type get_endian_scan_type() const;
 

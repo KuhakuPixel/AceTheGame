@@ -19,7 +19,8 @@
  * */
 #pragma once
 
-#include "ace_type.hpp"
+#include "ACE/ace_type.hpp"
+#include "ACE/scan_utils.hpp"
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -84,3 +85,6 @@ Maps_pathname_type get_Maps_pathname_type(const std::string &str);
 struct mem_segment parse_proc_map_str(const std::string &line);
 
 bool mem_segment_is_suitable(const struct mem_segment &mem_seg);
+std::vector<struct mem_segment>
+mem_segment_get_regions_for_scan(int pid,
+                                 Scan_Utils::E_region_level region_level);

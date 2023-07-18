@@ -164,3 +164,37 @@ bool mem_segment_is_suitable(const struct mem_segment &mem_seg) {
   else
     return true;
 }
+
+std::vector<struct mem_segment>
+mem_segment_get_regions_for_scan(int pid,
+                                 Scan_Utils::E_region_level region_level) {
+  //  ================= find memory mapped regions to scan =============
+  char path_to_maps[200];
+  snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
+
+  std::vector<struct mem_segment> proc_mem_segments =
+      parse_proc_map_file(path_to_maps);
+  //
+  std::vector<struct mem_segment> segments_to_scan = {};
+  for (size_t i = 0; i < proc_mem_segments.size(); i++) {
+    struct mem_segment mem_seg = proc_mem_segments[i];
+    // choose whether to add this region depending on [region_level]
+    bool is_region_suitable = false;
+    switch (region_level) {
+    case Scan_Utils::E_region_level::all_read_write: {
+      is_region_suitable = mem_seg.perm_read && mem_seg.perm_write;
+      break;
+    }
+
+    case Scan_Utils::E_region_level::all: {
+      is_region_suitable = true;
+      break;
+    }
+    }
+    // add region
+    if (is_region_suitable)
+      segments_to_scan.push_back(mem_seg);
+  }
+  // =================================================================
+  return segments_to_scan;
+}

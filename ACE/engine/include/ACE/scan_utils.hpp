@@ -61,6 +61,26 @@ static const std::unordered_map<Scan_Utils::E_scan_level, std::string>
 
 };
 
+enum class E_region_level {
+  /*
+   * all region that has read and write permission
+   * */
+  all_read_write,
+  all
+};
+
+static const std::unordered_map<std::string, Scan_Utils::E_region_level>
+    str_to_E_region_level_map = {
+        {"all_read_write", E_region_level::all_read_write},
+        {"all", E_region_level::all},
+};
+
+static const std::unordered_map<Scan_Utils::E_region_level, std::string>
+    E_region_level_to_str_map = {
+        {E_region_level::all_read_write, "all_read_write"},
+        {E_region_level::all, "all"},
+};
+
 /*
  * return the next address that is
  * [bytes_aligned] bytes aligned  from [addr]

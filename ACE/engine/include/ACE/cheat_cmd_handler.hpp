@@ -29,6 +29,7 @@ template <typename T> struct cheat_mode_args {
   ADDR addr_to_freeze_or_unfreeze;
   E_endian_scan_type endian_scan_type;
   Scan_Utils::E_scan_level scan_level_type;
+  Scan_Utils::E_region_level region_level;
   E_num_type num_type;
 
   size_t list_max_count;
