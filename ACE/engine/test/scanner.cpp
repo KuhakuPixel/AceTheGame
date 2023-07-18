@@ -107,7 +107,7 @@ TEST_CASE("int_scan_1", "[scanner]") {
   tester.setup_val_to_find(666);
   tester.setup_val_to_find(999);
 
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal,
+  scanner.new_scan(Scan_Utils::E_operator_type::equal,
                             INT_VAL_TO_FIND);
 
   tester.increment_setupped_val(+1);
@@ -140,7 +140,7 @@ TEST_CASE("int_scan_2", "[scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal,
+  scanner.new_scan(Scan_Utils::E_operator_type::equal,
                             INT_VAL_TO_FIND);
   scanner.next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND);
 
@@ -170,7 +170,7 @@ TEST_CASE("scan_and_reset_scan", "[scanner]") {
   tester.setup_val_to_find(999);
 
   REQUIRE(false == scanner.get_new_scan_done());
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal,
+  scanner.new_scan(Scan_Utils::E_operator_type::equal,
                             INT_VAL_TO_FIND);
   REQUIRE(true == scanner.get_new_scan_done());
 
@@ -204,7 +204,7 @@ TEST_CASE("short_scan_0", "[scanner]") {
   tester.setup_val_to_find(9999);
 
   //
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   tester.increment_setupped_val(-1);
   scanner.next_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND - 1);
@@ -238,7 +238,7 @@ TEST_CASE("short_scan_1", "[scanner]") {
     tester.setup_val_to_find(9999);
 
     //
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(-1);
     scanner.next_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND - 1);
@@ -272,7 +272,7 @@ TEST_CASE("new_scan_not_equal", "[scanner]") {
     tester.setup_val_to_find(999);
 
     //
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::not_equal, 0);
+    scanner.new_scan(Scan_Utils::E_operator_type::not_equal, 0);
 
     tester.increment_setupped_val(+1);
     scanner.next_scan(Scan_Utils::E_operator_type::not_equal);
@@ -322,7 +322,7 @@ TEST_CASE("action_decimal", "[scanner]") {
 
     tester.setup_val_to_find(666);
 
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
 
@@ -352,7 +352,7 @@ TEST_CASE("action_decimal", "[scanner]") {
     tester.setup_val_to_find(666);
     tester.setup_val_to_find(667);
 
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
 
@@ -395,7 +395,7 @@ TEST_CASE("next_scan_not_equal", "[scanner]") {
     tester.setup_val_to_find(666);
     tester.setup_val_to_find(1000);
     tester.setup_val_to_find(9999);
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     //
     tester.increment_setupped_val(1);
@@ -434,7 +434,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
      * */
     tester.setup_val_to_find(666);
 
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
     scanner.next_scan(Scan_Utils::E_operator_type::greater);
@@ -471,7 +471,7 @@ TEST_CASE("update_current_scan_result", "[scanner]") {
      * */
     tester.setup_val_to_find(666);
 
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(1);
     scanner.next_scan(Scan_Utils::E_operator_type::greater);
@@ -518,7 +518,7 @@ TEST_CASE("long_scan_1", "[scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   tester.increment_setupped_val(1);
   scanner.next_scan(Scan_Utils::E_operator_type::greater);
@@ -550,7 +550,7 @@ TEST_CASE("long_scan_2", "[scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   tester.increment_setupped_val(-1);
   scanner.next_scan(Scan_Utils::E_operator_type::less);
@@ -582,7 +582,7 @@ TEST_CASE("unknown_initial_value_scan", "[scanner]") {
   tester.setup_val_to_find(999);
 
   //
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::unknown, 0);
+  scanner.new_scan(Scan_Utils::E_operator_type::unknown, 0);
 
   tester.increment_setupped_val(-1);
   scanner.next_scan(Scan_Utils::E_operator_type::not_equal);
@@ -637,7 +637,7 @@ TEST_CASE("scan_stress_test", "[scanner]") {
   tester.setup_val_to_find(arr_mem_length - 3);
 
   //
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
   scanner.next_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   tester.increment_setupped_val(-1);
@@ -668,7 +668,7 @@ TEST_CASE("scanner.write_val_to_current_scan_results", "[scanner]") {
 
   tester.setup_val_to_find(666);
 
-  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+  scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
   tester.increment_setupped_val(1);
   scanner.next_scan(Scan_Utils::E_operator_type::greater);
@@ -709,7 +709,7 @@ TEST_CASE("reverse_endian_scan", "[scanner]") {
     tester.setup_val_to_find(999);
 
     //
-    scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
+    scanner.new_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
     scanner.next_scan(Scan_Utils::E_operator_type::equal, VAL_TO_FIND);
 
     tester.increment_setupped_val(swap_endian<short>(-1));

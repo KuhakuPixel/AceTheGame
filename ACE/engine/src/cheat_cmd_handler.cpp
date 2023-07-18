@@ -85,7 +85,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
       {
         if (scanner->get_new_scan_done()) {
 
-          scanner->new_scan_multiple(
+          scanner->new_scan(
 
               operator_type, num_to_find,
 

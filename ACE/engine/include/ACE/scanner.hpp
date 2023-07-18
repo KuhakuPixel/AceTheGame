@@ -145,14 +145,14 @@ public:
    * do a scan on multiple range of addresses
    * */
   void
-  new_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
+  new_scan(const std::vector<struct mem_segment> &segments_to_scan,
                     Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /**
    * [on_mem_segments_found]: called when all suitable memory segments
    * 			      are found
    * */
-  void new_scan_multiple(
+  void new_scan(
       Scan_Utils::E_operator_type operator_type, T value_to_find,
       std::function<
           void(const std::vector<struct mem_segment> &segments_to_scan)>
@@ -218,12 +218,6 @@ public:
   void append_new_scan(byte *addr_start, byte *addr_end,
                        Scan_Utils::E_operator_type operator_type,
                        T value_to_find);
-
-  /*
-   * clear current scan result before call to [append_new_scan]
-   * */
-  void new_scan(byte *addr_start, byte *addr_end,
-                Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*
    * if [compare_with_new_value] is false: compare old value with [cmp_val]

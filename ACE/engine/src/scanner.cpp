@@ -335,14 +335,7 @@ void ACE_scanner<T>::append_new_scan(byte *addr_start, byte *addr_end,
 }
 
 template <typename T>
-void ACE_scanner<T>::new_scan(byte *addr_start, byte *addr_end,
-                              Scan_Utils::E_operator_type operator_type,
-                              T value_to_find) {
-  this->current_scan_result.clear();
-  this->append_new_scan(addr_start, addr_end, operator_type, value_to_find);
-}
-template <typename T>
-void ACE_scanner<T>::new_scan_multiple(
+void ACE_scanner<T>::new_scan(
     const std::vector<struct mem_segment> &segments_to_scan,
     Scan_Utils::E_operator_type operator_type, T value_to_find) {
 
@@ -360,7 +353,7 @@ void ACE_scanner<T>::new_scan_multiple(
 }
 
 template <typename T>
-void ACE_scanner<T>::new_scan_multiple(
+void ACE_scanner<T>::new_scan(
     Scan_Utils::E_operator_type operator_type, T value_to_find,
     std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
         on_mem_segments_found) {
@@ -373,7 +366,7 @@ void ACE_scanner<T>::new_scan_multiple(
     on_mem_segments_found(segments_to_scan);
   }
 
-  this->new_scan_multiple(segments_to_scan, operator_type, value_to_find);
+  this->new_scan(segments_to_scan, operator_type, value_to_find);
 }
 
 template <typename T>
