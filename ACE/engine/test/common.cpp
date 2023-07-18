@@ -3,21 +3,11 @@
 
 TEST_CASE("TIME_ACTION", "[COMMON]") {
 
-  /*
-   * mark all variables here as volatile
-   * so the compiler won't remove this wait loops
-   * https://stackoverflow.com/a/246148/14073678
-   * */
-  // time  of executions cannot be negative
+  int sum = 0;
   {
     double time_sec = -1;
 
-    TIME_ACTION(
-        {
-          int sum = 0;
-          sum++;
-        },
-        &time_sec);
+    TIME_ACTION({ sum++; }, &time_sec);
     REQUIRE(time_sec >= 0.0);
   }
   {
@@ -25,11 +15,12 @@ TEST_CASE("TIME_ACTION", "[COMMON]") {
 
     TIME_ACTION(
         {
-          int sum = 0;
           for (int i = 0; i < 1000; i++)
             sum++;
         },
-        &time_sec);
+        &time_sec
+
+    );
     REQUIRE(time_sec >= 0.0);
   }
 
@@ -38,21 +29,16 @@ TEST_CASE("TIME_ACTION", "[COMMON]") {
   {
 
     double *NULL_PTR = NULL;
-    TIME_ACTION(
-        {
-          int sum = 0;
-          sum++;
-        },
-        NULL_PTR);
+    TIME_ACTION({ sum++; }, NULL_PTR);
 
     TIME_ACTION(
         {
-          int sum = 0;
           for (int i = 0; i < 1000; i++)
             sum++;
         },
         NULL_PTR);
   }
+  printf("sum: %d\n", sum);
 }
 TEST_CASE("free_and_null", "[COMMON]") {
 
