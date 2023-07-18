@@ -124,6 +124,7 @@ public:
     std::vector<std::string> addresses = {};
     for (size_t i : this->setupped_val_at_indexes) {
       char buff[200];
+      // request the address of value at index [i]
       snprintf(buff, sizeof(buff), "get_addr --index %zu", i);
       addresses.push_back(request(std::string(buff)));
     }
