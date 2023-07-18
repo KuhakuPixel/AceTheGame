@@ -156,6 +156,40 @@ TEST_CASE("int_scan_2", "[scanner]") {
                Catch::UnorderedEquals(found_addresses));
 }
 
+TEST_CASE("scan_and_reset_scan", "[scanner]") {
+
+  const int INT_VAL_TO_FIND = 1234567;
+  mock_program_controller<int> tester =
+      mock_program_controller<int>(1000, INT_VAL_TO_FIND);
+
+  ACE_scanner<int> scanner =
+      ACE_scanner<int>(tester.get_prog_pid(), on_progress);
+
+  tester.setup_val_to_find(0);
+  tester.setup_val_to_find(666);
+  tester.setup_val_to_find(999);
+
+  REQUIRE(false == scanner.get_new_scan_done());
+  scanner.new_scan_multiple(Scan_Utils::E_operator_type::equal,
+                            INT_VAL_TO_FIND);
+  REQUIRE(true == scanner.get_new_scan_done());
+
+  tester.increment_setupped_val(+1);
+  scanner.next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND + 1);
+
+  tester.increment_setupped_val(+1);
+  scanner.next_scan(Scan_Utils::E_operator_type::equal, INT_VAL_TO_FIND + 2);
+
+  std::vector<std::string> found_addresses = scanner.get_matches_addresses();
+  REQUIRE(found_addresses.size() == 3);
+  REQUIRE(tester.get_expected_found_addresses() == found_addresses);
+  // reset scan
+  REQUIRE(true == scanner.get_new_scan_done());
+  scanner.reset_scan();
+  REQUIRE(false == scanner.get_new_scan_done());
+  REQUIRE(0 == scanner.get_matches_addresses().size());
+}
+
 TEST_CASE("short_scan_0", "[scanner]") {
 
   const short VAL_TO_FIND = SHRT_MAX;

@@ -74,6 +74,10 @@ E_endian_scan_type ACE_scanner<T>::get_endian_scan_type() const {
   return this->endian_scan_type;
 }
 
+template <typename T> bool ACE_scanner<T>::get_new_scan_done() const {
+  return this->new_scan_done;
+}
+
 template <typename T>
 const match_storage<T> &ACE_scanner<T>::get_current_scan_result() const {
   return this->current_scan_result;
@@ -96,8 +100,9 @@ ACE_scanner<T>::get_current_scan_result_as_vector() const {
   return addr_and_values;
 }
 
-template <typename T> void ACE_scanner<T>::clear_current_scan_result() {
+template <typename T> void ACE_scanner<T>::reset_scan() {
   this->current_scan_result.clear();
+  this->new_scan_done = false;
 }
 
 template <typename T> void 
@@ -343,6 +348,7 @@ void ACE_scanner<T>::new_scan_multiple(
 
   // reset current scan
   this->current_scan_result.clear();
+  this->new_scan_done = true;
   for (size_t i = 0; i < segments_to_scan.size(); i++) {
     // show progress
     this->on_scan_progress(i + 1, segments_to_scan.size());

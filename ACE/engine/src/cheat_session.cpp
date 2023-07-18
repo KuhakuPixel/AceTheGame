@@ -154,8 +154,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   reset_cmd->callback(
 
       [&]() {
-        scanner->clear_current_scan_result();
-        cheat_config->new_scan_done = false;
+        scanner->reset_scan();
         frontend::print("resetting all scan\n");
       }
 

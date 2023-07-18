@@ -59,6 +59,7 @@ private:
   proc_rw<T> *process_rw = NULL;
   std::function<void(size_t current, size_t max)> on_scan_progress = NULL;
 
+  bool new_scan_done = false;
   // TODO: handle different scan level in consequent scan
   // 	   this current options only effect initial scan
   /*
@@ -121,6 +122,8 @@ public:
 
   E_endian_scan_type get_endian_scan_type() const;
 
+  bool get_new_scan_done() const;
+
   const match_storage<T> &get_current_scan_result() const;
 
   /*
@@ -131,7 +134,7 @@ public:
   std::vector<Scan_Utils::addr_and_value<T>>
   get_current_scan_result_as_vector() const;
 
-  void clear_current_scan_result();
+  void reset_scan();
   /*
    * update the value of all addresses with newer value
    * in this->current_scan_result
