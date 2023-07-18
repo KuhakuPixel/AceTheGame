@@ -13,7 +13,8 @@
 template <typename T>
 ACE_scanner<T>::ACE_scanner(
     int pid, std::function<void(size_t current, size_t max)> on_scan_progress,
-    size_t match_count_per_progress) {
+    size_t match_count_per_progress)
+    : pid(pid) {
   this->process_rw = new proc_rw<T>(pid);
   this->on_scan_progress = on_scan_progress;
   this->match_count_per_progress = match_count_per_progress;
@@ -59,6 +60,16 @@ Scan_Utils::E_scan_level ACE_scanner<T>::get_scan_level() {
 }
 
 template <typename T>
+void ACE_scanner<T>::set_region_level(Scan_Utils::E_region_level region_level) {
+  this->region_level = region_level;
+}
+
+template <typename T>
+Scan_Utils::E_region_level ACE_scanner<T>::get_region_level() {
+  return this->region_level;
+}
+
+template <typename T>
 E_endian_scan_type ACE_scanner<T>::get_endian_scan_type() const {
   return this->endian_scan_type;
 }
@@ -66,6 +77,23 @@ E_endian_scan_type ACE_scanner<T>::get_endian_scan_type() const {
 template <typename T>
 const match_storage<T> &ACE_scanner<T>::get_current_scan_result() const {
   return this->current_scan_result;
+}
+
+template <typename T>
+std::vector<Scan_Utils::addr_and_value<T>>
+ACE_scanner<T>::get_current_scan_result_as_vector() const {
+
+  std::vector<struct Scan_Utils::addr_and_value<T>> addr_and_values = {};
+  this->current_scan_result.iterate_val(
+
+      [&](ADDR addr, int val) {
+        //
+        addr_and_values.push_back(Scan_Utils::addr_and_value<T>(addr, val));
+      }
+
+  );
+
+  return addr_and_values;
 }
 
 template <typename T> void ACE_scanner<T>::clear_current_scan_result() {
@@ -176,9 +204,8 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
   }
 }
 template <typename T>
-void ACE_scanner<T>::_next_scan(
-    Scan_Utils::E_operator_type operator_type, bool compare_with_new_value,
-    T cmp_val) {
+void ACE_scanner<T>::_next_scan(Scan_Utils::E_operator_type operator_type,
+                                bool compare_with_new_value, T cmp_val) {
 
   if (this->endian_scan_type == E_endian_scan_type::swapped)
     cmp_val = swap_endian(cmp_val);
@@ -244,9 +271,9 @@ void ACE_scanner<T>::_next_scan(
 }
 
 template <typename T>
-void ACE_scanner<T>::append_new_scan(
-    byte *addr_start, byte *addr_end, Scan_Utils::E_operator_type operator_type,
-    T value_to_find) {
+void ACE_scanner<T>::append_new_scan(byte *addr_start, byte *addr_end,
+                                     Scan_Utils::E_operator_type operator_type,
+                                     T value_to_find) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
     value_to_find = swap_endian(value_to_find);
 
@@ -304,8 +331,8 @@ void ACE_scanner<T>::append_new_scan(
 
 template <typename T>
 void ACE_scanner<T>::new_scan(byte *addr_start, byte *addr_end,
-                                  Scan_Utils::E_operator_type operator_type,
-                                  T value_to_find) {
+                              Scan_Utils::E_operator_type operator_type,
+                              T value_to_find) {
   this->current_scan_result.clear();
   this->append_new_scan(addr_start, addr_end, operator_type, value_to_find);
 }
@@ -321,14 +348,31 @@ void ACE_scanner<T>::new_scan_multiple(
     this->on_scan_progress(i + 1, segments_to_scan.size());
     // do scan
     this->append_new_scan((byte *)segments_to_scan[i].address_start,
-                              (byte *)segments_to_scan[i].address_end,
-                              operator_type, value_to_find);
+                          (byte *)segments_to_scan[i].address_end,
+                          operator_type, value_to_find);
   }
 }
 
 template <typename T>
-void ACE_scanner<T>::next_scan(
-    Scan_Utils::E_operator_type operator_type, T cmp_val) {
+void ACE_scanner<T>::new_scan_multiple(
+    Scan_Utils::E_operator_type operator_type, T value_to_find,
+    std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
+        on_mem_segments_found) {
+
+  std::vector<struct mem_segment> segments_to_scan =
+      mem_segment_get_regions_for_scan(this->pid, this->get_region_level());
+  // =================================================================
+
+  if (on_mem_segments_found != nullptr) {
+    on_mem_segments_found(segments_to_scan);
+  }
+
+  this->new_scan_multiple(segments_to_scan, operator_type, value_to_find);
+}
+
+template <typename T>
+void ACE_scanner<T>::next_scan(Scan_Utils::E_operator_type operator_type,
+                               T cmp_val) {
   this->_next_scan(operator_type, false, cmp_val);
 }
 template <typename T>
@@ -355,6 +399,20 @@ void ACE_scanner<T>::write_val_to_current_scan_results(T val) {
       }
 
   );
+}
+
+template <typename T>
+std::vector<std::string> ACE_scanner<T>::get_matches_addresses() {
+  std::vector<std::string> matches_addresses = {};
+  this->get_current_scan_result().iterate_val(
+
+      [&matches_addresses](ADDR addr, int val) {
+        //
+        matches_addresses.push_back(std::to_string(addr));
+      }
+
+  );
+  return matches_addresses;
 }
 
 // explicit template instantiations

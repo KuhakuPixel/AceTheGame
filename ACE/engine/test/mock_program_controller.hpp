@@ -19,17 +19,22 @@ private:
   const std::string prog_path = "./mock_program/mock_program";
   attach_client *_attach_client = NULL;
   int runned_prog_pid = -1;
+  T val_to_find;
+
+  std::vector<size_t> setupped_val_at_indexes = {};
 
 public:
-  mock_program_controller(int port, size_t arr_size) {
+  mock_program_controller(size_t arr_size, T val_to_find, int port = 56665) {
     this->_attach_client = new attach_client(port);
+    this->val_to_find = val_to_find;
+    E_num_type num_type = get_E_num_type_from_T<T>();
+
     int pid = fork();
     switch (pid) {
     case -1: {
       exit(EXIT_FAILURE);
     }
     case 0: {
-      E_num_type num_type = get_E_num_type_from_T<T>();
       /**
        * run the mock program with execve
        * */
@@ -62,7 +67,21 @@ public:
       this->runned_prog_pid = pid;
     }
     }
+
+    /**
+     * make sure wait until program is running
+     * because if we try to read its memory
+     * immediately, we won't be able to read anything (read length that is
+     * successfull is 0), and it will hang during the scan
+     *
+     * I don't know the reasons, but probably due to race condition
+     *
+     * this seems hacky but it works
+     * */
+    assert("1" == this->request("is_running"));
   }
+
+  int get_prog_pid() { return this->runned_prog_pid; }
   std::string request(std::string msg) {
 
     std::string json_str = _attach_client->request(msg);
@@ -72,6 +91,44 @@ public:
     }
 
     return j["output"];
+  }
+
+  void setup_val_to_find(size_t i) {
+    char buff[200];
+    snprintf(buff, sizeof(buff), "set --index %zu --value %s", i,
+             std::to_string(this->val_to_find).c_str());
+    request(std::string(buff));
+
+    this->setupped_val_at_indexes.push_back(i);
+  }
+
+  void increment_setupped_val(T val) {
+
+    for (size_t i : this->setupped_val_at_indexes) {
+      char buff[200];
+      snprintf(buff, sizeof(buff), "increment --index %zu --value %s", i,
+               std::to_string(val).c_str());
+      request(std::string(buff));
+    }
+  }
+  std::vector<std::string> get_setupped_val() {
+    std::vector<std::string> vals_str = {};
+    for (size_t i : this->setupped_val_at_indexes) {
+      char buff[200];
+      snprintf(buff, sizeof(buff), "get --index %zu", i);
+      vals_str.push_back(request(std::string(buff)));
+    }
+    return vals_str;
+  }
+  std::vector<std::string> get_expected_found_addresses() {
+    std::vector<std::string> addresses = {};
+    for (size_t i : this->setupped_val_at_indexes) {
+      char buff[200];
+      // request the address of value at index [i]
+      snprintf(buff, sizeof(buff), "get_addr --index %zu", i);
+      addresses.push_back(request(std::string(buff)));
+    }
+    return addresses;
   }
 
   ~mock_program_controller() {

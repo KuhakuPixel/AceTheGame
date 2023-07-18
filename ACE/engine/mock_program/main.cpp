@@ -33,14 +33,14 @@ template <typename T> void run_loop(int port, size_t arr_size) {
 
     );
     // set//
-    CLI::App *set_val_at_idx_cmd = app.add_subcommand("set_val_at_idx");
+    CLI::App *set_val_at_idx_cmd = app.add_subcommand("set");
     set_val_at_idx_cmd->add_option("--index", index)->required();
     set_val_at_idx_cmd->add_option("--value", val)->required();
     set_val_at_idx_cmd->callback(
 
         [&]() {
           //
-          if (index > arr_size) {
+          if (index >= arr_size) {
             char err_buff[200];
             snprintf(err_buff, sizeof(err_buff), "index %zu is out of bound\n",
                      index);
@@ -53,14 +53,14 @@ template <typename T> void run_loop(int port, size_t arr_size) {
     );
 
     // increment
-    CLI::App *inc_val_at_idx_cmd = app.add_subcommand("increment_val_at_idx");
+    CLI::App *inc_val_at_idx_cmd = app.add_subcommand("increment");
     inc_val_at_idx_cmd->add_option("--index", index)->required();
     inc_val_at_idx_cmd->add_option("--value", val)->required();
     inc_val_at_idx_cmd->callback(
 
         [&]() {
           //
-          if (index > arr_size) {
+          if (index >= arr_size) {
             char err_buff[200];
             snprintf(err_buff, sizeof(err_buff), "index %zu is out of bound\n",
                      index);
@@ -73,12 +73,12 @@ template <typename T> void run_loop(int port, size_t arr_size) {
     );
     // get
     //
-    CLI::App *get_val_at_idx_cmd = app.add_subcommand("get_val_at_idx");
+    CLI::App *get_val_at_idx_cmd = app.add_subcommand("get");
     get_val_at_idx_cmd->add_option("--index", index)->required();
     get_val_at_idx_cmd->callback(
 
         [&]() {
-          if (index > arr_size) {
+          if (index >= arr_size) {
             char err_buff[200];
             snprintf(err_buff, sizeof(err_buff), "index %zu is out of bound\n",
                      index);
@@ -86,6 +86,26 @@ template <typename T> void run_loop(int port, size_t arr_size) {
             return;
           }
           output = std::to_string(arr[index]);
+        }
+
+    );
+
+    // get_address
+    //
+    CLI::App *get_addr_at_idx_cmd = app.add_subcommand("get_addr");
+    get_addr_at_idx_cmd->add_option("--index", index)->required();
+    get_addr_at_idx_cmd->callback(
+
+        [&]() {
+          if (index >= arr_size) {
+            char err_buff[200];
+            snprintf(err_buff, sizeof(err_buff), "index %zu is out of bound\n",
+                     index);
+            error_output = std::string(err_buff);
+            return;
+          }
+          ADDR addr = (ADDR)&arr[index];
+          output = std::to_string(addr);
         }
 
     );

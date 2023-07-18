@@ -140,7 +140,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
 
         [&]() {
           next_scan_cmd_handler<T>(scanner, cheat_args.operator_type,
-                                cheat_config);
+                                   cheat_config);
         }
 
     );
@@ -380,16 +380,24 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   CLI::App *config_cmd =
       app.add_subcommand("config", "set various options regarding scans");
 
-  // ============== scan_all_region ========
-  CLI::App *config_scan_all_region_cmd = config_cmd->add_subcommand(
-      "scan_all_region",
+  // ============== region_level ========
+  // TODO: use enum
+  std::string region_level_current_value =
+      Scan_Utils::E_region_level_to_str_map.at(scanner->get_region_level());
 
-      "scan all memory region of the program on initial scan\n\n"
-      "(WARN: initial scan might take a long time)");
+  CLI::App *config_region_level_cmd = config_cmd->add_subcommand(
+      "region_level", "choose which memory region to scan for\n"
+                      "current value: " +
+                          region_level_current_value);
 
-  config_scan_all_region_cmd
-      ->add_option("<VALUE>", cheat_config->scan_all_region)
-      ->required();
+  config_region_level_cmd->add_option("<VALUE>", cheat_args.region_level)
+      ->required()
+      ->transform(CLI::CheckedTransformer(Scan_Utils::str_to_E_region_level_map,
+                                          CLI::ignore_case));
+  config_region_level_cmd->callback(
+      [&]() { scanner->set_region_level(cheat_args.region_level); }
+
+  );
   // =============== endian ===============
   CLI::App *config_endian_cmd = config_cmd->add_subcommand(
       "endian",

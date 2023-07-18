@@ -16,7 +16,8 @@
 struct cheat_mode_config {
   bool new_scan_done = false;
   int pid = -1;
-  bool scan_all_region = false;
+  // TODO: use enum
+  // bool scan_all_region = false;
   bool pause_while_scan = false;
 };
 
@@ -28,6 +29,7 @@ template <typename T> struct cheat_mode_args {
   ADDR addr_to_freeze_or_unfreeze;
   E_endian_scan_type endian_scan_type;
   Scan_Utils::E_scan_level scan_level_type;
+  Scan_Utils::E_region_level region_level;
   E_num_type num_type;
 
   size_t list_max_count;
@@ -46,8 +48,8 @@ void pid_cmd_handler(int pid);
 
 template <typename T>
 void next_scan_cmd_handler(ACE_scanner<T> *scanner,
-                        Scan_Utils::E_operator_type operator_type,
-                        const cheat_mode_config *cheat_config);
+                           Scan_Utils::E_operator_type operator_type,
+                           const cheat_mode_config *cheat_config);
 
 template <typename T>
 void scan_cmd_handler(ACE_scanner<T> *scanner,

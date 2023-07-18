@@ -1,9 +1,9 @@
 #include "ACE/proc_rw.hpp"
-#include "ACE/proc_create.hpp" // for proc_fork_busy_child
 #include "../third_party/catch.hpp"
-#include <limits.h>     // for INT_MAX
-#include <sys/signal.h> // for SIGKILL
-#include <unistd.h>     // for kill
+#include "ACE/proc_create.hpp" // for proc_fork_busy_child
+#include <limits.h>            // for INT_MAX
+#include <sys/signal.h>        // for SIGKILL
+#include <unistd.h>            // for kill
 
 /*
  * reading mem method used for testing process_rw.read_mem_new

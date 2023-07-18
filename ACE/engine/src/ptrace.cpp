@@ -52,7 +52,7 @@ int ptrace_attach_pid(int pid, bool force_stop) {
 
     if (kill(pid, SIGSTOP) == -1) {
       frontend::mark_task_fail("Cannot force stop with SIGSTOP: %s\n",
-                              strerror(errno));
+                               strerror(errno));
       return -1;
     }
   }
@@ -63,7 +63,7 @@ int ptrace_attach_pid(int pid, bool force_stop) {
   int status;
   if (waitpid(pid, &status, 0) == -1 || !WIFSTOPPED(status)) {
     frontend::mark_task_fail("Error while waiting for process to stop: %s\n",
-                            strerror(errno));
+                             strerror(errno));
     frontend::mark_task_fail("Error code: %d\n", errno);
     return -1;
   }

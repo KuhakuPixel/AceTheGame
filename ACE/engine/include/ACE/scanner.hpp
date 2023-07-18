@@ -52,6 +52,7 @@ template <typename T> struct chunk_scan_prop {
 template <typename T> class ACE_scanner {
 
 private:
+  const int pid;
   const size_t one_mega_byte = pow_integral(2, 20);
   const size_t max_chunk_read_size = one_mega_byte;
   size_t match_count_per_progress;
@@ -70,6 +71,9 @@ private:
    *
    **/
   Scan_Utils::E_scan_level scan_level = Scan_Utils::E_scan_level::aligned_only;
+  //
+  Scan_Utils::E_region_level region_level =
+      Scan_Utils::E_region_level::all_read_write;
   // step size of the loop
   // during each iteration  of a scan
   size_t scan_step_size = sizeof(T);
@@ -90,7 +94,7 @@ private:
    *
    * */
   void _next_scan(Scan_Utils::E_operator_type operator_type,
-                            bool compare_with_new_value, T cmp_val);
+                  bool compare_with_new_value, T cmp_val);
 
 public:
   /**
@@ -108,13 +112,25 @@ public:
   void set_endian_scan_type(E_endian_scan_type val);
 
   size_t get_scan_step_size();
-  void set_scan_level(Scan_Utils::E_scan_level scan_level);
 
+  void set_scan_level(Scan_Utils::E_scan_level scan_level);
   Scan_Utils::E_scan_level get_scan_level();
+
+  void set_region_level(Scan_Utils::E_region_level region_level);
+  Scan_Utils::E_region_level get_region_level();
 
   E_endian_scan_type get_endian_scan_type() const;
 
   const match_storage<T> &get_current_scan_result() const;
+
+  /*
+   * get matches as vector of address and value
+   * (takes a long time, for performance, use [get_current_scan_result])
+   * because this func copies the result from [get_current_scan_result]
+   * */
+  std::vector<Scan_Utils::addr_and_value<T>>
+  get_current_scan_result_as_vector() const;
+
   void clear_current_scan_result();
   /*
    * update the value of all addresses with newer value
@@ -127,8 +143,19 @@ public:
    * */
   void
   new_scan_multiple(const std::vector<struct mem_segment> &segments_to_scan,
-                        Scan_Utils::E_operator_type operator_type,
-                        T value_to_find);
+                    Scan_Utils::E_operator_type operator_type, T value_to_find);
+
+  /**
+   * [on_mem_segments_found]: called when all suitable memory segments
+   * 			      are found
+   * */
+  void new_scan_multiple(
+      Scan_Utils::E_operator_type operator_type, T value_to_find,
+      std::function<
+          void(const std::vector<struct mem_segment> &segments_to_scan)>
+          on_mem_segments_found = nullptr
+
+  );
 
   /*
    * find value [value_to_find] from [addr_start] to [addr_end]
@@ -186,22 +213,21 @@ public:
    *
    * */
   void append_new_scan(byte *addr_start, byte *addr_end,
-                           Scan_Utils::E_operator_type operator_type,
-                           T value_to_find);
+                       Scan_Utils::E_operator_type operator_type,
+                       T value_to_find);
 
   /*
    * clear current scan result before call to [append_new_scan]
    * */
   void new_scan(byte *addr_start, byte *addr_end,
-                    Scan_Utils::E_operator_type operator_type, T value_to_find);
+                Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /*
    * if [compare_with_new_value] is false: compare old value with [cmp_val]
    * else: compare old value with new value in that address
    *
    * */
-  void next_scan(Scan_Utils::E_operator_type operator_type,
-                           T cmp_val);
+  void next_scan(Scan_Utils::E_operator_type operator_type, T cmp_val);
 
   /*
    * should be called after `scanner_find_val`
@@ -209,4 +235,10 @@ public:
   void next_scan(Scan_Utils::E_operator_type operator_type);
 
   void write_val_to_current_scan_results(T val);
+
+  /*
+   * get matches address in string format
+   * the address will be in base 10
+   * */
+  std::vector<std::string> get_matches_addresses();
 };

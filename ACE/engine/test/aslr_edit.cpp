@@ -1,6 +1,6 @@
 #include "ACE/aslr_edit.hpp"
-#include "ACE/file_utils.hpp"
 #include "../third_party/catch.hpp"
+#include "ACE/file_utils.hpp"
 
 /*
 TEST_CASE("aslr_set", "[aslr_edit]") {
