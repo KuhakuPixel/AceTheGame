@@ -74,8 +74,8 @@ E_endian_scan_type ACE_scanner<T>::get_endian_scan_type() const {
   return this->endian_scan_type;
 }
 
-template <typename T> bool ACE_scanner<T>::get_new_scan_done() const {
-  return this->new_scan_done;
+template <typename T> bool ACE_scanner<T>::get_first_scan_done() const {
+  return this->first_scan_done;
 }
 
 template <typename T>
@@ -102,7 +102,7 @@ ACE_scanner<T>::get_current_scan_result_as_vector() const {
 
 template <typename T> void ACE_scanner<T>::reset_scan() {
   this->current_scan_result.clear();
-  this->new_scan_done = false;
+  this->first_scan_done = false;
 }
 
 template <typename T> void 
@@ -277,7 +277,7 @@ void ACE_scanner<T>::_next_scan(Scan_Utils::E_operator_type operator_type,
 }
 
 template <typename T>
-void ACE_scanner<T>::_new_scan(
+void ACE_scanner<T>::_first_scan(
     byte *addr_start, byte *addr_end, Scan_Utils::E_operator_type operator_type,
     T value_to_find, std::function<void(ADDR addr, T new_val)> on_match_found) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
@@ -336,18 +336,18 @@ void ACE_scanner<T>::_new_scan(
 }
 
 template <typename T>
-void ACE_scanner<T>::new_scan(
+void ACE_scanner<T>::first_scan(
     const std::vector<struct mem_segment> &segments_to_scan,
     Scan_Utils::E_operator_type operator_type, T value_to_find) {
 
   // reset current scan
   this->current_scan_result.clear();
-  this->new_scan_done = true;
+  this->first_scan_done = true;
   for (size_t i = 0; i < segments_to_scan.size(); i++) {
     // show progress
     this->on_scan_progress(i + 1, segments_to_scan.size());
     // do scan
-    this->_new_scan(
+    this->_first_scan(
 
         (byte *)segments_to_scan[i].address_start,
         (byte *)segments_to_scan[i].address_end, operator_type, value_to_find,
@@ -361,7 +361,7 @@ void ACE_scanner<T>::new_scan(
 }
 
 template <typename T>
-void ACE_scanner<T>::new_scan(
+void ACE_scanner<T>::first_scan(
     Scan_Utils::E_operator_type operator_type, T value_to_find,
     std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
         on_mem_segments_found) {
@@ -374,7 +374,7 @@ void ACE_scanner<T>::new_scan(
     on_mem_segments_found(segments_to_scan);
   }
 
-  this->new_scan(segments_to_scan, operator_type, value_to_find);
+  this->first_scan(segments_to_scan, operator_type, value_to_find);
 }
 
 template <typename T>

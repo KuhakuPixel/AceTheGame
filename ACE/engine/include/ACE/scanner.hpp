@@ -59,7 +59,7 @@ private:
   proc_rw<T> *process_rw = NULL;
   std::function<void(size_t current, size_t max)> on_scan_progress = NULL;
 
-  bool new_scan_done = false;
+  bool first_scan_done = false;
   // TODO: handle different scan level in consequent scan
   // 	   this current options only effect initial scan
   /*
@@ -121,7 +121,7 @@ public:
 
   E_endian_scan_type get_endian_scan_type() const;
 
-  bool get_new_scan_done() const;
+  bool get_first_scan_done() const;
 
   const match_storage<T> &get_current_scan_result() const;
 
@@ -143,14 +143,14 @@ public:
   /*
    * do a scan on multiple range of addresses
    * */
-  void new_scan(const std::vector<struct mem_segment> &segments_to_scan,
+  void first_scan(const std::vector<struct mem_segment> &segments_to_scan,
                 Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /**
    * [on_mem_segments_found]: called when all suitable memory segments
    * 			      are found
    * */
-  void new_scan(Scan_Utils::E_operator_type operator_type, T value_to_find,
+  void first_scan(Scan_Utils::E_operator_type operator_type, T value_to_find,
                 std::function<void(
                     const std::vector<struct mem_segment> &segments_to_scan)>
                     on_mem_segments_found = nullptr
@@ -212,7 +212,7 @@ public:
    * if the system has them
    *
    * */
-  void _new_scan(byte *addr_start, byte *addr_end,
+  void _first_scan(byte *addr_start, byte *addr_end,
                  Scan_Utils::E_operator_type operator_type, T value_to_find,
                  std::function<void(ADDR addr, T new_val)> on_match_found);
 
