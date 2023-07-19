@@ -83,7 +83,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
   TIME_ACTION(
 
       {
-        if (scanner->get_first_scan_done()) {
+        if (!scanner->get_first_scan_done()) {
 
           scanner->first_scan(
 
