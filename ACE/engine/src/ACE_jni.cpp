@@ -17,7 +17,8 @@
 void ACE_jni_init() {
   // scan self
   int pid = getpid();
-  engine_server_start(pid, ACE_global::engine_server_client_default_port);
+  engine_server_start(pid, ACE_global::engine_server_client_default_port,
+                      ACE_global::status_publisher_subscriber_default_port);
 }
 
 // ===================================

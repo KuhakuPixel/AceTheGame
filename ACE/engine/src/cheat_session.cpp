@@ -568,10 +568,16 @@ cheat_session::cheater_mode_on_each_input(
   // else return value of _cheat_cmd
   return _cheat_cmd_ret;
 }
-cheat_session::cheat_session(int pid, E_num_type current_num_type) {
+cheat_session::cheat_session(int pid, E_num_type current_num_type,
+                             status_publisher *stat_publisher) {
 
-  auto on_scan_progress = [](size_t current, size_t max) {
+  auto on_scan_progress = [stat_publisher](size_t current, size_t max) {
     frontend::mark_progress(current, max);
+    // publish scan progress to anyone listening like an apk
+    if (stat_publisher != nullptr) {
+      stat_publisher->send_scan_progress(current, max, false);
+    }
+    //
   };
   this->pid = pid;
   this->current_num_type = current_num_type;

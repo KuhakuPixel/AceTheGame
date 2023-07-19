@@ -3,11 +3,14 @@
 #include "ACE/ace_type.hpp"
 #include "ACE/cheat_session.hpp"
 #include "ACE/server.hpp"
+#include "ACE/status_publisher.hpp"
 #include "ACE/to_frontend.hpp"
 
-void engine_server_start(int pid, int port) {
-
-  cheat_session _cheat_session = cheat_session(pid, E_num_type::INT);
+void engine_server_start(int pid, int engine_server_port,
+                         int status_publisher_port) {
+  status_publisher stat_publisher = status_publisher(status_publisher_port);
+  cheat_session _cheat_session =
+      cheat_session(pid, E_num_type::INT, &stat_publisher);
   // callback on each input
   auto on_input_received =
 
@@ -24,6 +27,6 @@ void engine_server_start(int pid, int port) {
   };
 
   // start server
-  server _server = server(port, on_input_received);
+  server _server = server(engine_server_port, on_input_received);
   _server.start();
 }

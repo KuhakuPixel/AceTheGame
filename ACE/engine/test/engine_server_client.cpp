@@ -13,7 +13,9 @@ TEST_CASE("engine_server_client", "[engine_server_client]") {
   std::thread server_thread = std::thread(
 
       [pid]() {
-        engine_server_start(pid, ACE_global::engine_server_client_default_port);
+        engine_server_start(
+            pid, ACE_global::engine_server_client_default_port,
+            ACE_global::status_publisher_subscriber_default_port);
       }
 
   );
