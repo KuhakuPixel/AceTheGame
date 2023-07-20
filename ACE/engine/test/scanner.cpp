@@ -94,6 +94,44 @@ TEST_CASE("set_scan_level", "[scanner]") {
 }
 // ========================================= scan test
 // =================================
+TEST_CASE("scan_progress", "[scanner]") {
+  /*
+   * check if progress's callback is called properly
+   * we gonna need to do unknown initial value scan
+   * for first and next scan to make sure we have many matches
+   * */
+
+  const int INT_VAL_TO_FIND = 1234567;
+  mock_program_controller<int> tester =
+      mock_program_controller<int>(100000, INT_VAL_TO_FIND);
+
+  size_t current_progress_idx = 0;
+  size_t max_idx = 0;
+  auto on_progress =
+
+      [&current_progress_idx, &max_idx](size_t current, size_t max) -> void {
+    current_progress_idx++;
+    max_idx = max;
+  };
+
+  ACE_scanner<int> scanner =
+      ACE_scanner<int>(tester.get_prog_pid(), on_progress);
+
+  tester.setup_val_to_find(0);
+  tester.setup_val_to_find(50000);
+  tester.setup_val_to_find(99999);
+
+  scanner.first_scan(Scan_Utils::E_operator_type::unknown, 0);
+  REQUIRE(max_idx != 0);
+  REQUIRE(current_progress_idx == max_idx);
+  // reset
+  max_idx = 0;
+  current_progress_idx = 0;
+  //
+  scanner.next_scan(Scan_Utils::E_operator_type::unknown);
+  REQUIRE(max_idx != 0);
+  REQUIRE(current_progress_idx == max_idx);
+}
 
 TEST_CASE("int_scan_1", "[scanner]") {
 
