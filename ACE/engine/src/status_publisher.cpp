@@ -5,12 +5,19 @@
 //
 #include "ACE/status_publisher.hpp"
 #include "../third_party/json.hpp"
+#include "ACE/to_frontend.hpp"
 #include <stdlib.h>
 
 using json = nlohmann::json;
 
 status_publisher::status_publisher(int port) {
-  this->socket.bind(this->publisher_base_zmq_address + std::to_string(port));
+
+  std::string publisher_binded_address =
+      this->publisher_base_zmq_address + std::to_string(port);
+
+  this->socket.bind(publisher_binded_address);
+  frontend::log("starting publisher at address %s\n",
+                publisher_binded_address.c_str());
 }
 
 void status_publisher::send(std::string data) {
