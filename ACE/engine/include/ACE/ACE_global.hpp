@@ -36,6 +36,8 @@ public:
 
   // ================ attach_client server ========================
   static const int engine_server_client_default_port;
+  // publisher
+  static const int status_publisher_subscriber_default_port;
 
 private:
   // Disallow creating an instance of this object

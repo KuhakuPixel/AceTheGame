@@ -20,8 +20,10 @@ void run_input_loop(std::function<E_loop_statement(std::string)> on_input,
     // ================== take line input ==========
     std::string input_str = std::string(line);
     // only enter?, just continue like a normal shell would
-    if (input_str == "")
+    if (input_str == "") {
+      linenoiseFree(line);
       continue;
+    }
     // add to history
     linenoiseHistoryAdd(line);
 

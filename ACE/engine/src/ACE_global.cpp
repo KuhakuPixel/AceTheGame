@@ -89,3 +89,4 @@ const std::string ACE_global::cpp_compiler_version =
 #endif
 
 const int ACE_global::engine_server_client_default_port = 56666;
+const int ACE_global::status_publisher_subscriber_default_port = 56667;

@@ -154,8 +154,7 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
   reset_cmd->callback(
 
       [&]() {
-        scanner->clear_current_scan_result();
-        cheat_config->new_scan_done = false;
+        scanner->reset_scan();
         frontend::print("resetting all scan\n");
       }
 
@@ -569,21 +568,35 @@ cheat_session::cheater_mode_on_each_input(
   // else return value of _cheat_cmd
   return _cheat_cmd_ret;
 }
-cheat_session::cheat_session(int pid, E_num_type current_num_type) {
+cheat_session::cheat_session(int pid, E_num_type current_num_type,
+                             status_publisher *stat_publisher) {
 
-  auto on_scan_progress = [](size_t current, size_t max) {
+  // publish scan progress to anyone listening like an apk
+  auto on_scan_progress = [stat_publisher](size_t current, size_t max) {
     frontend::mark_progress(current, max);
+    if (stat_publisher != nullptr) {
+      stat_publisher->send_scan_progress(current, max, false);
+    }
+    //
+  };
+  auto on_scan_done = [stat_publisher]() -> void {
+    if (stat_publisher != nullptr) {
+      stat_publisher->send_scan_progress(0, 0, true);
+    }
   };
   this->pid = pid;
   this->current_num_type = current_num_type;
   // initialize engine modules for all types
-  this->engine_module_ptr_int = new engine_module<int>(pid, on_scan_progress);
-  this->engine_module_ptr_long = new engine_module<long>(pid, on_scan_progress);
+  this->engine_module_ptr_int =
+      new engine_module<int>(pid, on_scan_progress, on_scan_done);
+  this->engine_module_ptr_long =
+      new engine_module<long>(pid, on_scan_progress, on_scan_done);
   this->engine_module_ptr_short =
-      new engine_module<short>(pid, on_scan_progress);
-  this->engine_module_ptr_byte = new engine_module<byte>(pid, on_scan_progress);
+      new engine_module<short>(pid, on_scan_progress, on_scan_done);
+  this->engine_module_ptr_byte =
+      new engine_module<byte>(pid, on_scan_progress, on_scan_done);
   this->engine_module_ptr_float =
-      new engine_module<float>(pid, on_scan_progress);
+      new engine_module<float>(pid, on_scan_progress, on_scan_done);
 }
 
 cheat_session::~cheat_session() {

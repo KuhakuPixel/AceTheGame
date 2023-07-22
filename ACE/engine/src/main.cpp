@@ -105,9 +105,10 @@ void ace_main() {
   run_input_loop(main_mode_on_each_input, "ACE");
 }
 
-void attach_pid_cmd_handler(int pid, int port) {
+void attach_pid_cmd_handler(int pid, int engine_server_port,
+                            int status_publisher_port) {
   printf("attaching to %d\n", pid);
-  engine_server_start(pid, port);
+  engine_server_start(pid, engine_server_port, status_publisher_port);
 }
 
 int main(int argc, char **argv) {
@@ -119,20 +120,33 @@ int main(int argc, char **argv) {
   std::string attach_cmd_help =
       "attach to a process with pid for gui communication via zeromq\n";
 
+  // pid
   int pid_to_attach = 0;
+  // ports
   int engine_server_port = ACE_global::engine_server_client_default_port;
+  int status_publisher_port =
+      ACE_global::status_publisher_subscriber_default_port;
+  // create command
   CLI::App *attach_pid_cmd =
       main_app.add_subcommand("attach-pid", attach_cmd_help);
   attach_pid_cmd->add_option("<PID>", pid_to_attach)->required();
+
   attach_pid_cmd->add_option("--port", engine_server_port,
                              "default port: " +
                                  std::to_string(engine_server_port));
+
+  attach_pid_cmd->add_option(
+      "--status_publisher_port", status_publisher_port,
+      "publish all progress like scan progress to this port\n"
+      "default port: " +
+          std::to_string(status_publisher_port));
   //
   attach_pid_cmd->callback(
 
       [&]() {
         //
-        attach_pid_cmd_handler(pid_to_attach, engine_server_port);
+        attach_pid_cmd_handler(pid_to_attach, engine_server_port,
+                               status_publisher_port);
       }
 
   );

@@ -58,7 +58,7 @@ template <typename T>
 void next_scan_cmd_handler(ACE_scanner<T> *scanner,
                            Scan_Utils::E_operator_type operator_type,
                            const cheat_mode_config *cheat_config) {
-  if (!cheat_config->new_scan_done)
+  if (!scanner->get_first_scan_done())
     frontend::print("WARN: no initial scan has been setup\n");
 
   double next_scan_time = -1;
@@ -83,10 +83,9 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
   TIME_ACTION(
 
       {
-        if (!cheat_config->new_scan_done) {
+        if (!scanner->get_first_scan_done()) {
 
-          // TODO: add test on how well this is?
-          scanner->new_scan_multiple(
+          scanner->first_scan(
 
               operator_type, num_to_find,
 
@@ -96,10 +95,6 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
               }
 
           );
-          // mark initial scan has been done
-          // so subsequent scan or filter operation know
-          // about it
-          cheat_config->new_scan_done = true;
         }
 
         else {
@@ -187,7 +182,7 @@ void writeat_cmd_handler(proc_rw<T> *process_rw, ADDR address, T val_to_write) {
 template <typename T>
 void update_cmd_handler(ACE_scanner<T> *scanner,
                         const cheat_mode_config *cheat_config) {
-  if (!cheat_config->new_scan_done) {
+  if (!scanner->get_first_scan_done()) {
     frontend::print("WARN: No initial scan is done\n");
     return;
   }
@@ -206,10 +201,10 @@ void scan_level_cmd_handler(ACE_scanner<T> *scanner,
                             Scan_Utils::E_scan_level scan_level) {
   scanner->set_scan_level(scan_level);
 
-  std::string new_scan_level_val =
+  std::string first_scan_level_val =
       Scan_Utils::E_scan_level_to_str.at(scan_level);
 
-  frontend::print("set scan level to %s\n", new_scan_level_val.c_str());
+  frontend::print("set scan level to %s\n", first_scan_level_val.c_str());
 }
 
 void type_cmd_handler(E_num_type num_type,

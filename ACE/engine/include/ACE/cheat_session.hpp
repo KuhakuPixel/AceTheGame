@@ -3,6 +3,7 @@
 #include "cheat_cmd_handler.hpp"
 #include "engine_module.hpp"
 #include "input.hpp"
+#include "status_publisher.hpp"
 
 /*
  * core logic of the cheater mode
@@ -20,7 +21,7 @@ private:
   engine_module<short> *engine_module_ptr_short = NULL;
   engine_module<byte> *engine_module_ptr_byte = NULL;
   engine_module<float> *engine_module_ptr_float = NULL;
-
+  //
   E_num_type current_num_type;
   //
   struct cheat_cmd_ret current_cheat_cmd_ret;
@@ -43,7 +44,8 @@ public:
   * [current_num_type]: the current scan type to be used
                          which can be changed later on
   */
-  cheat_session(int pid, E_num_type current_num_type);
+  cheat_session(int pid, E_num_type current_num_type,
+                status_publisher *stat_publisher = nullptr);
   ~cheat_session();
 
   /*

@@ -13,10 +13,11 @@
 template <typename T>
 ACE_scanner<T>::ACE_scanner(
     int pid, std::function<void(size_t current, size_t max)> on_scan_progress,
-    size_t match_count_per_progress)
-    : pid(pid) {
+    std::function<void()> on_scan_done, size_t match_count_per_progress)
+    : pid(pid), on_scan_progress(on_scan_progress), on_scan_done(on_scan_done)
+
+{
   this->process_rw = new proc_rw<T>(pid);
-  this->on_scan_progress = on_scan_progress;
   this->match_count_per_progress = match_count_per_progress;
 };
 
@@ -74,6 +75,10 @@ E_endian_scan_type ACE_scanner<T>::get_endian_scan_type() const {
   return this->endian_scan_type;
 }
 
+template <typename T> bool ACE_scanner<T>::get_first_scan_done() const {
+  return this->first_scan_done;
+}
+
 template <typename T>
 const match_storage<T> &ACE_scanner<T>::get_current_scan_result() const {
   return this->current_scan_result;
@@ -96,8 +101,9 @@ ACE_scanner<T>::get_current_scan_result_as_vector() const {
   return addr_and_values;
 }
 
-template <typename T> void ACE_scanner<T>::clear_current_scan_result() {
+template <typename T> void ACE_scanner<T>::reset_scan() {
   this->current_scan_result.clear();
+  this->first_scan_done = false;
 }
 
 template <typename T> void 
@@ -115,7 +121,7 @@ ACE_scanner<T>::update_current_scan_result() {
 }
 
 template <typename T>
-void ACE_scanner<T>::read_chunk_and_add_matches(
+void ACE_scanner<T>::read_chunk(
     chunk_scan_prop<T> scan_prop,
     std::function<void(ADDR addr, T new_val)> on_each_iteration,
 
@@ -142,6 +148,7 @@ void ACE_scanner<T>::read_chunk_and_add_matches(
      * - loaded_mem_size is less than the element size
      *   that we want to read
      *   (which of course we cannot read further
+     *
      *   or anything meaningful)
      *
      */
@@ -232,7 +239,7 @@ void ACE_scanner<T>::_next_scan(Scan_Utils::E_operator_type operator_type,
     scan_prop.read_mem_method =
         Scan_Utils::E_read_mem_method::with_process_vm_readv;
     // ============================================
-    this->read_chunk_and_add_matches(
+    this->read_chunk(
 
         scan_prop,
 
@@ -266,14 +273,17 @@ void ACE_scanner<T>::_next_scan(Scan_Utils::E_operator_type operator_type,
   this->current_scan_result.iterate_chunk(on_each_chunk);
   this->current_scan_result = new_scan_result;
 
+  if (this->on_scan_done != nullptr) {
+    this->on_scan_done();
+  }
   // free allocated memory
   free(mem_buff);
 }
 
 template <typename T>
-void ACE_scanner<T>::append_new_scan(byte *addr_start, byte *addr_end,
-                                     Scan_Utils::E_operator_type operator_type,
-                                     T value_to_find) {
+void ACE_scanner<T>::_first_scan(
+    byte *addr_start, byte *addr_end, Scan_Utils::E_operator_type operator_type,
+    T value_to_find, std::function<void(ADDR addr, T new_val)> on_match_found) {
   if (this->endian_scan_type == E_endian_scan_type::swapped)
     value_to_find = swap_endian(value_to_find);
 
@@ -310,14 +320,14 @@ void ACE_scanner<T>::append_new_scan(byte *addr_start, byte *addr_end,
 
   size_t mem_buff_size = this->max_chunk_read_size;
   byte *mem_buff = (byte *)malloc(mem_buff_size);
-  this->read_chunk_and_add_matches(
+  this->read_chunk(
 
       scan_prop,
 
-      [value_to_find, this, operator_type](ADDR addr, T new_val) {
+      [on_match_found, operator_type, value_to_find](ADDR addr, T new_val) {
         if (Scan_Utils::value_compare<T>(new_val, operator_type,
                                          value_to_find)) {
-          this->current_scan_result.add_match(addr, new_val);
+          on_match_found(addr, new_val);
         }
       },
 
@@ -330,31 +340,36 @@ void ACE_scanner<T>::append_new_scan(byte *addr_start, byte *addr_end,
 }
 
 template <typename T>
-void ACE_scanner<T>::new_scan(byte *addr_start, byte *addr_end,
-                              Scan_Utils::E_operator_type operator_type,
-                              T value_to_find) {
-  this->current_scan_result.clear();
-  this->append_new_scan(addr_start, addr_end, operator_type, value_to_find);
-}
-template <typename T>
-void ACE_scanner<T>::new_scan_multiple(
+void ACE_scanner<T>::first_scan(
     const std::vector<struct mem_segment> &segments_to_scan,
     Scan_Utils::E_operator_type operator_type, T value_to_find) {
 
   // reset current scan
   this->current_scan_result.clear();
+  this->first_scan_done = true;
   for (size_t i = 0; i < segments_to_scan.size(); i++) {
     // show progress
     this->on_scan_progress(i + 1, segments_to_scan.size());
     // do scan
-    this->append_new_scan((byte *)segments_to_scan[i].address_start,
-                          (byte *)segments_to_scan[i].address_end,
-                          operator_type, value_to_find);
+    this->_first_scan(
+
+        (byte *)segments_to_scan[i].address_start,
+        (byte *)segments_to_scan[i].address_end, operator_type, value_to_find,
+        // on match found
+        [this](ADDR addr, T new_val) {
+          this->current_scan_result.add_match(addr, new_val);
+        }
+
+    );
+  }
+
+  if (this->on_scan_done != nullptr) {
+    this->on_scan_done();
   }
 }
 
 template <typename T>
-void ACE_scanner<T>::new_scan_multiple(
+void ACE_scanner<T>::first_scan(
     Scan_Utils::E_operator_type operator_type, T value_to_find,
     std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
         on_mem_segments_found) {
@@ -367,7 +382,7 @@ void ACE_scanner<T>::new_scan_multiple(
     on_mem_segments_found(segments_to_scan);
   }
 
-  this->new_scan_multiple(segments_to_scan, operator_type, value_to_find);
+  this->first_scan(segments_to_scan, operator_type, value_to_find);
 }
 
 template <typename T>

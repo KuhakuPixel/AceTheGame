@@ -19,7 +19,7 @@ public:
   cheat_mode_config _cheat_mode_config;
 
   engine_module(
-      int pid,
-      std::function<void(size_t current, size_t max)> on_scan_progress);
+      int pid, std::function<void(size_t current, size_t max)> on_scan_progress,
+      std::function<void()> on_scan_done);
   ~engine_module();
 };

@@ -5,7 +5,7 @@ find_package(cppzmq)
 
 include(../cmake_utils/CMakeLists.txt)
 # ======================== binaries ===============
-set(client_programs attach_client util_client)
+set(client_programs attach_client util_client status_subscriber)
 foreach(program_name IN LISTS client_programs)
 	# get the source code of the program
 	set(program_name_src_file "${program_name}.cpp")
