@@ -57,7 +57,8 @@ private:
   const size_t max_chunk_read_size = one_mega_byte;
   size_t match_count_per_progress;
   proc_rw<T> *process_rw = NULL;
-  std::function<void(size_t current, size_t max)> on_scan_progress = NULL;
+  const std::function<void(size_t current, size_t max)> on_scan_progress;
+  const std::function<void()> on_scan_done;
 
   bool first_scan_done = false;
   // TODO: handle different scan level in consequent scan
@@ -103,7 +104,10 @@ public:
    * */
   ACE_scanner(int pid,
               std::function<void(size_t current, size_t max)> on_scan_progress,
-              size_t match_count_per_progress = 1000000);
+              std::function<void()> on_scan_done = nullptr,
+              size_t match_count_per_progress = 1000000
+
+  );
   ~ACE_scanner();
 
   /*
@@ -144,16 +148,16 @@ public:
    * do a scan on multiple range of addresses
    * */
   void first_scan(const std::vector<struct mem_segment> &segments_to_scan,
-                Scan_Utils::E_operator_type operator_type, T value_to_find);
+                  Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /**
    * [on_mem_segments_found]: called when all suitable memory segments
    * 			      are found
    * */
   void first_scan(Scan_Utils::E_operator_type operator_type, T value_to_find,
-                std::function<void(
-                    const std::vector<struct mem_segment> &segments_to_scan)>
-                    on_mem_segments_found = nullptr
+                  std::function<void(
+                      const std::vector<struct mem_segment> &segments_to_scan)>
+                      on_mem_segments_found = nullptr
 
   );
 
@@ -213,8 +217,8 @@ public:
    *
    * */
   void _first_scan(byte *addr_start, byte *addr_end,
-                 Scan_Utils::E_operator_type operator_type, T value_to_find,
-                 std::function<void(ADDR addr, T new_val)> on_match_found);
+                   Scan_Utils::E_operator_type operator_type, T value_to_find,
+                   std::function<void(ADDR addr, T new_val)> on_match_found);
 
   /*
    * if [compare_with_new_value] is false: compare old value with [cmp_val]

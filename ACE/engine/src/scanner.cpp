@@ -13,10 +13,11 @@
 template <typename T>
 ACE_scanner<T>::ACE_scanner(
     int pid, std::function<void(size_t current, size_t max)> on_scan_progress,
-    size_t match_count_per_progress)
-    : pid(pid) {
+    std::function<void()> on_scan_done, size_t match_count_per_progress)
+    : pid(pid), on_scan_progress(on_scan_progress), on_scan_done(on_scan_done)
+
+{
   this->process_rw = new proc_rw<T>(pid);
-  this->on_scan_progress = on_scan_progress;
   this->match_count_per_progress = match_count_per_progress;
 };
 
@@ -272,6 +273,9 @@ void ACE_scanner<T>::_next_scan(Scan_Utils::E_operator_type operator_type,
   this->current_scan_result.iterate_chunk(on_each_chunk);
   this->current_scan_result = new_scan_result;
 
+  if (this->on_scan_done != nullptr) {
+    this->on_scan_done();
+  }
   // free allocated memory
   free(mem_buff);
 }
@@ -357,6 +361,10 @@ void ACE_scanner<T>::first_scan(
         }
 
     );
+  }
+
+  if (this->on_scan_done != nullptr) {
+    this->on_scan_done();
   }
 }
 

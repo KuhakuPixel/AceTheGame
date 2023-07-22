@@ -107,15 +107,22 @@ TEST_CASE("scan_progress", "[scanner]") {
 
   size_t current_progress_idx = 0;
   size_t max_idx = 0;
+
+  // callbacks
   auto on_progress =
 
       [&current_progress_idx, &max_idx](size_t current, size_t max) -> void {
     current_progress_idx++;
     max_idx = max;
   };
+  int on_scan_done_called_count = 0;
+  auto on_scan_done = [&on_scan_done_called_count]() -> void {
+    on_scan_done_called_count++;
+  };
 
+  //
   ACE_scanner<int> scanner =
-      ACE_scanner<int>(tester.get_prog_pid(), on_progress);
+      ACE_scanner<int>(tester.get_prog_pid(), on_progress, on_scan_done);
 
   tester.setup_val_to_find(0);
   tester.setup_val_to_find(50000);
@@ -124,13 +131,16 @@ TEST_CASE("scan_progress", "[scanner]") {
   scanner.first_scan(Scan_Utils::E_operator_type::unknown, 0);
   REQUIRE(max_idx != 0);
   REQUIRE(current_progress_idx == max_idx);
-  // reset
+  REQUIRE(1 == on_scan_done_called_count);
+  // reset vars
   max_idx = 0;
   current_progress_idx = 0;
+  on_scan_done_called_count = 0;
   //
   scanner.next_scan(Scan_Utils::E_operator_type::unknown);
   REQUIRE(max_idx != 0);
   REQUIRE(current_progress_idx == max_idx);
+  REQUIRE(1 == on_scan_done_called_count);
 }
 
 TEST_CASE("int_scan_1", "[scanner]") {
