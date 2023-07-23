@@ -84,14 +84,14 @@ fun OverlayDropDown(
     expanded: MutableState<Boolean>,
     options: List<String>,
     selectedOptionIndex: Int,
-    enabled: MutableState<Boolean>,
+    enabled: Boolean,
     onShowOptions: (options: List<String>) -> Unit,
 ) {
 
     ExposedDropdownMenuBox(
         expanded = expanded.value,
         onExpandedChange = {
-            if (enabled.value) {
+            if (enabled) {
                 expanded.value = !expanded.value
                 if (expanded.value) {
                     onShowOptions(options)
@@ -101,7 +101,7 @@ fun OverlayDropDown(
         },
     ) {
         TextField(
-            enabled = enabled.value,
+            enabled = enabled,
             // The `menuAnchor` modifier must be passed to the text field for correctness.
             modifier = Modifier.menuAnchor(),
             readOnly = true,
@@ -109,7 +109,7 @@ fun OverlayDropDown(
             onValueChange = {},
             label = { Text(label) },
             trailingIcon = {
-                if (enabled.value) {
+                if (enabled) {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
                 }
             },
