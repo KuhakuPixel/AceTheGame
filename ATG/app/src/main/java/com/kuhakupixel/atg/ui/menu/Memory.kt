@@ -40,6 +40,7 @@ import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayChoicesDialog
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 import kotlin.math.min
 
 
@@ -57,6 +58,9 @@ private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
 val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+
+val nextScanEnabled: MutableState<Boolean> = mutableStateOf(false)
+val newScanEnabled: MutableState<Boolean> = mutableStateOf(false)
 
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
@@ -105,13 +109,16 @@ fun _MemoryMenu(
         // init default
         scanTypeSelectedOptionIdx.value = Operator.values().indexOf(ATGSettings.defaultScanType)
     }
-    val isAttached: Boolean = ace!!.IsAttached()
+    val isAttached: Boolean = ace.IsAttached()
 
     // =================================
 
     scanTypeEnabled.value = isAttached
     // only enable change value type at first scan
     valueTypeEnabled.value = isAttached && !(initialScanDone.value)
+    ///
+    nextScanEnabled.value = isAttached
+    newScanEnabled.value = isAttached && initialScanDone.value
 
     val content: @Composable (matchesTableModifier: Modifier, matchesSettingModifier: Modifier) -> Unit =
         { matchesTableModifier, matchesSettingModifier ->
@@ -146,7 +153,7 @@ fun _MemoryMenu(
                 valueTypeEnabled = valueTypeEnabled,
                 valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
                 //
-                nextScanEnabled = isAttached,
+                nextScanEnabled = nextScanEnabled.value,
                 nextScanClicked = fun() {
                     // ====================== get scan options ========================
                     val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
@@ -154,38 +161,46 @@ fun _MemoryMenu(
                     // ================================================================
                     // set the value type
                     if (!initialScanDone.value) ace.SetNumType(valueType)
-                    try {
-                        /**
-                         * scan against a value if input value
-                         * is not empty
-                         * and scan without value otherwise
-                         * (picking addresses whose value stayed the same, increased and etc)
-                         * */
+                    // disable next and new scan
+                    newScanEnabled.value = false
+                    nextScanEnabled.value = false
+                    // run scan
+                    thread {
+                        try {
+                            /**
+                             * scan against a value if input value
+                             * is not empty
+                             * and scan without value otherwise
+                             * (picking addresses whose value stayed the same, increased and etc)
+                             * */
 
-                        if (scanInputVal.value.isBlank()) {
-                            ace.ScanWithoutValue(scanType)
-                        } else {
-                            ace.ScanAgainstValue(
-                                scanType,
-                                scanInputVal.value
+                            if (scanInputVal.value.isBlank()) {
+                                ace.ScanWithoutValue(scanType)
+                            } else {
+                                ace.ScanAgainstValue(
+                                    scanType,
+                                    scanInputVal.value
+                                )
+                            }
+                        } catch (e: InvalidCommandException) {
+                            OverlayInfoDialog(overlayContext!!).show(
+                                title = "Error",
+                                text = e.stackTraceToString(),
+                                onConfirm = {},
                             )
                         }
-                    } catch (e: InvalidCommandException) {
-                        OverlayInfoDialog(overlayContext!!).show(
-                            title = "Error",
-                            text = e.stackTraceToString(),
-                            onConfirm = {},
-                        )
-                        return
+                        // reenable button again
+                        newScanEnabled.value = true
+                        nextScanEnabled.value = true
+                        // update matches table
+                        UpdateMatches(ace = ace)
                     }
 
-                    // update matches table
-                    UpdateMatches(ace = ace)
                     // set initial scan to true
                     initialScanDone.value = true
                 },
                 //
-                newScanEnabled = isAttached && initialScanDone.value,
+                newScanEnabled = newScanEnabled.value,
                 newScanClicked = {
                     ace.ResetMatches()
                     UpdateMatches(ace = ace)
