@@ -157,10 +157,10 @@ public class ACE {
     public void Attach(Long pid) throws IOException, InterruptedException {
         AssertNoAttachInARow();
         // start the server
-        Integer port = Port.GetOpenPort();
-        this.serverThread = ACEServer.GetStarterThread(this.context, pid, port);
+        List<Integer> ports = Port.GetOpenPorts(2);
+        this.serverThread = ACEServer.GetStarterThread(this.context, pid, ports.get(0), ports.get(1));
         this.serverThread.start();
-        ConnectToACEServer(port);
+        ConnectToACEServer(ports.get(0));
     }
 
 

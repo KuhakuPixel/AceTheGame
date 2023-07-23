@@ -195,14 +195,14 @@ public class ACETest {
         Process p = ProcUtil.RunBusyProgram();
         Long pid = ProcUtil.GetPid(p);
         // start ACE server and connect to it
-        Integer port = Port.GetOpenPort();
-        Thread serverThread = ACEServer.GetStarterThread(context, pid, port);
+        List<Integer> ports = Port.GetOpenPorts(2);
+        Thread serverThread = ACEServer.GetStarterThread(context, pid, ports.get(0), ports.get(1));
         serverThread.start();
 
         //
         Assert.assertEquals(false, ace.IsAttached());
         //
-        ace.ConnectToACEServer(port);
+        ace.ConnectToACEServer(ports.get(0));
         //
         Assert.assertEquals(true, ace.IsAttached());
         //
@@ -221,14 +221,14 @@ public class ACETest {
         {
             ACE ace = new ACE(context);
             // start ACE server and connect to it
-            Integer port = Port.GetOpenPort();
-            Thread serverThread = ACEServer.GetStarterThread(context, pid, port);
+            List<Integer> ports = Port.GetOpenPorts(2);
+            Thread serverThread = ACEServer.GetStarterThread(context, pid, ports.get(0), ports.get(1));
             serverThread.start();
 
             //
-            ace.ConnectToACEServer(port);
+            ace.ConnectToACEServer(ports.get(0));
             try {
-                ace.ConnectToACEServer(port);
+                ace.ConnectToACEServer(ports.get(0));
                 Assert.fail();
             } catch (ACE.AttachingInARowException e) {
                 Assert.assertTrue(true);
@@ -241,8 +241,8 @@ public class ACETest {
         {
             ACE ace = new ACE(context);
             // start ACE server and connect to it
-            Integer port = Port.GetOpenPort();
-            Thread serverThread = ACEServer.GetStarterThread(context, pid, port);
+            List<Integer> ports = Port.GetOpenPorts(2);
+            Thread serverThread = ACEServer.GetStarterThread(context, pid, ports.get(0), ports.get(1));
             serverThread.start();
 
             try {
@@ -253,7 +253,7 @@ public class ACETest {
             }
 
             // Connect to DeAttach and stop server
-            ace.ConnectToACEServer(port);
+            ace.ConnectToACEServer(ports.get(0));
             ace.DeAttach();
             serverThread.join();
 

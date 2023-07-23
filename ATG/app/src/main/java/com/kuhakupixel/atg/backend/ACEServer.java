@@ -15,7 +15,7 @@ public class ACEServer {
     /*
      * Get thread to start the server
      * */
-    public static Thread GetStarterThread(Context context, Long pid, Integer portNum) throws IOException {
+    public static Thread GetStarterThread(Context context, Long pid, Integer portNum, Integer statusPublisherPort) throws IOException {
         Thread thread = new Thread(
                 () -> {
                     Log.i("ATG", String.format("Running engine server at port %d", portNum));
@@ -28,7 +28,7 @@ public class ACEServer {
                     assert (new File(path).exists());
 
                     System.out.println("Binary path is " + path);
-                    String[] cmds = new String[]{path, "attach-pid", pid.toString(), "--port", portNum.toString()};
+                    String[] cmds = new String[]{path, "attach-pid", pid.toString(), "--port", portNum.toString(), "--status_publisher_port", statusPublisherPort.toString()};
 
                     String cmd_string = String.join(" ", cmds);
                     Log.i("ATG", String.format("Running command %s\n", cmd_string));
