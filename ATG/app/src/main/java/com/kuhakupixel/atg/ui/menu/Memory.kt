@@ -59,8 +59,7 @@ private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
 val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 
-val nextScanEnabled: MutableState<Boolean> = mutableStateOf(false)
-val newScanEnabled: MutableState<Boolean> = mutableStateOf(false)
+val isScanOnGoing: MutableState<Boolean> = mutableStateOf(false)
 
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
@@ -117,8 +116,7 @@ fun _MemoryMenu(
     // only enable change value type at first scan
     valueTypeEnabled.value = isAttached && !(initialScanDone.value)
     ///
-    nextScanEnabled.value = isAttached
-    newScanEnabled.value = isAttached && initialScanDone.value
+
 
     val content: @Composable (matchesTableModifier: Modifier, matchesSettingModifier: Modifier) -> Unit =
         { matchesTableModifier, matchesSettingModifier ->
@@ -153,7 +151,7 @@ fun _MemoryMenu(
                 valueTypeEnabled = valueTypeEnabled,
                 valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
                 //
-                nextScanEnabled = nextScanEnabled.value,
+                nextScanEnabled = isAttached && !isScanOnGoing.value,
                 nextScanClicked = fun() {
                     // ====================== get scan options ========================
                     val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
@@ -161,11 +159,10 @@ fun _MemoryMenu(
                     // ================================================================
                     // set the value type
                     if (!initialScanDone.value) ace.SetNumType(valueType)
-                    // disable next and new scan
-                    newScanEnabled.value = false
-                    nextScanEnabled.value = false
-                    // run scan
+
                     thread {
+                        // disable next and new scan
+                        isScanOnGoing.value = true
                         try {
                             /**
                              * scan against a value if input value
@@ -189,9 +186,7 @@ fun _MemoryMenu(
                                 onConfirm = {},
                             )
                         }
-                        // reenable button again
-                        newScanEnabled.value = true
-                        nextScanEnabled.value = true
+                        isScanOnGoing.value = false
                         // update matches table
                         UpdateMatches(ace = ace)
                     }
@@ -200,7 +195,7 @@ fun _MemoryMenu(
                     initialScanDone.value = true
                 },
                 //
-                newScanEnabled = newScanEnabled.value,
+                newScanEnabled = isAttached && initialScanDone.value && !isScanOnGoing.value,
                 newScanClicked = {
                     ace.ResetMatches()
                     UpdateMatches(ace = ace)
