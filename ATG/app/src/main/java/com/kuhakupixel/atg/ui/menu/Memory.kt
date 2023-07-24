@@ -58,6 +58,9 @@ private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
 val isScanOnGoing: MutableState<Boolean> = mutableStateOf(false)
 
+private val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+private val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
 private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches")
@@ -106,6 +109,8 @@ fun _MemoryMenu(
         scanTypeSelectedOptionIdx.value = Operator.values().indexOf(ATGSettings.defaultScanType)
     }
     val isAttached: Boolean = ace.IsAttached()
+    valueTypeEnabled.value = isAttached && !initialScanDone.value
+    scanTypeEnabled.value = isAttached
 
     // =================================
 
@@ -135,12 +140,12 @@ fun _MemoryMenu(
             MatchesSetting(
                 modifier = matchesSettingModifier,
                 //
-                scanTypeEnabled = isAttached,
+                scanTypeEnabled = scanTypeEnabled,
                 scanTypeSelectedOptionIdx = scanTypeSelectedOptionIdx,
                 //
                 scanInputVal = scanInputVal,
                 // only allow to change Value type before any scan is done
-                valueTypeEnabled = isAttached && !(initialScanDone.value),
+                valueTypeEnabled = valueTypeEnabled,
                 valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
                 //
                 nextScanEnabled = isAttached && !isScanOnGoing.value,
@@ -277,12 +282,12 @@ private fun UpdateMatches(ace: ACE) {
 private fun MatchesSetting(
     modifier: Modifier = Modifier,
     //
-    scanTypeEnabled: Boolean,
+    scanTypeEnabled: MutableState<Boolean>,
     scanTypeSelectedOptionIdx: MutableState<Int>,
     //
     scanInputVal: MutableState<String>,
     //
-    valueTypeEnabled: Boolean,
+    valueTypeEnabled: MutableState<Boolean>,
     valueTypeSelectedOptionIdx: MutableState<Int>,
     //
     nextScanEnabled: Boolean,
@@ -329,7 +334,7 @@ private fun MatchesSetting(
     @Composable
     fun ScanTypeDropDown(
         selectedOptionIndex: MutableState<Int>,
-        enabled: Boolean,
+        enabled: MutableState<Boolean>,
         overlayContext: OverlayContext,
     ) {
         val expanded = remember { mutableStateOf(false) }
@@ -363,7 +368,7 @@ private fun MatchesSetting(
     @Composable
     fun ValueTypeDropDown(
         selectedOptionIndex: MutableState<Int>,
-        enabled: Boolean,
+        enabled: MutableState<Boolean>,
         overlayContext: OverlayContext,
     ) {
         val expanded = remember { mutableStateOf(false) }

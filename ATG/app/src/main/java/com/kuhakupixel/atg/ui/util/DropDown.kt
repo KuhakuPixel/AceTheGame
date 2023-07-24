@@ -1,5 +1,6 @@
 package com.kuhakupixel.atg.ui.util
 
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -84,14 +85,20 @@ fun OverlayDropDown(
     expanded: MutableState<Boolean>,
     options: List<String>,
     selectedOptionIndex: Int,
-    enabled: Boolean,
+    enabled: MutableState<Boolean>,
     onShowOptions: (options: List<String>) -> Unit,
 ) {
+    /*
+    * need to use a mutable state for disabling/enabling with [enabled]  because if the value is only boolean
+    * then recomposition may not trigger inside the callback (enabled value in callback may stays the same
+    * even if the parent's MutableState's value has changed and recomposition happened, this cause bugs where the dropdown
+    * looks enabled, but the variable [enabled] doesn't change, so callback won't be called)
+    * */
 
     ExposedDropdownMenuBox(
         expanded = expanded.value,
         onExpandedChange = {
-            if (enabled) {
+            if (enabled.value) {
                 expanded.value = !expanded.value
                 if (expanded.value) {
                     onShowOptions(options)
@@ -101,7 +108,7 @@ fun OverlayDropDown(
         },
     ) {
         TextField(
-            enabled = enabled,
+            enabled = enabled.value,
             // The `menuAnchor` modifier must be passed to the text field for correctness.
             modifier = Modifier.menuAnchor(),
             readOnly = true,
@@ -109,7 +116,7 @@ fun OverlayDropDown(
             onValueChange = {},
             label = { Text(label) },
             trailingIcon = {
-                if (enabled) {
+                if (enabled.value) {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
                 }
             },
