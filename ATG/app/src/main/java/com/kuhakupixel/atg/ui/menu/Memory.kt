@@ -1,6 +1,7 @@
 package com.kuhakupixel.atg.ui.menu
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,8 @@ import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException
+import com.kuhakupixel.atg.backend.ACEStatusSubscriber
+import com.kuhakupixel.atg.backend.ScanProgressData
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
@@ -157,6 +160,7 @@ fun _MemoryMenu(
                     // set the value type
                     if (!initialScanDone.value) ace.SetNumType(valueType)
 
+                    val statusPublisherPort = ace.getStatusPublisherPort();
                     thread {
                         // disable next and new scan
                         isScanOnGoing.value = true
@@ -187,10 +191,36 @@ fun _MemoryMenu(
                         // update matches table
                         UpdateMatches(ace = ace)
                     }
+                    // add status subscriber to update progress
+                    thread {
+                        try {
+                            val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
+                            var scanProgressData: ScanProgressData
+                            do {
+                                scanProgressData = statusSubscriber.GetScanProgress()
+                                Log.d(
+                                    "ATG",
+                                    String.format(
+                                        "%d/%d, isdone: %b",
+                                        scanProgressData.current,
+                                        scanProgressData.max,
+                                        scanProgressData.is_finished
+                                    )
+                                )
+                            } while (!scanProgressData.is_finished)
+
+                            statusSubscriber.close()
+                        } catch (e: Exception) {
+                            Log.e("ATG", "Error " + e.toString());
+
+                        }
+
+                    }
 
                     // set initial scan to true
                     initialScanDone.value = true
                 },
+
                 //
                 newScanEnabled = isAttached && initialScanDone.value && !isScanOnGoing.value,
                 newScanClicked = {
