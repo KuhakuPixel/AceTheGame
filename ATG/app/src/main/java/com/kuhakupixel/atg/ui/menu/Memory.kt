@@ -198,15 +198,17 @@ fun _MemoryMenu(
                     thread {
                         try {
                             val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
-                            var scanProgressData: ScanProgressData =
-                                statusSubscriber.GetScanProgress()
-                            while (!scanProgressData.is_finished) {
-                                scanProgress.value =
-                                    scanProgressData.current.toFloat() / scanProgressData.max.toFloat()
-                                scanProgressData = statusSubscriber.GetScanProgress()
+                            statusSubscriber.use { it: ACEStatusSubscriber ->
+
+                                var scanProgressData: ScanProgressData =
+                                    statusSubscriber.GetScanProgress()
+                                while (!scanProgressData.is_finished) {
+                                    scanProgress.value =
+                                        scanProgressData.current.toFloat() / scanProgressData.max.toFloat()
+                                    scanProgressData = statusSubscriber.GetScanProgress()
+                                }
                             }
 
-                            statusSubscriber.close()
                         } catch (e: Exception) {
                             Log.e("ATG", "Error " + e.toString());
 
