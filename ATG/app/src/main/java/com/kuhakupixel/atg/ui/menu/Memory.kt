@@ -15,6 +15,7 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,6 +68,7 @@ private val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
 private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches")
+private val scanProgress: MutableState<Float> = mutableStateOf(0.0f)
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
@@ -125,6 +127,7 @@ fun _MemoryMenu(
                 modifier = matchesTableModifier,
                 matches = currentMatchesList.value,
                 matchesStatusText = matchesStatusText.value,
+                scanProgress = scanProgress.value,
                 onMatchClicked = { matchInfo: MatchInfo ->
                     //
                     val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
@@ -195,19 +198,13 @@ fun _MemoryMenu(
                     thread {
                         try {
                             val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
-                            var scanProgressData: ScanProgressData
-                            do {
+                            var scanProgressData: ScanProgressData =
+                                statusSubscriber.GetScanProgress()
+                            while (!scanProgressData.is_finished) {
+                                scanProgress.value =
+                                    scanProgressData.current.toFloat() / scanProgressData.max.toFloat()
                                 scanProgressData = statusSubscriber.GetScanProgress()
-                                Log.d(
-                                    "ATG",
-                                    String.format(
-                                        "%d/%d, isdone: %b",
-                                        scanProgressData.current,
-                                        scanProgressData.max,
-                                        scanProgressData.is_finished
-                                    )
-                                )
-                            } while (!scanProgressData.is_finished)
+                            }
 
                             statusSubscriber.close()
                         } catch (e: Exception) {
@@ -272,12 +269,13 @@ private fun MatchesTable(
     modifier: Modifier = Modifier,
     matches: List<MatchInfo>,
     matchesStatusText: String,
+    scanProgress: Float,
     onMatchClicked: (matchInfo: MatchInfo) -> Unit,
 ) {
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(matchesStatusText)
-        Spacer(modifier = Modifier.height(10.dp))
+        LinearProgressIndicator(progress = scanProgress)
         CreateTable(colNames = listOf("Address", "Previous Value"),
             colWeights = listOf(0.4f, 0.6f),
             itemCount = matches.size,
