@@ -33,12 +33,15 @@ class EditAddressOverlayDialog(overlayContext: OverlayContext, alpha: Float = 1.
                 label = "Value Input ...",
                 placeholder = "value ...",
             )
+            /* TODO: implement freeze value of address
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 Text("Freeze")
                 Checkbox(
                     checked = checked.value,
                     onCheckedChange = { value -> checked.value = value })
             }
+
+             */
         }
 
     }
