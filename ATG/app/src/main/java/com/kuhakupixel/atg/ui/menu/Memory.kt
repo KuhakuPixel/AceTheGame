@@ -157,6 +157,7 @@ fun _MemoryMenu(
                 //
                 nextScanEnabled = isAttached && !isScanOnGoing.value,
                 nextScanClicked = fun() {
+                    val statusPublisherPort = ace.getStatusPublisherPort();
                     thread {
                         // ====================== get scan options ========================
                         val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
@@ -201,7 +202,6 @@ fun _MemoryMenu(
                      * that keeps listening to a port until the scan is done
                      * */
                     thread {
-                        val statusPublisherPort = ace.getStatusPublisherPort();
                         try {
                             val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
                             statusSubscriber.use { it: ACEStatusSubscriber ->
@@ -211,8 +211,13 @@ fun _MemoryMenu(
                                 while (!scanProgressData.is_finished) {
                                     scanProgress.value =
                                         scanProgressData.current.toFloat() / scanProgressData.max.toFloat()
+                                    Log.d(
+                                        "ATG",
+                                        "Scan Progress: ${scanProgressData.current}/${scanProgressData.max}"
+                                    )
                                     scanProgressData = statusSubscriber.GetScanProgress()
                                 }
+                                scanProgress.value = 0.0f
                             }
 
                         } catch (e: Exception) {
