@@ -130,7 +130,7 @@ public class ACE {
     //
     private Integer statusPublisherPort;
 
-    public Integer getStatusPublisherPort() {
+    public synchronized Integer getStatusPublisherPort() {
         return statusPublisherPort;
     }
 
@@ -140,21 +140,21 @@ public class ACE {
         this.availableNumTypes = GetAvailableNumTypes();
     }
 
-    public Boolean IsAttached() {
+    public synchronized Boolean IsAttached() {
         return aceAttachClient != null;
     }
 
-    private void AssertAttached() {
+    private synchronized void AssertAttached() {
         if (!this.IsAttached())
             throw new NoAttachException("Operation requires attaching to a process, but it hasn't been attached");
     }
 
-    private void AssertNoAttachInARow() {
+    private synchronized void AssertNoAttachInARow() {
         if (this.IsAttached())
             throw new AttachingInARowException("Cannot Attach without DeAttaching first");
     }
 
-    public void ConnectToACEServer(Integer port) throws IOException, InterruptedException {
+    public synchronized void ConnectToACEServer(Integer port) throws IOException, InterruptedException {
         AssertNoAttachInARow();
         this.aceAttachClient = new ACEAttachClient(port);
     }
@@ -162,7 +162,7 @@ public class ACE {
     /**
      * this will create an ACE's server that is attached to process [pid]
      */
-    public void Attach(Long pid) throws IOException, InterruptedException {
+    public synchronized void Attach(Long pid) throws IOException, InterruptedException {
         AssertNoAttachInARow();
         // start the server
         List<Integer> ports = Port.GetOpenPorts(2);
@@ -173,7 +173,7 @@ public class ACE {
     }
 
 
-    public void DeAttach() throws InterruptedException {
+    public synchronized void DeAttach() throws InterruptedException {
         AssertAttached();
         // tell server to die
         aceAttachClient.Request(new String[]{"stop"});
@@ -187,7 +187,7 @@ public class ACE {
         }
     }
 
-    public Integer GetNumTypeBitSize(NumType numType) {
+    public synchronized Integer GetNumTypeBitSize(NumType numType) {
         Integer bitSize = null;
         for (NumTypeInfo typeInfo : this.availableNumTypes) {
             if (typeInfo.GetName().equals(numType.toString())) bitSize = typeInfo.GetBitSize();
@@ -196,37 +196,38 @@ public class ACE {
     }
 
 
-    public String GetNumTypeAndBitSize(NumType numType) {
+    public synchronized String GetNumTypeAndBitSize(NumType numType) {
         Integer bitSize = this.GetNumTypeBitSize(numType);
         return String.format("%s (%d bit)", numType.toString(), bitSize);
     }
 
 
     // =============== this commands require attach ===================
-    public String CheaterCmd(String[] cmd) {
+    public synchronized String CheaterCmd(String[] cmd) {
         AssertAttached();
         String out = aceAttachClient.Request(cmd);
         return out;
     }
 
-    public List<String> CheaterCmdAsList(String[] cmd) {
+    public synchronized List<String> CheaterCmdAsList(String[] cmd) {
         AssertAttached();
         return aceAttachClient.RequestAsList(cmd);
     }
 
-    public Long GetAttachedPid() {
+    public synchronized Long GetAttachedPid() {
+
         String pidStr = CheaterCmd(new String[]{"pid"});
         return Long.parseLong(pidStr);
     }
 
-    public void SetNumType(NumType type) {
+    public synchronized void SetNumType(NumType type) {
         CheaterCmd(new String[]{"config", "type", type.toString()});
     }
 
     /**
      * get current type that ACE use
      */
-    public NumType GetNumType() {
+    public synchronized NumType GetNumType() {
         String typeStr = CheaterCmd(new String[]{"config", "type"});
         return NumType.fromString(typeStr);
     }
@@ -235,7 +236,7 @@ public class ACE {
      * run code/function when type is set to [numType]
      * after done, the type will be set to the previous one
      */
-    public void ActionOnType(NumType numType, IActionOnType action) {
+    public synchronized void ActionOnType(NumType numType, IActionOnType action) {
         NumType prevType = GetNumType();
         // set type first before writing
         if (prevType != numType)
@@ -245,16 +246,16 @@ public class ACE {
             SetNumType(prevType);
     }
 
-    public void ScanAgainstValue(Operator operator, String numValStr) {
+    public synchronized void ScanAgainstValue(Operator operator, String numValStr) {
         CheaterCmd(new String[]{"scan", operatorEnumToSymbolBiMap.get(operator), numValStr});
 
     }
 
-    public void ScanWithoutValue(Operator operator) {
+    public synchronized void ScanWithoutValue(Operator operator) {
         CheaterCmd(new String[]{"filter", operatorEnumToSymbolBiMap.get(operator)});
     }
 
-    public void WriteValueAtAddress(NumType numType, String address, String value) {
+    public synchronized void WriteValueAtAddress(NumType numType, String address, String value) {
 
         this.ActionOnType(numType,
 
@@ -264,16 +265,16 @@ public class ACE {
         );
     }
 
-    public Integer GetMatchCount() {
+    public synchronized Integer GetMatchCount() {
         return Integer.parseInt(CheaterCmd(new String[]{"matchcount"}));
 
     }
 
-    public void ResetMatches() {
+    public synchronized void ResetMatches() {
         CheaterCmd(new String[]{"reset"});
     }
 
-    public List<MatchInfo> ListMatches(Integer maxCount) {
+    public synchronized List<MatchInfo> ListMatches(Integer maxCount) {
         /**
          * get list of matches with list command
          * which will return a list of [address] - [prev value] one per each line
@@ -292,15 +293,15 @@ public class ACE {
     }
 
     // =============== this commands don't require attach ===================
-    public List<String> UtilCmdAsList(String[] cmd) {
+    public synchronized List<String> UtilCmdAsList(String[] cmd) {
         return this.aceUtilClient.RequestAsList(cmd);
     }
 
-    public String UtilCmd(String[] cmd) {
+    public synchronized String UtilCmd(String[] cmd) {
         return this.aceUtilClient.Request(cmd);
     }
 
-    public List<ProcInfo> ListRunningProc() {
+    public synchronized List<ProcInfo> ListRunningProc() {
         List<ProcInfo> runningProcs = new ArrayList<ProcInfo>();
         // use --reverse so newest process will be shown first
         List<String> runningProcsInfoStr = UtilCmdAsList(new String[]{"ps", "ls", "--reverse"});
@@ -311,7 +312,7 @@ public class ACE {
         return runningProcs;
     }
 
-    public boolean IsPidRunning(Long pid) {
+    public synchronized boolean IsPidRunning(Long pid) {
         String boolStr = UtilCmd(new String[]{"ps", "is_running", pid.toString()});
         assert (boolStr.equals("true") || boolStr.equals("false"));
         return Boolean.parseBoolean(boolStr);
@@ -323,7 +324,7 @@ public class ACE {
      * which will return list of "<type name> <bit size>"
      * like "int 32", "short 16" and ect
      */
-    public List<NumTypeInfo> GetAvailableNumTypes() {
+    public synchronized List<NumTypeInfo> GetAvailableNumTypes() {
         List<NumTypeInfo> numTypeInfos = new ArrayList<NumTypeInfo>();
         List<String> out = UtilCmdAsList(new String[]{"info", "type"});
         for (String s : out) {
@@ -337,7 +338,7 @@ public class ACE {
 
     }
 
-    public List<Operator> GetAvailableOperatorTypes() {
+    public synchronized List<Operator> GetAvailableOperatorTypes() {
         // the output will be a list of supported operators like
         // >
         // <
