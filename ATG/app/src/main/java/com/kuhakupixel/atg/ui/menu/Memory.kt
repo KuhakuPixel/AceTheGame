@@ -160,18 +160,17 @@ fun _MemoryMenu(
                 //
                 nextScanEnabled = isAttached && !isScanOnGoing.value,
                 nextScanClicked = fun() {
-                    // ====================== get scan options ========================
-                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
-                    val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
-                    // ================================================================
-                    // set the value type
-                    if (!initialScanDone.value) ace.SetNumType(valueType)
-
-                    val statusPublisherPort = ace.getStatusPublisherPort();
                     // make sure to finish up the previous scan thread before continuing
                     // with the next one, because its gonna be nasty if we don't do that
                     currentScanThread?.join()
                     currentScanThread = thread {
+                        // ====================== get scan options ========================
+                        val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                        val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
+                        // ================================================================
+                        // set the value type
+                        if (!initialScanDone.value) ace.SetNumType(valueType)
+
                         // disable next and new scan
                         isScanOnGoing.value = true
                         try {
@@ -198,6 +197,8 @@ fun _MemoryMenu(
                             )
                         }
                         isScanOnGoing.value = false
+                        // set initial scan to true
+                        initialScanDone.value = true
                         // update matches table
                         UpdateMatches(ace = ace)
                     }
@@ -207,6 +208,7 @@ fun _MemoryMenu(
                      * */
                     currentScanProgressThread?.join()
                     currentScanProgressThread = thread {
+                        val statusPublisherPort = ace.getStatusPublisherPort();
                         try {
                             val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
                             statusSubscriber.use { it: ACEStatusSubscriber ->
@@ -227,8 +229,6 @@ fun _MemoryMenu(
 
                     }
 
-                    // set initial scan to true
-                    initialScanDone.value = true
                 },
 
                 //
