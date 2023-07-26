@@ -104,6 +104,8 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
     // for communication
     implementation 'org.zeromq:jeromq:0.5.3'
+    // jsons
+    implementation 'com.google.code.gson:gson:2.10.1'
     // ====================
     def libsuVersion = '5.0.4'
     // The core module that provides APIs to a shell

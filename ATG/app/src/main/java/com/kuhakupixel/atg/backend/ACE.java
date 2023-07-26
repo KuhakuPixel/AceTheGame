@@ -126,6 +126,14 @@ public class ACE {
     private final Context context;
     private final List<NumTypeInfo> availableNumTypes;
 
+
+    //
+    private Integer statusPublisherPort;
+
+    public Integer getStatusPublisherPort() {
+        return statusPublisherPort;
+    }
+
     public ACE(Context context) throws IOException {
         this.context = context;
         this.aceUtilClient = new ACEUtilClient(context);
@@ -157,10 +165,11 @@ public class ACE {
     public void Attach(Long pid) throws IOException, InterruptedException {
         AssertNoAttachInARow();
         // start the server
-        Integer port = Port.GetOpenPort();
-        this.serverThread = ACEServer.GetStarterThread(this.context, pid, port);
+        List<Integer> ports = Port.GetOpenPorts(2);
+        this.statusPublisherPort = ports.get(1);
+        this.serverThread = ACEServer.GetStarterThread(this.context, pid, ports.get(0), statusPublisherPort);
         this.serverThread.start();
-        ConnectToACEServer(port);
+        ConnectToACEServer(ports.get(0));
     }
 
 
@@ -185,6 +194,7 @@ public class ACE {
         }
         return bitSize;
     }
+
 
     public String GetNumTypeAndBitSize(NumType numType) {
         Integer bitSize = this.GetNumTypeBitSize(numType);

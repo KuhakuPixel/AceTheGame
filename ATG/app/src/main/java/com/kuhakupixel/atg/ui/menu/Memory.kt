@@ -1,6 +1,7 @@
 package com.kuhakupixel.atg.ui.menu
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +33,8 @@ import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException
+import com.kuhakupixel.atg.backend.ACEStatusSubscriber
+import com.kuhakupixel.atg.backend.ScanProgressData
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
@@ -40,6 +44,7 @@ import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayChoicesDialog
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 import kotlin.math.min
 
 
@@ -55,12 +60,19 @@ private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 
 // ================================================================
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
-val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
-val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+val isScanOnGoing: MutableState<Boolean> = mutableStateOf(false)
+
+private val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+private val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 
 // ===================================== current matches data =========================
 private var currentMatchesList: MutableState<List<MatchInfo>> = mutableStateOf(mutableListOf())
 private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches")
+private val scanProgress: MutableState<Float> = mutableStateOf(0.0f)
+
+// ================================================================
+private var currentScanThread: Thread? = null
+private var currentScanProgressThread: Thread? = null
 
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
@@ -105,21 +117,21 @@ fun _MemoryMenu(
         // init default
         scanTypeSelectedOptionIdx.value = Operator.values().indexOf(ATGSettings.defaultScanType)
     }
-    val isAttached: Boolean = ace!!.IsAttached()
+    val isAttached: Boolean = ace.IsAttached()
+    valueTypeEnabled.value = isAttached && !initialScanDone.value
+    scanTypeEnabled.value = isAttached
 
     // =================================
 
-    scanTypeEnabled.value = isAttached
-    // only enable change value type at first scan
-    valueTypeEnabled.value = isAttached && !(initialScanDone.value)
 
     val content: @Composable (matchesTableModifier: Modifier, matchesSettingModifier: Modifier) -> Unit =
         { matchesTableModifier, matchesSettingModifier ->
 
             MatchesTable(
                 modifier = matchesTableModifier,
-                matches = currentMatchesList,
-                matchesStatusText = matchesStatusText,
+                matches = currentMatchesList.value,
+                matchesStatusText = matchesStatusText.value,
+                scanProgress = scanProgress.value,
                 onMatchClicked = { matchInfo: MatchInfo ->
                     //
                     val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
@@ -146,7 +158,7 @@ fun _MemoryMenu(
                 valueTypeEnabled = valueTypeEnabled,
                 valueTypeSelectedOptionIdx = valueTypeSelectedOptionIdx,
                 //
-                nextScanEnabled = isAttached,
+                nextScanEnabled = isAttached && !isScanOnGoing.value,
                 nextScanClicked = fun() {
                     // ====================== get scan options ========================
                     val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
@@ -154,38 +166,73 @@ fun _MemoryMenu(
                     // ================================================================
                     // set the value type
                     if (!initialScanDone.value) ace.SetNumType(valueType)
-                    try {
-                        /**
-                         * scan against a value if input value
-                         * is not empty
-                         * and scan without value otherwise
-                         * (picking addresses whose value stayed the same, increased and etc)
-                         * */
 
-                        if (scanInputVal.value.isBlank()) {
-                            ace.ScanWithoutValue(scanType)
-                        } else {
-                            ace.ScanAgainstValue(
-                                scanType,
-                                scanInputVal.value
+                    val statusPublisherPort = ace.getStatusPublisherPort();
+                    // make sure to finish up the previous scan thread before continuing
+                    // with the next one, because its gonna be nasty if we don't do that
+                    currentScanThread?.join()
+                    currentScanThread = thread {
+                        // disable next and new scan
+                        isScanOnGoing.value = true
+                        try {
+                            /**
+                             * scan against a value if input value
+                             * is not empty
+                             * and scan without value otherwise
+                             * (picking addresses whose value stayed the same, increased and etc)
+                             * */
+
+                            if (scanInputVal.value.isBlank()) {
+                                ace.ScanWithoutValue(scanType)
+                            } else {
+                                ace.ScanAgainstValue(
+                                    scanType,
+                                    scanInputVal.value
+                                )
+                            }
+                        } catch (e: InvalidCommandException) {
+                            OverlayInfoDialog(overlayContext!!).show(
+                                title = "Error",
+                                text = e.stackTraceToString(),
+                                onConfirm = {},
                             )
                         }
-                    } catch (e: InvalidCommandException) {
-                        OverlayInfoDialog(overlayContext!!).show(
-                            title = "Error",
-                            text = e.stackTraceToString(),
-                            onConfirm = {},
-                        )
-                        return
+                        isScanOnGoing.value = false
+                        // update matches table
+                        UpdateMatches(ace = ace)
+                    }
+                    /**
+                     * thread to update the progress as the scan goes, with a subscriber
+                     * that keeps listening to a port until the scan is done
+                     * */
+                    currentScanProgressThread?.join()
+                    currentScanProgressThread = thread {
+                        try {
+                            val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
+                            statusSubscriber.use { it: ACEStatusSubscriber ->
+
+                                var scanProgressData: ScanProgressData =
+                                    statusSubscriber.GetScanProgress()
+                                while (!scanProgressData.is_finished) {
+                                    scanProgress.value =
+                                        scanProgressData.current.toFloat() / scanProgressData.max.toFloat()
+                                    scanProgressData = statusSubscriber.GetScanProgress()
+                                }
+                            }
+
+                        } catch (e: Exception) {
+                            Log.e("ATG", "Error " + e.toString());
+
+                        }
+
                     }
 
-                    // update matches table
-                    UpdateMatches(ace = ace)
                     // set initial scan to true
                     initialScanDone.value = true
                 },
+
                 //
-                newScanEnabled = isAttached && initialScanDone.value,
+                newScanEnabled = isAttached && initialScanDone.value && !isScanOnGoing.value,
                 newScanClicked = {
                     ace.ResetMatches()
                     UpdateMatches(ace = ace)
@@ -233,27 +280,28 @@ fun _MemoryMenu(
 @Composable
 private fun MatchesTable(
     modifier: Modifier = Modifier,
-    matches: MutableState<List<MatchInfo>>,
-    matchesStatusText: MutableState<String>,
+    matches: List<MatchInfo>,
+    matchesStatusText: String,
+    scanProgress: Float,
     onMatchClicked: (matchInfo: MatchInfo) -> Unit,
 ) {
 
-    Column(modifier = modifier) {
-        Text(matchesStatusText.value)
-        Spacer(modifier = Modifier.height(10.dp))
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(matchesStatusText)
+        LinearProgressIndicator(progress = scanProgress)
         CreateTable(colNames = listOf("Address", "Previous Value"),
             colWeights = listOf(0.4f, 0.6f),
-            itemCount = matches.value.size,
+            itemCount = matches.size,
             minEmptyItemCount = 50,
             onRowClicked = { rowIndex: Int ->
-                onMatchClicked(matches.value[rowIndex])
+                onMatchClicked(matches[rowIndex])
             },
             drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
                 if (colIndex == 0) {
-                    Text(text = matches.value[rowIndex].address, modifier = cellModifier)
+                    Text(text = matches[rowIndex].address, modifier = cellModifier)
                 }
                 if (colIndex == 1) {
-                    Text(text = matches.value[rowIndex].prevValue, modifier = cellModifier)
+                    Text(text = matches[rowIndex].prevValue, modifier = cellModifier)
                 }
             })
     }
