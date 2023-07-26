@@ -71,9 +71,6 @@ private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches"
 private val scanProgress: MutableState<Float> = mutableStateOf(0.0f)
 
 // ================================================================
-private var currentScanThread: Thread? = null
-private var currentScanProgressThread: Thread? = null
-
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -160,10 +157,7 @@ fun _MemoryMenu(
                 //
                 nextScanEnabled = isAttached && !isScanOnGoing.value,
                 nextScanClicked = fun() {
-                    // make sure to finish up the previous scan thread before continuing
-                    // with the next one, because its gonna be nasty if we don't do that
-                    currentScanThread?.join()
-                    currentScanThread = thread {
+                    thread {
                         // ====================== get scan options ========================
                         val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
                         val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
@@ -206,8 +200,7 @@ fun _MemoryMenu(
                      * thread to update the progress as the scan goes, with a subscriber
                      * that keeps listening to a port until the scan is done
                      * */
-                    currentScanProgressThread?.join()
-                    currentScanProgressThread = thread {
+                    thread {
                         val statusPublisherPort = ace.getStatusPublisherPort();
                         try {
                             val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
