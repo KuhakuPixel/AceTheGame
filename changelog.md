@@ -1,5 +1,19 @@
 # ChangeLog
 
+## [0.0.9]
+
+### Fixed
+- [ATG] some of scan options not shown, because it is not scrollable
+- [ATG] scanning for value may freeze the entire app due to only using one thread
+
+### Added
+- [ATG] progress bar when scanning
+- [ATG] Icon for the overlay button
+
+### Changed
+### Removed
+
+
 ## [0.0.8]
 Initial Alpha release of ATG apk
 
