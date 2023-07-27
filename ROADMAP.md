@@ -17,10 +17,6 @@ than `=`, `<`
 
 ### Freeze value of an address
 
-### Display progress bar on when scanning 
-currently in the apk, when doing scanning
-the apk will freeze/wait until it finish
-
 ### show value of an address in real time 
 
 ### Undo
