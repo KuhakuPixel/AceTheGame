@@ -17,14 +17,15 @@ void process_map_cmd_handler(int pid, bool ps_map_list_all) {
   char path_to_maps[200];
   snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
   //
-  std::vector<std::string> proc_maps_file = read_file(path_to_maps);
+  std::vector<struct mem_segment> proc_mem_segments =
+      parse_proc_map_file(path_to_maps);
 
   size_t special_mapping_count = 0;
   //
 
-  for (size_t i = 0; i < proc_maps_file.size(); i++) {
+  for (size_t i = 0; i < proc_mem_segments.size(); i++) {
 
-    struct mem_segment m_seg = parse_proc_map_str(proc_maps_file[i]);
+    struct mem_segment m_seg = proc_mem_segments[i];
     // by default only show special region
     if (!m_seg.is_special_region && !ps_map_list_all)
       continue;
@@ -35,7 +36,7 @@ void process_map_cmd_handler(int pid, bool ps_map_list_all) {
   }
 
   frontend::print("------------------------------------\n");
-  frontend::print("Found total of %zu mappings\n", proc_maps_file.size());
+  frontend::print("Found total of %zu mappings\n", proc_mem_segments.size());
   frontend::print("With %zu special region mapping\n", special_mapping_count);
   frontend::print("------------------------------------\n");
 }

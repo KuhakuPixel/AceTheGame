@@ -82,7 +82,14 @@ std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps);
  * directly unless for unit testing
  * */
 Maps_pathname_type get_Maps_pathname_type(const std::string &str);
-struct mem_segment parse_proc_map_str(const std::string &line);
+
+struct parse_proc_map_context {
+  unsigned int code_regions = 0, exe_regions = 0;
+  unsigned long prev_end = 0, load_addr = 0, exe_load = 0;
+  bool is_exe = false;
+};
+struct mem_segment parse_proc_map_str(const std::string &line,
+                                      parse_proc_map_context *context);
 
 bool mem_segment_is_suitable(const struct mem_segment &mem_seg);
 std::vector<struct mem_segment>

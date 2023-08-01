@@ -7,7 +7,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+#include <unistd.h>
 #include <vector>
+
+#define MAX_LINKBUF_SIZE 256
+
+std::string get_executable_name(int pid) {
+
+  /* get executable name */
+
+  char exelink[128] = {0};
+  char exename[MAX_LINKBUF_SIZE] = {0};
+  snprintf(exelink, sizeof(exelink), "/proc/%d/exe", pid);
+  readlink(exelink, exename, MAX_LINKBUF_SIZE - 1);
+  return std::string(exename);
+}
 
 std::string mem_segment::get_displayable_str() const {
 
@@ -31,7 +45,8 @@ std::string mem_segment::get_displayable_str() const {
 
 // TODO need to spltup the functions
 // to help with readability
-struct mem_segment parse_proc_map_str(const std::string &line) {
+struct mem_segment parse_proc_map_str(const std::string &line,
+                                      parse_proc_map_context *context) {
 
   /*
    path_name ussualy contains literal path
@@ -96,10 +111,12 @@ std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps) {
   // we parse a line at /proc/[pid]/maps
   // (for example a function that prints the struct mem_segment, so
   // we can see the progress
+  parse_proc_map_context context;
   std::vector<struct mem_segment> proc_mem_segments;
   std::vector<std::string> file_content = read_file(path_to_maps);
   for (size_t i = 0; i < file_content.size(); i++) {
-    struct mem_segment current_mem_seg = parse_proc_map_str(file_content[i]);
+    struct mem_segment current_mem_seg =
+        parse_proc_map_str(file_content[i], &context);
     proc_mem_segments.push_back(current_mem_seg);
   }
   return proc_mem_segments;

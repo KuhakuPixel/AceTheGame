@@ -2,10 +2,11 @@
 #include "../third_party/catch.hpp"
 // TODO: add test for special memory region with only one '['
 TEST_CASE("parse_proc_map_str", "[proc_map]") {
-
+  parse_proc_map_context context;
   struct mem_segment m_seg = parse_proc_map_str(
       "55f2dc48f000-55f2dc4b0000 rw-p 00000000 00:00 0          "
-      "                [heap]");
+      "                [heap]",
+      &context);
   REQUIRE(m_seg.address_start == 0x55f2dc48f000);
   REQUIRE(m_seg.address_end == 0x55f2dc4b0000);
   REQUIRE(m_seg.mem_type == Maps_pathname_type::heap);
@@ -23,7 +24,8 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   //
   m_seg = parse_proc_map_str(
       "55f2dc48f000-55f2dc4b0000 rw-p 00000000 00:00 0          "
-      "                [anon:scudo:primary]");
+      "                [anon:scudo:primary]",
+      &context);
   REQUIRE(m_seg.address_start == 0x55f2dc48f000);
   REQUIRE(m_seg.address_end == 0x55f2dc4b0000);
   REQUIRE(m_seg.mem_type == Maps_pathname_type::heap);
@@ -38,8 +40,8 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   REQUIRE(m_seg.perm_shared == false);
 
   //
-  m_seg =
-      parse_proc_map_str("7f51fc624000-7f51fc627000 rw-p 00000000 00:00 0 ");
+  m_seg = parse_proc_map_str("7f51fc624000-7f51fc627000 rw-p 00000000 00:00 0 ",
+                             &context);
   REQUIRE(m_seg.address_start == 0x7f51fc624000);
   REQUIRE(m_seg.address_end == 0x7f51fc627000);
   REQUIRE(m_seg.mem_type == Maps_pathname_type::anonymous);
@@ -51,7 +53,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   for (int i = 0; i < 1000; i++) {
     proc_map_line_str += "/path_to_prog";
   }
-  m_seg = parse_proc_map_str(proc_map_line_str);
+  m_seg = parse_proc_map_str(proc_map_line_str, &context);
   REQUIRE(m_seg.address_start == 0x55f2dab4a000);
   REQUIRE(m_seg.address_end == 0x55f2dab4b000);
   REQUIRE(m_seg.mem_type == Maps_pathname_type::program_mapping);
@@ -65,7 +67,8 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   REQUIRE(m_seg.perm_shared == false);
   // ======path_name contains space and non-standard char============
   m_seg = parse_proc_map_str("e8bf8000-e8bf9000 rw-p 00000000 00:00 0          "
-                             " [anon:arc4random data]");
+                             " [anon:arc4random data]",
+                             &context);
   REQUIRE(m_seg.address_start == 0xe8bf8000);
   REQUIRE(m_seg.address_end == 0xe8bf9000);
   REQUIRE(m_seg.mem_type_str == "[anon:arc4random data]");
@@ -80,7 +83,8 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   // =====================================
 
   m_seg = parse_proc_map_str("e8bfa000-e8bfb000 rw-p 00000000 00:00 0         "
-                             " [anon:System property context nodes]");
+                             " [anon:System property context nodes]",
+                             &context);
   REQUIRE(m_seg.address_start == 0xe8bfa000);
   REQUIRE(m_seg.address_end == 0xe8bfb000);
   REQUIRE(m_seg.mem_type_str == "[anon:System property context nodes]");
@@ -95,7 +99,8 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   // =====================================
   m_seg = parse_proc_map_str(
       "5592ff044000-5592ff045000 r--p 00000000 08:05 21548075    "
-      " /Projects/ACE/example_program/coin prog");
+      " /Projects/ACE/example_program/coin prog",
+      &context);
   REQUIRE(m_seg.address_start == 0x5592ff044000);
   REQUIRE(m_seg.address_end == 0x5592ff045000);
   REQUIRE(m_seg.mem_type_str == "/Projects/ACE/example_program/coin prog");
@@ -110,7 +115,8 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   // ================================================================
 
   m_seg = parse_proc_map_str("e7fff000-e801f000 r--s 00000000 00:11 7567       "
-                             " /dev/__properties__/properties_serial");
+                             " /dev/__properties__/properties_serial",
+                             &context);
 
   REQUIRE(m_seg.address_start == 0xe7fff000);
   REQUIRE(m_seg.address_end == 0xe801f000);
@@ -126,7 +132,8 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   // ================================================================
 
   m_seg = parse_proc_map_str("e8a9b000-e8a9d000 ---p 00000000 00:00 0          "
-                             "                        [anon:cfi shadow]");
+                             "                        [anon:cfi shadow]",
+                             &context);
 
   REQUIRE(m_seg.address_start == 0xe8a9b000);
   REQUIRE(m_seg.address_end == 0xe8a9d000);
