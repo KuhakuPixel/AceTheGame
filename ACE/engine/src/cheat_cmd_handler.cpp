@@ -89,7 +89,7 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
 
               operator_type, num_to_find,
 
-              [](const std::vector<struct mem_segment> &segments_to_scan) {
+              [](const std::vector<struct mem_region> &segments_to_scan) {
                 frontend::print("Found %zu regions to be scanned\n",
                                 segments_to_scan.size());
               }

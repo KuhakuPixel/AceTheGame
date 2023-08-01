@@ -25,7 +25,7 @@
 #include <unordered_map>
 #include <vector>
 
-enum class Maps_pathname_type {
+enum class mem_region_type {
   // the program binary and libraries it used
   program_mapping,
   heap,
@@ -37,26 +37,26 @@ enum class Maps_pathname_type {
   anonymous,
   unknown
 };
-static const std::unordered_map<std::string, Maps_pathname_type>
-    str_to_Maps_pathname_type = {
-        {"heap", Maps_pathname_type::heap},
+static const std::unordered_map<std::string, mem_region_type>
+    str_to_mem_region_type = {
+        {"heap", mem_region_type::heap},
         // this seems to be the heap of an android program
         // I got this info from an experiment with running
         // [example_program] and this program in google's android emulator
         // in adb shell
-        {"anon:scudo:primary", Maps_pathname_type::heap},
+        {"anon:scudo:primary", mem_region_type::heap},
         //
-        {"stack", Maps_pathname_type::stack},
-        {"vdso", Maps_pathname_type::vdso},
-        {"vvar", Maps_pathname_type::vvar},
-        {"vsyscall", Maps_pathname_type::vsyscall},
+        {"stack", mem_region_type::stack},
+        {"vdso", mem_region_type::vdso},
+        {"vvar", mem_region_type::vvar},
+        {"vsyscall", mem_region_type::vsyscall},
 
 };
 
-struct mem_segment {
+struct mem_region {
   ULL address_start;
   ULL address_end;
-  Maps_pathname_type mem_type;
+  mem_region_type mem_type;
   std::string mem_type_str;
 
   std::string get_displayable_str() const;
@@ -84,24 +84,24 @@ struct parse_proc_map_context {
 /*
  *
  * read file at path_to_maps and on each line
- * parse to struct mem_segment
+ * parse to struct mem_region
  * */
-std::vector<struct mem_segment>
+std::vector<struct mem_region>
 parse_proc_map_file(const char *path_to_maps, parse_proc_map_context *context);
 
-std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps);
-std::vector<struct mem_segment> parse_proc_map_file(int pid);
+std::vector<struct mem_region> parse_proc_map_file(const char *path_to_maps);
+std::vector<struct mem_region> parse_proc_map_file(int pid);
 
 /*
  * meant to be used for parse_proc_map_str, avoid calling it
  * directly unless for unit testing
  * */
-Maps_pathname_type get_Maps_pathname_type(const std::string &str);
+mem_region_type get_mem_region_type(const std::string &str);
 
-struct mem_segment parse_proc_map_str(const std::string &line,
+struct mem_region parse_proc_map_str(const std::string &line,
                                       parse_proc_map_context *context);
 
-bool mem_segment_is_suitable(const struct mem_segment &mem_seg);
-std::vector<struct mem_segment>
-mem_segment_get_regions_for_scan(int pid,
+bool mem_region_is_suitable(const struct mem_region &mem_reg);
+std::vector<struct mem_region>
+mem_region_get_regions_for_scan(int pid,
                                  Scan_Utils::E_region_level region_level);

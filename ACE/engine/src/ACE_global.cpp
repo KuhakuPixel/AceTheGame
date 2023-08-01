@@ -43,10 +43,10 @@ const bool ACE_global::use_proc_vm_read_writev =
 #endif
 
 //
-const std::vector<Maps_pathname_type> ACE_global::mem_type_name_to_scan = {
-    Maps_pathname_type::heap,
-    Maps_pathname_type::stack,
-    Maps_pathname_type::anonymous,
+const std::vector<mem_region_type> ACE_global::mem_type_name_to_scan = {
+    mem_region_type::heap,
+    mem_region_type::stack,
+    mem_region_type::anonymous,
 
 };
 
