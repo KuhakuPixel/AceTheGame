@@ -28,7 +28,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
       &context);
   REQUIRE(m_reg.address_start == 0x55f2dc48f000);
   REQUIRE(m_reg.address_end == 0x55f2dc4b0000);
-  REQUIRE(m_reg.mem_type == mem_region_type::heap);
+  REQUIRE(m_reg.mem_type == mem_region_type::misc);
   REQUIRE(m_reg.path_name == "[anon:scudo:primary]");
   REQUIRE(m_reg.is_special_region == true);
 
@@ -44,7 +44,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
                              &context);
   REQUIRE(m_reg.address_start == 0x7f51fc624000);
   REQUIRE(m_reg.address_end == 0x7f51fc627000);
-  REQUIRE(m_reg.mem_type == mem_region_type::anonymous);
+  REQUIRE(m_reg.mem_type == mem_region_type::misc);
   // ===================== test when
   // ========= path_name of the program is really long =================
   std::string proc_map_line_str = "55f2dab4a000-55f2dab4b000 rw-p 00003000 "
@@ -56,7 +56,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   m_reg = parse_proc_map_str(proc_map_line_str, &context);
   REQUIRE(m_reg.address_start == 0x55f2dab4a000);
   REQUIRE(m_reg.address_end == 0x55f2dab4b000);
-  REQUIRE(m_reg.mem_type == mem_region_type::program_mapping);
+  REQUIRE(m_reg.mem_type == mem_region_type::misc);
   REQUIRE(m_reg.is_special_region == false);
 
   REQUIRE(m_reg.perm_read == true);
@@ -149,6 +149,9 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
 
 TEST_CASE("parse_proc_map_file", "[proc_map]") {
 
+  std::string exename = "/home/nicholas/Desktop/Projects/ACE/example_program/"
+                        "coin_prog";
+  parse_proc_map_context context = parse_proc_map_context(exename);
   std::vector<struct mem_region> proc_mem_regions =
       parse_proc_map_file("test_files/maps_files/maps");
 
@@ -156,8 +159,14 @@ TEST_CASE("parse_proc_map_file", "[proc_map]") {
   //
   REQUIRE(0x55f2dab46000 == proc_mem_regions[0].address_start);
   REQUIRE(0x55f2dab47000 == proc_mem_regions[0].address_end);
-  REQUIRE(mem_region_type::program_mapping == proc_mem_regions[0].mem_type);
+  REQUIRE(mem_region_type::misc == proc_mem_regions[0].mem_type);
   REQUIRE(false == proc_mem_regions[0].is_special_region);
+  //
+  REQUIRE(0x55f2dab47000 == proc_mem_regions[1].address_start);
+  REQUIRE(0x55f2dab48000 == proc_mem_regions[1].address_end);
+  // TODO: pass the test
+  REQUIRE(mem_region_type::exe == proc_mem_regions[1].mem_type);
+  REQUIRE(false == proc_mem_regions[1].is_special_region);
 
   //
   REQUIRE(0x55f2dc48f000 == proc_mem_regions[5].address_start);
@@ -173,38 +182,37 @@ TEST_CASE("parse_proc_map_file", "[proc_map]") {
 
 TEST_CASE("test_get_mem_region_type", "[proc_map]") {
 
-  // program mapping like the binary and the library files
-  REQUIRE(get_mem_region_type("/home/coin_prog") ==
-          mem_region_type::program_mapping);
+  {
+    parse_proc_map_context context = parse_proc_map_context("");
+    context.is_exe = true;
+    // program mapping like the binary and the library files
+    REQUIRE(get_mem_region_type("/home/coin_prog", &context) ==
+            mem_region_type::exe);
+  }
 
-  REQUIRE(get_mem_region_type(
-              "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2") ==
-          mem_region_type::program_mapping);
-  // specal region
-  REQUIRE(get_mem_region_type("") == mem_region_type::anonymous);
-  REQUIRE(get_mem_region_type("[stack]") == mem_region_type::stack);
-  REQUIRE(get_mem_region_type("[heap]") == mem_region_type::heap);
-  REQUIRE(get_mem_region_type("[anon:scudo:primary]") ==
-          mem_region_type::heap);
+  {
+    parse_proc_map_context context = parse_proc_map_context("");
+    // just some random number
+    context.code_regions = 3;
+    // program mapping like the binary and the library files
+    REQUIRE(get_mem_region_type("/home/coin_prog", &context) ==
+            mem_region_type::code);
+  }
 
-  REQUIRE(get_mem_region_type("[vdso]") == mem_region_type::vdso);
-  REQUIRE(get_mem_region_type("[vvar]") == mem_region_type::vvar);
-  REQUIRE(get_mem_region_type("[vsyscall]") == mem_region_type::vsyscall);
-  // ============ unknown mapping ==================
-  //
-  REQUIRE(get_mem_region_type("[STACK]") == mem_region_type::unknown);
-  REQUIRE(get_mem_region_type("[]") == mem_region_type::unknown);
-  REQUIRE(get_mem_region_type("[]]") == mem_region_type::unknown);
+  {
+    parse_proc_map_context context = parse_proc_map_context("");
+    REQUIRE(get_mem_region_type("[stack]", &context) == mem_region_type::stack);
+  }
 
-  // notice that '/' at front is not present, which is not valid path
-  REQUIRE(
-      get_mem_region_type("usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2") ==
-      mem_region_type::unknown);
-  // directory is mapped?, impossible
-  //
-  REQUIRE(get_mem_region_type("/home/coin_prog/") ==
-          mem_region_type::unknown);
-
-  REQUIRE(get_mem_region_type("//") == mem_region_type::unknown);
-  REQUIRE(get_mem_region_type("/") == mem_region_type::unknown);
+  {
+    parse_proc_map_context context = parse_proc_map_context("");
+    REQUIRE(get_mem_region_type("[heap]", &context) == mem_region_type::heap);
+  }
+  // ============ misc mapping ==================
+  {
+    parse_proc_map_context context = parse_proc_map_context("");
+    REQUIRE(get_mem_region_type("[STACK]", &context) == mem_region_type::misc);
+    REQUIRE(get_mem_region_type("[]", &context) == mem_region_type::misc);
+    REQUIRE(get_mem_region_type("[]]", &context) == mem_region_type::misc);
+  }
 }

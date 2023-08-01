@@ -43,13 +43,6 @@ const bool ACE_global::use_proc_vm_read_writev =
 #endif
 
 //
-const std::vector<mem_region_type> ACE_global::mem_type_name_to_scan = {
-    mem_region_type::heap,
-    mem_region_type::stack,
-    mem_region_type::anonymous,
-
-};
-
 const char *ACE_global::license =
 #include "./LICENSE_APPLIED"
     ;

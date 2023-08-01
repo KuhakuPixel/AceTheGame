@@ -27,29 +27,17 @@
 
 enum class mem_region_type {
   // the program binary and libraries it used
-  program_mapping,
   heap,
   stack,
-  // The virtual dynamically linked shared object
-  vdso,
-  vvar,
-  vsyscall,
-  anonymous,
-  unknown
+  code,
+  exe,
+  misc,
 };
 static const std::unordered_map<std::string, mem_region_type>
     str_to_mem_region_type = {
-        {"heap", mem_region_type::heap},
-        // this seems to be the heap of an android program
-        // I got this info from an experiment with running
-        // [example_program] and this program in google's android emulator
-        // in adb shell
-        {"anon:scudo:primary", mem_region_type::heap},
-        //
-        {"stack", mem_region_type::stack},
-        {"vdso", mem_region_type::vdso},
-        {"vvar", mem_region_type::vvar},
-        {"vsyscall", mem_region_type::vsyscall},
+        {"heap", mem_region_type::heap}, {"stack", mem_region_type::stack},
+        {"code", mem_region_type::code}, {"exe", mem_region_type::exe},
+        {"misc", mem_region_type::misc},
 
 };
 
@@ -96,12 +84,13 @@ std::vector<struct mem_region> parse_proc_map_file(int pid);
  * meant to be used for parse_proc_map_str, avoid calling it
  * directly unless for unit testing
  * */
-mem_region_type get_mem_region_type(const std::string &str);
+mem_region_type get_mem_region_type(const std::string &path_name,
+                                    const parse_proc_map_context *context);
 
 struct mem_region parse_proc_map_str(const std::string &line,
-                                      parse_proc_map_context *context);
+                                     parse_proc_map_context *context);
 
 bool mem_region_is_suitable(const struct mem_region &mem_reg);
 std::vector<struct mem_region>
 mem_region_get_regions_for_scan(int pid,
-                                 Scan_Utils::E_region_level region_level);
+                                Scan_Utils::E_region_level region_level);

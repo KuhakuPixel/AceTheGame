@@ -28,8 +28,8 @@ std::string get_executable_name(int pid) {
 std::string mem_region::get_displayable_str() const {
 
   std::string segment_display_str = "";
-  if (this->mem_type == mem_region_type::anonymous)
-    segment_display_str += "<Anonymous Mappings>";
+  if (this->mem_type == mem_region_type::misc)
+    segment_display_str += "<Misc Mappings>";
 
   else
     segment_display_str += this->path_name;
@@ -48,7 +48,7 @@ std::string mem_region::get_displayable_str() const {
 // TODO need to spltup the functions
 // to help with readability
 struct mem_region parse_proc_map_str(const std::string &line,
-                                      parse_proc_map_context *context) {
+                                     parse_proc_map_context *context) {
 
   /*
    path_name ussualy contains literal path
@@ -101,7 +101,7 @@ struct mem_region parse_proc_map_str(const std::string &line,
   m_reg.address_end = address_end;
   m_reg.path_name = std::string(path_name);
   // TODO: need to add constructor
-  m_reg.mem_type = get_mem_region_type(std::string(path_name));
+  m_reg.mem_type = get_mem_region_type(std::string(path_name), context);
   m_reg.is_special_region = is_special_region;
 
   free(path_name);
@@ -140,40 +140,19 @@ std::vector<struct mem_region> parse_proc_map_file(int pid) {
   return proc_mem_regions;
 }
 
-mem_region_type get_mem_region_type(const std::string &str) {
+mem_region_type get_mem_region_type(const std::string &path_name,
+                                    const parse_proc_map_context *context) {
 
-  // If the pathname field is blank, this is an anonymous
-  if (str.length() == 0)
-    return mem_region_type::anonymous;
-  // cannot end with '/', otherwise it is a dir
-  else if (str.length() > 2 && str[0] == '/' && str[str.length() - 1] != '/') {
-    return mem_region_type::program_mapping;
-  }
-
-  // special regions like the heap
-  // and the stack and ect, which most of the program's
-  // computation should reside in
-  else if (str[0] == '[' && str[str.length() - 1] == ']') {
-
-    // extract name from bracket
-    char *buff = (char *)calloc(str.length(), sizeof(char));
-    sscanf(str.c_str(), "[%[^]]", buff);
-    std::string region_name_str = std::string(buff);
-    // if the key doesn't exist, then the maps' pathname type is unknown
-    mem_region_type region_name;
-    if (str_to_mem_region_type.count(region_name_str) == 1)
-      region_name = str_to_mem_region_type.at(region_name_str);
-    else
-      region_name = mem_region_type::unknown;
-
-    // free resources
-    free(buff);
-    return region_name;
-
-  }
-
+  if (context->is_exe)
+    return mem_region_type::exe;
+  else if (context->code_regions > 0)
+    return mem_region_type::code;
+  else if (path_name == "[heap]")
+    return mem_region_type::heap;
+  else if (path_name == "[stack]")
+    return mem_region_type::stack;
   else
-    return mem_region_type::unknown;
+    return mem_region_type::misc;
 }
 
 bool mem_region_is_suitable(const struct mem_region &mem_reg) {
@@ -202,7 +181,7 @@ bool mem_region_is_suitable(const struct mem_region &mem_reg) {
 
 std::vector<struct mem_region>
 mem_region_get_regions_for_scan(int pid,
-                                 Scan_Utils::E_region_level region_level) {
+                                Scan_Utils::E_region_level region_level) {
   //  ================= find memory mapped regions to scan =============
   char path_to_maps[200];
   snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
