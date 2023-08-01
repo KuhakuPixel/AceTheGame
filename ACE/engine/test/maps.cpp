@@ -10,7 +10,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   REQUIRE(m_reg.address_start == 0x55f2dc48f000);
   REQUIRE(m_reg.address_end == 0x55f2dc4b0000);
   REQUIRE(m_reg.mem_type == mem_region_type::heap);
-  REQUIRE(m_reg.mem_type_str == "[heap]");
+  REQUIRE(m_reg.path_name == "[heap]");
   REQUIRE(m_reg.is_special_region == true);
 
   REQUIRE(m_reg.perm_read == true);
@@ -29,7 +29,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
   REQUIRE(m_reg.address_start == 0x55f2dc48f000);
   REQUIRE(m_reg.address_end == 0x55f2dc4b0000);
   REQUIRE(m_reg.mem_type == mem_region_type::heap);
-  REQUIRE(m_reg.mem_type_str == "[anon:scudo:primary]");
+  REQUIRE(m_reg.path_name == "[anon:scudo:primary]");
   REQUIRE(m_reg.is_special_region == true);
 
   REQUIRE(m_reg.perm_read == true);
@@ -71,7 +71,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
                              &context);
   REQUIRE(m_reg.address_start == 0xe8bf8000);
   REQUIRE(m_reg.address_end == 0xe8bf9000);
-  REQUIRE(m_reg.mem_type_str == "[anon:arc4random data]");
+  REQUIRE(m_reg.path_name == "[anon:arc4random data]");
   REQUIRE(m_reg.is_special_region == true);
 
   REQUIRE(m_reg.perm_read == true);
@@ -87,7 +87,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
                              &context);
   REQUIRE(m_reg.address_start == 0xe8bfa000);
   REQUIRE(m_reg.address_end == 0xe8bfb000);
-  REQUIRE(m_reg.mem_type_str == "[anon:System property context nodes]");
+  REQUIRE(m_reg.path_name == "[anon:System property context nodes]");
   REQUIRE(m_reg.is_special_region == true);
 
   REQUIRE(m_reg.perm_read == true);
@@ -103,7 +103,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
       &context);
   REQUIRE(m_reg.address_start == 0x5592ff044000);
   REQUIRE(m_reg.address_end == 0x5592ff045000);
-  REQUIRE(m_reg.mem_type_str == "/Projects/ACE/example_program/coin prog");
+  REQUIRE(m_reg.path_name == "/Projects/ACE/example_program/coin prog");
   REQUIRE(m_reg.is_special_region == false);
 
   REQUIRE(m_reg.perm_read == true);
@@ -120,7 +120,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
 
   REQUIRE(m_reg.address_start == 0xe7fff000);
   REQUIRE(m_reg.address_end == 0xe801f000);
-  REQUIRE(m_reg.mem_type_str == "/dev/__properties__/properties_serial");
+  REQUIRE(m_reg.path_name == "/dev/__properties__/properties_serial");
   REQUIRE(m_reg.is_special_region == false);
 
   REQUIRE(m_reg.perm_read == true);
@@ -137,7 +137,7 @@ TEST_CASE("parse_proc_map_str", "[proc_map]") {
 
   REQUIRE(m_reg.address_start == 0xe8a9b000);
   REQUIRE(m_reg.address_end == 0xe8a9d000);
-  REQUIRE(m_reg.mem_type_str == "[anon:cfi shadow]");
+  REQUIRE(m_reg.path_name == "[anon:cfi shadow]");
   REQUIRE(m_reg.is_special_region == true);
 
   REQUIRE(m_reg.perm_read == false);

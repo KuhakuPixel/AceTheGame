@@ -57,7 +57,7 @@ struct mem_region {
   ULL address_start;
   ULL address_end;
   mem_region_type mem_type;
-  std::string mem_type_str;
+  std::string path_name;
 
   std::string get_displayable_str() const;
   bool is_special_region;

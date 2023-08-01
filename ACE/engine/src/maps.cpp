@@ -32,7 +32,7 @@ std::string mem_region::get_displayable_str() const {
     segment_display_str += "<Anonymous Mappings>";
 
   else
-    segment_display_str += this->mem_type_str;
+    segment_display_str += this->path_name;
 
   char buff[200];
   snprintf(buff, 199, "0x%llx-0x%llx", this->address_start, this->address_end);
@@ -99,7 +99,7 @@ struct mem_region parse_proc_map_str(const std::string &line,
 
   m_reg.address_start = address_start;
   m_reg.address_end = address_end;
-  m_reg.mem_type_str = std::string(path_name);
+  m_reg.path_name = std::string(path_name);
   // TODO: need to add constructor
   m_reg.mem_type = get_mem_region_type(std::string(path_name));
   m_reg.is_special_region = is_special_region;
@@ -193,7 +193,7 @@ bool mem_region_is_suitable(const struct mem_region &mem_reg) {
    * https://en.wikipedia.org/wiki/Device_file
    * https://unix.stackexchange.com/a/18534/505340
    * */
-  else if (strncmp(mem_reg.mem_type_str.c_str(), "/dev/", strlen("/dev/")) == 0)
+  else if (strncmp(mem_reg.path_name.c_str(), "/dev/", strlen("/dev/")) == 0)
     return false;
 
   else
