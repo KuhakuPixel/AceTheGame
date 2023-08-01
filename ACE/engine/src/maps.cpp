@@ -100,6 +100,78 @@ struct mem_region parse_proc_map_str(const std::string &line,
   m_reg.address_start = address_start;
   m_reg.address_end = address_end;
   m_reg.path_name = std::string(path_name);
+
+  /*
+   * detect which region is code and executable
+   * credits: https://github.com/scanmem/scanmem/blob/main/maps.c
+   * */
+  /*
+   * get the load address for regions of the same ELF file
+   *
+   * When the ELF loader loads an executable or a library into
+   * memory, there is one region per ELF segment created:
+   * .text (r-x), .rodata (r--), .data (rw-) and .bss (rw-). The
+   * 'x' permission of .text is used to detect the load address
+   * (region start) and the end of the ELF file in memory. All
+   * these regions have the same filename. The only exception
+   * is the .bss region. Its filename is empty and it is
+   * consecutive with the .data region. But the regions .bss and
+   * .rodata may not be present with some ELF files. This is why
+   * we can't rely on other regions to be consecutive in memory.
+   * There should never be more than these four regions.
+   * The data regions use their variables relative to the load
+   * address. So determining it makes sense as we can get the
+   * variable address used within the ELF file with it.
+   * But for the executable there is the special case that there
+   * is a gap between .text and .rodata. Other regions might be
+   * loaded via mmap() to it. So we have to count the number of
+   * regions belonging to the exe separately to handle that.
+   * References:
+   * http://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+   * http://wiki.osdev.org/ELF
+   * http://lwn.net/Articles/531148/
+   */
+  // detect further regions of the same ELF file and its end
+  if (context->code_regions > 0) {
+    if (m_reg.perm_execute ||
+        (m_reg.path_name != context->binname &&
+         (m_reg.path_name.size() > 0 ||
+          m_reg.address_start != context->prev_end)) ||
+        context->code_regions >= 4) {
+      context->code_regions = 0;
+      context->is_exe = false;
+      // exe with .text and without .data is impossible
+      if (context->exe_regions > 1)
+        context->exe_regions = 0;
+    }
+
+    else {
+      // exe must not have perm execute
+      //
+      context->code_regions++;
+      if (context->is_exe)
+        context->exe_regions++;
+    }
+  }
+
+  if (context->code_regions == 0) {
+    // detect the first region belonging to an ELF file
+    if (m_reg.perm_execute && m_reg.path_name.size() > 0) {
+      context->code_regions++;
+      if (m_reg.path_name == context->exename) {
+        context->exe_regions = 1;
+        context->is_exe = true;
+      }
+      context->binname = m_reg.path_name;
+      // detect the second region of the exe after skipping regions
+    } else if (context->exe_regions == 1 && m_reg.path_name.size() > 0 &&
+               m_reg.path_name == context->exename) {
+      context->code_regions = ++context->exe_regions;
+      context->is_exe = true;
+      context->binname = m_reg.path_name;
+    }
+  }
+  context->prev_end = m_reg.address_end;
   // TODO: need to add constructor
   m_reg.mem_type = get_mem_region_type(std::string(path_name), context);
   m_reg.is_special_region = is_special_region;

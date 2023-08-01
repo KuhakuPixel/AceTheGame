@@ -153,7 +153,7 @@ TEST_CASE("parse_proc_map_file", "[proc_map]") {
                         "coin_prog";
   parse_proc_map_context context = parse_proc_map_context(exename);
   std::vector<struct mem_region> proc_mem_regions =
-      parse_proc_map_file("test_files/maps_files/maps");
+      parse_proc_map_file("test_files/maps_files/maps", &context);
 
   REQUIRE(23 == proc_mem_regions.size());
   //
