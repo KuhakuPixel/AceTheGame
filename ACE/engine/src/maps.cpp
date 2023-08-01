@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <vector>
 
+parse_proc_map_context::parse_proc_map_context(const std::string exename)
+    : exename(exename) {}
 #define MAX_LINKBUF_SIZE 256
 
 std::string get_executable_name(int pid) {
@@ -87,13 +89,6 @@ struct mem_segment parse_proc_map_str(const std::string &line,
     if (path_name[0] == '[' && path_name[path_name_length - 1] == ']')
       is_special_region = true;
   }
-
-  // TODO: need to add constructor
-  m_seg.address_start = address_start;
-  m_seg.address_end = address_end;
-  m_seg.mem_type_str = std::string(path_name);
-  m_seg.mem_type = get_Maps_pathname_type(std::string(path_name));
-  m_seg.is_special_region = is_special_region;
   // set perms
   m_seg.perm_read = perms[0] == 'r';
   m_seg.perm_write = perms[1] == 'w';
@@ -102,23 +97,46 @@ struct mem_segment parse_proc_map_str(const std::string &line,
   m_seg.perm_shared = perms[3] == 's';
   m_seg.perm_private = perms[3] == 'p';
 
+  m_seg.address_start = address_start;
+  m_seg.address_end = address_end;
+  m_seg.mem_type_str = std::string(path_name);
+  // TODO: need to add constructor
+  m_seg.mem_type = get_Maps_pathname_type(std::string(path_name));
+  m_seg.is_special_region = is_special_region;
+
   free(path_name);
   return m_seg;
 }
-std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps) {
+std::vector<struct mem_segment>
+parse_proc_map_file(const char *path_to_maps, parse_proc_map_context *context) {
 
-  // TODO: accepty a function pointer that will be called everytime
-  // we parse a line at /proc/[pid]/maps
-  // (for example a function that prints the struct mem_segment, so
-  // we can see the progress
-  parse_proc_map_context context;
   std::vector<struct mem_segment> proc_mem_segments;
   std::vector<std::string> file_content = read_file(path_to_maps);
   for (size_t i = 0; i < file_content.size(); i++) {
     struct mem_segment current_mem_seg =
-        parse_proc_map_str(file_content[i], &context);
+        parse_proc_map_str(file_content[i], context);
     proc_mem_segments.push_back(current_mem_seg);
   }
+  return proc_mem_segments;
+}
+
+std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps) {
+
+  parse_proc_map_context context = parse_proc_map_context("");
+  return parse_proc_map_file(path_to_maps, &context);
+}
+
+std::vector<struct mem_segment> parse_proc_map_file(int pid) {
+
+  char path_to_maps[200];
+  snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
+
+  // get exe name from pid and its parsing context
+  std::string exename = get_executable_name(pid);
+  parse_proc_map_context context = parse_proc_map_context(exename);
+  //
+  std::vector<struct mem_segment> proc_mem_segments =
+      parse_proc_map_file(path_to_maps, &context);
   return proc_mem_segments;
 }
 

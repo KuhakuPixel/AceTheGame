@@ -68,6 +68,17 @@ struct mem_segment {
   bool perm_execute;
   bool perm_shared;
   bool perm_private;
+  //
+  bool is_exe;
+};
+struct parse_proc_map_context {
+  unsigned int code_regions = 0, exe_regions = 0;
+  unsigned long prev_end = 0, load_addr = 0, exe_load = 0;
+  bool is_exe = false;
+  std::string binname;
+  const std::string exename;
+
+  parse_proc_map_context(const std::string exename);
 };
 
 /*
@@ -75,7 +86,11 @@ struct mem_segment {
  * read file at path_to_maps and on each line
  * parse to struct mem_segment
  * */
+std::vector<struct mem_segment>
+parse_proc_map_file(const char *path_to_maps, parse_proc_map_context *context);
+
 std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps);
+std::vector<struct mem_segment> parse_proc_map_file(int pid);
 
 /*
  * meant to be used for parse_proc_map_str, avoid calling it
@@ -83,11 +98,6 @@ std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps);
  * */
 Maps_pathname_type get_Maps_pathname_type(const std::string &str);
 
-struct parse_proc_map_context {
-  unsigned int code_regions = 0, exe_regions = 0;
-  unsigned long prev_end = 0, load_addr = 0, exe_load = 0;
-  bool is_exe = false;
-};
 struct mem_segment parse_proc_map_str(const std::string &line,
                                       parse_proc_map_context *context);
 

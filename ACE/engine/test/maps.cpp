@@ -2,7 +2,7 @@
 #include "../third_party/catch.hpp"
 // TODO: add test for special memory region with only one '['
 TEST_CASE("parse_proc_map_str", "[proc_map]") {
-  parse_proc_map_context context;
+  parse_proc_map_context context = parse_proc_map_context("");
   struct mem_segment m_seg = parse_proc_map_str(
       "55f2dc48f000-55f2dc4b0000 rw-p 00000000 00:00 0          "
       "                [heap]",
