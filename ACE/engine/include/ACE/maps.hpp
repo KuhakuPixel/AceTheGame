@@ -26,10 +26,16 @@
 #include <vector>
 
 enum class mem_region_type {
-  // the program binary and libraries it used
   heap,
   stack,
+  // starts with executable permission and
+  // the regions after that (don't have executable permission) as well,
+  // code that don't belong to self process directly
+  // example: loaded dynamic/static library
   code,
+  // belong to self process, the first region must  have executable
+  // permission, and the regions after that belongs to it as well
+  // if the pathname is equal to the path of binary
   exe,
   misc,
 };

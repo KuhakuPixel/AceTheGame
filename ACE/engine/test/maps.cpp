@@ -164,7 +164,6 @@ TEST_CASE("parse_proc_map_file", "[proc_map]") {
   //
   REQUIRE(0x55f2dab47000 == proc_mem_regions[1].address_start);
   REQUIRE(0x55f2dab48000 == proc_mem_regions[1].address_end);
-  // TODO: pass the test
   REQUIRE(mem_region_type::exe == proc_mem_regions[1].mem_type);
   REQUIRE(false == proc_mem_regions[1].is_special_region);
 
@@ -178,6 +177,40 @@ TEST_CASE("parse_proc_map_file", "[proc_map]") {
   REQUIRE(0x7fff7b80b000 == proc_mem_regions[19].address_end);
   REQUIRE(mem_region_type::stack == proc_mem_regions[19].mem_type);
   REQUIRE(true == proc_mem_regions[19].is_special_region);
+}
+
+TEST_CASE("parse_proc_map_file2", "[proc_map]") {
+
+  std::string exename = "/snap/opensurge/89/usr/games/opensurge";
+  parse_proc_map_context context = parse_proc_map_context(exename);
+
+  std::vector<struct mem_region> proc_mem_regions =
+      parse_proc_map_file("test_files/maps_files/maps2", &context);
+
+  REQUIRE(732 == proc_mem_regions.size());
+  //
+  REQUIRE(mem_region_type::misc == proc_mem_regions[0].mem_type);
+  REQUIRE(mem_region_type::exe == proc_mem_regions[1].mem_type);
+  REQUIRE(mem_region_type::exe == proc_mem_regions[2].mem_type);
+  REQUIRE(mem_region_type::exe == proc_mem_regions[3].mem_type);
+  REQUIRE(mem_region_type::exe == proc_mem_regions[4].mem_type);
+  REQUIRE(mem_region_type::misc == proc_mem_regions[5].mem_type);
+  REQUIRE(mem_region_type::heap == proc_mem_regions[6].mem_type);
+  REQUIRE(mem_region_type::misc == proc_mem_regions[37].mem_type);
+
+  REQUIRE(mem_region_type::misc == proc_mem_regions[56].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[57].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[58].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[59].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[60].mem_type);
+
+  REQUIRE(mem_region_type::misc == proc_mem_regions[61].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[62].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[63].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[64].mem_type);
+  REQUIRE(mem_region_type::code == proc_mem_regions[65].mem_type);
+
+  REQUIRE(mem_region_type::misc == proc_mem_regions[66].mem_type);
 }
 
 TEST_CASE("test_get_mem_region_type", "[proc_map]") {
