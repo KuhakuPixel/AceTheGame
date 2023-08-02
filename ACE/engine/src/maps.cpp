@@ -197,19 +197,22 @@ std::vector<struct mem_region> parse_proc_map_file(const char *path_to_maps) {
   parse_proc_map_context context = parse_proc_map_context("");
   return parse_proc_map_file(path_to_maps, &context);
 }
-
-std::vector<struct mem_region> parse_proc_map_file(int pid) {
+std::vector<struct mem_region>
+parse_proc_map_file(int pid, parse_proc_map_context *context) {
 
   char path_to_maps[200];
   snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
 
-  // get exe name from pid and its parsing context
+  std::vector<struct mem_region> proc_mem_regions =
+      parse_proc_map_file(path_to_maps, context);
+  return proc_mem_regions;
+}
+
+std::vector<struct mem_region> parse_proc_map_file(int pid) {
+
   std::string exename = get_executable_name(pid);
   parse_proc_map_context context = parse_proc_map_context(exename);
-  //
-  std::vector<struct mem_region> proc_mem_regions =
-      parse_proc_map_file(path_to_maps, &context);
-  return proc_mem_regions;
+  return parse_proc_map_file(pid, &context);
 }
 
 mem_region_type get_mem_region_type(const std::string &path_name,
@@ -254,26 +257,47 @@ bool mem_region_is_suitable(const struct mem_region &mem_reg) {
 std::vector<struct mem_region>
 mem_region_get_regions_for_scan(int pid,
                                 Scan_Utils::E_region_level region_level) {
-  //  ================= find memory mapped regions to scan =============
-  char path_to_maps[200];
-  snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
+  std::string exe_name = get_executable_name(pid);
 
+  parse_proc_map_context context = parse_proc_map_context(exe_name);
   std::vector<struct mem_region> proc_mem_regions =
-      parse_proc_map_file(path_to_maps);
+      parse_proc_map_file(pid, &context);
   //
   std::vector<struct mem_region> segments_to_scan = {};
   for (size_t i = 0; i < proc_mem_regions.size(); i++) {
     struct mem_region mem_reg = proc_mem_regions[i];
+    // must at least have read permission
+    if (!mem_reg.perm_read)
+      continue;
+    // skip if non writable except when [region_level] is all
+    if (!mem_reg.perm_write && region_level != Scan_Utils::E_region_level::all)
+      continue;
     // choose whether to add this region depending on [region_level]
     bool is_region_suitable = false;
     switch (region_level) {
-    case Scan_Utils::E_region_level::all_read_write: {
-      is_region_suitable = mem_reg.perm_read && mem_reg.perm_write;
-      break;
-    }
 
     case Scan_Utils::E_region_level::all: {
       is_region_suitable = true;
+      break;
+    }
+    case Scan_Utils::E_region_level::all_read_write: {
+      is_region_suitable = true;
+      break;
+    }
+
+    case Scan_Utils::E_region_level::heap_stack_executable_bss: {
+      if (mem_reg.path_name.size() == 0)
+        is_region_suitable = true;
+    }
+      // fall through
+    case Scan_Utils::E_region_level::heap_stack_executable: {
+      if (mem_reg.mem_type == mem_region_type::heap ||
+          mem_reg.mem_type == mem_region_type::stack) {
+        is_region_suitable = true;
+      } else if (mem_reg.mem_type == mem_region_type::exe ||
+                 mem_reg.path_name == exe_name) {
+        is_region_suitable = true;
+      }
       break;
     }
     }

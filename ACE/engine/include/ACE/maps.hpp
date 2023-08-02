@@ -84,6 +84,9 @@ std::vector<struct mem_region>
 parse_proc_map_file(const char *path_to_maps, parse_proc_map_context *context);
 
 std::vector<struct mem_region> parse_proc_map_file(const char *path_to_maps);
+
+std::vector<struct mem_region>
+parse_proc_map_file(int pid, parse_proc_map_context *context);
 std::vector<struct mem_region> parse_proc_map_file(int pid);
 
 /*

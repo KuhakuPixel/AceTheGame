@@ -75,7 +75,7 @@ private:
   Scan_Utils::E_scan_level scan_level = Scan_Utils::E_scan_level::aligned_only;
   //
   Scan_Utils::E_region_level region_level =
-      Scan_Utils::E_region_level::all_read_write;
+      Scan_Utils::E_region_level::heap_stack_executable_bss;
   // step size of the loop
   // during each iteration  of a scan
   size_t scan_step_size = sizeof(T);
