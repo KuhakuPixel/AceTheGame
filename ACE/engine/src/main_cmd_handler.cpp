@@ -14,7 +14,7 @@ void process_map_cmd_handler(int pid, bool ps_map_list_all) {
     frontend::mark_task_fail("No processes is running with pid %d\n", pid);
     return;
   }
-  std::vector<struct mem_region> proc_mem_regions = parse_proc_map_file(pid);
+  std::vector<struct mem_region> proc_mem_regions = parse_proc_map(pid);
 
   size_t special_mapping_count = 0;
   //

@@ -197,8 +197,9 @@ std::vector<struct mem_region> parse_proc_map_file(const char *path_to_maps) {
   parse_proc_map_context context = parse_proc_map_context("");
   return parse_proc_map_file(path_to_maps, &context);
 }
-std::vector<struct mem_region>
-parse_proc_map_file(int pid, parse_proc_map_context *context) {
+
+std::vector<struct mem_region> parse_proc_map(int pid,
+                                              parse_proc_map_context *context) {
 
   char path_to_maps[200];
   snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
@@ -208,11 +209,11 @@ parse_proc_map_file(int pid, parse_proc_map_context *context) {
   return proc_mem_regions;
 }
 
-std::vector<struct mem_region> parse_proc_map_file(int pid) {
+std::vector<struct mem_region> parse_proc_map(int pid) {
 
   std::string exename = get_executable_name(pid);
   parse_proc_map_context context = parse_proc_map_context(exename);
-  return parse_proc_map_file(pid, &context);
+  return parse_proc_map(pid, &context);
 }
 
 mem_region_type get_mem_region_type(const std::string &path_name,
@@ -261,7 +262,7 @@ mem_region_get_regions_for_scan(int pid,
 
   parse_proc_map_context context = parse_proc_map_context(exe_name);
   std::vector<struct mem_region> proc_mem_regions =
-      parse_proc_map_file(pid, &context);
+      parse_proc_map(pid, &context);
   //
   std::vector<struct mem_region> segments_to_scan = {};
   for (size_t i = 0; i < proc_mem_regions.size(); i++) {
