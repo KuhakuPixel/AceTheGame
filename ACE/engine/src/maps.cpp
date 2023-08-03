@@ -1,8 +1,10 @@
 #include "ACE/maps.hpp"
 #include "ACE/file_utils.hpp"
 #include "ACE/str_utils.hpp"
+#include "ACE/to_frontend.hpp"
 #include <cstdint>
 #include <cstdio>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,7 +23,13 @@ std::string get_executable_name(int pid) {
   char exelink[128] = {0};
   char exename[MAX_LINKBUF_SIZE] = {0};
   snprintf(exelink, sizeof(exelink), "/proc/%d/exe", pid);
-  readlink(exelink, exename, MAX_LINKBUF_SIZE - 1);
+
+  errno = 0;
+  ssize_t ret = readlink(exelink, exename, MAX_LINKBUF_SIZE - 1);
+  if (ret == -1) {
+    frontend::log("readlink failed in [get_executable_name]: %s\n",
+                  strerror(errno));
+  }
   return std::string(exename);
 }
 
@@ -268,8 +276,10 @@ mem_region_get_regions_for_scan(int pid,
     }
       // fall through
     case Scan_Utils::E_region_level::heap_stack_executable: {
-      if (mem_reg.mem_type == mem_region_type::heap ||
-          mem_reg.mem_type == mem_region_type::stack) {
+      if (mem_reg.is_special_region)
+        is_region_suitable = true;
+      else if (mem_reg.mem_type == mem_region_type::heap ||
+               mem_reg.mem_type == mem_region_type::stack) {
         is_region_suitable = true;
       } else if (mem_reg.mem_type == mem_region_type::exe ||
                  mem_reg.path_name == exe_name) {
