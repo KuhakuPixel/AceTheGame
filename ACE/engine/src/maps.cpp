@@ -231,30 +231,6 @@ mem_region_type get_mem_region_type(const std::string &path_name,
     return mem_region_type::misc;
 }
 
-bool mem_region_is_suitable(const struct mem_region &mem_reg) {
-  // mem_region_type mem_type = mem_reg.mem_type;
-  /*
-   * segment must be readable and writable
-   * for it to be useful
-   * */
-  if (!mem_reg.perm_read || !mem_reg.perm_write)
-    return false;
-  /*
-   * don't search region that starts with /dev/
-   * because it is a special file used to communicate with device
-   * driver in the kernel
-   *
-   * a typical process's value shouldn't reside there
-   * https://en.wikipedia.org/wiki/Device_file
-   * https://unix.stackexchange.com/a/18534/505340
-   * */
-  else if (strncmp(mem_reg.path_name.c_str(), "/dev/", strlen("/dev/")) == 0)
-    return false;
-
-  else
-    return true;
-}
-
 std::vector<struct mem_region>
 mem_region_get_regions_for_scan(int pid,
                                 Scan_Utils::E_region_level region_level) {

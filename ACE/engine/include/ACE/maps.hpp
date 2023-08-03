@@ -85,8 +85,8 @@ parse_proc_map_file(const char *path_to_maps, parse_proc_map_context *context);
 
 std::vector<struct mem_region> parse_proc_map_file(const char *path_to_maps);
 
-std::vector<struct mem_region>
-parse_proc_map(int pid, parse_proc_map_context *context);
+std::vector<struct mem_region> parse_proc_map(int pid,
+                                              parse_proc_map_context *context);
 std::vector<struct mem_region> parse_proc_map(int pid);
 
 /*
@@ -99,7 +99,6 @@ mem_region_type get_mem_region_type(const std::string &path_name,
 struct mem_region parse_proc_map_str(const std::string &line,
                                      parse_proc_map_context *context);
 
-bool mem_region_is_suitable(const struct mem_region &mem_reg);
 std::vector<struct mem_region>
 mem_region_get_regions_for_scan(int pid,
                                 Scan_Utils::E_region_level region_level);
