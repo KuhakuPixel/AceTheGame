@@ -6,12 +6,22 @@
 #include "zmq.hpp"
 #include <stdlib.h>
 #include <string>
+#include <sys/mman.h>
 
 using json = nlohmann::json;
 
 template <typename T> void run_loop(int port, size_t arr_size) {
 
-  T *arr = (T *)calloc(arr_size, sizeof(T));
+  // cannot use normal malloc because return address is not guaranteed by the
+  // standard to be a virtual address
+  // https://github.com/KuhakuPixel/AceTheGame/issues/49
+  // https://stackoverflow.com/questions/4779188/how-to-use-mmap-to-allocate-a-memory-in-heap
+  T *arr = (T *)mmap(NULL, arr_size * sizeof(T), PROT_READ | PROT_WRITE,
+                     MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  // init to 0
+  for (size_t i = 0; i < arr_size; i++) {
+    arr[i] = 0;
+  }
   auto on_input = [&arr, arr_size](std::string input) -> std::string {
     size_t index = 0;
     T val = 0;
@@ -137,7 +147,8 @@ template <typename T> void run_loop(int port, size_t arr_size) {
 
   server _server = server(port, on_input);
   _server.start();
-  free(arr);
+  // free
+  munmap(arr, arr_size * sizeof(T));
 }
 
 int main(int argc, char **argv) {
