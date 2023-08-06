@@ -1,0 +1,732 @@
+55c9e3879000-55c9e3894000 r--p 00000000 07:14 138                        /snap/opensurge/89/usr/games/opensurge
+55c9e3894000-55c9e3935000 r-xp 0001b000 07:14 138                        /snap/opensurge/89/usr/games/opensurge
+55c9e3935000-55c9e3974000 r--p 000bc000 07:14 138                        /snap/opensurge/89/usr/games/opensurge
+55c9e3975000-55c9e3977000 r--p 000fb000 07:14 138                        /snap/opensurge/89/usr/games/opensurge
+55c9e3977000-55c9e3978000 rw-p 000fd000 07:14 138                        /snap/opensurge/89/usr/games/opensurge
+55c9e3978000-55c9e3a60000 rw-p 00000000 00:00 0 
+55c9e5080000-55c9e9343000 rw-p 00000000 00:00 0                          [heap]
+7f5070000000-7f5070023000 rw-p 00000000 00:00 0 
+7f5070023000-7f5074000000 ---p 00000000 00:00 0 
+7f5078000000-7f5078021000 rw-p 00000000 00:00 0 
+7f5078021000-7f507c000000 ---p 00000000 00:00 0 
+7f507c000000-7f507c021000 rw-p 00000000 00:00 0 
+7f507c021000-7f5080000000 ---p 00000000 00:00 0 
+7f5080000000-7f5080021000 rw-p 00000000 00:00 0 
+7f5080021000-7f5084000000 ---p 00000000 00:00 0 
+7f5088000000-7f5088021000 rw-p 00000000 00:00 0 
+7f5088021000-7f508c000000 ---p 00000000 00:00 0 
+7f508ca57000-7f508ca58000 ---p 00000000 00:00 0 
+7f508ca58000-7f508d258000 rw-p 00000000 00:00 0 
+7f508d258000-7f508d259000 ---p 00000000 00:00 0 
+7f508d259000-7f508da59000 rw-p 00000000 00:00 0 
+7f508e182000-7f508e183000 ---p 00000000 00:00 0 
+7f508e183000-7f508e983000 rw-p 00000000 00:00 0 
+7f508e983000-7f508eb83000 rw-s 13302a000 00:05 833                       /dev/dri/card0
+7f508eb83000-7f508eb84000 ---p 00000000 00:00 0 
+7f508eb84000-7f5090000000 rw-p 00000000 00:00 0 
+7f5090000000-7f5090021000 rw-p 00000000 00:00 0 
+7f5090021000-7f5094000000 ---p 00000000 00:00 0 
+7f5094000000-7f5098000000 rw-s 00000000 00:01 37794                      /memfd:pulseaudio (deleted)
+7f5098000000-7f5098021000 rw-p 00000000 00:00 0 
+7f5098021000-7f509c000000 ---p 00000000 00:00 0 
+7f509c139000-7f509c339000 rw-s 1062a4000 00:05 833                       /dev/dri/card0
+7f509c339000-7f509ca25000 rw-p 00000000 00:00 0 
+7f509cac5000-7f509ce4a000 rw-p 00000000 00:00 0 
+7f509ce4f000-7f509d04f000 rw-s 13525b000 00:05 833                       /dev/dri/card0
+7f509d04f000-7f509d152000 rw-p 00000000 00:00 0 
+7f509d152000-7f509d352000 rw-s 107d74000 00:05 833                       /dev/dri/card0
+7f509d352000-7f509dd52000 rwxp 00000000 00:00 0 
+7f509ddbe000-7f509de3e000 rw-s 109c74000 00:05 833                       /dev/dri/card0
+7f509de3e000-7f509debe000 rw-s 109bf4000 00:05 833                       /dev/dri/card0
+7f509debe000-7f509df3e000 rw-s 109b74000 00:05 833                       /dev/dri/card0
+7f509df3e000-7f509df98000 rw-p 00000000 00:00 0 
+7f509df98000-7f509df99000 ---p 00000000 00:00 0 
+7f509df99000-7f509e799000 rw-p 00000000 00:00 0 
+7f509e799000-7f509e79a000 ---p 00000000 00:00 0 
+7f509e79a000-7f509ef9a000 rw-p 00000000 00:00 0 
+7f509ef9a000-7f509ef9b000 ---p 00000000 00:00 0 
+7f509ef9b000-7f509f79b000 rw-p 00000000 00:00 0 
+7f509f79b000-7f509f79c000 ---p 00000000 00:00 0 
+7f509f79c000-7f50a0000000 rw-p 00000000 00:00 0 
+7f50a0000000-7f50a0021000 rw-p 00000000 00:00 0 
+7f50a0021000-7f50a4000000 ---p 00000000 00:00 0 
+7f50a403e000-7f50a40be000 rw-s 10c9c8000 00:05 833                       /dev/dri/card0
+7f50a40be000-7f50a40bf000 ---p 00000000 00:00 0 
+7f50a40bf000-7f50a48bf000 rw-p 00000000 00:00 0 
+7f50a48bf000-7f50a4a00000 rw-s 00000000 08:02 17572457                   /home/kuhakupixel/snap/opensurge/common/.cache/mesa_shader_cache/index
+7f50a4a00000-7f50a4a0e000 r--p 00000000 07:09 6291                       /usr/lib/x86_64-linux-gnu/libtinfo.so.6.2
+7f50a4a0e000-7f50a4a1d000 r-xp 0000e000 07:09 6291                       /usr/lib/x86_64-linux-gnu/libtinfo.so.6.2
+7f50a4a1d000-7f50a4a2b000 r--p 0001d000 07:09 6291                       /usr/lib/x86_64-linux-gnu/libtinfo.so.6.2
+7f50a4a2b000-7f50a4a2f000 r--p 0002a000 07:09 6291                       /usr/lib/x86_64-linux-gnu/libtinfo.so.6.2
+7f50a4a2f000-7f50a4a30000 rw-p 0002e000 07:09 6291                       /usr/lib/x86_64-linux-gnu/libtinfo.so.6.2
+7f50a4a30000-7f50a4a38000 r--p 00000000 07:09 6107                       /usr/lib/x86_64-linux-gnu/libedit.so.2.0.63
+7f50a4a38000-7f50a4a53000 r-xp 00008000 07:09 6107                       /usr/lib/x86_64-linux-gnu/libedit.so.2.0.63
+7f50a4a53000-7f50a4a61000 r--p 00023000 07:09 6107                       /usr/lib/x86_64-linux-gnu/libedit.so.2.0.63
+7f50a4a61000-7f50a4a63000 r--p 00030000 07:09 6107                       /usr/lib/x86_64-linux-gnu/libedit.so.2.0.63
+7f50a4a63000-7f50a4a64000 rw-p 00032000 07:09 6107                       /usr/lib/x86_64-linux-gnu/libedit.so.2.0.63
+7f50a4a64000-7f50a4a68000 rw-p 00000000 00:00 0 
+7f50a4a68000-7f50a4a6b000 r--p 00000000 07:09 6126                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f50a4a6b000-7f50a4a7d000 r-xp 00003000 07:09 6126                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f50a4a7d000-7f50a4a81000 r--p 00015000 07:09 6126                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f50a4a81000-7f50a4a82000 r--p 00018000 07:09 6126                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f50a4a82000-7f50a4a83000 rw-p 00019000 07:09 6126                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f50a4a83000-7f50a4b19000 r--p 00000000 07:09 6281                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
+7f50a4b19000-7f50a4c0a000 r-xp 00096000 07:09 6281                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
+7f50a4c0a000-7f50a4c53000 r--p 00187000 07:09 6281                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
+7f50a4c53000-7f50a4c54000 ---p 001d0000 07:09 6281                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
+7f50a4c54000-7f50a4c5f000 r--p 001d0000 07:09 6281                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
+7f50a4c5f000-7f50a4c62000 rw-p 001db000 07:09 6281                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28
+7f50a4c62000-7f50a4c65000 rw-p 00000000 00:00 0 
+7f50a4c65000-7f50a4c74000 r--p 00000000 07:14 552                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131
+7f50a4c74000-7f50a4ca6000 r-xp 0000f000 07:14 552                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131
+7f50a4ca6000-7f50a4cb9000 r--p 00041000 07:14 552                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131
+7f50a4cb9000-7f50a4cba000 r--p 00053000 07:14 552                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131
+7f50a4cba000-7f50a4cbb000 rw-p 00054000 07:14 552                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131
+7f50a4cbb000-7f50a4cbd000 r--p 00000000 07:14 455                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0
+7f50a4cbd000-7f50a4cc2000 r-xp 00002000 07:14 455                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0
+7f50a4cc2000-7f50a4cc4000 r--p 00007000 07:14 455                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0
+7f50a4cc4000-7f50a4cc5000 r--p 00008000 07:14 455                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0
+7f50a4cc5000-7f50a4cc6000 rw-p 00009000 07:14 455                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_nouveau.so.2.0.0
+7f50a4cc6000-7f50a4cc9000 r--p 00000000 07:14 451                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_amdgpu.so.1.0.0
+7f50a4cc9000-7f50a4cce000 r-xp 00003000 07:14 451                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_amdgpu.so.1.0.0
+7f50a4cce000-7f50a4cd0000 r--p 00008000 07:14 451                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_amdgpu.so.1.0.0
+7f50a4cd0000-7f50a4cd1000 r--p 00009000 07:14 451                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_amdgpu.so.1.0.0
+7f50a4cd1000-7f50a4cd2000 rw-p 0000a000 07:14 451                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_amdgpu.so.1.0.0
+7f50a4cd2000-7f50a4cd5000 r--p 00000000 07:09 6108                       /usr/lib/x86_64-linux-gnu/libelf-0.176.so
+7f50a4cd5000-7f50a4ce7000 r-xp 00003000 07:09 6108                       /usr/lib/x86_64-linux-gnu/libelf-0.176.so
+7f50a4ce7000-7f50a4cec000 r--p 00015000 07:09 6108                       /usr/lib/x86_64-linux-gnu/libelf-0.176.so
+7f50a4cec000-7f50a4ced000 r--p 00019000 07:09 6108                       /usr/lib/x86_64-linux-gnu/libelf-0.176.so
+7f50a4ced000-7f50a4cee000 rw-p 0001a000 07:09 6108                       /usr/lib/x86_64-linux-gnu/libelf-0.176.so
+7f50a4cee000-7f50a4cf0000 r--p 00000000 07:14 457                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_radeon.so.1.0.1
+7f50a4cf0000-7f50a4cf7000 r-xp 00002000 07:14 457                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_radeon.so.1.0.1
+7f50a4cf7000-7f50a4cfb000 r--p 00009000 07:14 457                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_radeon.so.1.0.1
+7f50a4cfb000-7f50a4cfc000 r--p 0000c000 07:14 457                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_radeon.so.1.0.1
+7f50a4cfc000-7f50a4cfd000 rw-p 0000d000 07:14 457                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm_radeon.so.1.0.1
+7f50a4cfd000-7f50a4d00000 r--p 00000000 07:14 531                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsensors.so.5.0.0
+7f50a4d00000-7f50a4d07000 r-xp 00003000 07:14 531                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsensors.so.5.0.0
+7f50a4d07000-7f50a4d0c000 r--p 0000a000 07:14 531                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsensors.so.5.0.0
+7f50a4d0c000-7f50a4d0d000 r--p 0000e000 07:14 531                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsensors.so.5.0.0
+7f50a4d0d000-7f50a4d0e000 rw-p 0000f000 07:14 531                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsensors.so.5.0.0
+7f50a4d0e000-7f50a4d12000 r--p 00000000 07:09 6309                       /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.4
+7f50a4d12000-7f50a4da4000 r-xp 00004000 07:09 6309                       /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.4
+7f50a4da4000-7f50a4db5000 r--p 00096000 07:09 6309                       /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.4
+7f50a4db5000-7f50a4db6000 r--p 000a6000 07:09 6309                       /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.4
+7f50a4db6000-7f50a4db7000 rw-p 000a7000 07:09 6309                       /usr/lib/x86_64-linux-gnu/libzstd.so.1.4.4
+7f50a4dca000-7f50a9feb000 r-xp 00000000 07:14 386                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libLLVM-12.so.1
+7f50a9feb000-7f50aa504000 r--p 05220000 07:14 386                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libLLVM-12.so.1
+7f50aa504000-7f50aa50b000 rw-p 05739000 07:14 386                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libLLVM-12.so.1
+7f50aa50b000-7f50aa580000 rw-p 00000000 00:00 0 
+7f50aa580000-7f50aa716000 r--p 00000000 07:14 327                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+7f50aa716000-7f50ab7c1000 r-xp 00196000 07:14 327                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+7f50ab7c1000-7f50abc87000 r--p 01241000 07:14 327                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+7f50abc87000-7f50abdb5000 r--p 01706000 07:14 327                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+7f50abdb5000-7f50abeed000 rw-p 01834000 07:14 327                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/dri/nouveau_dri.so
+7f50abeed000-7f50ac10b000 rw-p 00000000 00:00 0 
+7f50ac10b000-7f50ac10e000 r--p 00000000 07:14 576                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-xfixes.so.0.0.0
+7f50ac10e000-7f50ac111000 r-xp 00003000 07:14 576                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-xfixes.so.0.0.0
+7f50ac111000-7f50ac112000 r--p 00006000 07:14 576                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-xfixes.so.0.0.0
+7f50ac112000-7f50ac113000 ---p 00007000 07:14 576                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-xfixes.so.0.0.0
+7f50ac113000-7f50ac114000 r--p 00007000 07:14 576                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-xfixes.so.0.0.0
+7f50ac114000-7f50ac115000 rw-p 00008000 07:14 576                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-xfixes.so.0.0.0
+7f50ac115000-7f50ac116000 r-xp 00000000 07:14 584                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxshmfence.so.1.0.0
+7f50ac116000-7f50ac315000 ---p 00001000 07:14 584                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxshmfence.so.1.0.0
+7f50ac315000-7f50ac316000 r--p 00000000 07:14 584                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxshmfence.so.1.0.0
+7f50ac316000-7f50ac317000 rw-p 00001000 07:14 584                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxshmfence.so.1.0.0
+7f50ac317000-7f50ac31a000 r--p 00000000 07:14 574                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-sync.so.1.0.0
+7f50ac31a000-7f50ac31d000 r-xp 00003000 07:14 574                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-sync.so.1.0.0
+7f50ac31d000-7f50ac31e000 r--p 00006000 07:14 574                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-sync.so.1.0.0
+7f50ac31e000-7f50ac31f000 ---p 00007000 07:14 574                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-sync.so.1.0.0
+7f50ac31f000-7f50ac320000 r--p 00007000 07:14 574                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-sync.so.1.0.0
+7f50ac320000-7f50ac321000 rw-p 00008000 07:14 574                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-sync.so.1.0.0
+7f50ac321000-7f50ac32c000 r--p 00000000 07:14 566                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-glx.so.0.0.0
+7f50ac32c000-7f50ac335000 r-xp 0000b000 07:14 566                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-glx.so.0.0.0
+7f50ac335000-7f50ac33a000 r--p 00014000 07:14 566                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-glx.so.0.0.0
+7f50ac33a000-7f50ac33b000 ---p 00019000 07:14 566                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-glx.so.0.0.0
+7f50ac33b000-7f50ac33d000 r--p 00019000 07:14 566                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-glx.so.0.0.0
+7f50ac33d000-7f50ac33e000 rw-p 0001b000 07:14 566                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-glx.so.0.0.0
+7f50ac33e000-7f50ac34b000 r--p 00000000 07:14 473                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+7f50ac34b000-7f50ac359000 r-xp 0000d000 07:14 473                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+7f50ac359000-7f50ac372000 r--p 0001b000 07:14 473                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+7f50ac372000-7f50ac373000 ---p 00034000 07:14 473                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+7f50ac373000-7f50ac377000 r--p 00034000 07:14 473                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+7f50ac377000-7f50ac378000 rw-p 00038000 07:14 473                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+7f50ac378000-7f50ac379000 rw-p 00000000 00:00 0 
+7f50ac379000-7f50ac392000 r--p 00000000 07:14 382                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+7f50ac392000-7f50ac3d6000 r-xp 00019000 07:14 382                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+7f50ac3d6000-7f50ac3ed000 r--p 0005d000 07:14 382                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+7f50ac3ed000-7f50ac3f0000 r--p 00073000 07:14 382                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+7f50ac3f0000-7f50ac3f1000 rw-p 00076000 07:14 382                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+7f50ac3f1000-7f50ac3f2000 rw-p 00000000 00:00 0 
+7f50ac3f2000-7f50ac425000 rw-p 00000000 00:00 0 
+7f50ac429000-7f50ac42a000 rw-s 00000000 00:01 36739                      /memfd:xshmfence (deleted)
+7f50ac42a000-7f50ac42b000 rw-s 00000000 00:01 38009                      /memfd:xshmfence (deleted)
+7f50ac42b000-7f50ac42c000 rwxp 00000000 00:00 0 
+7f50ac42c000-7f50ac42d000 r--p 00000000 07:14 568                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-present.so.0.0.0
+7f50ac42d000-7f50ac42e000 r-xp 00001000 07:14 568                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-present.so.0.0.0
+7f50ac42e000-7f50ac42f000 r--p 00002000 07:14 568                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-present.so.0.0.0
+7f50ac42f000-7f50ac430000 r--p 00002000 07:14 568                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-present.so.0.0.0
+7f50ac430000-7f50ac431000 rw-p 00003000 07:14 568                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-present.so.0.0.0
+7f50ac431000-7f50ac433000 r--p 00000000 07:14 564                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri3.so.0.0.0
+7f50ac433000-7f50ac434000 r-xp 00002000 07:14 564                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri3.so.0.0.0
+7f50ac434000-7f50ac435000 r--p 00003000 07:14 564                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri3.so.0.0.0
+7f50ac435000-7f50ac436000 r--p 00003000 07:14 564                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri3.so.0.0.0
+7f50ac436000-7f50ac437000 rw-p 00004000 07:14 564                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri3.so.0.0.0
+7f50ac437000-7f50ac438000 r--p 00000000 07:14 416                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f50ac438000-7f50ac43b000 r-xp 00001000 07:14 416                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f50ac43b000-7f50ac43c000 r--p 00004000 07:14 416                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f50ac43c000-7f50ac43d000 r--p 00004000 07:14 416                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f50ac43d000-7f50ac43e000 rw-p 00005000 07:14 416                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f50ac43e000-7f50ac443000 r--p 00000000 07:14 449                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0
+7f50ac443000-7f50ac44e000 r-xp 00005000 07:14 449                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0
+7f50ac44e000-7f50ac452000 r--p 00010000 07:14 449                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0
+7f50ac452000-7f50ac453000 r--p 00013000 07:14 449                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0
+7f50ac453000-7f50ac454000 rw-p 00014000 07:14 449                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdrm.so.2.4.0
+7f50ac454000-7f50ac475000 rw-p 00000000 00:00 0 
+7f50ac475000-7f50ac476000 ---p 00000000 00:00 0 
+7f50ac476000-7f50acc7f000 rw-p 00000000 00:00 0 
+7f50acc7f000-7f50acc83000 r--p 00000000 07:09 6142                       /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.28.0
+7f50acc83000-7f50acc96000 r-xp 00004000 07:09 6142                       /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.28.0
+7f50acc96000-7f50acca0000 r--p 00017000 07:09 6142                       /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.28.0
+7f50acca0000-7f50acca1000 r--p 00020000 07:09 6142                       /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.28.0
+7f50acca1000-7f50acca2000 rw-p 00021000 07:09 6142                       /usr/lib/x86_64-linux-gnu/libgpg-error.so.0.28.0
+7f50acca2000-7f50acca4000 r--p 00000000 07:14 445                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdatrie.so.1.3.5
+7f50acca4000-7f50acca8000 r-xp 00002000 07:14 445                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdatrie.so.1.3.5
+7f50acca8000-7f50accaa000 r--p 00006000 07:14 445                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdatrie.so.1.3.5
+7f50accaa000-7f50accab000 r--p 00007000 07:14 445                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdatrie.so.1.3.5
+7f50accab000-7f50accac000 rw-p 00008000 07:14 445                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libdatrie.so.1.3.5
+7f50accac000-7f50accae000 r--p 00000000 07:09 6249                       /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.9.0
+7f50accae000-7f50acd13000 r-xp 00002000 07:09 6249                       /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.9.0
+7f50acd13000-7f50acd3b000 r--p 00067000 07:09 6249                       /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.9.0
+7f50acd3b000-7f50acd3c000 r--p 0008e000 07:09 6249                       /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.9.0
+7f50acd3c000-7f50acd3d000 rw-p 0008f000 07:09 6249                       /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.9.0
+7f50acd3d000-7f50acd3f000 rw-p 00000000 00:00 0 
+7f50acd3f000-7f50acd49000 r--p 00000000 07:09 6071                       /usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0
+7f50acd49000-7f50acd7f000 r-xp 0000a000 07:09 6071                       /usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0
+7f50acd7f000-7f50acd8f000 r--p 00040000 07:09 6071                       /usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0
+7f50acd8f000-7f50acd90000 ---p 00050000 07:09 6071                       /usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0
+7f50acd90000-7f50acd95000 r--p 00050000 07:09 6071                       /usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0
+7f50acd95000-7f50acd96000 rw-p 00055000 07:09 6071                       /usr/lib/x86_64-linux-gnu/libblkid.so.1.1.0
+7f50acd96000-7f50acdaa000 r--p 00000000 07:14 548                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisenc.so.2.0.11
+7f50acdaa000-7f50acdad000 r-xp 00014000 07:14 548                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisenc.so.2.0.11
+7f50acdad000-7f50ace24000 r--p 00017000 07:14 548                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisenc.so.2.0.11
+7f50ace24000-7f50ace40000 r--p 0008d000 07:14 548                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisenc.so.2.0.11
+7f50ace40000-7f50ace41000 rw-p 000a9000 07:14 548                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisenc.so.2.0.11
+7f50ace41000-7f50ace49000 r--p 00000000 07:14 377                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libFLAC.so.8.3.0
+7f50ace49000-7f50ace72000 r-xp 00008000 07:14 377                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libFLAC.so.8.3.0
+7f50ace72000-7f50ace7c000 r--p 00031000 07:14 377                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libFLAC.so.8.3.0
+7f50ace7c000-7f50ace7d000 ---p 0003b000 07:14 377                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libFLAC.so.8.3.0
+7f50ace7d000-7f50ace7e000 r--p 0003b000 07:14 377                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libFLAC.so.8.3.0
+7f50ace7e000-7f50ace7f000 rw-p 0003c000 07:14 377                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libFLAC.so.8.3.0
+7f50ace7f000-7f50ace83000 r--p 00000000 07:09 6212                       /usr/lib/x86_64-linux-gnu/libnsl-2.31.so
+7f50ace83000-7f50ace93000 r-xp 00004000 07:09 6212                       /usr/lib/x86_64-linux-gnu/libnsl-2.31.so
+7f50ace93000-7f50ace98000 r--p 00014000 07:09 6212                       /usr/lib/x86_64-linux-gnu/libnsl-2.31.so
+7f50ace98000-7f50ace99000 r--p 00018000 07:09 6212                       /usr/lib/x86_64-linux-gnu/libnsl-2.31.so
+7f50ace99000-7f50ace9a000 rw-p 00019000 07:09 6212                       /usr/lib/x86_64-linux-gnu/libnsl-2.31.so
+7f50ace9a000-7f50ace9c000 rw-p 00000000 00:00 0 
+7f50ace9c000-7f50acea8000 r--p 00000000 07:09 6128                       /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.2.5
+7f50acea8000-7f50acf76000 r-xp 0000c000 07:09 6128                       /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.2.5
+7f50acf76000-7f50acfb3000 r--p 000da000 07:09 6128                       /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.2.5
+7f50acfb3000-7f50acfb5000 r--p 00116000 07:09 6128                       /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.2.5
+7f50acfb5000-7f50acfba000 rw-p 00118000 07:09 6128                       /usr/lib/x86_64-linux-gnu/libgcrypt.so.20.2.5
+7f50acfba000-7f50acfbc000 rw-p 00000000 00:00 0 
+7f50acfbc000-7f50acfbe000 r--p 00000000 07:09 6173                       /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.2
+7f50acfbe000-7f50acfd8000 r-xp 00002000 07:09 6173                       /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.2
+7f50acfd8000-7f50acfdb000 r--p 0001c000 07:09 6173                       /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.2
+7f50acfdb000-7f50acfdc000 r--p 0001e000 07:09 6173                       /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.2
+7f50acfdc000-7f50acfdd000 rw-p 0001f000 07:09 6173                       /usr/lib/x86_64-linux-gnu/liblz4.so.1.9.2
+7f50acfdd000-7f50acfe0000 r--p 00000000 07:09 6175                       /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.4
+7f50acfe0000-7f50acff8000 r-xp 00003000 07:09 6175                       /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.4
+7f50acff8000-7f50ad003000 r--p 0001b000 07:09 6175                       /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.4
+7f50ad003000-7f50ad004000 ---p 00026000 07:09 6175                       /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.4
+7f50ad004000-7f50ad005000 r--p 00026000 07:09 6175                       /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.4
+7f50ad005000-7f50ad006000 rw-p 00027000 07:09 6175                       /usr/lib/x86_64-linux-gnu/liblzma.so.5.2.4
+7f50ad006000-7f50ad00a000 r--p 00000000 07:09 6073                       /usr/lib/x86_64-linux-gnu/libbsd.so.0.10.0
+7f50ad00a000-7f50ad019000 r-xp 00004000 07:09 6073                       /usr/lib/x86_64-linux-gnu/libbsd.so.0.10.0
+7f50ad019000-7f50ad01c000 r--p 00013000 07:09 6073                       /usr/lib/x86_64-linux-gnu/libbsd.so.0.10.0
+7f50ad01c000-7f50ad01d000 ---p 00016000 07:09 6073                       /usr/lib/x86_64-linux-gnu/libbsd.so.0.10.0
+7f50ad01d000-7f50ad01e000 r--p 00016000 07:09 6073                       /usr/lib/x86_64-linux-gnu/libbsd.so.0.10.0
+7f50ad01e000-7f50ad01f000 rw-p 00017000 07:09 6073                       /usr/lib/x86_64-linux-gnu/libbsd.so.0.10.0
+7f50ad01f000-7f50ad020000 rw-p 00000000 00:00 0 
+7f50ad020000-7f50ad022000 r--p 00000000 07:09 6299                       /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f50ad022000-7f50ad026000 r-xp 00002000 07:09 6299                       /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f50ad026000-7f50ad027000 r--p 00006000 07:09 6299                       /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f50ad027000-7f50ad028000 r--p 00006000 07:09 6299                       /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f50ad028000-7f50ad029000 rw-p 00007000 07:09 6299                       /usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f50ad029000-7f50ad02d000 r--p 00000000 07:09 6111                       /usr/lib/x86_64-linux-gnu/libexpat.so.1.6.11
+7f50ad02d000-7f50ad049000 r-xp 00004000 07:09 6111                       /usr/lib/x86_64-linux-gnu/libexpat.so.1.6.11
+7f50ad049000-7f50ad053000 r--p 00020000 07:09 6111                       /usr/lib/x86_64-linux-gnu/libexpat.so.1.6.11
+7f50ad053000-7f50ad054000 ---p 0002a000 07:09 6111                       /usr/lib/x86_64-linux-gnu/libexpat.so.1.6.11
+7f50ad054000-7f50ad056000 r--p 0002a000 07:09 6111                       /usr/lib/x86_64-linux-gnu/libexpat.so.1.6.11
+7f50ad056000-7f50ad057000 rw-p 0002c000 07:09 6111                       /usr/lib/x86_64-linux-gnu/libexpat.so.1.6.11
+7f50ad057000-7f50ad059000 rw-p 00000000 00:00 0 
+7f50ad059000-7f50ad05c000 r--p 00000000 07:14 476                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgraphite2.so.3.2.1
+7f50ad05c000-7f50ad07e000 r-xp 00003000 07:14 476                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgraphite2.so.3.2.1
+7f50ad07e000-7f50ad083000 r--p 00025000 07:14 476                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgraphite2.so.3.2.1
+7f50ad083000-7f50ad085000 r--p 00029000 07:14 476                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgraphite2.so.3.2.1
+7f50ad085000-7f50ad086000 rw-p 0002b000 07:14 476                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgraphite2.so.3.2.1
+7f50ad086000-7f50ad088000 r--p 00000000 07:14 542                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libthai.so.0.3.1
+7f50ad088000-7f50ad08c000 r-xp 00002000 07:14 542                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libthai.so.0.3.1
+7f50ad08c000-7f50ad08f000 r--p 00006000 07:14 542                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libthai.so.0.3.1
+7f50ad08f000-7f50ad090000 r--p 00008000 07:14 542                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libthai.so.0.3.1
+7f50ad090000-7f50ad091000 rw-p 00009000 07:14 542                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libthai.so.0.3.1
+7f50ad091000-7f50ad095000 r--p 00000000 07:09 6264                       /usr/lib/x86_64-linux-gnu/libresolv-2.31.so
+7f50ad095000-7f50ad0a5000 r-xp 00004000 07:09 6264                       /usr/lib/x86_64-linux-gnu/libresolv-2.31.so
+7f50ad0a5000-7f50ad0a9000 r--p 00014000 07:09 6264                       /usr/lib/x86_64-linux-gnu/libresolv-2.31.so
+7f50ad0a9000-7f50ad0aa000 r--p 00017000 07:09 6264                       /usr/lib/x86_64-linux-gnu/libresolv-2.31.so
+7f50ad0aa000-7f50ad0ab000 rw-p 00018000 07:09 6264                       /usr/lib/x86_64-linux-gnu/libresolv-2.31.so
+7f50ad0ab000-7f50ad0ad000 rw-p 00000000 00:00 0 
+7f50ad0ad000-7f50ad0b3000 r--p 00000000 07:09 6270                       /usr/lib/x86_64-linux-gnu/libselinux.so.1
+7f50ad0b3000-7f50ad0cc000 r-xp 00006000 07:09 6270                       /usr/lib/x86_64-linux-gnu/libselinux.so.1
+7f50ad0cc000-7f50ad0d3000 r--p 0001f000 07:09 6270                       /usr/lib/x86_64-linux-gnu/libselinux.so.1
+7f50ad0d3000-7f50ad0d4000 ---p 00026000 07:09 6270                       /usr/lib/x86_64-linux-gnu/libselinux.so.1
+7f50ad0d4000-7f50ad0d5000 r--p 00026000 07:09 6270                       /usr/lib/x86_64-linux-gnu/libselinux.so.1
+7f50ad0d5000-7f50ad0d6000 rw-p 00027000 07:09 6270                       /usr/lib/x86_64-linux-gnu/libselinux.so.1
+7f50ad0d6000-7f50ad0d8000 rw-p 00000000 00:00 0 
+7f50ad0d8000-7f50ad0e3000 r--p 00000000 07:09 6188                       /usr/lib/x86_64-linux-gnu/libmount.so.1.1.0
+7f50ad0e3000-7f50ad121000 r-xp 0000b000 07:09 6188                       /usr/lib/x86_64-linux-gnu/libmount.so.1.1.0
+7f50ad121000-7f50ad134000 r--p 00049000 07:09 6188                       /usr/lib/x86_64-linux-gnu/libmount.so.1.1.0
+7f50ad134000-7f50ad137000 r--p 0005b000 07:09 6188                       /usr/lib/x86_64-linux-gnu/libmount.so.1.1.0
+7f50ad137000-7f50ad138000 rw-p 0005e000 07:09 6188                       /usr/lib/x86_64-linux-gnu/libmount.so.1.1.0
+7f50ad138000-7f50ad13a000 rw-p 00000000 00:00 0 
+7f50ad13a000-7f50ad149000 r--p 00000000 07:14 424                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatspi.so.0.0.1
+7f50ad149000-7f50ad15f000 r-xp 0000f000 07:14 424                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatspi.so.0.0.1
+7f50ad15f000-7f50ad16c000 r--p 00025000 07:14 424                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatspi.so.0.0.1
+7f50ad16c000-7f50ad16d000 ---p 00032000 07:14 424                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatspi.so.0.0.1
+7f50ad16d000-7f50ad170000 r--p 00032000 07:14 424                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatspi.so.0.0.1
+7f50ad170000-7f50ad171000 rw-p 00035000 07:14 424                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatspi.so.0.0.1
+7f50ad171000-7f50ad176000 r--p 00000000 07:14 570                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-render.so.0.0.0
+7f50ad176000-7f50ad17b000 r-xp 00005000 07:14 570                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-render.so.0.0.0
+7f50ad17b000-7f50ad17d000 r--p 0000a000 07:14 570                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-render.so.0.0.0
+7f50ad17d000-7f50ad17e000 ---p 0000c000 07:14 570                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-render.so.0.0.0
+7f50ad17e000-7f50ad17f000 r--p 0000c000 07:14 570                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-render.so.0.0.0
+7f50ad17f000-7f50ad180000 rw-p 0000d000 07:14 570                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-render.so.0.0.0
+7f50ad180000-7f50ad181000 r--p 00000000 07:14 572                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-shm.so.0.0.0
+7f50ad181000-7f50ad182000 r-xp 00001000 07:14 572                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-shm.so.0.0.0
+7f50ad182000-7f50ad183000 r--p 00002000 07:14 572                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-shm.so.0.0.0
+7f50ad183000-7f50ad184000 r--p 00002000 07:14 572                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-shm.so.0.0.0
+7f50ad184000-7f50ad185000 rw-p 00003000 07:14 572                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-shm.so.0.0.0
+7f50ad185000-7f50ad18f000 r--p 00000000 07:14 515                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpixman-1.so.0.38.4
+7f50ad18f000-7f50ad213000 r-xp 0000a000 07:14 515                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpixman-1.so.0.38.4
+7f50ad213000-7f50ad223000 r--p 0008e000 07:14 515                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpixman-1.so.0.38.4
+7f50ad223000-7f50ad22b000 r--p 0009d000 07:14 515                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpixman-1.so.0.38.4
+7f50ad22b000-7f50ad22c000 rw-p 000a5000 07:14 515                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpixman-1.so.0.38.4
+7f50ad22c000-7f50ad22f000 r--p 00000000 07:09 6062                       /usr/lib/x86_64-linux-gnu/libapparmor.so.1.6.1
+7f50ad22f000-7f50ad238000 r-xp 00003000 07:09 6062                       /usr/lib/x86_64-linux-gnu/libapparmor.so.1.6.1
+7f50ad238000-7f50ad23f000 r--p 0000c000 07:09 6062                       /usr/lib/x86_64-linux-gnu/libapparmor.so.1.6.1
+7f50ad23f000-7f50ad240000 r--p 00012000 07:09 6062                       /usr/lib/x86_64-linux-gnu/libapparmor.so.1.6.1
+7f50ad240000-7f50ad241000 rw-p 00013000 07:09 6062                       /usr/lib/x86_64-linux-gnu/libapparmor.so.1.6.1
+7f50ad241000-7f50ad243000 rw-p 00000000 00:00 0 
+7f50ad243000-7f50ad248000 r-xp 00000000 07:14 418                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libasyncns.so.0.3.1
+7f50ad248000-7f50ad447000 ---p 00005000 07:14 418                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libasyncns.so.0.3.1
+7f50ad447000-7f50ad448000 r--p 00004000 07:14 418                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libasyncns.so.0.3.1
+7f50ad448000-7f50ad449000 rw-p 00005000 07:14 418                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libasyncns.so.0.3.1
+7f50ad449000-7f50ad450000 r--p 00000000 07:14 533                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsndfile.so.1.0.28
+7f50ad450000-7f50ad4a3000 r-xp 00007000 07:14 533                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsndfile.so.1.0.28
+7f50ad4a3000-7f50ad4c0000 r--p 0005a000 07:14 533                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsndfile.so.1.0.28
+7f50ad4c0000-7f50ad4c1000 ---p 00077000 07:14 533                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsndfile.so.1.0.28
+7f50ad4c1000-7f50ad4c4000 r--p 00077000 07:14 533                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsndfile.so.1.0.28
+7f50ad4c4000-7f50ad4c5000 rw-p 0007a000 07:14 533                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsndfile.so.1.0.28
+7f50ad4c5000-7f50ad4c7000 rw-p 00000000 00:00 0 
+7f50ad4c7000-7f50ad4ca000 r--p 00000000 07:09 6301                       /usr/lib/x86_64-linux-gnu/libwrap.so.0.7.6
+7f50ad4ca000-7f50ad4cf000 r-xp 00003000 07:09 6301                       /usr/lib/x86_64-linux-gnu/libwrap.so.0.7.6
+7f50ad4cf000-7f50ad4d1000 r--p 00008000 07:09 6301                       /usr/lib/x86_64-linux-gnu/libwrap.so.0.7.6
+7f50ad4d1000-7f50ad4d2000 r--p 00009000 07:09 6301                       /usr/lib/x86_64-linux-gnu/libwrap.so.0.7.6
+7f50ad4d2000-7f50ad4d3000 rw-p 0000a000 07:09 6301                       /usr/lib/x86_64-linux-gnu/libwrap.so.0.7.6
+7f50ad4d3000-7f50ad4e3000 r--p 00000000 07:09 6283                       /usr/lib/x86_64-linux-gnu/libsystemd.so.0.28.0
+7f50ad4e3000-7f50ad558000 r-xp 00010000 07:09 6283                       /usr/lib/x86_64-linux-gnu/libsystemd.so.0.28.0
+7f50ad558000-7f50ad57d000 r--p 00085000 07:09 6283                       /usr/lib/x86_64-linux-gnu/libsystemd.so.0.28.0
+7f50ad57d000-7f50ad580000 r--p 000a9000 07:09 6283                       /usr/lib/x86_64-linux-gnu/libsystemd.so.0.28.0
+7f50ad580000-7f50ad581000 rw-p 000ac000 07:09 6283                       /usr/lib/x86_64-linux-gnu/libsystemd.so.0.28.0
+7f50ad581000-7f50ad582000 rw-p 00000000 00:00 0 
+7f50ad582000-7f50ad584000 r--p 00000000 07:14 402                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f50ad584000-7f50ad586000 r-xp 00002000 07:14 402                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f50ad586000-7f50ad588000 r--p 00004000 07:14 402                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f50ad588000-7f50ad589000 r--p 00005000 07:14 402                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f50ad589000-7f50ad58a000 rw-p 00006000 07:14 402                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f50ad58a000-7f50ad58c000 rw-p 00000000 00:00 0 
+7f50ad58c000-7f50ad58d000 r--p 00000000 07:14 394                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f50ad58d000-7f50ad58f000 r-xp 00001000 07:14 394                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f50ad58f000-7f50ad590000 r--p 00003000 07:14 394                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f50ad590000-7f50ad591000 r--p 00003000 07:14 394                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f50ad591000-7f50ad592000 rw-p 00004000 07:14 394                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f50ad592000-7f50ad594000 r--p 00000000 07:09 6247                       /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f50ad594000-7f50ad5e5000 r-xp 00002000 07:09 6247                       /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f50ad5e5000-7f50ad603000 r--p 00053000 07:09 6247                       /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f50ad603000-7f50ad604000 r--p 00070000 07:09 6247                       /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f50ad604000-7f50ad605000 rw-p 00071000 07:09 6247                       /usr/lib/x86_64-linux-gnu/libpcre.so.3.13.3
+7f50ad605000-7f50ad607000 r--p 00000000 07:09 6119                       /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0
+7f50ad607000-7f50ad60d000 r-xp 00002000 07:09 6119                       /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0
+7f50ad60d000-7f50ad60e000 r--p 00008000 07:09 6119                       /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0
+7f50ad60e000-7f50ad60f000 ---p 00009000 07:09 6119                       /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0
+7f50ad60f000-7f50ad610000 r--p 00009000 07:09 6119                       /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0
+7f50ad610000-7f50ad611000 rw-p 0000a000 07:09 6119                       /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0
+7f50ad611000-7f50ad613000 r--p 00000000 07:09 6266                       /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f50ad613000-7f50ad617000 r-xp 00002000 07:09 6266                       /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f50ad617000-7f50ad619000 r--p 00006000 07:09 6266                       /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f50ad619000-7f50ad61a000 r--p 00007000 07:09 6266                       /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f50ad61a000-7f50ad61b000 rw-p 00008000 07:09 6266                       /usr/lib/x86_64-linux-gnu/librt-2.31.so
+7f50ad61b000-7f50ad620000 r--p 00000000 07:14 554                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-client.so.0.3.0
+7f50ad620000-7f50ad626000 r-xp 00005000 07:14 554                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-client.so.0.3.0
+7f50ad626000-7f50ad629000 r--p 0000b000 07:14 554                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-client.so.0.3.0
+7f50ad629000-7f50ad62b000 r--p 0000d000 07:14 554                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-client.so.0.3.0
+7f50ad62b000-7f50ad62c000 rw-p 0000f000 07:14 554                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-client.so.0.3.0
+7f50ad62c000-7f50ad62e000 rw-p 00000000 00:00 0 
+7f50ad62e000-7f50ad62f000 r--p 00000000 07:14 558                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-egl.so.1.0.0
+7f50ad62f000-7f50ad630000 r-xp 00001000 07:14 558                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-egl.so.1.0.0
+7f50ad630000-7f50ad631000 r--p 00002000 07:14 558                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-egl.so.1.0.0
+7f50ad631000-7f50ad632000 r--p 00002000 07:14 558                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-egl.so.1.0.0
+7f50ad632000-7f50ad633000 rw-p 00003000 07:14 558                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-egl.so.1.0.0
+7f50ad633000-7f50ad635000 r--p 00000000 07:14 556                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-cursor.so.0.0.0
+7f50ad635000-7f50ad638000 r-xp 00002000 07:14 556                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-cursor.so.0.0.0
+7f50ad638000-7f50ad639000 r--p 00005000 07:14 556                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-cursor.so.0.0.0
+7f50ad639000-7f50ad63a000 r--p 00005000 07:14 556                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-cursor.so.0.0.0
+7f50ad63a000-7f50ad63e000 rw-p 00006000 07:14 556                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libwayland-cursor.so.0.0.0
+7f50ad63e000-7f50ad642000 r--p 00000000 07:14 580                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0.0.0
+7f50ad642000-7f50ad65e000 r-xp 00004000 07:14 580                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0.0.0
+7f50ad65e000-7f50ad67d000 r--p 00020000 07:14 580                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0.0.0
+7f50ad67d000-7f50ad67f000 r--p 0003e000 07:14 580                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0.0.0
+7f50ad67f000-7f50ad680000 rw-p 00040000 07:14 580                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0.0.0
+7f50ad680000-7f50ad681000 r--p 00000000 07:14 400                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdamage.so.1.1.0
+7f50ad681000-7f50ad682000 r-xp 00001000 07:14 400                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdamage.so.1.1.0
+7f50ad682000-7f50ad683000 r--p 00002000 07:14 400                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdamage.so.1.1.0
+7f50ad683000-7f50ad684000 r--p 00002000 07:14 400                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdamage.so.1.1.0
+7f50ad684000-7f50ad685000 rw-p 00003000 07:14 400                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXdamage.so.1.1.0
+7f50ad685000-7f50ad686000 r--p 00000000 07:14 396                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcomposite.so.1.0.0
+7f50ad686000-7f50ad687000 r-xp 00001000 07:14 396                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcomposite.so.1.0.0
+7f50ad687000-7f50ad688000 r--p 00002000 07:14 396                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcomposite.so.1.0.0
+7f50ad688000-7f50ad689000 r--p 00002000 07:14 396                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcomposite.so.1.0.0
+7f50ad689000-7f50ad68a000 rw-p 00003000 07:14 396                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcomposite.so.1.0.0
+7f50ad68a000-7f50ad68c000 rw-p 00000000 00:00 0 
+7f50ad68c000-7f50ad693000 r--p 00000000 07:14 461                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfontconfig.so.1.12.0
+7f50ad693000-7f50ad6b8000 r-xp 00007000 07:14 461                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfontconfig.so.1.12.0
+7f50ad6b8000-7f50ad6d0000 r--p 0002c000 07:14 461                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfontconfig.so.1.12.0
+7f50ad6d0000-7f50ad6d2000 r--p 00043000 07:14 461                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfontconfig.so.1.12.0
+7f50ad6d2000-7f50ad6d3000 rw-p 00045000 07:14 461                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfontconfig.so.1.12.0
+7f50ad6d3000-7f50ad6dc000 r--p 00000000 07:14 482                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libharfbuzz.so.0.20600.4
+7f50ad6dc000-7f50ad7a3000 r-xp 00009000 07:14 482                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libharfbuzz.so.0.20600.4
+7f50ad7a3000-7f50ad7d4000 r--p 000d0000 07:14 482                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libharfbuzz.so.0.20600.4
+7f50ad7d4000-7f50ad7d5000 ---p 00101000 07:14 482                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libharfbuzz.so.0.20600.4
+7f50ad7d5000-7f50ad7d6000 r--p 00101000 07:14 482                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libharfbuzz.so.0.20600.4
+7f50ad7d6000-7f50ad7d7000 rw-p 00102000 07:14 482                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libharfbuzz.so.0.20600.4
+7f50ad7d7000-7f50ad7e6000 r--p 00000000 07:14 505                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.4400.7
+7f50ad7e6000-7f50ad80b000 r-xp 0000f000 07:14 505                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.4400.7
+7f50ad80b000-7f50ad822000 r--p 00034000 07:14 505                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.4400.7
+7f50ad822000-7f50ad825000 r--p 0004a000 07:14 505                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.4400.7
+7f50ad825000-7f50ad826000 rw-p 0004d000 07:14 505                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpango-1.0.so.0.4400.7
+7f50ad826000-7f50ad82d000 r--p 00000000 07:14 509                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangoft2-1.0.so.0.4400.7
+7f50ad82d000-7f50ad838000 r-xp 00007000 07:14 509                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangoft2-1.0.so.0.4400.7
+7f50ad838000-7f50ad83c000 r--p 00012000 07:14 509                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangoft2-1.0.so.0.4400.7
+7f50ad83c000-7f50ad83d000 ---p 00016000 07:14 509                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangoft2-1.0.so.0.4400.7
+7f50ad83d000-7f50ad83e000 r--p 00016000 07:14 509                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangoft2-1.0.so.0.4400.7
+7f50ad83e000-7f50ad83f000 rw-p 00017000 07:14 509                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangoft2-1.0.so.0.4400.7
+7f50ad83f000-7f50ad877000 r--p 00000000 07:09 6130                       /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.6400.6
+7f50ad877000-7f50ad98a000 r-xp 00038000 07:09 6130                       /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.6400.6
+7f50ad98a000-7f50ada14000 r--p 0014b000 07:09 6130                       /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.6400.6
+7f50ada14000-7f50ada1d000 r--p 001d4000 07:09 6130                       /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.6400.6
+7f50ada1d000-7f50ada1e000 rw-p 001dd000 07:09 6130                       /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.6400.6
+7f50ada1e000-7f50ada20000 rw-p 00000000 00:00 0 
+7f50ada20000-7f50ada22000 r--p 00000000 07:14 465                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfribidi.so.0.4.0
+7f50ada22000-7f50ada26000 r-xp 00002000 07:14 465                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfribidi.so.0.4.0
+7f50ada26000-7f50ada3b000 r--p 00006000 07:14 465                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfribidi.so.0.4.0
+7f50ada3b000-7f50ada3c000 r--p 0001a000 07:14 465                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfribidi.so.0.4.0
+7f50ada3c000-7f50ada3d000 rw-p 0001b000 07:14 465                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfribidi.so.0.4.0
+7f50ada3d000-7f50ada3f000 rw-p 00000000 00:00 0 
+7f50ada3f000-7f50ada9f000 r--p 00000000 07:14 459                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libepoxy.so.0.0.0
+7f50ada9f000-7f50adb05000 r-xp 00060000 07:14 459                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libepoxy.so.0.0.0
+7f50adb05000-7f50adb62000 r--p 000c6000 07:14 459                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libepoxy.so.0.0.0
+7f50adb62000-7f50adb63000 ---p 00123000 07:14 459                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libepoxy.so.0.0.0
+7f50adb63000-7f50adb6b000 r--p 00123000 07:14 459                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libepoxy.so.0.0.0
+7f50adb6b000-7f50adb72000 rw-p 0012b000 07:14 459                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libepoxy.so.0.0.0
+7f50adb72000-7f50adb7e000 r--p 00000000 07:14 422                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0.0.0
+7f50adb7e000-7f50adb97000 r-xp 0000c000 07:14 422                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0.0.0
+7f50adb97000-7f50adba5000 r--p 00025000 07:14 422                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0.0.0
+7f50adba5000-7f50adba6000 ---p 00033000 07:14 422                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0.0.0
+7f50adba6000-7f50adba7000 r--p 00033000 07:14 422                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0.0.0
+7f50adba7000-7f50adba8000 rw-p 00034000 07:14 422                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-bridge-2.0.so.0.0.0
+7f50adba8000-7f50adba9000 rw-p 00000000 00:00 0 
+7f50adba9000-7f50adbb4000 r--p 00000000 07:14 420                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-1.0.so.0.23510.1
+7f50adbb4000-7f50adbc3000 r-xp 0000b000 07:14 420                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-1.0.so.0.23510.1
+7f50adbc3000-7f50adbcf000 r--p 0001a000 07:14 420                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-1.0.so.0.23510.1
+7f50adbcf000-7f50adbd2000 r--p 00025000 07:14 420                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-1.0.so.0.23510.1
+7f50adbd2000-7f50adbd3000 rw-p 00028000 07:14 420                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libatk-1.0.so.0.23510.1
+7f50adbd3000-7f50adbd9000 r--p 00000000 07:14 469                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so.0.4000.0
+7f50adbd9000-7f50adbf0000 r-xp 00006000 07:14 469                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so.0.4000.0
+7f50adbf0000-7f50adbf9000 r--p 0001d000 07:14 469                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so.0.4000.0
+7f50adbf9000-7f50adbfa000 r--p 00025000 07:14 469                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so.0.4000.0
+7f50adbfa000-7f50adbfb000 rw-p 00026000 07:14 469                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so.0.4000.0
+7f50adbfb000-7f50adc0d000 r--p 00000000 07:14 438                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo.so.2.11600.0
+7f50adc0d000-7f50adcdc000 r-xp 00012000 07:14 438                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo.so.2.11600.0
+7f50adcdc000-7f50add18000 r--p 000e1000 07:14 438                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo.so.2.11600.0
+7f50add18000-7f50add1c000 r--p 0011c000 07:14 438                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo.so.2.11600.0
+7f50add1c000-7f50add1d000 rw-p 00120000 07:14 438                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo.so.2.11600.0
+7f50add1d000-7f50add1e000 rw-p 00000000 00:00 0 
+7f50add1e000-7f50add22000 r--p 00000000 07:14 436                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo-gobject.so.2.11600.0
+7f50add22000-7f50add24000 r-xp 00004000 07:14 436                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo-gobject.so.2.11600.0
+7f50add24000-7f50add26000 r--p 00006000 07:14 436                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo-gobject.so.2.11600.0
+7f50add26000-7f50add27000 ---p 00008000 07:14 436                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo-gobject.so.2.11600.0
+7f50add27000-7f50add29000 r--p 00008000 07:14 436                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo-gobject.so.2.11600.0
+7f50add29000-7f50add2a000 rw-p 0000a000 07:14 436                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libcairo-gobject.so.2.11600.0
+7f50add2a000-7f50add2c000 rw-p 00000000 00:00 0 
+7f50add2c000-7f50add31000 r--p 00000000 07:14 507                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.0.4400.7
+7f50add31000-7f50add39000 r-xp 00005000 07:14 507                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.0.4400.7
+7f50add39000-7f50add3c000 r--p 0000d000 07:14 507                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.0.4400.7
+7f50add3c000-7f50add3d000 r--p 0000f000 07:14 507                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.0.4400.7
+7f50add3d000-7f50add3e000 rw-p 00010000 07:14 507                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so.0.4400.7
+7f50add3e000-7f50add3f000 r--p 00000000 07:09 6134                       /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.6400.6
+7f50add3f000-7f50add41000 r-xp 00001000 07:09 6134                       /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.6400.6
+7f50add41000-7f50add42000 r--p 00003000 07:09 6134                       /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.6400.6
+7f50add42000-7f50add43000 r--p 00003000 07:09 6134                       /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.6400.6
+7f50add43000-7f50add44000 rw-p 00004000 07:09 6134                       /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so.0.6400.6
+7f50add44000-7f50add4f000 r--p 00000000 07:09 6096                       /usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.11
+7f50add4f000-7f50add7d000 r-xp 0000b000 07:09 6096                       /usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.11
+7f50add7d000-7f50add92000 r--p 00039000 07:09 6096                       /usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.11
+7f50add92000-7f50add93000 ---p 0004e000 07:09 6096                       /usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.11
+7f50add93000-7f50add94000 r--p 0004e000 07:09 6096                       /usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.11
+7f50add94000-7f50add95000 rw-p 0004f000 07:09 6096                       /usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.11
+7f50add95000-7f50adda6000 r--p 00000000 07:14 588                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-13.99.so
+7f50adda6000-7f50addee000 r-xp 00011000 07:14 588                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-13.99.so
+7f50addee000-7f50ade13000 r--p 00059000 07:14 588                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-13.99.so
+7f50ade13000-7f50ade14000 ---p 0007e000 07:14 588                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-13.99.so
+7f50ade14000-7f50ade16000 r--p 0007e000 07:14 588                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-13.99.so
+7f50ade16000-7f50ade17000 rw-p 00080000 07:14 588                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-13.99.so
+7f50ade17000-7f50ade19000 r--p 00000000 07:14 503                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libogg.so.0.8.4
+7f50ade19000-7f50ade1e000 r-xp 00002000 07:14 503                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libogg.so.0.8.4
+7f50ade1e000-7f50ade21000 r--p 00007000 07:14 503                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libogg.so.0.8.4
+7f50ade21000-7f50ade22000 ---p 0000a000 07:14 503                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libogg.so.0.8.4
+7f50ade22000-7f50ade23000 r--p 0000a000 07:14 503                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libogg.so.0.8.4
+7f50ade23000-7f50ade24000 rw-p 0000b000 07:14 503                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libogg.so.0.8.4
+7f50ade24000-7f50ade26000 rw-p 00000000 00:00 0 
+7f50ade26000-7f50ade29000 r--p 00000000 07:14 546                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbis.so.0.4.8
+7f50ade29000-7f50ade40000 r-xp 00003000 07:14 546                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbis.so.0.4.8
+7f50ade40000-7f50ade51000 r--p 0001a000 07:14 546                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbis.so.0.4.8
+7f50ade51000-7f50ade52000 ---p 0002b000 07:14 546                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbis.so.0.4.8
+7f50ade52000-7f50ade53000 r--p 0002b000 07:14 546                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbis.so.0.4.8
+7f50ade53000-7f50ade54000 rw-p 0002c000 07:14 546                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbis.so.0.4.8
+7f50ade54000-7f50ade56000 r--p 00000000 07:09 6307                       /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f50ade56000-7f50ade67000 r-xp 00002000 07:09 6307                       /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f50ade67000-7f50ade6d000 r--p 00013000 07:09 6307                       /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f50ade6d000-7f50ade6e000 ---p 00019000 07:09 6307                       /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f50ade6e000-7f50ade6f000 r--p 00019000 07:09 6307                       /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f50ade6f000-7f50ade70000 rw-p 0001a000 07:09 6307                       /usr/lib/x86_64-linux-gnu/libz.so.1.2.11
+7f50ade70000-7f50adeb0000 r--p 00000000 07:14 384                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f50adeb0000-7f50adeef000 r-xp 00040000 07:14 384                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f50adeef000-7f50adf03000 r--p 0007f000 07:14 384                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f50adf03000-7f50adf1f000 r--p 00092000 07:14 384                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f50adf1f000-7f50adf20000 rw-p 000ae000 07:14 384                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+7f50adf20000-7f50adf28000 rw-p 00000000 00:00 0 
+7f50adf28000-7f50adf2c000 r--p 00000000 07:14 404                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f50adf2c000-7f50adf37000 r-xp 00004000 07:14 404                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f50adf37000-7f50adf3b000 r--p 0000f000 07:14 404                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f50adf3b000-7f50adf3c000 r--p 00012000 07:14 404                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f50adf3c000-7f50adf3d000 rw-p 00013000 07:14 404                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f50adf3d000-7f50adf3f000 r--p 00000000 07:14 406                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f50adf3f000-7f50adf42000 r-xp 00002000 07:14 406                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f50adf42000-7f50adf43000 r--p 00005000 07:14 406                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f50adf43000-7f50adf44000 r--p 00005000 07:14 406                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f50adf44000-7f50adf45000 rw-p 00006000 07:14 406                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f50adf45000-7f50adf4e000 r-xp 00000000 07:14 414                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f50adf4e000-7f50ae14d000 ---p 00009000 07:14 414                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f50ae14d000-7f50ae14e000 r--p 00008000 07:14 414                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f50ae14e000-7f50ae14f000 rw-p 00009000 07:14 414                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f50ae14f000-7f50ae151000 rw-p 00000000 00:00 0 
+7f50ae151000-7f50ae152000 r--p 00000000 07:09 6100                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f50ae152000-7f50ae154000 r-xp 00001000 07:09 6100                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f50ae154000-7f50ae155000 r--p 00003000 07:09 6100                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f50ae155000-7f50ae156000 r--p 00003000 07:09 6100                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f50ae156000-7f50ae157000 rw-p 00004000 07:09 6100                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f50ae157000-7f50ae162000 r--p 00000000 07:14 578                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f50ae162000-7f50ae176000 r-xp 0000b000 07:14 578                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f50ae176000-7f50ae17f000 r--p 0001f000 07:14 578                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f50ae17f000-7f50ae180000 r--p 00027000 07:14 578                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f50ae180000-7f50ae181000 rw-p 00028000 07:14 578                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f50ae181000-7f50ae19d000 r--p 00000000 07:09 6132                       /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.6400.6
+7f50ae19d000-7f50ae222000 r-xp 0001c000 07:09 6132                       /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.6400.6
+7f50ae222000-7f50ae2a8000 r--p 000a1000 07:09 6132                       /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.6400.6
+7f50ae2a8000-7f50ae2a9000 r--p 00126000 07:09 6132                       /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.6400.6
+7f50ae2a9000-7f50ae2aa000 rw-p 00127000 07:09 6132                       /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.6400.6
+7f50ae2aa000-7f50ae2ab000 rw-p 00000000 00:00 0 
+7f50ae2ab000-7f50ae2b9000 r--p 00000000 07:09 6140                       /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.6400.6
+7f50ae2b9000-7f50ae2ef000 r-xp 0000e000 07:09 6140                       /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.6400.6
+7f50ae2ef000-7f50ae307000 r--p 00044000 07:09 6140                       /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.6400.6
+7f50ae307000-7f50ae30a000 r--p 0005b000 07:09 6140                       /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.6400.6
+7f50ae30a000-7f50ae30b000 rw-p 0005e000 07:09 6140                       /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.6400.6
+7f50ae30b000-7f50ae335000 r--p 00000000 07:14 467                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2404.16
+7f50ae335000-7f50ae3b6000 r-xp 0002a000 07:14 467                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2404.16
+7f50ae3b6000-7f50ae405000 r--p 000ab000 07:14 467                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2404.16
+7f50ae405000-7f50ae40e000 r--p 000f9000 07:14 467                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2404.16
+7f50ae40e000-7f50ae410000 rw-p 00102000 07:14 467                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2404.16
+7f50ae410000-7f50ae412000 rw-p 00000000 00:00 0 
+7f50ae412000-7f50ae497000 r--p 00000000 07:14 480                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2404.16
+7f50ae497000-7f50ae806000 r-xp 00085000 07:14 480                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2404.16
+7f50ae806000-7f50aebaa000 r--p 003f4000 07:14 480                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2404.16
+7f50aebaa000-7f50aebbb000 r--p 00797000 07:14 480                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2404.16
+7f50aebbb000-7f50aebbd000 rw-p 007a8000 07:14 480                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2404.16
+7f50aebbd000-7f50aebc3000 rw-p 00000000 00:00 0 
+7f50aebc3000-7f50aebcf000 r--p 00000000 07:14 525                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse.so.0.21.2
+7f50aebcf000-7f50aebff000 r-xp 0000c000 07:14 525                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse.so.0.21.2
+7f50aebff000-7f50aec15000 r--p 0003c000 07:14 525                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse.so.0.21.2
+7f50aec15000-7f50aec17000 r--p 00051000 07:14 525                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse.so.0.21.2
+7f50aec17000-7f50aec18000 rw-p 00053000 07:14 525                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse.so.0.21.2
+7f50aec18000-7f50aec1a000 r--p 00000000 07:14 523                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse-simple.so.0.1.1
+7f50aec1a000-7f50aec1c000 r-xp 00002000 07:14 523                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse-simple.so.0.1.1
+7f50aec1c000-7f50aec1d000 r--p 00004000 07:14 523                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse-simple.so.0.1.1
+7f50aec1d000-7f50aec1e000 r--p 00004000 07:14 523                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse-simple.so.0.1.1
+7f50aec1e000-7f50aec1f000 rw-p 00005000 07:14 523                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpulse-simple.so.0.1.1
+7f50aec1f000-7f50aec21000 r--p 00000000 07:14 550                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisfile.so.3.3.7
+7f50aec21000-7f50aec26000 r-xp 00002000 07:14 550                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisfile.so.3.3.7
+7f50aec26000-7f50aec27000 r--p 00007000 07:14 550                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisfile.so.3.3.7
+7f50aec27000-7f50aec28000 ---p 00008000 07:14 550                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisfile.so.3.3.7
+7f50aec28000-7f50aec29000 r--p 00008000 07:14 550                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisfile.so.3.3.7
+7f50aec29000-7f50aec2a000 rw-p 00009000 07:14 550                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libvorbisfile.so.3.3.7
+7f50aec2a000-7f50aec36000 r--p 00000000 07:14 463                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfreetype.so.6.17.1
+7f50aec36000-7f50aecb6000 r-xp 0000c000 07:14 463                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfreetype.so.6.17.1
+7f50aecb6000-7f50aece0000 r--p 0008c000 07:14 463                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfreetype.so.6.17.1
+7f50aece0000-7f50aece1000 ---p 000b6000 07:14 463                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfreetype.so.6.17.1
+7f50aece1000-7f50aece8000 r--p 000b6000 07:14 463                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfreetype.so.6.17.1
+7f50aece8000-7f50aece9000 rw-p 000bd000 07:14 463                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libfreetype.so.6.17.1
+7f50aece9000-7f50aeceb000 rw-p 00000000 00:00 0 
+7f50aeceb000-7f50aecef000 r--p 00000000 07:14 497                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2
+7f50aecef000-7f50aed33000 r-xp 00004000 07:14 497                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2
+7f50aed33000-7f50aed6d000 r--p 00048000 07:14 497                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2
+7f50aed6d000-7f50aed6e000 ---p 00082000 07:14 497                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2
+7f50aed6e000-7f50aed6f000 r--p 00082000 07:14 497                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2
+7f50aed6f000-7f50aed70000 rw-p 00083000 07:14 497                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libjpeg.so.8.2.2
+7f50aed70000-7f50aed75000 r--p 00000000 07:14 517                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpng16.so.16.37.0
+7f50aed75000-7f50aed9a000 r-xp 00005000 07:14 517                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpng16.so.16.37.0
+7f50aed9a000-7f50aeda6000 r--p 0002a000 07:14 517                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpng16.so.16.37.0
+7f50aeda6000-7f50aeda7000 r--p 00035000 07:14 517                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpng16.so.16.37.0
+7f50aeda7000-7f50aeda8000 rw-p 00036000 07:14 517                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libpng16.so.16.37.0
+7f50aeda8000-7f50aedab000 r--p 00000000 07:14 379                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f50aedab000-7f50aedc6000 r-xp 00003000 07:14 379                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f50aedc6000-7f50aedca000 r--p 0001e000 07:14 379                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f50aedca000-7f50aedcb000 r--p 00021000 07:14 379                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f50aedcb000-7f50aedcc000 rw-p 00022000 07:14 379                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+7f50aedcc000-7f50aeddc000 rw-p 00000000 00:00 0 
+7f50aeddc000-7f50aedf1000 r--p 00000000 07:14 388                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libOpenGL.so.0.0.0
+7f50aedf1000-7f50aedfc000 r-xp 00015000 07:14 388                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libOpenGL.so.0.0.0
+7f50aedfc000-7f50aee01000 r--p 00020000 07:14 388                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libOpenGL.so.0.0.0
+7f50aee01000-7f50aee02000 ---p 00025000 07:14 388                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libOpenGL.so.0.0.0
+7f50aee02000-7f50aee07000 r--p 00025000 07:14 388                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libOpenGL.so.0.0.0
+7f50aee07000-7f50aee08000 rw-p 0002a000 07:14 388                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libOpenGL.so.0.0.0
+7f50aee08000-7f50aee0a000 r--p 00000000 07:14 412                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f50aee0a000-7f50aee11000 r-xp 00002000 07:14 412                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f50aee11000-7f50aee13000 r--p 00009000 07:14 412                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f50aee13000-7f50aee14000 r--p 0000a000 07:14 412                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f50aee14000-7f50aee15000 rw-p 0000b000 07:14 412                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f50aee15000-7f50aee17000 rw-p 00000000 00:00 0 
+7f50aee17000-7f50aee18000 r--p 00000000 07:14 410                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7f50aee18000-7f50aee19000 r-xp 00001000 07:14 410                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7f50aee19000-7f50aee1a000 r--p 00002000 07:14 410                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7f50aee1a000-7f50aee1b000 r--p 00002000 07:14 410                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7f50aee1b000-7f50aee1c000 rw-p 00003000 07:14 410                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXinerama.so.1.0.0
+7f50aee1c000-7f50aee1e000 r--p 00000000 07:14 408                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f50aee1e000-7f50aee29000 r-xp 00002000 07:14 408                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f50aee29000-7f50aee2c000 r--p 0000d000 07:14 408                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f50aee2c000-7f50aee2d000 r--p 0000f000 07:14 408                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f50aee2d000-7f50aee2e000 rw-p 00010000 07:14 408                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f50aee2e000-7f50aee31000 r--p 00000000 07:14 398                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f50aee31000-7f50aee37000 r-xp 00003000 07:14 398                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f50aee37000-7f50aee39000 r--p 00009000 07:14 398                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f50aee39000-7f50aee3a000 r--p 0000a000 07:14 398                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f50aee3a000-7f50aee3b000 rw-p 0000b000 07:14 398                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f50aee3b000-7f50aee53000 r--p 00000000 07:14 392                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f50aee53000-7f50aeede000 r-xp 00018000 07:14 392                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f50aeede000-7f50aef72000 r--p 000a3000 07:14 392                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f50aef72000-7f50aef73000 ---p 00137000 07:14 392                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f50aef73000-7f50aef74000 r--p 00137000 07:14 392                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f50aef74000-7f50aef78000 rw-p 00138000 07:14 392                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f50aef78000-7f50aef7e000 r--p 00000000 07:09 6258                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f50aef7e000-7f50aef8f000 r-xp 00006000 07:09 6258                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f50aef8f000-7f50aef95000 r--p 00017000 07:09 6258                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f50aef95000-7f50aef96000 r--p 0001c000 07:09 6258                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f50aef96000-7f50aef97000 rw-p 0001d000 07:09 6258                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f50aef97000-7f50aef9b000 rw-p 00000000 00:00 0 
+7f50aef9b000-7f50aefbd000 r--p 00000000 07:09 6077                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f50aefbd000-7f50af135000 r-xp 00022000 07:09 6077                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f50af135000-7f50af183000 r--p 0019a000 07:09 6077                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f50af183000-7f50af187000 r--p 001e7000 07:09 6077                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f50af187000-7f50af189000 rw-p 001eb000 07:09 6077                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f50af189000-7f50af18f000 rw-p 00000000 00:00 0 
+7f50af18f000-7f50af190000 r--p 00000000 07:14 297                        /snap/opensurge/89/usr/lib/liballegro_memfile.so.5.2.7
+7f50af190000-7f50af191000 r-xp 00001000 07:14 297                        /snap/opensurge/89/usr/lib/liballegro_memfile.so.5.2.7
+7f50af191000-7f50af192000 r--p 00002000 07:14 297                        /snap/opensurge/89/usr/lib/liballegro_memfile.so.5.2.7
+7f50af192000-7f50af193000 r--p 00002000 07:14 297                        /snap/opensurge/89/usr/lib/liballegro_memfile.so.5.2.7
+7f50af193000-7f50af194000 rw-p 00003000 07:14 297                        /snap/opensurge/89/usr/lib/liballegro_memfile.so.5.2.7
+7f50af194000-7f50af199000 r--p 00000000 07:14 285                        /snap/opensurge/89/usr/lib/liballegro_dialog.so.5.2.7
+7f50af199000-7f50af1a0000 r-xp 00005000 07:14 285                        /snap/opensurge/89/usr/lib/liballegro_dialog.so.5.2.7
+7f50af1a0000-7f50af1a2000 r--p 0000c000 07:14 285                        /snap/opensurge/89/usr/lib/liballegro_dialog.so.5.2.7
+7f50af1a2000-7f50af1a3000 ---p 0000e000 07:14 285                        /snap/opensurge/89/usr/lib/liballegro_dialog.so.5.2.7
+7f50af1a3000-7f50af1a4000 r--p 0000e000 07:14 285                        /snap/opensurge/89/usr/lib/liballegro_dialog.so.5.2.7
+7f50af1a4000-7f50af1a5000 rw-p 0000f000 07:14 285                        /snap/opensurge/89/usr/lib/liballegro_dialog.so.5.2.7
+7f50af1a5000-7f50af1aa000 r--p 00000000 07:14 279                        /snap/opensurge/89/usr/lib/liballegro_audio.so.5.2.7
+7f50af1aa000-7f50af1bc000 r-xp 00005000 07:14 279                        /snap/opensurge/89/usr/lib/liballegro_audio.so.5.2.7
+7f50af1bc000-7f50af1c1000 r--p 00017000 07:14 279                        /snap/opensurge/89/usr/lib/liballegro_audio.so.5.2.7
+7f50af1c1000-7f50af1c2000 r--p 0001b000 07:14 279                        /snap/opensurge/89/usr/lib/liballegro_audio.so.5.2.7
+7f50af1c2000-7f50af1c3000 rw-p 0001c000 07:14 279                        /snap/opensurge/89/usr/lib/liballegro_audio.so.5.2.7
+7f50af1c3000-7f50af1c5000 r--p 00000000 07:14 276                        /snap/opensurge/89/usr/lib/liballegro_acodec.so.5.2.7
+7f50af1c5000-7f50af1c9000 r-xp 00002000 07:14 276                        /snap/opensurge/89/usr/lib/liballegro_acodec.so.5.2.7
+7f50af1c9000-7f50af1cb000 r--p 00006000 07:14 276                        /snap/opensurge/89/usr/lib/liballegro_acodec.so.5.2.7
+7f50af1cb000-7f50af1cc000 r--p 00007000 07:14 276                        /snap/opensurge/89/usr/lib/liballegro_acodec.so.5.2.7
+7f50af1cc000-7f50af1cd000 rw-p 00008000 07:14 276                        /snap/opensurge/89/usr/lib/liballegro_acodec.so.5.2.7
+7f50af1cd000-7f50af1cf000 r--p 00000000 07:14 306                        /snap/opensurge/89/usr/lib/liballegro_ttf.so.5.2.7
+7f50af1cf000-7f50af1d3000 r-xp 00002000 07:14 306                        /snap/opensurge/89/usr/lib/liballegro_ttf.so.5.2.7
+7f50af1d3000-7f50af1d4000 r--p 00006000 07:14 306                        /snap/opensurge/89/usr/lib/liballegro_ttf.so.5.2.7
+7f50af1d4000-7f50af1d5000 r--p 00006000 07:14 306                        /snap/opensurge/89/usr/lib/liballegro_ttf.so.5.2.7
+7f50af1d5000-7f50af1d6000 rw-p 00007000 07:14 306                        /snap/opensurge/89/usr/lib/liballegro_ttf.so.5.2.7
+7f50af1d6000-7f50af1d9000 r--p 00000000 07:14 288                        /snap/opensurge/89/usr/lib/liballegro_font.so.5.2.7
+7f50af1d9000-7f50af1df000 r-xp 00003000 07:14 288                        /snap/opensurge/89/usr/lib/liballegro_font.so.5.2.7
+7f50af1df000-7f50af1e1000 r--p 00009000 07:14 288                        /snap/opensurge/89/usr/lib/liballegro_font.so.5.2.7
+7f50af1e1000-7f50af1e2000 ---p 0000b000 07:14 288                        /snap/opensurge/89/usr/lib/liballegro_font.so.5.2.7
+7f50af1e2000-7f50af1e3000 r--p 0000b000 07:14 288                        /snap/opensurge/89/usr/lib/liballegro_font.so.5.2.7
+7f50af1e3000-7f50af1e4000 rw-p 0000c000 07:14 288                        /snap/opensurge/89/usr/lib/liballegro_font.so.5.2.7
+7f50af1e4000-7f50af1e6000 rw-p 00000000 00:00 0 
+7f50af1e6000-7f50af1ea000 r--p 00000000 07:14 303                        /snap/opensurge/89/usr/lib/liballegro_primitives.so.5.2.7
+7f50af1ea000-7f50af1f9000 r-xp 00004000 07:14 303                        /snap/opensurge/89/usr/lib/liballegro_primitives.so.5.2.7
+7f50af1f9000-7f50af1fc000 r--p 00013000 07:14 303                        /snap/opensurge/89/usr/lib/liballegro_primitives.so.5.2.7
+7f50af1fc000-7f50af1fd000 r--p 00015000 07:14 303                        /snap/opensurge/89/usr/lib/liballegro_primitives.so.5.2.7
+7f50af1fd000-7f50af1fe000 rw-p 00016000 07:14 303                        /snap/opensurge/89/usr/lib/liballegro_primitives.so.5.2.7
+7f50af1fe000-7f50af201000 r--p 00000000 07:14 291                        /snap/opensurge/89/usr/lib/liballegro_image.so.5.2.7
+7f50af201000-7f50af20b000 r-xp 00003000 07:14 291                        /snap/opensurge/89/usr/lib/liballegro_image.so.5.2.7
+7f50af20b000-7f50af20d000 r--p 0000d000 07:14 291                        /snap/opensurge/89/usr/lib/liballegro_image.so.5.2.7
+7f50af20d000-7f50af20e000 r--p 0000e000 07:14 291                        /snap/opensurge/89/usr/lib/liballegro_image.so.5.2.7
+7f50af20e000-7f50af20f000 rw-p 0000f000 07:14 291                        /snap/opensurge/89/usr/lib/liballegro_image.so.5.2.7
+7f50af20f000-7f50af24d000 r--p 00000000 07:14 273                        /snap/opensurge/89/usr/lib/liballegro.so.5.2.7
+7f50af24d000-7f50af306000 r-xp 0003e000 07:14 273                        /snap/opensurge/89/usr/lib/liballegro.so.5.2.7
+7f50af306000-7f50af333000 r--p 000f7000 07:14 273                        /snap/opensurge/89/usr/lib/liballegro.so.5.2.7
+7f50af333000-7f50af338000 r--p 00123000 07:14 273                        /snap/opensurge/89/usr/lib/liballegro.so.5.2.7
+7f50af338000-7f50af33e000 rw-p 00128000 07:14 273                        /snap/opensurge/89/usr/lib/liballegro.so.5.2.7
+7f50af33e000-7f50af345000 rw-p 00000000 00:00 0 
+7f50af345000-7f50af34f000 r--p 00000000 07:14 540                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsurgescript.so.0.5.6.1
+7f50af34f000-7f50af378000 r-xp 0000a000 07:14 540                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsurgescript.so.0.5.6.1
+7f50af378000-7f50af385000 r--p 00033000 07:14 540                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsurgescript.so.0.5.6.1
+7f50af385000-7f50af386000 ---p 00040000 07:14 540                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsurgescript.so.0.5.6.1
+7f50af386000-7f50af387000 r--p 00040000 07:14 540                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsurgescript.so.0.5.6.1
+7f50af387000-7f50af389000 rw-p 00041000 07:14 540                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libsurgescript.so.0.5.6.1
+7f50af389000-7f50af396000 r--p 00000000 07:09 6178                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f50af396000-7f50af43d000 r-xp 0000d000 07:09 6178                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f50af43d000-7f50af4d6000 r--p 000b4000 07:09 6178                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f50af4d6000-7f50af4d7000 r--p 0014c000 07:09 6178                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f50af4d7000-7f50af4d8000 rw-p 0014d000 07:09 6178                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f50af4d8000-7f50af4da000 r--p 00000000 07:14 562                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri2.so.0.0.0
+7f50af4da000-7f50af4dc000 r-xp 00002000 07:14 562                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri2.so.0.0.0
+7f50af4dc000-7f50af4dd000 r--p 00004000 07:14 562                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri2.so.0.0.0
+7f50af4dd000-7f50af4de000 r--p 00004000 07:14 562                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri2.so.0.0.0
+7f50af4de000-7f50af4df000 rw-p 00005000 07:14 562                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libxcb-dri2.so.0.0.0
+7f50af4df000-7f50af4e0000 r--p 00000000 07:14 390                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f50af4e0000-7f50af4e1000 r-xp 00001000 07:14 390                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f50af4e1000-7f50af4e2000 r--p 00002000 07:14 390                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f50af4e2000-7f50af4e3000 r--p 00002000 07:14 390                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f50af4e3000-7f50af4e4000 rw-p 00003000 07:14 390                        /snap/opensurge/89/usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f50af4e4000-7f50af4eb000 r--s 00000000 07:09 6034                       /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+7f50af4eb000-7f50af4ed000 rw-p 00000000 00:00 0 
+7f50af4ed000-7f50af4ee000 r--p 00000000 07:09 6052                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f50af4ee000-7f50af511000 r-xp 00001000 07:09 6052                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f50af511000-7f50af519000 r--p 00024000 07:09 6052                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f50af519000-7f50af51a000 rw-s 10102e000 00:05 833                       /dev/dri/card0
+7f50af51a000-7f50af51b000 r--p 0002c000 07:09 6052                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f50af51b000-7f50af51c000 rw-p 0002d000 07:09 6052                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f50af51c000-7f50af51d000 rw-p 00000000 00:00 0 
+7ffc8c8ed000-7ffc8c90e000 rw-p 00000000 00:00 0                          [stack]
+7ffc8c94c000-7ffc8c950000 r--p 00000000 00:00 0                          [vvar]
+7ffc8c950000-7ffc8c952000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]

@@ -66,19 +66,28 @@ enum class E_region_level {
    * all region that has read and write permission
    * */
   all_read_write,
-  all
+  all,
+  heap_stack_executable,
+  heap_stack_executable_bss
+
 };
 
 static const std::unordered_map<std::string, Scan_Utils::E_region_level>
     str_to_E_region_level_map = {
         {"all_read_write", E_region_level::all_read_write},
         {"all", E_region_level::all},
+        {"heap_stack_executable", E_region_level::heap_stack_executable},
+        {"heap_stack_executable_bss",
+         E_region_level::heap_stack_executable_bss},
 };
 
 static const std::unordered_map<Scan_Utils::E_region_level, std::string>
     E_region_level_to_str_map = {
         {E_region_level::all_read_write, "all_read_write"},
         {E_region_level::all, "all"},
+        {E_region_level::heap_stack_executable, "heap_stack_executable"},
+        {E_region_level::heap_stack_executable_bss,
+         "heap_stack_executable_bss"},
 };
 
 /*

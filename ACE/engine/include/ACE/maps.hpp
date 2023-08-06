@@ -25,39 +25,33 @@
 #include <unordered_map>
 #include <vector>
 
-enum class Maps_pathname_type {
-  // the program binary and libraries it used
-  program_mapping,
+enum class mem_region_type {
   heap,
   stack,
-  // The virtual dynamically linked shared object
-  vdso,
-  vvar,
-  vsyscall,
-  anonymous,
-  unknown
+  // starts with executable permission and
+  // the regions after that (don't have executable permission) as well,
+  // code that don't belong to self process directly
+  // example: loaded dynamic/static library
+  code,
+  // belong to self process, the first region must  have executable
+  // permission, and the regions after that belongs to it as well
+  // if the pathname is equal to the path of binary
+  exe,
+  misc,
 };
-static const std::unordered_map<std::string, Maps_pathname_type>
-    str_to_Maps_pathname_type = {
-        {"heap", Maps_pathname_type::heap},
-        // this seems to be the heap of an android program
-        // I got this info from an experiment with running
-        // [example_program] and this program in google's android emulator
-        // in adb shell
-        {"anon:scudo:primary", Maps_pathname_type::heap},
-        //
-        {"stack", Maps_pathname_type::stack},
-        {"vdso", Maps_pathname_type::vdso},
-        {"vvar", Maps_pathname_type::vvar},
-        {"vsyscall", Maps_pathname_type::vsyscall},
+static const std::unordered_map<std::string, mem_region_type>
+    str_to_mem_region_type = {
+        {"heap", mem_region_type::heap}, {"stack", mem_region_type::stack},
+        {"code", mem_region_type::code}, {"exe", mem_region_type::exe},
+        {"misc", mem_region_type::misc},
 
 };
 
-struct mem_segment {
+struct mem_region {
   ULL address_start;
   ULL address_end;
-  Maps_pathname_type mem_type;
-  std::string mem_type_str;
+  mem_region_type mem_type;
+  std::string path_name;
 
   std::string get_displayable_str() const;
   bool is_special_region;
@@ -69,22 +63,40 @@ struct mem_segment {
   bool perm_shared;
   bool perm_private;
 };
+struct parse_proc_map_context {
+  unsigned int code_regions = 0, exe_regions = 0;
+  unsigned long prev_end = 0, load_addr = 0, exe_load = 0;
+  bool is_exe = false;
+  std::string binname;
+  const std::string exename;
+
+  parse_proc_map_context(const std::string exename);
+};
 
 /*
  *
  * read file at path_to_maps and on each line
- * parse to struct mem_segment
+ * parse to struct mem_region
  * */
-std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps);
+std::vector<struct mem_region>
+parse_proc_map_file(const char *path_to_maps, parse_proc_map_context *context);
+
+std::vector<struct mem_region> parse_proc_map_file(const char *path_to_maps);
+
+std::vector<struct mem_region> parse_proc_map(int pid,
+                                              parse_proc_map_context *context);
+std::vector<struct mem_region> parse_proc_map(int pid);
 
 /*
  * meant to be used for parse_proc_map_str, avoid calling it
  * directly unless for unit testing
  * */
-Maps_pathname_type get_Maps_pathname_type(const std::string &str);
-struct mem_segment parse_proc_map_str(const std::string &line);
+mem_region_type get_mem_region_type(const std::string &path_name,
+                                    const parse_proc_map_context *context);
 
-bool mem_segment_is_suitable(const struct mem_segment &mem_seg);
-std::vector<struct mem_segment>
-mem_segment_get_regions_for_scan(int pid,
-                                 Scan_Utils::E_region_level region_level);
+struct mem_region parse_proc_map_str(const std::string &line,
+                                     parse_proc_map_context *context);
+
+std::vector<struct mem_region>
+mem_region_get_regions_for_scan(int pid,
+                                Scan_Utils::E_region_level region_level);

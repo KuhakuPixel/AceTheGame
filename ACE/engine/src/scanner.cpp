@@ -341,7 +341,7 @@ void ACE_scanner<T>::_first_scan(
 
 template <typename T>
 void ACE_scanner<T>::first_scan(
-    const std::vector<struct mem_segment> &segments_to_scan,
+    const std::vector<struct mem_region> &segments_to_scan,
     Scan_Utils::E_operator_type operator_type, T value_to_find) {
 
   // reset current scan
@@ -371,15 +371,15 @@ void ACE_scanner<T>::first_scan(
 template <typename T>
 void ACE_scanner<T>::first_scan(
     Scan_Utils::E_operator_type operator_type, T value_to_find,
-    std::function<void(const std::vector<struct mem_segment> &segments_to_scan)>
-        on_mem_segments_found) {
+    std::function<void(const std::vector<struct mem_region> &segments_to_scan)>
+        on_mem_regions_found) {
 
-  std::vector<struct mem_segment> segments_to_scan =
-      mem_segment_get_regions_for_scan(this->pid, this->get_region_level());
+  std::vector<struct mem_region> segments_to_scan =
+      mem_region_get_regions_for_scan(this->pid, this->get_region_level());
   // =================================================================
 
-  if (on_mem_segments_found != nullptr) {
-    on_mem_segments_found(segments_to_scan);
+  if (on_mem_regions_found != nullptr) {
+    on_mem_regions_found(segments_to_scan);
   }
 
   this->first_scan(segments_to_scan, operator_type, value_to_find);

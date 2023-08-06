@@ -75,7 +75,7 @@ private:
   Scan_Utils::E_scan_level scan_level = Scan_Utils::E_scan_level::aligned_only;
   //
   Scan_Utils::E_region_level region_level =
-      Scan_Utils::E_region_level::all_read_write;
+      Scan_Utils::E_region_level::heap_stack_executable_bss;
   // step size of the loop
   // during each iteration  of a scan
   size_t scan_step_size = sizeof(T);
@@ -147,17 +147,17 @@ public:
   /*
    * do a scan on multiple range of addresses
    * */
-  void first_scan(const std::vector<struct mem_segment> &segments_to_scan,
+  void first_scan(const std::vector<struct mem_region> &segments_to_scan,
                   Scan_Utils::E_operator_type operator_type, T value_to_find);
 
   /**
-   * [on_mem_segments_found]: called when all suitable memory segments
+   * [on_mem_regions_found]: called when all suitable memory segments
    * 			      are found
    * */
   void first_scan(Scan_Utils::E_operator_type operator_type, T value_to_find,
                   std::function<void(
-                      const std::vector<struct mem_segment> &segments_to_scan)>
-                      on_mem_segments_found = nullptr
+                      const std::vector<struct mem_region> &segments_to_scan)>
+                      on_mem_regions_found = nullptr
 
   );
 

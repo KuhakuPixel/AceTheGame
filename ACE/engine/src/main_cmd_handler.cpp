@@ -14,28 +14,25 @@ void process_map_cmd_handler(int pid, bool ps_map_list_all) {
     frontend::mark_task_fail("No processes is running with pid %d\n", pid);
     return;
   }
-  char path_to_maps[200];
-  snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
-  //
-  std::vector<std::string> proc_maps_file = read_file(path_to_maps);
+  std::vector<struct mem_region> proc_mem_regions = parse_proc_map(pid);
 
   size_t special_mapping_count = 0;
   //
 
-  for (size_t i = 0; i < proc_maps_file.size(); i++) {
+  for (size_t i = 0; i < proc_mem_regions.size(); i++) {
 
-    struct mem_segment m_seg = parse_proc_map_str(proc_maps_file[i]);
+    struct mem_region m_reg = proc_mem_regions[i];
     // by default only show special region
-    if (!m_seg.is_special_region && !ps_map_list_all)
+    if (!m_reg.is_special_region && !ps_map_list_all)
       continue;
-    frontend::print("%s", m_seg.get_displayable_str().c_str());
+    frontend::print("%s", m_reg.get_displayable_str().c_str());
     // count special region
-    if (m_seg.is_special_region)
+    if (m_reg.is_special_region)
       special_mapping_count++;
   }
 
   frontend::print("------------------------------------\n");
-  frontend::print("Found total of %zu mappings\n", proc_maps_file.size());
+  frontend::print("Found total of %zu mappings\n", proc_mem_regions.size());
   frontend::print("With %zu special region mapping\n", special_mapping_count);
   frontend::print("------------------------------------\n");
 }

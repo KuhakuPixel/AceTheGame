@@ -15,7 +15,7 @@ public:
   /*
    * list of suitable  memory region to scan for
    * */
-  const static std::vector<Maps_pathname_type> mem_type_name_to_scan;
+  const static std::vector<mem_region_type> mem_type_name_to_scan;
 
   // versions
   static const int major_version;

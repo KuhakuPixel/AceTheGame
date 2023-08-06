@@ -28,20 +28,20 @@ int main(int argc, char **argv) {
     return 0;
   }
   // parse maps file
-  std::vector<struct mem_segment> mem_segments =
+  std::vector<struct mem_region> mem_regions =
       parse_proc_map_file(maps_file_path.c_str());
 
   // find out in which mem segment the [address]
-  for (size_t i = 0; i < mem_segments.size(); i++) {
+  for (size_t i = 0; i < mem_regions.size(); i++) {
 
     // if address is between the address range,
     // then that address belongs to that region
     // we have found it!
-    if (address >= mem_segments[i].address_start &&
-        address <= mem_segments[i].address_end) {
+    if (address >= mem_regions[i].address_start &&
+        address <= mem_regions[i].address_end) {
       printf("address: %llx\n", address);
       printf("region name: %s\n",
-             mem_segments[i].get_displayable_str().c_str());
+             mem_regions[i].get_displayable_str().c_str());
       return 0;
     }
   }

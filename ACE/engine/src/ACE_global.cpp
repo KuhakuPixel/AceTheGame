@@ -43,13 +43,6 @@ const bool ACE_global::use_proc_vm_read_writev =
 #endif
 
 //
-const std::vector<Maps_pathname_type> ACE_global::mem_type_name_to_scan = {
-    Maps_pathname_type::heap,
-    Maps_pathname_type::stack,
-    Maps_pathname_type::anonymous,
-
-};
-
 const char *ACE_global::license =
 #include "./LICENSE_APPLIED"
     ;

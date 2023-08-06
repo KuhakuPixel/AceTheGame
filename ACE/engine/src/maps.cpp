@@ -1,22 +1,46 @@
 #include "ACE/maps.hpp"
 #include "ACE/file_utils.hpp"
 #include "ACE/str_utils.hpp"
+#include "ACE/to_frontend.hpp"
 #include <cstdint>
 #include <cstdio>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+#include <unistd.h>
 #include <vector>
 
-std::string mem_segment::get_displayable_str() const {
+parse_proc_map_context::parse_proc_map_context(const std::string exename)
+    : exename(exename) {}
+#define MAX_LINKBUF_SIZE 256
+
+std::string get_executable_name(int pid) {
+
+  /* get executable name */
+
+  char exelink[128] = {0};
+  char exename[MAX_LINKBUF_SIZE] = {0};
+  snprintf(exelink, sizeof(exelink), "/proc/%d/exe", pid);
+
+  errno = 0;
+  ssize_t ret = readlink(exelink, exename, MAX_LINKBUF_SIZE - 1);
+  if (ret == -1) {
+    frontend::log("readlink failed in [get_executable_name]: %s\n",
+                  strerror(errno));
+  }
+  return std::string(exename);
+}
+
+std::string mem_region::get_displayable_str() const {
 
   std::string segment_display_str = "";
-  if (this->mem_type == Maps_pathname_type::anonymous)
-    segment_display_str += "<Anonymous Mappings>";
+  if (this->mem_type == mem_region_type::misc)
+    segment_display_str += "<Misc Mappings>";
 
   else
-    segment_display_str += this->mem_type_str;
+    segment_display_str += this->path_name;
 
   char buff[200];
   snprintf(buff, 199, "0x%llx-0x%llx", this->address_start, this->address_end);
@@ -31,7 +55,8 @@ std::string mem_segment::get_displayable_str() const {
 
 // TODO need to spltup the functions
 // to help with readability
-struct mem_segment parse_proc_map_str(const std::string &line) {
+struct mem_region parse_proc_map_str(const std::string &line,
+                                     parse_proc_map_context *context) {
 
   /*
    path_name ussualy contains literal path
@@ -41,7 +66,7 @@ struct mem_segment parse_proc_map_str(const std::string &line) {
    if one of the bracket is missing, we assume that it is either an anonymous
    mapping (empty path_name) or literal path to a file
    */
-  struct mem_segment m_seg;
+  struct mem_region m_reg;
 
   ULL address_start;
   ULL address_end;
@@ -72,128 +97,200 @@ struct mem_segment parse_proc_map_str(const std::string &line) {
     if (path_name[0] == '[' && path_name[path_name_length - 1] == ']')
       is_special_region = true;
   }
-
-  // TODO: need to add constructor
-  m_seg.address_start = address_start;
-  m_seg.address_end = address_end;
-  m_seg.mem_type_str = std::string(path_name);
-  m_seg.mem_type = get_Maps_pathname_type(std::string(path_name));
-  m_seg.is_special_region = is_special_region;
   // set perms
-  m_seg.perm_read = perms[0] == 'r';
-  m_seg.perm_write = perms[1] == 'w';
-  m_seg.perm_execute = perms[2] == 'x';
+  m_reg.perm_read = perms[0] == 'r';
+  m_reg.perm_write = perms[1] == 'w';
+  m_reg.perm_execute = perms[2] == 'x';
   // shared and private field shares the same index
-  m_seg.perm_shared = perms[3] == 's';
-  m_seg.perm_private = perms[3] == 'p';
+  m_reg.perm_shared = perms[3] == 's';
+  m_reg.perm_private = perms[3] == 'p';
+
+  m_reg.address_start = address_start;
+  m_reg.address_end = address_end;
+  m_reg.path_name = std::string(path_name);
+
+  /*
+   * detect which region is code and executable
+   * credits: https://github.com/scanmem/scanmem/blob/main/maps.c
+   * */
+  /*
+   * get the load address for regions of the same ELF file
+   *
+   * When the ELF loader loads an executable or a library into
+   * memory, there is one region per ELF segment created:
+   * .text (r-x), .rodata (r--), .data (rw-) and .bss (rw-). The
+   * 'x' permission of .text is used to detect the load address
+   * (region start) and the end of the ELF file in memory. All
+   * these regions have the same filename. The only exception
+   * is the .bss region. Its filename is empty and it is
+   * consecutive with the .data region. But the regions .bss and
+   * .rodata may not be present with some ELF files. This is why
+   * we can't rely on other regions to be consecutive in memory.
+   * There should never be more than these four regions.
+   * The data regions use their variables relative to the load
+   * address. So determining it makes sense as we can get the
+   * variable address used within the ELF file with it.
+   * But for the executable there is the special case that there
+   * is a gap between .text and .rodata. Other regions might be
+   * loaded via mmap() to it. So we have to count the number of
+   * regions belonging to the exe separately to handle that.
+   * References:
+   * http://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+   * http://wiki.osdev.org/ELF
+   * http://lwn.net/Articles/531148/
+   */
+  // detect further regions of the same ELF file and its end
+  if (context->code_regions > 0) {
+    if (m_reg.perm_execute ||
+        (m_reg.path_name != context->binname &&
+         (m_reg.path_name.size() > 0 ||
+          m_reg.address_start != context->prev_end)) ||
+        context->code_regions >= 4) {
+      context->code_regions = 0;
+      context->is_exe = false;
+      // exe with .text and without .data is impossible
+      if (context->exe_regions > 1)
+        context->exe_regions = 0;
+    }
+
+    else {
+      // exe must not have perm execute
+      //
+      context->code_regions++;
+      if (context->is_exe)
+        context->exe_regions++;
+    }
+  }
+
+  if (context->code_regions == 0) {
+    // detect the first region belonging to an ELF file
+    if (m_reg.perm_execute && m_reg.path_name.size() > 0) {
+      context->code_regions++;
+      if (m_reg.path_name == context->exename) {
+        context->exe_regions = 1;
+        context->is_exe = true;
+      }
+      context->binname = m_reg.path_name;
+      // detect the second region of the exe after skipping regions
+    } else if (context->exe_regions == 1 && m_reg.path_name.size() > 0 &&
+               m_reg.path_name == context->exename) {
+      context->code_regions = ++context->exe_regions;
+      context->is_exe = true;
+      context->binname = m_reg.path_name;
+    }
+  }
+  context->prev_end = m_reg.address_end;
+  // TODO: need to add constructor
+  m_reg.mem_type = get_mem_region_type(std::string(path_name), context);
+  m_reg.is_special_region = is_special_region;
 
   free(path_name);
-  return m_seg;
+  return m_reg;
 }
-std::vector<struct mem_segment> parse_proc_map_file(const char *path_to_maps) {
+std::vector<struct mem_region>
+parse_proc_map_file(const char *path_to_maps, parse_proc_map_context *context) {
 
-  // TODO: accepty a function pointer that will be called everytime
-  // we parse a line at /proc/[pid]/maps
-  // (for example a function that prints the struct mem_segment, so
-  // we can see the progress
-  std::vector<struct mem_segment> proc_mem_segments;
+  std::vector<struct mem_region> proc_mem_regions;
   std::vector<std::string> file_content = read_file(path_to_maps);
   for (size_t i = 0; i < file_content.size(); i++) {
-    struct mem_segment current_mem_seg = parse_proc_map_str(file_content[i]);
-    proc_mem_segments.push_back(current_mem_seg);
+    struct mem_region current_mem_seg =
+        parse_proc_map_str(file_content[i], context);
+    proc_mem_regions.push_back(current_mem_seg);
   }
-  return proc_mem_segments;
+  return proc_mem_regions;
 }
 
-Maps_pathname_type get_Maps_pathname_type(const std::string &str) {
+std::vector<struct mem_region> parse_proc_map_file(const char *path_to_maps) {
 
-  // If the pathname field is blank, this is an anonymous
-  if (str.length() == 0)
-    return Maps_pathname_type::anonymous;
-  // cannot end with '/', otherwise it is a dir
-  else if (str.length() > 2 && str[0] == '/' && str[str.length() - 1] != '/') {
-    return Maps_pathname_type::program_mapping;
-  }
-
-  // special regions like the heap
-  // and the stack and ect, which most of the program's
-  // computation should reside in
-  else if (str[0] == '[' && str[str.length() - 1] == ']') {
-
-    // extract name from bracket
-    char *buff = (char *)calloc(str.length(), sizeof(char));
-    sscanf(str.c_str(), "[%[^]]", buff);
-    std::string region_name_str = std::string(buff);
-    // if the key doesn't exist, then the maps' pathname type is unknown
-    Maps_pathname_type region_name;
-    if (str_to_Maps_pathname_type.count(region_name_str) == 1)
-      region_name = str_to_Maps_pathname_type.at(region_name_str);
-    else
-      region_name = Maps_pathname_type::unknown;
-
-    // free resources
-    free(buff);
-    return region_name;
-
-  }
-
-  else
-    return Maps_pathname_type::unknown;
+  parse_proc_map_context context = parse_proc_map_context("");
+  return parse_proc_map_file(path_to_maps, &context);
 }
 
-bool mem_segment_is_suitable(const struct mem_segment &mem_seg) {
-  // Maps_pathname_type mem_type = mem_seg.mem_type;
-  /*
-   * segment must be readable and writable
-   * for it to be useful
-   * */
-  if (!mem_seg.perm_read || !mem_seg.perm_write)
-    return false;
-  /*
-   * don't search region that starts with /dev/
-   * because it is a special file used to communicate with device
-   * driver in the kernel
-   *
-   * a typical process's value shouldn't reside there
-   * https://en.wikipedia.org/wiki/Device_file
-   * https://unix.stackexchange.com/a/18534/505340
-   * */
-  else if (strncmp(mem_seg.mem_type_str.c_str(), "/dev/", strlen("/dev/")) == 0)
-    return false;
+std::vector<struct mem_region> parse_proc_map(int pid,
+                                              parse_proc_map_context *context) {
 
-  else
-    return true;
-}
-
-std::vector<struct mem_segment>
-mem_segment_get_regions_for_scan(int pid,
-                                 Scan_Utils::E_region_level region_level) {
-  //  ================= find memory mapped regions to scan =============
   char path_to_maps[200];
   snprintf(path_to_maps, 199, "/proc/%d/maps", pid);
 
-  std::vector<struct mem_segment> proc_mem_segments =
-      parse_proc_map_file(path_to_maps);
+  std::vector<struct mem_region> proc_mem_regions =
+      parse_proc_map_file(path_to_maps, context);
+  return proc_mem_regions;
+}
+
+std::vector<struct mem_region> parse_proc_map(int pid) {
+
+  std::string exename = get_executable_name(pid);
+  parse_proc_map_context context = parse_proc_map_context(exename);
+  return parse_proc_map(pid, &context);
+}
+
+mem_region_type get_mem_region_type(const std::string &path_name,
+                                    const parse_proc_map_context *context) {
+
+  if (context->is_exe)
+    return mem_region_type::exe;
+  else if (context->code_regions > 0)
+    return mem_region_type::code;
+  else if (path_name == "[heap]")
+    return mem_region_type::heap;
+  else if (path_name == "[stack]")
+    return mem_region_type::stack;
+  else
+    return mem_region_type::misc;
+}
+
+std::vector<struct mem_region>
+mem_region_get_regions_for_scan(int pid,
+                                Scan_Utils::E_region_level region_level) {
+  std::string exe_name = get_executable_name(pid);
+
+  parse_proc_map_context context = parse_proc_map_context(exe_name);
+  std::vector<struct mem_region> proc_mem_regions =
+      parse_proc_map(pid, &context);
   //
-  std::vector<struct mem_segment> segments_to_scan = {};
-  for (size_t i = 0; i < proc_mem_segments.size(); i++) {
-    struct mem_segment mem_seg = proc_mem_segments[i];
+  std::vector<struct mem_region> segments_to_scan = {};
+  for (size_t i = 0; i < proc_mem_regions.size(); i++) {
+    struct mem_region mem_reg = proc_mem_regions[i];
+    // must at least have read permission
+    if (!mem_reg.perm_read)
+      continue;
+    // skip if non writable except when [region_level] is all
+    if (!mem_reg.perm_write && region_level != Scan_Utils::E_region_level::all)
+      continue;
     // choose whether to add this region depending on [region_level]
     bool is_region_suitable = false;
     switch (region_level) {
-    case Scan_Utils::E_region_level::all_read_write: {
-      is_region_suitable = mem_seg.perm_read && mem_seg.perm_write;
-      break;
-    }
 
     case Scan_Utils::E_region_level::all: {
       is_region_suitable = true;
       break;
     }
+    case Scan_Utils::E_region_level::all_read_write: {
+      is_region_suitable = true;
+      break;
+    }
+
+    case Scan_Utils::E_region_level::heap_stack_executable_bss: {
+      if (mem_reg.path_name.size() == 0)
+        is_region_suitable = true;
+    }
+      // fall through
+    case Scan_Utils::E_region_level::heap_stack_executable: {
+      if (mem_reg.is_special_region)
+        is_region_suitable = true;
+      else if (mem_reg.mem_type == mem_region_type::heap ||
+               mem_reg.mem_type == mem_region_type::stack) {
+        is_region_suitable = true;
+      } else if (mem_reg.mem_type == mem_region_type::exe ||
+                 mem_reg.path_name == exe_name) {
+        is_region_suitable = true;
+      }
+      break;
+    }
     }
     // add region
     if (is_region_suitable)
-      segments_to_scan.push_back(mem_seg);
+      segments_to_scan.push_back(mem_reg);
   }
   // =================================================================
   return segments_to_scan;
