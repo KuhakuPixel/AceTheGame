@@ -62,8 +62,6 @@ struct mem_region {
   bool perm_execute;
   bool perm_shared;
   bool perm_private;
-  //
-  bool is_exe;
 };
 struct parse_proc_map_context {
   unsigned int code_regions = 0, exe_regions = 0;
