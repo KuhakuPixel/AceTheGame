@@ -7,14 +7,14 @@ TEST_CASE("TIME_ACTION", "[COMMON]") {
   {
     double time_sec = -1;
 
-    TIME_ACTION({ sum++; }, &time_sec);
+    time_action([&]() { sum++; }, &time_sec);
     REQUIRE(time_sec >= 0.0);
   }
   {
     double time_sec = -1;
 
-    TIME_ACTION(
-        {
+    time_action(
+        [&]() {
           for (int i = 0; i < 1000; i++)
             sum++;
         },
@@ -29,10 +29,10 @@ TEST_CASE("TIME_ACTION", "[COMMON]") {
   {
 
     double *NULL_PTR = NULL;
-    TIME_ACTION({ sum++; }, NULL_PTR);
+    time_action([&]() { sum++; }, NULL_PTR);
 
-    TIME_ACTION(
-        {
+    time_action(
+        [&]() {
           for (int i = 0; i < 1000; i++)
             sum++;
         },

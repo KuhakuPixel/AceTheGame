@@ -1,4 +1,3 @@
-
 #include "ACE/ptrace.hpp"
 #include "ACE/input.hpp"
 #include "ACE/to_frontend.hpp"
@@ -93,4 +92,20 @@ int ptrace_deattach_pid(int pid, bool force_stop) {
   }
 
   return 0;
+}
+
+void call_while_ptrace_attached(int pid, std::function<void()> action,
+                                int *ptrace_attach_return_ptr,
+                                int *ptrace_deattach_return_ptr,
+                                bool force_stop) {
+
+  *ptrace_attach_return_ptr =
+      ptrace_attach_pid(pid,
+                        force_stop); // exit early when cannot attach
+  if (*ptrace_attach_return_ptr == -1)
+    return;
+
+  //  everything looks okay, call [action]
+  action();
+  *ptrace_deattach_return_ptr = ptrace_deattach_pid(pid, force_stop);
 }

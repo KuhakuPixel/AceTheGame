@@ -62,7 +62,15 @@ void next_scan_cmd_handler(ACE_scanner<T> *scanner,
     frontend::print("WARN: no initial scan has been setup\n");
 
   double next_scan_time = -1;
-  TIME_ACTION({ scanner->next_scan(operator_type); }, &next_scan_time);
+  time_action(
+
+      [&]() {
+        //
+        scanner->next_scan(operator_type);
+      },
+      &next_scan_time
+
+  );
 
   frontend::print("current matches: %zu\n",
                   scanner->get_current_scan_result().get_matches_count());
@@ -80,9 +88,9 @@ void scan_cmd_handler(ACE_scanner<T> *scanner,
 
   double scan_time = -1;
 
-  TIME_ACTION(
+  time_action(
 
-      {
+      [&]() {
         if (!scanner->get_first_scan_done()) {
 
           scanner->first_scan(

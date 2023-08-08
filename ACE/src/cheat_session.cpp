@@ -526,10 +526,10 @@ cheat_session::cheater_mode_on_each_input(
   int ptrace_deattach_ret = 0;
   if (cheat_config->pause_while_scan) {
     // do operation paused with ptrace
-    CALL_WHILE_PTRACE_ATTACHED(
+    call_while_ptrace_attached(
         pid,
 
-        {
+        [&]() {
           _cheat_cmd_ret =
               _cheat_cmd<T>(engine_module_ptr, cheat_config, input_str);
         },

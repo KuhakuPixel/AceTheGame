@@ -7,42 +7,17 @@
 
 #pragma once
 #include "ace_type.hpp"
+#include <functional>
 #include <stdio.h>
 #include <time.h>
 
 /*
- * time an execution [aAction]  and assgin time (seconds)
- * in double to
- * [PTR_TO_DOUBLE] if not NULL
+ * time an execution [action]  and assign time (seconds)
+ * to [time]
  *
- * Example:
- *
- * TIME_ACTION(
- *  	{
- *  		// execute some code
- *
- *  	}
- *  	,
- *  	&time_as_double
- * );
  *
  * */
-#define TIME_ACTION(aAction, PTR_TO_DOUBLE)                                    \
-  do {                                                                         \
-    clock_t begin = clock();                                                   \
-    {aAction};                                                                 \
-    clock_t end = clock();                                                     \
-    /*                                                                         \
-     * cast PTR_TO_DOUBLE to void* to supress                                  \
-     * gcc warning                                                             \
-     * "the address of[addr] will never be NULL"                               \
-     * https://stackoverflow.com/a/3154835/14073678                            \
-     *                                                                         \
-     * */                                                                      \
-    if ((void *)PTR_TO_DOUBLE != NULL)                                         \
-      *PTR_TO_DOUBLE = ((double)(end - begin) / CLOCKS_PER_SEC);               \
-  } while (0)
-
+void time_action(std::function<void()> action, double *time);
 /*
  * instantiate a template for all numeric types
  * this is useful when template functions/classes implementation
