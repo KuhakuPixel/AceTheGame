@@ -20,15 +20,7 @@ def find_file_with_extension(dir_name: str, extensions=[]):
     return files_with_extension
 
 
-def format_c_cpp_dir(root_dir: str, extensions: list, dir_to_exclude: list):
-    dirs = []
-    # only pick directory name not in [dir_to_exclude]
-    for f in os.listdir(root_dir):
-        full_dir_path = os.path.join(root_dir, f)
-        if os.path.isdir(full_dir_path):
-            if f not in dir_to_exclude:
-                dirs.append(full_dir_path)
-
+def format_c_cpp_dir(dirs: [], extensions: list):
     # format recursively for each directory in [dirs]
     for d in dirs:
         files_to_format = find_file_with_extension(dir_name=d, extensions=extensions)
@@ -39,7 +31,7 @@ def format_c_cpp_dir(root_dir: str, extensions: list, dir_to_exclude: list):
 
 
 EXTENSIONS = [".cpp", ".hpp"]
-DIRS_TO_EXCLUDE = ["third_party"]
+DIRS_TO_INCLUDE = ["src","test", "program_utils", "mock_program", "example_program", "include"]
 format_c_cpp_dir(
-    root_dir=os.getcwd(), extensions=EXTENSIONS, dir_to_exclude=DIRS_TO_EXCLUDE
+    dirs=DIRS_TO_INCLUDE, extensions=EXTENSIONS
 )
