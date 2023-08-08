@@ -12,9 +12,9 @@ $ mkdir build
 $ cd build 
 $ # choose either one
 $ # for debugging
-$ cmake -DCMAKE_BUILD_TYPE=Debug ../../../../engine/
+$ cmake -DCMAKE_BUILD_TYPE=Debug ..
 $ # for release (optimization on)
-$ cmake -DCMAKE_BUILD_TYPE=Release ../../../../engine/ 
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 ```
 $ make
