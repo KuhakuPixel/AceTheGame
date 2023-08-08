@@ -26,7 +26,7 @@ android {
     // https://developer.android.com/studio/projects/gradle-external-native-builds
     externalNativeBuild {
         cmake {
-            path "../../ACE/engine/CMakeLists.txt"
+            path "../../ACE/CMakeLists.txt"
         }
     }
     defaultConfig {

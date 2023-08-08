@@ -39,7 +39,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path "../../../../../ACE/engine/CMakeLists.txt"
+            path "../../../../../ACE/CMakeLists.txt"
         }
     }
     namespace 'com.AceInjector.hellolibs'

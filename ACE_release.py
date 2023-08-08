@@ -18,7 +18,7 @@ from build_option import ANDROID_ARCH_ABI_ARR, ANDROID_PLATFORM_TARGET
 
 LINUX_RELEASE_DIR = "./linux"
 ANDROID_RELEASE_DIR = "./android"
-CMAKELIST_PATH = "./ACE/engine/"
+CMAKELIST_PATH = "./ACE/"
 BUILD_DIR = "./build"
 
 def gen_make_and_make_ACE(
