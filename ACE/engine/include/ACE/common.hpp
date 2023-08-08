@@ -44,19 +44,6 @@
   } while (0)
 
 /*
- * free [ptr] and assign NULL
- *
- * macro is used since cpp compiler doesn't allow passing
- * different type of pointer to  `void*`
- * */
-
-#define FREE_AND_NULL(ptr)                                                     \
-  do {                                                                         \
-    free(ptr);                                                                 \
-    ptr = NULL;                                                                \
-  } while (0)
-
-/*
  * instantiate a template for all numeric types
  * this is useful when template functions/classes implementation
  * are separated from header files, which mean that

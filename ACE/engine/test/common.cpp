@@ -40,25 +40,3 @@ TEST_CASE("TIME_ACTION", "[COMMON]") {
   }
   printf("sum: %d\n", sum);
 }
-TEST_CASE("free_and_null", "[COMMON]") {
-
-  {
-    size_t *arr = (size_t *)malloc(sizeof(size_t) * 10000);
-    REQUIRE(arr != NULL);
-    FREE_AND_NULL(arr);
-    REQUIRE(arr == NULL);
-  }
-
-  {
-    size_t *arr = (size_t *)malloc(sizeof(size_t) * 1000000);
-    REQUIRE(arr != NULL);
-    FREE_AND_NULL(arr);
-    REQUIRE(arr == NULL);
-  }
-
-  {
-    size_t *null_ptr = NULL;
-    FREE_AND_NULL(null_ptr);
-    REQUIRE(null_ptr == NULL);
-  }
-}
