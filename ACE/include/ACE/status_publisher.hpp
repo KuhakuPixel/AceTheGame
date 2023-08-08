@@ -3,21 +3,21 @@
 #include <string>
 
 /*
- * publish status to any subscriber that is listening 
+ * publish status to any subscriber that is listening
  * used to publish things like scan progress
  *
- *  Problem: 
+ *  Problem:
  *  	- when ACE is runned as a server by a gui
- *  	  it can only act as a request reply 
+ *  	  it can only act as a request reply
  *
  *  	  so when gui send request to do thing like scan
  *  	  it won't be able to receive any ongoing
- *  	  progress until scan is finished 
+ *  	  progress until scan is finished
  *
  * Solution:
  * 	- open up another port by using this class
  * 	  that continuously publish the ongoing progress
- * 	  
+ *
  * 	  gui can then subscribe to the [port] and can know ongoing progress
  * */
 

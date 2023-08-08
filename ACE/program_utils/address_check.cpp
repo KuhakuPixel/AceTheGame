@@ -40,8 +40,7 @@ int main(int argc, char **argv) {
     if (address >= mem_regions[i].address_start &&
         address <= mem_regions[i].address_end) {
       printf("address: %llx\n", address);
-      printf("region name: %s\n",
-             mem_regions[i].get_displayable_str().c_str());
+      printf("region name: %s\n", mem_regions[i].get_displayable_str().c_str());
       return 0;
     }
   }
