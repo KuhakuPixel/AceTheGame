@@ -19,6 +19,7 @@ import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
+
 class AddressInfo(val matchInfo: MatchInfo, val numType: NumType) {
 }
 
@@ -84,16 +85,16 @@ fun SavedAddressesTable(
                 savedAddressList[rowIndex].matchInfo.address
             )
         },
-        drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
+        drawCell = { rowIndex: Int, colIndex: Int ->
             if (colIndex == 0) {
-                Text(text = savedAddressList[rowIndex].matchInfo.address, modifier = cellModifier)
+                Text(text = savedAddressList[rowIndex].matchInfo.address)
             }
             if (colIndex == 1) {
                 val typeDesc: String = ace.GetNumTypeAndBitSize(savedAddressList[rowIndex].numType)
-                Text(text = typeDesc, modifier = cellModifier)
+                Text(text = typeDesc)
             }
             if (colIndex == 2) {
-                Text(text = savedAddressList[rowIndex].matchInfo.prevValue, modifier = cellModifier)
+                Text(text = savedAddressList[rowIndex].matchInfo.prevValue)
             }
         }
     )

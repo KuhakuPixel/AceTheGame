@@ -294,12 +294,12 @@ private fun MatchesTable(
             onRowClicked = { rowIndex: Int ->
                 onMatchClicked(matches[rowIndex])
             },
-            drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
+            drawCell = { rowIndex: Int, colIndex: Int ->
                 if (colIndex == 0) {
-                    Text(text = matches[rowIndex].address, modifier = cellModifier)
+                    Text(text = matches[rowIndex].address)
                 }
                 if (colIndex == 1) {
-                    Text(text = matches[rowIndex].prevValue, modifier = cellModifier)
+                    Text(text = matches[rowIndex].prevValue)
                 }
             })
     }
