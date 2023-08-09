@@ -1,6 +1,6 @@
 [submodule "ACE/engine/third_party/cppzmq"]
-	path = ACE/engine/third_party/cppzmq
+	path = ACE/third_party/cppzmq
 	url = https://github.com/KuhakuPixel/cppzmq.git
 [submodule "ACE/engine/third_party/libzmq"]
-	path = ACE/engine/third_party/libzmq
+	path = ACE/third_party/libzmq
 	url = https://github.com/KuhakuPixel/libzmq.git
