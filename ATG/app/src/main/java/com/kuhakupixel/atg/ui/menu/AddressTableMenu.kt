@@ -106,6 +106,17 @@ fun SavedAddressesTable(
                         freezeChecked.value,
                         onCheckedChange = { checked: Boolean ->
                             freezeChecked.value = checked
+                            if (checked) {
+                                ace.FreezeValueAtAddress(
+                                    savedAddressList[rowIndex].numType,
+                                    savedAddressList[rowIndex].matchInfo.address
+                                )
+                            } else {
+                                ace.UnFreezeValueAtAddress(
+                                    savedAddressList[rowIndex].numType,
+                                    savedAddressList[rowIndex].matchInfo.address
+                                )
+                            }
 
                         },
                     )
