@@ -1,13 +1,18 @@
 package com.kuhakupixel.atg.ui.menu
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.backend.ACE
@@ -80,21 +85,34 @@ fun SavedAddressesTable(
         itemCount = savedAddressList.size,
         minEmptyItemCount = 50,
         onRowClicked = { rowIndex: Int ->
-            onAddressClicked(
-                savedAddressList[rowIndex].numType,
-                savedAddressList[rowIndex].matchInfo.address
-            )
         },
         drawCell = { rowIndex: Int, colIndex: Int ->
+            // address
             if (colIndex == 0) {
                 Text(text = savedAddressList[rowIndex].matchInfo.address)
             }
+            // num type
             if (colIndex == 1) {
                 val typeDesc: String = ace.GetNumTypeAndBitSize(savedAddressList[rowIndex].numType)
                 Text(text = typeDesc)
             }
+            // value
             if (colIndex == 2) {
-                Text(text = savedAddressList[rowIndex].matchInfo.prevValue)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAddressClicked(
+                                savedAddressList[rowIndex].numType,
+                                savedAddressList[rowIndex].matchInfo.address
+                            )
+
+                        },
+                ) {
+                    Text(
+                        text = savedAddressList[rowIndex].matchInfo.prevValue,
+                    )
+                }
             }
         }
     )

@@ -6,16 +6,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
 
@@ -39,6 +43,10 @@ fun CreateTable(
             .padding(8.dp)
             // just in case if text is too long
             .horizontalScroll(rememberScrollState())
+            // so children's size in [drawCell] can be as big as possible
+            // https://stackoverflow.com/questions/67677125/fill-height-for-child-in-row
+            // https://stackoverflow.com/questions/65942711/match-width-of-parent-in-column-jetpack-compose
+            .width(IntrinsicSize.Max)
     }
 
     @Composable
@@ -78,6 +86,7 @@ fun CreateTable(
                             onRowClicked(rowIndex)
                         },
                 ) {
+
                     for (colIndex in 0 until colCount) {
                         Box(
                             modifier = GetCellModifier(colWeights[colIndex])
