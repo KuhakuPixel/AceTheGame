@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontVariation.width
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
 
@@ -30,9 +32,11 @@ fun CreateTable(
     colWeights: List<Float>,
     itemCount: Int,
     minEmptyItemCount: Int = 0,
+    rowMinHeight: Dp = 0.dp,
     onRowClicked: (rowIndex: Int) -> Unit,
     drawCell: @Composable (rowIndex: Int, colIndex: Int) -> Unit,
-) {
+
+    ) {
     @Composable
     fun RowScope.GetCellModifier(
         weight: Float
@@ -56,7 +60,7 @@ fun CreateTable(
     ) {
         Text(
             text = text,
-            modifier = GetCellModifier(weight)
+            modifier = GetCellModifier(weight).defaultMinSize(minHeight = rowMinHeight)
         )
     }
     if (colNames.size != colWeights.size) {
@@ -89,7 +93,7 @@ fun CreateTable(
 
                     for (colIndex in 0 until colCount) {
                         Box(
-                            modifier = GetCellModifier(colWeights[colIndex])
+                            modifier = GetCellModifier(colWeights[colIndex]).defaultMinSize(minHeight = rowMinHeight)
                         ) {
                             drawCell(
                                 rowIndex = rowIndex,
