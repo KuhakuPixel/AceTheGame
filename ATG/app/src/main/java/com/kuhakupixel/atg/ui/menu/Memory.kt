@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -143,6 +146,20 @@ fun _MemoryMenu(
                         )
                     }
                 },
+                onCopyAllMatchesToAddressTable = {
+                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                    for (matchInfo in currentMatchesList.value)
+                        AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
+                    coroutineScope.launch() {
+                        snackbarHostState.showSnackbar(
+                            message = "Added all matches to Address Table",
+                            duration = SnackbarDuration.Short,
+                            actionLabel = "Ok"
+
+                        )
+                    }
+
+                }
             )
             MatchesSetting(
                 modifier = matchesSettingModifier,
@@ -282,10 +299,23 @@ private fun MatchesTable(
     matchesStatusText: String,
     scanProgress: Float,
     onMatchClicked: (matchInfo: MatchInfo) -> Unit,
+    onCopyAllMatchesToAddressTable: () -> Unit,
 ) {
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(matchesStatusText)
+
+        Row(
+            modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween
+        ) {
+            Text(matchesStatusText)
+
+            Button(onClick = onCopyAllMatchesToAddressTable) {
+                Icon(
+                    Icons.Filled.ArrowForward,
+                    "Copy all matches to address table",
+                )
+            }
+        }
         LinearProgressIndicator(progress = scanProgress)
         CreateTable(colNames = listOf("Address", "Previous Value"),
             colWeights = listOf(0.4f, 0.6f),
