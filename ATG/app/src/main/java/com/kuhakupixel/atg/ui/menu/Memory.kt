@@ -38,6 +38,7 @@ import com.kuhakupixel.atg.ui.util.NumberInputField
 import com.kuhakupixel.atg.ui.util.OverlayDropDown
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayChoicesDialog
+import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.min
@@ -126,8 +127,23 @@ fun _MemoryMenu(
     scanTypeEnabled.value = isAttached
 
     // =================================
+    // for showing scan error
+    // have to use this hacky solution because OverlayInfoDiaog.show
+    // cannot be called in another thread
+    val showErrorDialog = remember { mutableStateOf(false) }
+    val errorDialogMsg = remember { mutableStateOf("") }
+    if (showErrorDialog.value) {
+        OverlayInfoDialog(overlayContext!!).show(
+            title = "Error",
+            text = errorDialogMsg.value,
+            onConfirm = {
+                showErrorDialog.value = false
+            }
+        )
+    }
 
 
+//
     val content: @Composable (matchesTableModifier: Modifier, matchesSettingModifier: Modifier) -> Unit =
         { matchesTableModifier, matchesSettingModifier ->
 
@@ -179,7 +195,6 @@ fun _MemoryMenu(
                 nextScanEnabled = isAttached && !isScanOnGoing.value,
                 nextScanClicked = fun() {
                     onNextScanClicked(
-                        overlayContext = overlayContext!!,
                         scanOptions = getCurrentScanOption(),
                         ace = ace,
                         onBeforeScanStart = {
@@ -195,7 +210,12 @@ fun _MemoryMenu(
                         },
                         onScanProgress = { progress: Float ->
                             scanProgress.value = progress
+                        },
+                        onScanError = { e: Exception ->
+                            showErrorDialog.value = true
+                            errorDialogMsg.value = e.stackTraceToString()
                         }
+
 
                     )
                 },
@@ -213,7 +233,7 @@ fun _MemoryMenu(
         }
 
 
-    // switch to column when portrait and row when landscape
+// switch to column when portrait and row when landscape
     if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
@@ -244,7 +264,6 @@ fun _MemoryMenu(
         }
     }
 }
-
 
 @Composable
 private fun MatchesTable(
