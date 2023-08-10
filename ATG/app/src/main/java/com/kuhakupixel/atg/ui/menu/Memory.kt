@@ -74,6 +74,18 @@ private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches"
 private val scanProgress: MutableState<Float> = mutableStateOf(0.0f)
 
 // ================================================================
+class ScanOptions(val inputVal: String, val numType: NumType, val scanType: Operator) {
+}
+
+fun GetCurrentScanOption(): ScanOptions {
+
+    return ScanOptions(
+        inputVal = scanInputVal.value,
+        numType = NumType.values()[valueTypeSelectedOptionIdx.value],
+        scanType = Operator.values()[scanTypeSelectedOptionIdx.value],
+    )
+}
+
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -134,7 +146,7 @@ fun _MemoryMenu(
                 scanProgress = scanProgress.value,
                 onMatchClicked = { matchInfo: MatchInfo ->
                     //
-                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                    val valueType: NumType = GetCurrentScanOption().numType
                     AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
                     //
                     coroutineScope.launch() {
@@ -147,7 +159,7 @@ fun _MemoryMenu(
                     }
                 },
                 onCopyAllMatchesToAddressTable = {
-                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                    val valueType: NumType = GetCurrentScanOption().numType
                     for (matchInfo in currentMatchesList.value)
                         AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
                     coroutineScope.launch() {
@@ -176,13 +188,10 @@ fun _MemoryMenu(
                 nextScanClicked = fun() {
                     val statusPublisherPort = ace.getStatusPublisherPort();
                     thread {
-                        // ====================== get scan options ========================
-                        val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
-                        val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
-                        // ================================================================
+                        // get scan options
+                        val scanOptions: ScanOptions = GetCurrentScanOption()
                         // set the value type
-                        if (!initialScanDone.value) ace.SetNumType(valueType)
-
+                        if (!initialScanDone.value) ace.SetNumType(scanOptions.numType)
                         // disable next and new scan
                         isScanOnGoing.value = true
                         try {
@@ -194,10 +203,10 @@ fun _MemoryMenu(
                              * */
 
                             if (scanInputVal.value.isBlank()) {
-                                ace.ScanWithoutValue(scanType)
+                                ace.ScanWithoutValue(scanOptions.scanType)
                             } else {
                                 ace.ScanAgainstValue(
-                                    scanType,
+                                    scanOptions.scanType,
                                     scanInputVal.value
                                 )
                             }
