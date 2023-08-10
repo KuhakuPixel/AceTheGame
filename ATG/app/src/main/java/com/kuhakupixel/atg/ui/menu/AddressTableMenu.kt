@@ -13,6 +13,7 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -29,7 +30,11 @@ import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
 
-class AddressInfo(val matchInfo: MatchInfo, val numType: NumType) {
+class AddressInfo(
+    val matchInfo: MatchInfo,
+    val numType: NumType,
+    val isFreezed: MutableState<Boolean> = mutableStateOf(false)
+) {
 }
 
 private val savedAddresList = SnapshotStateList<AddressInfo>()
@@ -93,16 +98,15 @@ fun SavedAddressesTable(
         },
         rowMinHeight = 25.dp,
         drawCell = { rowIndex: Int, colIndex: Int ->
-            val freezeChecked = remember { mutableStateOf(false) }
             if (colIndex == 0) {
                 // remove default padding  in Checkbox
                 // https://stackoverflow.com/questions/71609051/remove-default-padding-around-checkboxes-in-jetpack-compose-new-update
                 // https://stackoverflow.com/questions/73620652/jetpack-compose-internal-padding
                 CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                     Checkbox(
-                        freezeChecked.value,
+                        savedAddressList[rowIndex].isFreezed.value,
                         onCheckedChange = { checked: Boolean ->
-                            freezeChecked.value = checked
+                            savedAddressList[rowIndex].isFreezed.value = checked
                             if (checked) {
                                 ace.FreezeAtAddress(
                                     savedAddressList[rowIndex].numType,
