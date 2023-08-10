@@ -258,12 +258,36 @@ public class ACE {
     public synchronized void WriteValueAtAddress(NumType numType, String address, String value) {
 
         this.ActionOnType(numType,
-
                 self -> {
                     self.CheaterCmd(new String[]{"writeat", address, value});
                 }
         );
     }
+
+    public synchronized void FreezeAtAddress(NumType numType, String address) {
+        this.ActionOnType(numType,
+                self -> {
+                    self.CheaterCmd(new String[]{"freeze at", address});
+                }
+        );
+    }
+
+    public synchronized void FreezeValueAtAddress(NumType numType, String address, String value) {
+        this.ActionOnType(numType,
+                self -> {
+                    self.CheaterCmd(new String[]{"freeze at", address, "--value", value});
+                }
+        );
+    }
+
+    public synchronized void UnFreezeAtAddress(NumType numType, String address) {
+        this.ActionOnType(numType,
+                self -> {
+                    self.CheaterCmd(new String[]{"unfreeze at", address});
+                }
+        );
+    }
+
 
     public synchronized Integer GetMatchCount() {
         return Integer.parseInt(CheaterCmd(new String[]{"matchcount"}));

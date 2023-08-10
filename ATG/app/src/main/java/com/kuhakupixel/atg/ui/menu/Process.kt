@@ -90,12 +90,12 @@ fun ProcessTable(
             )
 
         },
-        drawCell = { rowIndex: Int, colIndex: Int, cellModifier: Modifier ->
+        drawCell = { rowIndex: Int, colIndex: Int ->
             if (colIndex == 0) {
-                Text(text = processList[rowIndex].GetPidStr(), modifier = cellModifier)
+                Text(text = processList[rowIndex].GetPidStr())
             }
             if (colIndex == 1) {
-                Text(text = processList[rowIndex].GetName(), modifier = cellModifier)
+                Text(text = processList[rowIndex].GetName())
             }
         })
 }
