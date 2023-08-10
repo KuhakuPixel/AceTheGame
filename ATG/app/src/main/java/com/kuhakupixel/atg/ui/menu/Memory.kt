@@ -137,8 +137,12 @@ fun _MemoryMenu(
             title = "Error",
             text = errorDialogMsg.value,
             onConfirm = {
+            },
+            onClose = {
+
                 showErrorDialog.value = false
             }
+
         )
     }
 
