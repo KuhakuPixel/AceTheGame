@@ -264,7 +264,7 @@ public class ACE {
         );
     }
 
-    public synchronized void FreezeValueAtAddress(NumType numType, String address) {
+    public synchronized void FreezeAtAddress(NumType numType, String address) {
         this.ActionOnType(numType,
                 self -> {
                     self.CheaterCmd(new String[]{"freeze at", address});
@@ -272,7 +272,15 @@ public class ACE {
         );
     }
 
-    public synchronized void UnFreezeValueAtAddress(NumType numType, String address) {
+    public synchronized void FreezeValueAtAddress(NumType numType, String address, String value) {
+        this.ActionOnType(numType,
+                self -> {
+                    self.CheaterCmd(new String[]{"freeze at", address, "--value", value});
+                }
+        );
+    }
+
+    public synchronized void UnFreezeAtAddress(NumType numType, String address) {
         this.ActionOnType(numType,
                 self -> {
                     self.CheaterCmd(new String[]{"unfreeze at", address});

@@ -17,7 +17,6 @@ import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayDialog
 class EditAddressOverlayDialog(overlayContext: OverlayContext, alpha: Float = 1.0f) :
     OverlayDialog(overlayContext, alpha = alpha) {
     private val valueInput: MutableState<String> = mutableStateOf("")
-    private val checked: MutableState<Boolean> = mutableStateOf(false)
 
     @Composable
     override fun DialogBody() {
@@ -33,24 +32,15 @@ class EditAddressOverlayDialog(overlayContext: OverlayContext, alpha: Float = 1.
                 label = "Value Input ...",
                 placeholder = "value ...",
             )
-            /* TODO: implement freeze value of address
-            Column(verticalArrangement = Arrangement.SpaceBetween) {
-                Text("Freeze")
-                Checkbox(
-                    checked = checked.value,
-                    onCheckedChange = { value -> checked.value = value })
-            }
-
-             */
         }
 
     }
 
-    fun show(title: String, onConfirm: (input: String, isFreezed: Boolean) -> Unit) {
+    fun show(title: String, onConfirm: (input: String) -> Unit) {
         super.show(
             title = title,
             onConfirm = {
-                onConfirm(valueInput.value, checked.value)
+                onConfirm(valueInput.value)
             },
             onClose = {}
         )

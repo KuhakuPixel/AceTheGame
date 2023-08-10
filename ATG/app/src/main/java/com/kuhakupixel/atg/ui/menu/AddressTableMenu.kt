@@ -1,6 +1,5 @@
 package com.kuhakupixel.atg.ui.menu
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
@@ -19,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.backend.ACE
@@ -57,10 +54,10 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
                 .padding(16.dp),
             savedAddressList = savedAddresList,
             ace = ace,
-            onAddressClicked = { numType: NumType, address: String ->
+            onValueClicked = { numType: NumType, address: String ->
                 EditAddressOverlayDialog(overlayContext!!).show(
                     title = "Edit value of $address",
-                    onConfirm = { input: String, isFreezed: Boolean ->
+                    onConfirm = { input: String ->
                         try {
                             ace.WriteValueAtAddress(numType, address, input)
                         } catch (e: ACEBaseClient.InvalidCommandException) {
@@ -83,7 +80,7 @@ fun SavedAddressesTable(
     modifier: Modifier = Modifier,
     savedAddressList: SnapshotStateList<AddressInfo>,
     ace: ACE,
-    onAddressClicked: (numType: NumType, address: String) -> Unit
+    onValueClicked: (numType: NumType, address: String) -> Unit
 ) {
 
     CreateTable(
@@ -107,12 +104,12 @@ fun SavedAddressesTable(
                         onCheckedChange = { checked: Boolean ->
                             freezeChecked.value = checked
                             if (checked) {
-                                ace.FreezeValueAtAddress(
+                                ace.FreezeAtAddress(
                                     savedAddressList[rowIndex].numType,
                                     savedAddressList[rowIndex].matchInfo.address
                                 )
                             } else {
-                                ace.UnFreezeValueAtAddress(
+                                ace.UnFreezeAtAddress(
                                     savedAddressList[rowIndex].numType,
                                     savedAddressList[rowIndex].matchInfo.address
                                 )
@@ -137,7 +134,7 @@ fun SavedAddressesTable(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            onAddressClicked(
+                            onValueClicked(
                                 savedAddressList[rowIndex].numType,
                                 savedAddressList[rowIndex].matchInfo.address
                             )
