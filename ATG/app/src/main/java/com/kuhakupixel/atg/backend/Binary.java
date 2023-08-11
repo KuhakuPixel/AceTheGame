@@ -13,13 +13,11 @@ public class Binary {
 
     public enum Type {
         server,
-        attachClient,
         utilClient,
     }
 
     public static final Map<Type, String> binaryNameToFileNameMap = new HashMap<Type, String>() {
         {
-            put(Type.attachClient, "attach_client");
             put(Type.utilClient, "util_client");
             put(Type.server, "ACE");
 

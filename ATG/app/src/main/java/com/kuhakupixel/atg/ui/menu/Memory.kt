@@ -1,14 +1,11 @@
 package com.kuhakupixel.atg.ui.menu
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.SnackbarDuration
@@ -35,9 +32,6 @@ import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACE.Operator
 import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
-import com.kuhakupixel.atg.backend.ACEBaseClient.InvalidCommandException
-import com.kuhakupixel.atg.backend.ACEStatusSubscriber
-import com.kuhakupixel.atg.backend.ScanProgressData
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
@@ -47,7 +41,6 @@ import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayChoicesDialog
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
 import kotlin.math.min
 
 
@@ -63,7 +56,7 @@ private val valueTypeSelectedOptionIdx = mutableStateOf(0)
 
 // ================================================================
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
-val isScanOnGoing: MutableState<Boolean> = mutableStateOf(false)
+private val isScanOnGoing: MutableState<Boolean> = mutableStateOf(false)
 
 private val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 private val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
@@ -74,6 +67,17 @@ private var matchesStatusText: MutableState<String> = mutableStateOf("0 matches"
 private val scanProgress: MutableState<Float> = mutableStateOf(0.0f)
 
 // ================================================================
+
+fun getCurrentScanOption(): ScanOptions {
+
+    return ScanOptions(
+        inputVal = scanInputVal.value,
+        numType = NumType.values()[valueTypeSelectedOptionIdx.value],
+        scanType = Operator.values()[scanTypeSelectedOptionIdx.value],
+        initialScanDone = initialScanDone.value
+    )
+}
+
 @Composable
 fun MemoryMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
@@ -87,6 +91,7 @@ fun MemoryMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
         )
     }
 }
+
 
 @Composable
 fun _MemoryMenu(
@@ -122,8 +127,27 @@ fun _MemoryMenu(
     scanTypeEnabled.value = isAttached
 
     // =================================
+    // for showing scan error
+    // have to use this hacky solution because OverlayInfoDiaog.show
+    // cannot be called in another thread
+    val showErrorDialog = remember { mutableStateOf(false) }
+    val errorDialogMsg = remember { mutableStateOf("") }
+    if (showErrorDialog.value) {
+        OverlayInfoDialog(overlayContext!!).show(
+            title = "Error",
+            text = errorDialogMsg.value,
+            onConfirm = {
+            },
+            onClose = {
+
+                showErrorDialog.value = false
+            }
+
+        )
+    }
 
 
+//
     val content: @Composable (matchesTableModifier: Modifier, matchesSettingModifier: Modifier) -> Unit =
         { matchesTableModifier, matchesSettingModifier ->
 
@@ -134,7 +158,7 @@ fun _MemoryMenu(
                 scanProgress = scanProgress.value,
                 onMatchClicked = { matchInfo: MatchInfo ->
                     //
-                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                    val valueType: NumType = getCurrentScanOption().numType
                     AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
                     //
                     coroutineScope.launch() {
@@ -147,7 +171,7 @@ fun _MemoryMenu(
                     }
                 },
                 onCopyAllMatchesToAddressTable = {
-                    val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
+                    val valueType: NumType = getCurrentScanOption().numType
                     for (matchInfo in currentMatchesList.value)
                         AddressTableAddAddress(matchInfo = matchInfo, numType = valueType)
                     coroutineScope.launch() {
@@ -174,76 +198,30 @@ fun _MemoryMenu(
                 //
                 nextScanEnabled = isAttached && !isScanOnGoing.value,
                 nextScanClicked = fun() {
-                    val statusPublisherPort = ace.getStatusPublisherPort();
-                    thread {
-                        // ====================== get scan options ========================
-                        val valueType: NumType = NumType.values()[valueTypeSelectedOptionIdx.value]
-                        val scanType: Operator = Operator.values()[scanTypeSelectedOptionIdx.value]
-                        // ================================================================
-                        // set the value type
-                        if (!initialScanDone.value) ace.SetNumType(valueType)
-
-                        // disable next and new scan
-                        isScanOnGoing.value = true
-                        try {
-                            /**
-                             * scan against a value if input value
-                             * is not empty
-                             * and scan without value otherwise
-                             * (picking addresses whose value stayed the same, increased and etc)
-                             * */
-
-                            if (scanInputVal.value.isBlank()) {
-                                ace.ScanWithoutValue(scanType)
-                            } else {
-                                ace.ScanAgainstValue(
-                                    scanType,
-                                    scanInputVal.value
-                                )
-                            }
-                        } catch (e: InvalidCommandException) {
-                            OverlayInfoDialog(overlayContext!!).show(
-                                title = "Error",
-                                text = e.stackTraceToString(),
-                                onConfirm = {},
-                            )
-                        }
-                        isScanOnGoing.value = false
-                        // set initial scan to true
-                        initialScanDone.value = true
-                        // update matches table
-                        UpdateMatches(ace = ace)
-                    }
-                    /**
-                     * thread to update the progress as the scan goes, with a subscriber
-                     * that keeps listening to a port until the scan is done
-                     * */
-                    thread {
-                        try {
-                            val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
-                            statusSubscriber.use { it: ACEStatusSubscriber ->
-
-                                var scanProgressData: ScanProgressData =
-                                    statusSubscriber.GetScanProgress()
-                                while (!scanProgressData.is_finished) {
-                                    scanProgress.value =
-                                        scanProgressData.current.toFloat() / scanProgressData.max.toFloat()
-                                    Log.d(
-                                        "ATG",
-                                        "Scan Progress: ${scanProgressData.current}/${scanProgressData.max}"
-                                    )
-                                    scanProgressData = statusSubscriber.GetScanProgress()
-                                }
-                                scanProgress.value = 0.0f
-                            }
-
-                        } catch (e: Exception) {
-                            Log.e("ATG", "Error " + e.toString());
-
+                    onNextScanClicked(
+                        scanOptions = getCurrentScanOption(),
+                        ace = ace,
+                        onBeforeScanStart = {
+                            // disable next and new scan
+                            isScanOnGoing.value = true
+                        },
+                        onScanDone = {
+                            isScanOnGoing.value = false
+                            // set initial scan to true
+                            initialScanDone.value = true
+                            // update matches table
+                            UpdateMatches(ace = ace)
+                        },
+                        onScanProgress = { progress: Float ->
+                            scanProgress.value = progress
+                        },
+                        onScanError = { e: Exception ->
+                            showErrorDialog.value = true
+                            errorDialogMsg.value = e.stackTraceToString()
                         }
 
-                    }
 
+                    )
                 },
 
                 //
@@ -259,7 +237,7 @@ fun _MemoryMenu(
         }
 
 
-    // switch to column when portrait and row when landscape
+// switch to column when portrait and row when landscape
     if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
@@ -290,7 +268,6 @@ fun _MemoryMenu(
         }
     }
 }
-
 
 @Composable
 private fun MatchesTable(
