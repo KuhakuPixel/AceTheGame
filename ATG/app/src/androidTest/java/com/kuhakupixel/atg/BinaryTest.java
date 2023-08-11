@@ -30,7 +30,7 @@ public class BinaryTest {
         path = Binary.GetBinPath(context, Binary.Type.server);
         Assert.assertFalse(StringUtils.isEmpty(path));
 
-        path = Binary.GetBinPath(context, Binary.Type.attachClient);
+        path = Binary.GetBinPath(context, Binary.Type.utilClient);
         Assert.assertFalse(StringUtils.isEmpty(path));
     }
 }
