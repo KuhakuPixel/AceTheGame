@@ -59,12 +59,37 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
                 .padding(16.dp),
             savedAddressList = savedAddresList,
             ace = ace,
-            onValueClicked = { numType: NumType, address: String ->
+            onValueClicked = { addressInfo: AddressInfo ->
                 EditAddressOverlayDialog(overlayContext!!).show(
-                    title = "Edit value of $address",
-                    onConfirm = { input: String ->
+                    title = "Edit value of ${addressInfo.matchInfo.address}",
+                    onConfirm = { newValue: String ->
                         try {
-                            ace.WriteValueAtAddress(numType, address, input)
+                            /* if value already frozen
+                            * we need to first unfreeze it and then freeze the address
+                            * with [newValue] instead of only writing to that value, because it
+                            * will be pointless mimicking cheat engine's behaviour
+                            *
+                            * example when this is useful: if we have already frozen player's y coordinate,
+                            * and we want to fly into higher/lower position
+                            * */
+                            if (addressInfo.isFreezed.value) {
+                                ace.UnFreezeAtAddress(
+                                    addressInfo.numType,
+                                    addressInfo.matchInfo.address
+                                )
+                                ace.FreezeValueAtAddress(
+                                    addressInfo.numType,
+                                    addressInfo.matchInfo.address,
+                                    newValue
+                                )
+                            } else {
+
+                                ace.WriteValueAtAddress(
+                                    addressInfo.numType,
+                                    addressInfo.matchInfo.address,
+                                    newValue
+                                )
+                            }
                         } catch (e: ACEBaseClient.InvalidCommandException) {
                             OverlayInfoDialog(overlayContext!!).show(
                                 title = "Error",
@@ -85,7 +110,7 @@ fun SavedAddressesTable(
     modifier: Modifier = Modifier,
     savedAddressList: SnapshotStateList<AddressInfo>,
     ace: ACE,
-    onValueClicked: (numType: NumType, address: String) -> Unit
+    onValueClicked: (addressInfo: AddressInfo) -> Unit
 ) {
 
     CreateTable(
@@ -139,8 +164,7 @@ fun SavedAddressesTable(
                         .fillMaxWidth()
                         .clickable {
                             onValueClicked(
-                                savedAddressList[rowIndex].numType,
-                                savedAddressList[rowIndex].matchInfo.address
+                                savedAddressList[rowIndex]
                             )
 
                         },
