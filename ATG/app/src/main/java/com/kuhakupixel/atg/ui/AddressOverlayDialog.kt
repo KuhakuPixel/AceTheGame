@@ -27,7 +27,10 @@ class AddressOverlayDialog(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = onAddressDeleted) {
+            Button(onClick = {
+                onAddressDeleted()
+                super.close()
+            }) {
                 Text("Delete address")
             }
         }
