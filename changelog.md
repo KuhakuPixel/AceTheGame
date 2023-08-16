@@ -1,5 +1,24 @@
 # ChangeLog
 
+## [0.1.0]
+
+### Fixed
+- [APK] error not showing when giving invalid input during scan
+
+### Added
+- [APK] freeze value
+- [APK] right arrow icon option to add all matches to address table
+- [APK] faster scan by only scanning memory region that matters
+- [APK] options to delete all (trash icon)  or one address in address table
+	(clicking the address of an entry and click `delete this address`)
+- [ACE] `region_level` option to choose which region to scan
+
+### Changed
+- [APK] press only the value cell to edit address's value instead of the whole row
+
+### Removed
+- [APK] unused binary module (apk's size is smaller now)
+
 ## [0.0.9]
 
 ### Fixed
@@ -12,7 +31,6 @@
 
 ### Changed
 ### Removed
-
 
 ## [0.0.8]
 Initial Alpha release of ATG apk
@@ -41,3 +59,4 @@ Initial Alpha release of ATG apk
   to scan with/without value
 
   suggestion from [lasnik](https://github.com/lasnikprogram)
+

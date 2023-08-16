@@ -93,7 +93,7 @@ dependencies {
     def nav_version = "2.5.3"
     implementation "androidx.navigation:navigation-compose:$nav_version"
     // creating overlay window
-    def libUberAllesVersion = '0.0.5'
+    def libUberAllesVersion = '0.0.6'
     implementation "com.github.KuhakuPixel:UberAlles:${libUberAllesVersion}"
     // ========================= for communication with ACE ===============
     // apache commons

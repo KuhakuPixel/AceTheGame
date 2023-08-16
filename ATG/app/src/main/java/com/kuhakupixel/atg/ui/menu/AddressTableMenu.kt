@@ -1,5 +1,6 @@
 package com.kuhakupixel.atg.ui.menu
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,13 +8,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -24,6 +31,7 @@ import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACEBaseClient
+import com.kuhakupixel.atg.ui.AddressOverlayDialog
 import com.kuhakupixel.atg.ui.EditAddressOverlayDialog
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
@@ -37,8 +45,7 @@ class AddressInfo(
 ) {
 }
 
-private val savedAddresList = SnapshotStateList<AddressInfo>()
-
+private val savedAddresList = mutableStateListOf<AddressInfo>()
 fun AddressTableAddAddress(matchInfo: MatchInfo, numType: NumType) {
     savedAddresList.add(AddressInfo(matchInfo, numType))
 }
@@ -48,23 +55,73 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
 
     val ace: ACE = globalConf!!.getAce()
     Column(
-        verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(16.dp),
     ) {
-        Text("Address Table", modifier = Modifier.weight(0.2f))
+        Column(
+            modifier = Modifier.weight(0.2f)
+        ) {
+            Button(
+                onClick = {
+                    OverlayInfoDialog(overlayContext!!).show(
+                        title = "Info Dialog",
+                        text = "Delete all addresses?",
+                        onConfirm = {
+                            savedAddresList.clear()
+                        },
+                    )
+
+                }) {
+
+                Icon(Icons.Filled.Delete, "Delete All Matches")
+            }
+        }
         SavedAddressesTable(
-            modifier = Modifier
-                .weight(0.8f)
-                .padding(16.dp),
+            modifier = Modifier.weight(0.8f),
             savedAddressList = savedAddresList,
             ace = ace,
-            onValueClicked = { numType: NumType, address: String ->
+            onAddressClicked = { itemIndex: Int ->
+                AddressOverlayDialog(
+                    overlayContext = overlayContext!!,
+                    onAddressDeleted = {
+                        savedAddresList.removeAt(index = itemIndex)
+                    }
+
+                ).show(title = "Address ", onConfirm = {})
+
+            },
+            onValueClicked = { addressInfo: AddressInfo ->
                 EditAddressOverlayDialog(overlayContext!!).show(
-                    title = "Edit value of $address",
-                    onConfirm = { input: String ->
+                    title = "Edit value of ${addressInfo.matchInfo.address}",
+                    onConfirm = { newValue: String ->
                         try {
-                            ace.WriteValueAtAddress(numType, address, input)
+                            /* if value already frozen
+                            * we need to first unfreeze it and then freeze the address
+                            * with [newValue] instead of only writing to that value, because it
+                            * will be pointless mimicking cheat engine's behaviour
+                            *
+                            * example when this is useful: if we have already frozen player's y coordinate,
+                            * and we want to fly into higher/lower position
+                            * */
+                            if (addressInfo.isFreezed.value) {
+                                ace.UnFreezeAtAddress(
+                                    addressInfo.numType,
+                                    addressInfo.matchInfo.address
+                                )
+                                ace.FreezeValueAtAddress(
+                                    addressInfo.numType,
+                                    addressInfo.matchInfo.address,
+                                    newValue
+                                )
+                            } else {
+
+                                ace.WriteValueAtAddress(
+                                    addressInfo.numType,
+                                    addressInfo.matchInfo.address,
+                                    newValue
+                                )
+                            }
                         } catch (e: ACEBaseClient.InvalidCommandException) {
                             OverlayInfoDialog(overlayContext!!).show(
                                 title = "Error",
@@ -85,7 +142,8 @@ fun SavedAddressesTable(
     modifier: Modifier = Modifier,
     savedAddressList: SnapshotStateList<AddressInfo>,
     ace: ACE,
-    onValueClicked: (numType: NumType, address: String) -> Unit
+    onValueClicked: (addressInfo: AddressInfo) -> Unit,
+    onAddressClicked: (itemIndex: Int) -> Unit
 ) {
 
     CreateTable(
@@ -125,7 +183,16 @@ fun SavedAddressesTable(
             }
             // address
             if (colIndex == 1) {
-                Text(text = savedAddressList[rowIndex].matchInfo.address)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onAddressClicked(rowIndex)
+                        },
+                ) {
+                    Text(text = savedAddressList[rowIndex].matchInfo.address)
+                }
             }
             // num type
             if (colIndex == 2) {
@@ -139,8 +206,7 @@ fun SavedAddressesTable(
                         .fillMaxWidth()
                         .clickable {
                             onValueClicked(
-                                savedAddressList[rowIndex].numType,
-                                savedAddressList[rowIndex].matchInfo.address
+                                savedAddressList[rowIndex]
                             )
 
                         },
