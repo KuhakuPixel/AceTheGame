@@ -26,15 +26,8 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
 
-    // libs for io operations 
-    // https://stackoverflow.com/a/23678498/14073678
-    // installation:
-    // https://stackoverflow.com/a/31496709/14073678
-    implementation 'commons-io:commons-io:2.11.0'
-    // for easy os detection
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    // 
-    implementation 'org.apktool:apktool-lib:2.6.1'
+    //
+    // implementation 'org.apktool:apktool-lib:2.6.1'
     implementation 'net.lingala.zip4j:zip4j:2.11.3'
     // auto signer
     // TODO: add docker file for uber signer project
@@ -44,8 +37,16 @@ dependencies {
     // https://stackoverflow.com/a/20956456/14073678
     implementation files("./lib/uber-apk-signer-1.3.0.jar")
 
+    implementation files("./lib/apktool-cli-all_2.8.1.jar")
 
-   
+    // libs for io operations
+    // https://stackoverflow.com/a/23678498/14073678
+    // installation:
+    // https://stackoverflow.com/a/31496709/14073678
+    implementation 'commons-io:commons-io:2.13.0'
+    // for easy os detection
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
 
 }
 

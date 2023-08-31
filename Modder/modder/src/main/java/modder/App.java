@@ -141,8 +141,8 @@ class ModderMainCmd {
 		Assert.AssertExistAndIsDirectory(apkSrcDir);
 		// copy apk folder so we dont write to the original one
 		File apkDir = new File(apkSrcDir.getAbsolutePath() + ".patched");
-		FileUtils.copyDirectory(apkSrcDir, apkDir);
-
+		//FileUtils.copyDirectory(apkSrcDir, apkDir);
+		org.apache.commons.io.FileUtils.copyDirectory(apkSrcDir, apkDir);
 		// get the base apk for patching
 		File baseApkFile = new File(apkDir.getAbsolutePath(), Patcher.BASE_APK_FILE_NAME);
 		Assert.AssertExistAndIsFile(baseApkFile);
