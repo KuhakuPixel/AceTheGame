@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ApkToolWrap {
 
     public static void Decompile(String apkPathName, String outDirName) {
-        String[] cmd = new String[]{"d", apkPathName, "--no-res", "--output", outDirName, "-f"};
+        String[] cmd = new String[]{"d", apkPathName, "--output", outDirName, "-f"};
         try {
             brut.apktool.Main.main(cmd);
         } catch (BrutException e) {

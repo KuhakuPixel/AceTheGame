@@ -137,15 +137,16 @@ class ModderMainCmd {
         Assert.AssertExistAndIsDirectory(apkSrcDir);
         // copy apk folder so we don't write to the original one
         File patchedApkDir = new File(apkSrcDir.getAbsolutePath() + ".patched");
-        //FileUtils.copyDirectory(apkSrcDir, apkDir);
         org.apache.commons.io.FileUtils.copyDirectory(apkSrcDir, patchedApkDir);
         // get the base apk for patching
         File baseApkFile = new File(patchedApkDir.getAbsolutePath(), Patcher.BASE_APK_FILE_NAME);
         Assert.AssertExistAndIsFile(baseApkFile);
-        // add patch
+        // ========== add patch ===========================
         Patcher patcher = new Patcher(baseApkFile.getAbsolutePath());
         patcher.AddMemScanner();
-
+        // fix [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2] after recompile
+        // https://github.com/iBotPeaches/Apktool/issues/1626
+        patcher.RemoveExtractNativeLibOptions();
         // ================== export ===================
         // String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
         String patchedApkPath = baseApkFile.getAbsolutePath();

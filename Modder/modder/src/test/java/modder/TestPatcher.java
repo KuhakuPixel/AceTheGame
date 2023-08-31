@@ -2,10 +2,12 @@
 package modder;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 
 class TestPatcher {
@@ -160,6 +162,20 @@ class TestPatcher {
     }
 
     @Test
+    void RemoveExtractNativeLibOptions() throws IOException {
+        Patcher patcher = new Patcher(testApkPathStr);
+        // initially contains extractNativeLib options
+        String manifestContent = Files.readString(patcher.GetManifestFile().toPath());
+        assertEquals(true, manifestContent.contains("android:extractNativeLibs=\"false\""));
+
+        patcher.RemoveExtractNativeLibOptions();
+        // test
+        manifestContent = Files.readString(patcher.GetManifestFile().toPath());
+        assertFalse(manifestContent.contains("android:extractNativeLibs=\"false\""));
+        assertTrue(manifestContent.length() > 0);
+    }
+
+    @Test
     void AddMemScannerLib() throws IOException {
         Patcher patcher = new Patcher(testApkPathStr);
 
@@ -175,7 +191,7 @@ class TestPatcher {
     void AddMemScannerLib2() throws IOException {
         Patcher patcher = new Patcher(testApkWithNativeLibPathStr);
 
-        System.out.printf("the resource dir is: %s\n",Patcher.MEM_SCANNER_LIB_RESOURCE_DIR);
+        System.out.printf("the resource dir is: %s\n", Patcher.MEM_SCANNER_LIB_RESOURCE_DIR);
         // mem scanner lib shouldnt exist previously
         assertEquals(false, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME));
         // but this should exist
