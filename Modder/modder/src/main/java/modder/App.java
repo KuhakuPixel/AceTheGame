@@ -253,81 +253,6 @@ class ModderMainCmd {
 
 //
 public class App {
-	public String getGreeting() {
-		return "Hello World!";
-	}
-
-	// workaround for java 11 since app built with
-	// "gradle build", will be missing javaFX lib
-	// https://stackoverflow.com/questions/59771324/error-javafx-runtime-components-are-missing-and-are-required-to-run-this-appli
-	public static class RealApp extends Application {
-		final int width = 587;
-		final int height = 612;
-
-		@Override
-		public void start(Stage primaryStage) {
-
-			if (!Util.DoesCommandExist("adb")) {
-				GuiUtil.ShowAlert("Adb Command doesn't exist", "", "Command \"adb\" not found in PATH");
-				return;
-			}
-
-			// ====================================================
-			List<String> output = new ArrayList<String>();
-
-			// test if adb shell can be connected by echoing in
-			// the shell and check the output
-			output = Util.RunCommand("adb", Arrays.asList("shell", "echo", "test"));
-			if (output.size() >= 1) {
-				if (!output.get(0).equals("test")) {
-					System.out.println();
-
-					GuiUtil.ShowAlert("Adb Shell Error",
-							String.format("Error connecting to adb shell: \"%s\" ",
-									output.get(0)),
-
-							"Have you connected android device to your computer?");
-					return;
-				}
-
-			} else {
-				GuiUtil.ShowAlert("Adb Shell Error", "", "Error connecting to adb shell: Empty Output");
-				return;
-
-			}
-
-			// everything looks okay
-			output = Util.RunCommand("adb", Arrays.asList("shell", "pm", "list", "packages"));
-			output.forEach(s -> System.out.println(s));
-
-			// ========================== init gui =================
-			//
-			StackPane root = new StackPane();
-			Scene scene = new Scene(root, width, height);
-			// ============== set button ================
-			Button btn = new Button();
-			btn.setText("Get Size");
-			btn.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent event) {
-					System.out.println(
-							"width: " + scene.getWidth() + " height: " + scene.getHeight());
-				}
-			});
-
-			root.getChildren().add(btn);
-			// ==========================================
-
-			primaryStage.setTitle("Hello World!");
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			// primaryStage.setFullScreen(true);
-			primaryStage.show();
-		}
-
-	}
-
 	public static void cliInit(String[] args) {
 		CommandLine cli = new CommandLine(new ModderMainCmd());
 
@@ -353,10 +278,6 @@ public class App {
 			System.out.println("adb doesn't exist");
 
 		}
-
-		// gui
-		// Application.launch(RealApp.class);
-		// cli app
 		cliInit(args);
 
 	}
