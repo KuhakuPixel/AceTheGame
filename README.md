@@ -13,6 +13,8 @@
 - Game Guardian open source alternative for android
 
 - Game hacking tools for modifying health, coin and etc
+  
+[download](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 
 Disclaimer!!!: this program is still in beta phase 
 
@@ -289,8 +291,6 @@ see the [docs here](./ACE/readme.md)
  [adb download](https://developer.android.com/studio/command-line/adb)
 
 ### Installing memory scanner and editor to device
-- [download latest release of AceTheGame](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
-  and unzip the file to get `release` folder
 
   inside the `release` folder, the structure should look like 
   ```
