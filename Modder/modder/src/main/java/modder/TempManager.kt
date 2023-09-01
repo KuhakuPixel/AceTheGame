@@ -13,7 +13,7 @@ import java.nio.file.Path
 object TempManager {
     @JvmOverloads
     @Throws(IOException::class)
-    fun CreateTempDirectory(prefix: String?, taskOnExit: TaskOnExit = TaskOnExit.clean): Path {
+    fun CreateTempDirectory(prefix: String, taskOnExit: TaskOnExit = TaskOnExit.clean): Path {
         val tempDir = Files.createTempDirectory(prefix)
         // make sure we have the absolute path
         // https://stackoverflow.com/a/17552395/14073678

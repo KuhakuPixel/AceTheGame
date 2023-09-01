@@ -141,7 +141,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
     }
 
     @Throws(IOException::class)
-    fun AddFileToNativeLibDir(srcFileStr: String?) {
+    fun AddFileToNativeLibDir(srcFileStr: String) {
         val srcFile = File(srcFileStr)
         if (!srcFile.exists()) {
             throw IOException(String.format("%s doesn't exist",
@@ -192,7 +192,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
     }
 
     @Throws(IOException::class)
-    fun DoesNativeLibExist(libName: String?): Boolean {
+    fun DoesNativeLibExist(libName: String): Boolean {
 
         // need to use wrapper to accsess variable
         // from inside lambda
@@ -283,7 +283,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         PrintWriter(manifestFile.absolutePath).use { out -> out.println(newManifestContent) }
     }
 
-    fun Export(exportPath: String?) {
+    fun Export(exportPath: String) {
         val exportFile = File(exportPath)
         ApkToolWrap.Recompile(decompiledApkDirStr, exportFile.absolutePath)
         System.out.printf("exported to %s\n", exportFile.absolutePath)
@@ -323,7 +323,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         val MEM_SCANNER_SMALI_CODE_ZIP_PATH = java.lang.String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)
         const val MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V"
         @JvmStatic
-        fun LaunchableActivityToSmaliRelativePath(launchableActivity: String?): String {
+        fun LaunchableActivityToSmaliRelativePath(launchableActivity: String): String {
 
             // replace the '.' in launchableActivity class
             // to a near complete path
@@ -335,7 +335,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
 
         @JvmStatic
         @Throws(IOException::class)
-        fun MemScannerFindInjectionLineNum(launchableSmaliFile: String?): Int {
+        fun MemScannerFindInjectionLineNum(launchableSmaliFile: String): Int {
             val entrySmaliPath = File(launchableSmaliFile).toPath()
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())
             for (i in fileData.indices) {
@@ -347,7 +347,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
 
         @JvmStatic
         @Throws(IOException::class)
-        fun AddMemScannerConstructorSmaliCode(launchableSmaliFile: String?): List<String> {
+        fun AddMemScannerConstructorSmaliCode(launchableSmaliFile: String): List<String> {
             val entrySmaliPath = File(launchableSmaliFile).toPath()
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())
             val injectionLine = MemScannerFindInjectionLineNum(launchableSmaliFile)

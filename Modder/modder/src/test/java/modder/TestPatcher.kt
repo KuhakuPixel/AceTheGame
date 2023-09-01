@@ -27,7 +27,7 @@ internal class TestPatcher {
     @Test
     fun LaunchableActivityToSmaliRelativePath() {
         var path = ""
-        var expectedPath: String? = ""
+        var expectedPath: String = ""
         expectedPath = java.lang.String.join(File.separator, "com", "java", "simpleapp", "MainActivity.smali")
         path = LaunchableActivityToSmaliRelativePath("com.java.simpleapp.MainActivity")
         Assertions.assertEquals(expectedPath, path)

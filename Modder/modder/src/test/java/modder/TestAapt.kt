@@ -14,11 +14,11 @@ internal class TestAapt {
     var apk2_Path = GetFile(classLoader, "apk_example/with space/app-debug.apk")
     @Test
     fun RunBasicCmd() {
-        var output: List<String?>? = ArrayList()
+        var output: List<String> = ArrayList()
 
         // should contains basic info about aapt when run with --help
-        output = RunCmd(mutableListOf<String?>("--help"))
-        Assertions.assertEquals(true, output!!.contains("Android Asset Packaging Tool"))
+        output = RunCmd(mutableListOf<String>("--help"))
+        Assertions.assertEquals(true, output.contains("Android Asset Packaging Tool"))
         Assertions.assertEquals(true, output.contains("Usage:"))
     }
 

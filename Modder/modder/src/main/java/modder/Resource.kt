@@ -18,7 +18,7 @@ class Resource {
      * [resourceFile]: path to resource file, must start with '/'
      */
     @Throws(IOException::class)
-    fun CopyResourceFile(resourceFile: String?, destFile: String?) {
+    fun CopyResourceFile(resourceFile: String, destFile: String) {
         val `in` = javaClass.getResourceAsStream(resourceFile)
         val outputPath = Paths.get(destFile)
         System.out.printf("Copying resources file %s to %s\n", resourceFile, destFile)
@@ -27,7 +27,7 @@ class Resource {
 
     companion object {
         @JvmStatic
-        fun GetFile(classLoader: ClassLoader, resourceFile: String?): File {
+        fun GetFile(classLoader: ClassLoader, resourceFile: String): File {
             return try {
                 // need to decode the path, because for some reason,
                 // getResource().getFile replace space with %20

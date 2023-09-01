@@ -13,9 +13,9 @@ class ModderMainCmd {
     var spec: CommandSpec? = null
     val DECOMPILED_DIR_EXT = ".decompiled"
     val RECOMPILED_DIR_EXT = ".recompiled"
-    fun ShowAdbShellError(out: Adb.Output?) {
+    fun ShowAdbShellError(out: Adb.Output) {
         println("can't connect to adb shell:")
-        out!!.strings!!.forEach(Consumer { s: String? -> println(s) })
+        out!!.strings!!.forEach(Consumer { s: String -> println(s) })
     }
 
     @CommandLine.Command(name = "listApk", description = ["List installed apks"])
@@ -42,10 +42,10 @@ class ModderMainCmd {
     @CommandLine.Command(name = "apkInfo", description = ["information about apk"])
     @Throws(IOException::class)
     fun ApkInfo(
-            @CommandLine.Parameters(paramLabel = "apkPath", description = ["path to apk"]) apkPathStr: String?
+            @CommandLine.Parameters(paramLabel = "apkPath", description = ["path to apk"]) apkPathStr: String
     ) {
         val output = Aapt.DumpBadging(apkPathStr)
-        output!!.forEach(Consumer { x: String? -> println(x) })
+        output!!.forEach(Consumer { x: String -> println(x) })
     }
 
     /*
@@ -67,7 +67,7 @@ class ModderMainCmd {
      */
     @CommandLine.Command(name = "decompile", description = ["Decompile an apk"])
     fun Decompile(
-            @CommandLine.Parameters(paramLabel = "ApkFilePath", description = ["Path to apk file or a directory containing apks"]) apkPathStr: String?
+            @CommandLine.Parameters(paramLabel = "ApkFilePath", description = ["Path to apk file or a directory containing apks"]) apkPathStr: String
     ) {
         val apkDir = File(apkPathStr)
         ApkMod.Decompile(apkPathStr, apkDir.toString() + ApkMod.DECOMPILED_DIR_EXT)
@@ -75,7 +75,7 @@ class ModderMainCmd {
 
     @CommandLine.Command(name = "recompile", description = ["recompile apks"])
     fun Recompile(
-            @CommandLine.Parameters(paramLabel = "decompiledFolder", description = ["Folder to decompiled apks"]) decompiledFolderStr: String?
+            @CommandLine.Parameters(paramLabel = "decompiledFolder", description = ["Folder to decompiled apks"]) decompiledFolderStr: String
     ) {
         val decompiledApkDir = File(decompiledFolderStr)
         ApkMod.Recompile(decompiledFolderStr, decompiledApkDir.toString() + ApkMod.RECOMPILED_DIR_EXT)
@@ -84,7 +84,7 @@ class ModderMainCmd {
     @CommandLine.Command(name = "Patch", description = ["recompile apks"])
     @Throws(IOException::class)
     fun Patch(
-            @CommandLine.Parameters(paramLabel = "ApkFolderPath", description = ["Path to directory containing apks"]) apkDirStr: String?
+            @CommandLine.Parameters(paramLabel = "ApkFolderPath", description = ["Path to directory containing apks"]) apkDirStr: String
     ) {
 
         // check if the directory exist
@@ -168,7 +168,7 @@ class ModderMainCmd {
                 ShowAdbShellError(out)
                 return
             }
-            downloadOut.strings!!.forEach(Consumer { x: String? -> println(x) })
+            downloadOut.strings!!.forEach(Consumer { x: String -> println(x) })
             System.out.printf("...done\n")
         }
     }
@@ -180,10 +180,10 @@ class ModderMainCmd {
     @CommandLine.Command(name = "install", description = ["install all apk in a folder"])
     @Throws(IOException::class)
     fun Install(
-            @CommandLine.Parameters(paramLabel = "apkDir", description = ["Directory that contains apk"]) apkDirStr: String?
+            @CommandLine.Parameters(paramLabel = "apkDir", description = ["Directory that contains apk"]) apkDirStr: String
     ) {
         val adb = Adb()
         val out = adb.InstallApk(apkDirStr)
-        out!!.strings!!.forEach(Consumer { x: String? -> println(x) })
+        out!!.strings!!.forEach(Consumer { x: String -> println(x) })
     }
 }

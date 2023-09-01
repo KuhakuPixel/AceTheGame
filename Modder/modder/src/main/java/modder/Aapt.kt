@@ -10,8 +10,8 @@ import java.io.*
 import java.util.*
 
 object Aapt {
-    fun RunCmd(args: List<String?>): List<String?>? {
-        var output: List<String?>? = ArrayList()
+    fun RunCmd(args: List<String>): List<String> {
+        var output: List<String> = ArrayList()
         val aaptFile: File
         // get aapt
         aaptFile = try {
@@ -25,7 +25,7 @@ object Aapt {
     }
 
     @Throws(IOException::class)
-    fun DumpBadging(apkPath: String?): List<String?>? {
+    fun DumpBadging(apkPath: String): List<String> {
         Assert.AssertExistAndIsFile(File(apkPath))
         val apkPathArg = String.format("%s", apkPath)
         return RunCmd(Arrays.asList("dump", "badging", apkPathArg))
@@ -33,7 +33,7 @@ object Aapt {
 
     @JvmStatic
 	@Throws(IOException::class)
-    fun GetLaunchableActivity(apkPath: String?): String {
+    fun GetLaunchableActivity(apkPath: String): String {
         var launchableActivity = ""
         val out = DumpBadging(apkPath)
         for (i in out!!.indices) {

@@ -22,7 +22,7 @@ class Adb {
 
         // test if adb shell can be connected by echoing in
         // the shell and check the output
-        out.strings = Util.RunCommand("adb", mutableListOf<String?>("shell", "echo", "test"))
+        out.strings = Util.RunCommand("adb", mutableListOf<String>("shell", "echo", "test"))
         if (out.strings.size >= 1) {
             if (out.strings.get(0) != "test") out.error = Error.no_connection
         } else {
@@ -71,7 +71,7 @@ class Adb {
         return out
     }
 
-    fun GetApkPathAtDevice(package_name: String?): Output {
+    fun GetApkPathAtDevice(package_name: String): Output {
         val out = RunShell(Arrays.asList("pm", "path", package_name))
         if (out.error != Error.ok) {
             return out
@@ -91,7 +91,7 @@ class Adb {
         return out
     }
 
-    fun DownloadApk(path_to_apk: String?, downloadDir: String?): Output {
+    fun DownloadApk(path_to_apk: String, downloadDir: String): Output {
         val out = Run(Arrays.asList("pull", path_to_apk, downloadDir))
         return if (out.error != Error.ok) {
             out
@@ -99,7 +99,7 @@ class Adb {
     }
 
     @Throws(IOException::class)
-    fun InstallApk(apkDirStr: String?): Output {
+    fun InstallApk(apkDirStr: String): Output {
         val apkDir = File(apkDirStr)
         Assert.AssertExistAndIsDirectory(apkDir)
         val command: MutableList<String> = ArrayList()

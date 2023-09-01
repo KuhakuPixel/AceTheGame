@@ -5,7 +5,7 @@ import java.io.File
 object ApkMod {
     const val DECOMPILED_DIR_EXT = ".decompiled"
     const val RECOMPILED_DIR_EXT = ".recompiled"
-    fun Decompile(apkDirStr: String?, outDirName: String?) {
+    fun Decompile(apkDirStr: String, outDirName: String) {
         val apkPath = File(apkDirStr)
         if (!apkPath.exists()) {
             System.out.printf("file or directory \"%s\" not found\n", apkPath.toString())
@@ -41,7 +41,7 @@ object ApkMod {
         }
     }
 
-    fun Recompile(decompiledFolderStr: String?, outDirName: String?) {
+    fun Recompile(decompiledFolderStr: String, outDirName: String) {
 
         // =================== check if folder exist and follows
         // convention==================

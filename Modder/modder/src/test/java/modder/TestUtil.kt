@@ -52,21 +52,21 @@ internal class TestUtil {
         // because windows's echo command seems to be built in to the shell
         // not a binary, so it can't executed it on windows
         if (SystemUtils.IS_OS_UNIX) {
-            var output: List<String?> = ArrayList()
-            output = RunCommand("echo", mutableListOf<String?>("hello"))
-            Assertions.assertIterableEquals(mutableListOf<String?>("hello"), output)
-            output = RunCommand("echo", mutableListOf<String?>("hello world"))
-            Assertions.assertIterableEquals(mutableListOf<String?>("hello world"), output)
-            output = RunCommand("echo", mutableListOf<String?>("hello and goodbye world"))
-            Assertions.assertIterableEquals(mutableListOf<String?>("hello and goodbye world"), output)
-            output = RunCommand("echo", mutableListOf<String?>("hello\nworld"))
-            Assertions.assertIterableEquals(mutableListOf<String?>("hello", "world"), output)
-            output = RunCommand("echo", mutableListOf<String?>("hello\nworld\nbye"))
-            Assertions.assertIterableEquals(mutableListOf<String?>("hello", "world", "bye"), output)
+            var output: List<String> = ArrayList()
+            output = RunCommand("echo", mutableListOf<String>("hello"))
+            Assertions.assertIterableEquals(mutableListOf<String>("hello"), output)
+            output = RunCommand("echo", mutableListOf<String>("hello world"))
+            Assertions.assertIterableEquals(mutableListOf<String>("hello world"), output)
+            output = RunCommand("echo", mutableListOf<String>("hello and goodbye world"))
+            Assertions.assertIterableEquals(mutableListOf<String>("hello and goodbye world"), output)
+            output = RunCommand("echo", mutableListOf<String>("hello\nworld"))
+            Assertions.assertIterableEquals(mutableListOf<String>("hello", "world"), output)
+            output = RunCommand("echo", mutableListOf<String>("hello\nworld\nbye"))
+            Assertions.assertIterableEquals(mutableListOf<String>("hello", "world", "bye"), output)
 
             // check if it can also run binary from absolute path
-            output = RunCommand("/usr/bin/echo", mutableListOf<String?>("hello\nworld\nbye"))
-            Assertions.assertIterableEquals(mutableListOf<String?>("hello", "world", "bye"), output)
+            output = RunCommand("/usr/bin/echo", mutableListOf<String>("hello\nworld\nbye"))
+            Assertions.assertIterableEquals(mutableListOf<String>("hello", "world", "bye"), output)
         }
     }
 }
