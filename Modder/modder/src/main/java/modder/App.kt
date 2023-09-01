@@ -7,7 +7,7 @@ package modder
 import picocli.CommandLine
 
 //
-object App {
+class App {
     fun cliInit(args: Array<String>) {
         val cli = CommandLine(ModderMainCmd())
 
@@ -24,7 +24,6 @@ object App {
         System.exit(exitCode)
     }
 
-    @JvmStatic
     fun main(args: Array<String>) {
         // Some testing
         if (Util.DoesCommandExist("adb")) {
