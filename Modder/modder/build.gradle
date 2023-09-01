@@ -12,6 +12,7 @@ plugins {
     // gradle plugin for javafx lib
     // https://stackoverflow.com/a/55889428/14073678
     id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
 }
 
 repositories {
@@ -46,6 +47,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.13.0'
     // for easy os detection
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
 
 }
@@ -64,4 +66,7 @@ application {
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(17)
 }
