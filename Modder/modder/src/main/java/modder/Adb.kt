@@ -3,7 +3,7 @@
 */
 package modder
 
-import java.io.*
+import java.io.File
 import java.util.*
 
 class Adb {
@@ -18,11 +18,11 @@ class Adb {
     }
 
     fun Run(command: List<String>): Output {
-        val out: Output = Output()
+        val out = Output()
 
         // test if adb shell can be connected by echoing in
         // the shell and check the output
-        out.strings = Util.RunCommand("adb", mutableListOf<String>("shell", "echo", "test"))
+        out.strings = Util.RunCommand("adb", mutableListOf("shell", "echo", "test"))
         if (out.strings.size >= 1) {
             if (out.strings.get(0) != "test") out.error = Error.no_connection
         } else {
@@ -52,7 +52,7 @@ class Adb {
     }
 
     fun ListApk(): Output {
-        val out = RunShell(mutableListOf<String>("pm", "list", "packages"))
+        val out = RunShell(mutableListOf("pm", "list", "packages"))
         if (out.error != Error.ok) {
             return out
         }
@@ -61,10 +61,10 @@ class Adb {
         // package:com.android.offfice
         // package:com.vivo.appstore
         // "package:" should be trimmed for better view
-        for (i in out.strings!!.indices) {
+        for (i in out.strings.indices) {
             // use the caret symbol '^'
             // to match the beggining of the pattern
-            val new_str = out.strings!![i]!!.replaceFirst("^package:".toRegex(), "")
+            val new_str = out.strings[i].replaceFirst("^package:".toRegex(), "")
             apks.add(new_str)
         }
         out.strings = apks
@@ -81,10 +81,10 @@ class Adb {
         // package:/system/app/name
         // package:/system/test/clashroyale
         // "package:" should be trimmed
-        for (i in out.strings!!.indices) {
+        for (i in out.strings.indices) {
             // use the caret symbol '^'
             // to match the beggining of the pattern
-            val new_str = out.strings!![i]!!.replaceFirst("^package:".toRegex(), "")
+            val new_str = out.strings[i].replaceFirst("^package:".toRegex(), "")
             apks_paths.add(new_str)
         }
         out.strings = apks_paths
@@ -98,7 +98,7 @@ class Adb {
         } else out
     }
 
-    
+
     fun InstallApk(apkDirStr: String): Output {
         val apkDir = File(apkDirStr)
         Assert.AssertExistAndIsDirectory(apkDir)

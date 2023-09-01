@@ -25,18 +25,18 @@ class Aapt {
             return output
         }
 
-        
+
         fun DumpBadging(apkPath: String): List<String> {
             Assert.AssertExistAndIsFile(File(apkPath))
             val apkPathArg = String.format("%s", apkPath)
             return RunCmd(Arrays.asList("dump", "badging", apkPathArg))
         }
 
-        
+
         fun GetLaunchableActivity(apkPath: String): String {
             var launchableActivity = ""
             val out = DumpBadging(apkPath)
-            for (i in out!!.indices) {
+            for (i in out.indices) {
                 // found a launchable activity
                 // ussually the output is like
                 //
@@ -45,7 +45,7 @@ class Aapt {
                 // launchable-activity: name='com.java.simpleapp.MainActivity' label='SimpleApp'
                 // icon=''
                 // ```
-                if (out[i]!!.startsWith("launchable-activity:")) {
+                if (out[i].startsWith("launchable-activity:")) {
                     // try to parse the output and get the activity
                     val matchedStr = StringUtils.substringsBetween(out[i], "name='", "'")
                     assert(matchedStr.size == 1)

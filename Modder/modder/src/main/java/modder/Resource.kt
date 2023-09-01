@@ -1,6 +1,7 @@
 package modder
 
-import java.io.*
+import java.io.File
+import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -17,7 +18,7 @@ class Resource {
     /*
      * [resourceFile]: path to resource file, must start with '/'
      */
-    
+
     fun CopyResourceFile(resourceFile: String, destFile: String) {
         val `in` = javaClass.getResourceAsStream(resourceFile)
         val outputPath = Paths.get(destFile)
@@ -26,7 +27,7 @@ class Resource {
     }
 
     companion object {
-        
+
         fun GetFile(classLoader: ClassLoader, resourceFile: String): File {
             return try {
                 // need to decode the path, because for some reason,

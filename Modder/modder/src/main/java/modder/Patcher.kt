@@ -5,14 +5,16 @@ import modder.TempManager.TaskOnExit
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import org.apache.commons.lang3.StringUtils
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.PrintWriter
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 
-class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnExit = TaskOnExit.clean) {
+class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnExit = TaskOnExit.clean) {
     var apkFilePathStr: String
     var decompiledApkDirStr: String
     val resource = Resource()
@@ -23,10 +25,10 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         Assert.AssertExistAndIsFile(apkFile)
         // make sure to get the absolute path
         this.apkFilePathStr = apkFile.absolutePath
-        val tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", tempFolderTaskOnExit)
+        val tempDir = CreateTempDirectory("ModderDecompiledApk", tempFolderTaskOnExit)
         // make sure we have the absolute path
         // https://stackoverflow.com/a/17552395/14073678
-        decompiledApkDirStr = tempDir!!.toAbsolutePath().toString()
+        decompiledApkDirStr = tempDir.toAbsolutePath().toString()
         // =============================== decompile the apk ===========
         ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr)
     }
@@ -126,8 +128,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
     }
 
 
-    
-    fun IterateNativeLibArchDir(onIter: (arch: String, archLibFolder: File)->Unit) {
+    fun IterateNativeLibArchDir(onIter: (arch: String, archLibFolder: File) -> Unit) {
         // make sure to create directory for native libs
         val apkNativeLibDir = CreateNativeLibDir()
         val supportedArch = GetNativeLibSupportedArch()
@@ -138,7 +139,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         }
     }
 
-    
+
     fun AddFileToNativeLibDir(srcFileStr: String) {
         val srcFile = File(srcFileStr)
         if (!srcFile.exists()) {
@@ -166,7 +167,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         }
     }
 
-    
+
     fun AddMemScannerLib() {
         // TODO: add test for apk that support one arch only
         IterateNativeLibArchDir { arch: String, archLibFolder: File ->
@@ -189,12 +190,12 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         }
     }
 
-    
+
     fun DoesNativeLibExist(libName: String): Boolean {
 
         // need to use wrapper to accsess variable
         // from inside lambda
-            var libExistInAllArch = true
+        var libExistInAllArch = true
         IterateNativeLibArchDir { arch: String, archLibFolder: File ->
             val libFile = File(archLibFolder.absolutePath, libName)
             if (!libFile.exists()) libExistInAllArch = false
@@ -202,7 +203,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         return libExistInAllArch
     }
 
-    
+
     fun GetPackageNameOfLaunchableActivity(): String {
 
         // find launchable activity
@@ -215,10 +216,10 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
 
         // because split takes a regex string
         // to actually split by '.' we need to escape it first
-        return launchableActivity!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray<String>()[0]
+        return launchableActivity.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray<String>()[0]
     }
 
-    
+
     fun GetPackageDirOfLaunchableActivity(): String {
         val packageName = GetPackageNameOfLaunchableActivity()
         val smaliBaseDir = GetSmaliFolderOfLaunchableActvity()
@@ -226,7 +227,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         return smaliCodePackageDir.absolutePath
     }
 
-    
+
     fun AddMemScannerSmaliCode() {
         // path to copy the smali constructor to
         val smaliCodePackageDir = GetPackageDirOfLaunchableActivity()
@@ -250,7 +251,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         System.out.printf("copying resource to %s\n", destDir)
     }
 
-    
+
     fun AddMemScanner() {
         AddMemScannerLib()
         AddMemScannerSmaliCode()
@@ -268,7 +269,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         return File(decompiledApkDirStr, ANDROID_MANIFEST_FILE_NAME)
     }
 
-    
+
     fun RemoveExtractNativeLibOptions() {
         val manifestFile = GetManifestFile()
         val manifestContent = Files.readString(manifestFile.toPath())
@@ -318,19 +319,18 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
         val MEM_SCANNER_SMALI_RESOURCE_DIR = File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).absolutePath
         val MEM_SCANNER_SMALI_CODE_ZIP_PATH = java.lang.String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)
         const val MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V"
-        
+
         fun LaunchableActivityToSmaliRelativePath(launchableActivity: String): String {
 
             // replace the '.' in launchableActivity class
             // to a near complete path
-            var relativePath = launchableActivity!!.replace(".", File.separator)
+            var relativePath = launchableActivity.replace(".", File.separator)
             // don't forget the file extension
             relativePath += ".smali"
             return relativePath
         }
 
-        
-        
+
         fun MemScannerFindInjectionLineNum(launchableSmaliFile: String): Int {
             val entrySmaliPath = File(launchableSmaliFile).toPath()
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())
@@ -341,8 +341,7 @@ class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnE
             return -1
         }
 
-        
-        
+
         fun AddMemScannerConstructorSmaliCode(launchableSmaliFile: String): List<String> {
             val entrySmaliPath = File(launchableSmaliFile).toPath()
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())

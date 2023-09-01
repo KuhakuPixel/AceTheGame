@@ -1,9 +1,10 @@
 package modder
 
-import java.io.*
+import java.io.File
+import java.io.IOException
 
 object Assert {
-    
+
     fun AssertExistAndIsDirectory(dir: File) {
         var errMsg = ""
         if (!dir.exists()) {
@@ -16,7 +17,7 @@ object Assert {
         }
     }
 
-    
+
     fun AssertExistAndIsFile(dir: File) {
         var errMsg = ""
         if (!dir.exists()) {
