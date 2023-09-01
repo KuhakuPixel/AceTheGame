@@ -3,12 +3,14 @@
  */
 package modder;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.apache.commons.lang3.SystemUtils;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestUtil {
 	@Test

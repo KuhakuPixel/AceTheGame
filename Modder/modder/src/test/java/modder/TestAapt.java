@@ -2,12 +2,14 @@
 package modder;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TestAapt {
 	// https://stackoverflow.com/a/43415602/14073678

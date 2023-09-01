@@ -1,21 +1,18 @@
 package modder;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.nio.file.Paths;
 import java.util.List;
-import java.nio.charset.Charset;
-
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.ZipFile;
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 

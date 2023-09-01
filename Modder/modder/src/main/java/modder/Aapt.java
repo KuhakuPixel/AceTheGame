@@ -6,13 +6,13 @@ package modder;
 
 import brut.common.BrutException;
 import brut.util.AaptManager;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.commons.lang3.StringUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Aapt {
 

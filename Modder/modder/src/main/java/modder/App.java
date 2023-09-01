@@ -4,30 +4,16 @@
  */
 package modder;
 
-import at.favre.tools.apksigner.SignTool;
-
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.io.File;
-import java.io.IOException;
-
-// 
+import org.apache.commons.io.FileUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
-//
-import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 @Command(name = "Modder", subcommands = {
         CommandLine.HelpCommand.class}, description = "Utilities for hacking android apk")

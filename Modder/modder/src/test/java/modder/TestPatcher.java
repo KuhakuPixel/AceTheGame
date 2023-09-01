@@ -3,12 +3,12 @@ package modder;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestPatcher {
     //
