@@ -1,7 +1,5 @@
 package modder
 
-import modder.TempManager.CreateTempDirectory
-import modder.TempManager.TaskOnExit
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import org.apache.commons.lang3.StringUtils
@@ -14,7 +12,7 @@ import java.nio.file.Paths
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 
-class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnExit = TaskOnExit.clean) {
+class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnExit = TempManager.TaskOnExit.clean) {
     var apkFilePathStr: String
     var decompiledApkDirStr: String
     val resource = Resource()
@@ -25,7 +23,7 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnExit = TaskOnE
         Assert.AssertExistAndIsFile(apkFile)
         // make sure to get the absolute path
         this.apkFilePathStr = apkFile.absolutePath
-        val tempDir = CreateTempDirectory("ModderDecompiledApk", tempFolderTaskOnExit)
+        val tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", tempFolderTaskOnExit)
         // make sure we have the absolute path
         // https://stackoverflow.com/a/17552395/14073678
         decompiledApkDirStr = tempDir.toAbsolutePath().toString()
@@ -235,7 +233,7 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnExit = TaskOnE
         // copy the zip code of smali constructor from resources
         // unextract it in a temp folder and then copy to
         // the apk
-        val tempDir: String = CreateTempDirectory("TempSmalifolder").toString()
+        val tempDir: String = TempManager.CreateTempDirectory("TempSmalifolder").toString()
         //
         val destSmaliZipCode = File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME)
         resource.CopyResourceFile(MEM_SCANNER_SMALI_CODE_ZIP_PATH, destSmaliZipCode.absolutePath)
