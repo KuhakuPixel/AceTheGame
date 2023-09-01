@@ -17,13 +17,16 @@ import java.nio.file.StandardCopyOption
 class Resource {
     /*
      * [resourceFile]: path to resource file, must start with '/'
+     *
+     * this function cannot be static, because it needs to use [javaClass]
+     * (it cannot be declared in companion/static)
      */
 
     fun CopyResourceFile(resourceFile: String, destFile: String) {
-        val `in` = javaClass.getResourceAsStream(resourceFile)
+        val _in = javaClass.getResourceAsStream(resourceFile)
         val outputPath = Paths.get(destFile)
         System.out.printf("Copying resources file %s to %s\n", resourceFile, destFile)
-        Files.copy(`in`, outputPath, StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(_in, outputPath, StandardCopyOption.REPLACE_EXISTING)
     }
 
     companion object {
