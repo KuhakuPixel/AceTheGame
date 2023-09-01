@@ -30,334 +30,250 @@ import picocli.CommandLine.Spec;
 import org.apache.commons.io.FileUtils;
 
 @Command(name = "Modder", subcommands = {
-		CommandLine.HelpCommand.class }, description = "Utilities for hacking android apk")
+        CommandLine.HelpCommand.class}, description = "Utilities for hacking android apk")
 class ModderMainCmd {
-	@Spec
-	CommandSpec spec;
+    @Spec
+    CommandSpec spec;
 
-	final String DECOMPILED_DIR_EXT = ".decompiled";
-	final String RECOMPILED_DIR_EXT = ".recompiled";
+    final String DECOMPILED_DIR_EXT = ".decompiled";
+    final String RECOMPILED_DIR_EXT = ".recompiled";
 
-	void ShowAdbShellError(Adb.Output out) {
-		System.out.println("can't connect to adb shell:");
-		out.strings.forEach(s -> System.out.println(s));
+    void ShowAdbShellError(Adb.Output out) {
+        System.out.println("can't connect to adb shell:");
+        out.strings.forEach(s -> System.out.println(s));
 
-	}
+    }
 
-	@Command(name = "listApk", description = "List installed apks")
-	void ListApk() {
+    @Command(name = "listApk", description = "List installed apks")
+    void ListApk() {
 
-		Adb adb = new Adb();
-		Adb.Output out = adb.ListApk();
-		if (out.error != Adb.Error.ok) {
-			ShowAdbShellError(out);
-			return;
-		}
-		// output will look like
-		// package:com.android.offfice
-		// package:com.vivo.appstore
-		// "package:" should be trimmed for better view
-		for (int i = 0; i < out.strings.size(); i++) {
-			// use the caret symbol '^'
-			// to match the beggining of the pattern
-			String new_str = out.strings.get(i).replaceFirst("^package:", "");
-			System.out.printf("%d %s\n", i, new_str);
-		}
-		System.out.printf("Found %d packages\n", out.strings.size());
+        Adb adb = new Adb();
+        Adb.Output out = adb.ListApk();
+        if (out.error != Adb.Error.ok) {
+            ShowAdbShellError(out);
+            return;
+        }
+        // output will look like
+        // package:com.android.offfice
+        // package:com.vivo.appstore
+        // "package:" should be trimmed for better view
+        for (int i = 0; i < out.strings.size(); i++) {
+            // use the caret symbol '^'
+            // to match the beggining of the pattern
+            String new_str = out.strings.get(i).replaceFirst("^package:", "");
+            System.out.printf("%d %s\n", i, new_str);
+        }
+        System.out.printf("Found %d packages\n", out.strings.size());
 
-	}
+    }
 
-	@Command(name = "apkInfo", description = "information about apk")
-	void ApkInfo(
+    @Command(name = "apkInfo", description = "information about apk")
+    void ApkInfo(
 
-			@Parameters(paramLabel = "apkPath", description = "path to apk")
+            @Parameters(paramLabel = "apkPath", description = "path to apk")
 
-			String apkPathStr
+            String apkPathStr
 
-	) throws IOException {
+    ) throws IOException {
 
-		List<String> output = Aapt.DumpBadging(apkPathStr);
+        List<String> output = Aapt.DumpBadging(apkPathStr);
 
-		output.forEach(System.out::println);
+        output.forEach(System.out::println);
 
-	}
+    }
 
-	/*
-	 *
-	 * for decompilation and recompilation output directory
-	 * we have to pass the path to a File object first
-	 * and then use toString, to make sure the path doesn't contain '/'
-	 *
-	 * if the output Folder from user contains '/'
-	 * then the output will not be put in the same directory as
-	 * apk folder or decompiled apk folder because
-	 *
-	 * ussualy an output for decompilation and recompilation are
-	 * "[apkDir]+ApkMod.DECOMPILED_DIR_EXT" or
-	 * "[decompiledApkDir]+ApkMod.RECOMPILED_DIR_EXT"
-	 * so the output will be put inside [apkDir] or [decompiledApkDir]
-	 * as .decompiled or .recompiled
-	 * 
-	 */
-	@Command(name = "decompile", description = "Decompile an apk")
-	void Decompile(
+    /*
+     *
+     * for decompilation and recompilation output directory
+     * we have to pass the path to a File object first
+     * and then use toString, to make sure the path doesn't contain '/'
+     *
+     * if the output Folder from user contains '/'
+     * then the output will not be put in the same directory as
+     * apk folder or decompiled apk folder because
+     *
+     * ussualy an output for decompilation and recompilation are
+     * "[apkDir]+ApkMod.DECOMPILED_DIR_EXT" or
+     * "[decompiledApkDir]+ApkMod.RECOMPILED_DIR_EXT"
+     * so the output will be put inside [apkDir] or [decompiledApkDir]
+     * as .decompiled or .recompiled
+     *
+     */
+    @Command(name = "decompile", description = "Decompile an apk")
+    void Decompile(
 
-			@Parameters(paramLabel = "ApkFilePath", description = "Path to apk file or a directory containing apks")
+            @Parameters(paramLabel = "ApkFilePath", description = "Path to apk file or a directory containing apks")
 
-			String apkPathStr
+            String apkPathStr
 
-	) {
-		File apkDir = new File(apkPathStr);
-		ApkMod.Decompile(apkPathStr, apkDir.toString() + ApkMod.DECOMPILED_DIR_EXT);
-	}
+    ) {
+        File apkDir = new File(apkPathStr);
+        ApkMod.Decompile(apkPathStr, apkDir.toString() + ApkMod.DECOMPILED_DIR_EXT);
+    }
 
-	@Command(name = "recompile", description = "recompile apks")
-	void Recompile(
+    @Command(name = "recompile", description = "recompile apks")
+    void Recompile(
 
-			@Parameters(paramLabel = "decompiledFolder", description = "Folder to decompiled apks")
+            @Parameters(paramLabel = "decompiledFolder", description = "Folder to decompiled apks")
 
-			String decompiledFolderStr
+            String decompiledFolderStr
 
-	) {
+    ) {
 
-		File decompiledApkDir = new File(decompiledFolderStr);
+        File decompiledApkDir = new File(decompiledFolderStr);
 
-		ApkMod.Recompile(decompiledFolderStr, decompiledApkDir.toString() + ApkMod.RECOMPILED_DIR_EXT);
-	}
+        ApkMod.Recompile(decompiledFolderStr, decompiledApkDir.toString() + ApkMod.RECOMPILED_DIR_EXT);
+    }
 
-	@Command(name = "Patch", description = "recompile apks")
-	void Patch(
+    @Command(name = "Patch", description = "recompile apks")
+    void Patch(
+            @Parameters(paramLabel = "ApkFolderPath", description = "Path to directory containing apks")
+            String apkDirStr
 
-			@Parameters(paramLabel = "ApkFolderPath", description = "Path to directory containing apks") String apkDirStr,
+    ) throws IOException {
 
-			@Parameters(paramLabel = "attachMemScanner", description = "attach a memory scanner to apk")
+        // check if the directory exist
+        File apkSrcDir = new File(apkDirStr);
+        Assert.AssertExistAndIsDirectory(apkSrcDir);
+        // copy apk folder so we don't write to the original one
+        File patchedApkDir = new File(apkSrcDir.getAbsolutePath() + ".patched");
+        org.apache.commons.io.FileUtils.copyDirectory(apkSrcDir, patchedApkDir);
+        // get the base apk for patching
+        File baseApkFile = new File(patchedApkDir.getAbsolutePath(), Patcher.BASE_APK_FILE_NAME);
+        Assert.AssertExistAndIsFile(baseApkFile);
+        // ========== add patch ===========================
+        Patcher patcher = new Patcher(baseApkFile.getAbsolutePath());
+        patcher.AddMemScanner();
+        // fix [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2] after recompile
+        // https://github.com/iBotPeaches/Apktool/issues/1626
+        patcher.RemoveExtractNativeLibOptions();
+        // ================== export ===================
+        // String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
+        String patchedApkPath = baseApkFile.getAbsolutePath();
+        patcher.Export(patchedApkPath);
 
-			boolean attachMemScanner
+        // ============ sign all the apk in the directory ==========
+        File[] files = patchedApkDir.listFiles();
+        for (File f : files) {
+            if (f.isFile())
+                ApkSigner.Sign(f);
+        }
 
-	) throws IOException {
+        System.out.printf("exported apk to %s\n", patchedApkPath);
 
-		// check if the directory exist
-		File apkSrcDir = new File(apkDirStr);
-		Assert.AssertExistAndIsDirectory(apkSrcDir);
-		// copy apk folder so we dont write to the original one
-		File apkDir = new File(apkSrcDir.getAbsolutePath() + ".patched");
-		FileUtils.copyDirectory(apkSrcDir, apkDir);
+    }
 
-		// get the base apk for patching
-		File baseApkFile = new File(apkDir.getAbsolutePath(), Patcher.BASE_APK_FILE_NAME);
-		Assert.AssertExistAndIsFile(baseApkFile);
-		// add patch
-		Patcher patcher = new Patcher(baseApkFile.getAbsolutePath());
-		if (attachMemScanner)
-			patcher.AddMemScanner();
+    /*
+     * Download apk from device specified by [package_name]
+     * and put it in a folder with the same name as [package_name]
+     */
+    @Command(name = "download", description = "Download an apk from device")
+    void Download(
 
-		// export
-		// String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
-		String patchedApkPath = baseApkFile.getAbsolutePath();
-		patcher.Export(patchedApkPath);
-		System.out.printf("exported apk to %s\n", patchedApkPath);
-		// sign all the apk in the directory
-		File[] files = apkDir.listFiles();
-		for (File f : files) {
-			if (f.isFile()) {
-				String[] args = new String[] { "--apks", f.getAbsolutePath(), "--allowResign", "--overwrite" };
-				SignTool.main(args);
-			}
+            @Parameters(paramLabel = "packageName", description = "Package to download") String package_name
 
-		}
+    ) {
+        String downloadDir = package_name;
+        // if folder with name [package_name] exist
+        // then remove it and recreate an empty one
+        File downloadFile = new File(downloadDir);
+        if (downloadFile.exists() && downloadFile.isDirectory()) {
+            try {
+                System.out.printf("directory %s exist, removing it...\n", downloadDir);
+                FileUtils.deleteDirectory(downloadFile);
+            } catch (IOException e) {
+                System.out.printf("Error while deleting directory \n");
+                System.out.println(e.getMessage());
+            }
+        }
+        // create dir for storing downloaded apk
+        (new File(downloadDir)).mkdirs();
+        System.out.printf("created directory %s for storing downloaded apk\n", downloadDir);
 
-	}
+        //
+        Adb adb = new Adb();
+        // check if [package_name] exists
+        Adb.Output out = adb.ListApk();
+        if (out.error != Adb.Error.ok) {
+            ShowAdbShellError(out);
+            return;
+        }
 
-	/*
-	 * Download apk from device specified by [package_name]
-	 * and put it in a folder with the same name as [package_name]
-	 */
-	@Command(name = "download", description = "Download an apk from device")
-	void Download(
+        if (!out.strings.contains(package_name)) {
+            System.out.printf("package %s doesn't exist in the device\n", package_name);
+            System.out.println("use listApk command to list installed packages");
+            return;
 
-			@Parameters(paramLabel = "packageName", description = "Package to download") String package_name
+        }
+        out = adb.GetApkPathAtDevice(package_name);
+        if (out.error != Adb.Error.ok) {
+            ShowAdbShellError(out);
+            return;
+        }
+        // we need to loop when downloading the app
+        // in case the apk is splitted apks (have multiple paths)
+        System.out.println("Downloading apks ...");
+        for (int i = 0; i < out.strings.size(); i++) {
 
-	) {
-		String downloadDir = package_name;
-		// if folder with name [package_name] exist
-		// then remove it and recreate an empty one
-		File downloadFile = new File(downloadDir);
-		if (downloadFile.exists() && downloadFile.isDirectory()) {
-			try {
-				System.out.printf("directory %s exist, removing it...\n", downloadDir);
-				FileUtils.deleteDirectory(downloadFile);
-			} catch (IOException e) {
-				System.out.printf("Error while deleting directory \n");
-				System.out.println(e.getMessage());
-			}
-		}
-		// create dir for storing downloaded apk
-		(new File(downloadDir)).mkdirs();
-		System.out.printf("created directory %s for storing downloaded apk\n", downloadDir);
+            String apkPath = out.strings.get(i);
+            System.out.printf("Downloading apk (%d/%d) at %s", i + 1, out.strings.size(), apkPath);
+            Adb.Output downloadOut = adb.DownloadApk(apkPath, downloadDir);
+            if (downloadOut.error != Adb.Error.ok) {
+                ShowAdbShellError(out);
+                return;
+            }
+            downloadOut.strings.forEach(System.out::println);
+            System.out.printf("...done\n");
+        }
 
-		//
-		Adb adb = new Adb();
-		// check if [package_name] exists
-		Adb.Output out = adb.ListApk();
-		if (out.error != Adb.Error.ok) {
-			ShowAdbShellError(out);
-			return;
-		}
+    }
 
-		if (!out.strings.contains(package_name)) {
-			System.out.printf("package %s doesn't exist in the device\n", package_name);
-			System.out.println("use listApk command to list installed packages");
-			return;
+    /*
+     * Download apk from device specified by [package_name]
+     * and put it in a folder with the same name as [package_name]
+     */
+    @Command(name = "install", description = "install all apk in a folder")
+    void Install(
 
-		}
-		out = adb.GetApkPathAtDevice(package_name);
-		if (out.error != Adb.Error.ok) {
-			ShowAdbShellError(out);
-			return;
-		}
-		// we need to loop when downloading the app
-		// in case the apk is splitted apks (have multiple paths)
-		System.out.println("Downloading apks ...");
-		for (int i = 0; i < out.strings.size(); i++) {
+            @Parameters(paramLabel = "apkDir", description = "Directory that contains apk") String apkDirStr
 
-			String apkPath = out.strings.get(i);
-			System.out.printf("Downloading apk (%d/%d) at %s", i + 1, out.strings.size(), apkPath);
-			Adb.Output downloadOut = adb.DownloadApk(apkPath, downloadDir);
-			if (downloadOut.error != Adb.Error.ok) {
-				ShowAdbShellError(out);
-				return;
-			}
-			downloadOut.strings.forEach(System.out::println);
-			System.out.printf("...done\n");
-		}
+    ) throws IOException {
 
-	}
+        Adb adb = new Adb();
+        Adb.Output out = adb.InstallApk(apkDirStr);
+        out.strings.forEach(System.out::println);
 
-	/*
-	 * Download apk from device specified by [package_name]
-	 * and put it in a folder with the same name as [package_name]
-	 */
-	@Command(name = "install", description = "install all apk in a folder")
-	void Install(
-
-			@Parameters(paramLabel = "apkDir", description = "Directory that contains apk") String apkDirStr
-
-	) throws IOException{
-
-		Adb adb = new Adb();
-		Adb.Output out =  adb.InstallApk(apkDirStr);
-		out.strings.forEach(System.out::println);
-
-	}
+    }
 }
 
 //
 public class App {
-	public String getGreeting() {
-		return "Hello World!";
-	}
+    public static void cliInit(String[] args) {
+        CommandLine cli = new CommandLine(new ModderMainCmd());
 
-	// workaround for java 11 since app built with
-	// "gradle build", will be missing javaFX lib
-	// https://stackoverflow.com/questions/59771324/error-javafx-runtime-components-are-missing-and-are-required-to-run-this-appli
-	public static class RealApp extends Application {
-		final int width = 587;
-		final int height = 612;
+        // ========== set some options =============
+        // https://picocli.info/
+        // allow case insensitive
+        cli.setSubcommandsCaseInsensitive(true);
+        cli.setOptionsCaseInsensitive(true);
+        // allow abbreviations
+        cli.setAbbreviatedOptionsAllowed(true);
+        cli.setAbbreviatedSubcommandsAllowed(true);
+        // execute
+        int exitCode = cli.execute(args);
+        System.exit(exitCode);
 
-		@Override
-		public void start(Stage primaryStage) {
+    }
 
-			if (!Util.DoesCommandExist("adb")) {
-				GuiUtil.ShowAlert("Adb Command doesn't exist", "", "Command \"adb\" not found in PATH");
-				return;
-			}
+    public static void main(String[] args) {
+        // Some testing
+        if (Util.DoesCommandExist("adb")) {
+            System.out.println("adb exist");
+        } else {
+            System.out.println("adb doesn't exist");
 
-			// ====================================================
-			List<String> output = new ArrayList<String>();
+        }
+        cliInit(args);
 
-			// test if adb shell can be connected by echoing in
-			// the shell and check the output
-			output = Util.RunCommand("adb", Arrays.asList("shell", "echo", "test"));
-			if (output.size() >= 1) {
-				if (!output.get(0).equals("test")) {
-					System.out.println();
-
-					GuiUtil.ShowAlert("Adb Shell Error",
-							String.format("Error connecting to adb shell: \"%s\" ",
-									output.get(0)),
-
-							"Have you connected android device to your computer?");
-					return;
-				}
-
-			} else {
-				GuiUtil.ShowAlert("Adb Shell Error", "", "Error connecting to adb shell: Empty Output");
-				return;
-
-			}
-
-			// everything looks okay
-			output = Util.RunCommand("adb", Arrays.asList("shell", "pm", "list", "packages"));
-			output.forEach(s -> System.out.println(s));
-
-			// ========================== init gui =================
-			//
-			StackPane root = new StackPane();
-			Scene scene = new Scene(root, width, height);
-			// ============== set button ================
-			Button btn = new Button();
-			btn.setText("Get Size");
-			btn.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent event) {
-					System.out.println(
-							"width: " + scene.getWidth() + " height: " + scene.getHeight());
-				}
-			});
-
-			root.getChildren().add(btn);
-			// ==========================================
-
-			primaryStage.setTitle("Hello World!");
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			// primaryStage.setFullScreen(true);
-			primaryStage.show();
-		}
-
-	}
-
-	public static void cliInit(String[] args) {
-		CommandLine cli = new CommandLine(new ModderMainCmd());
-
-		// ========== set some options =============
-		// https://picocli.info/
-		// allow case insensitive
-		cli.setSubcommandsCaseInsensitive(true);
-		cli.setOptionsCaseInsensitive(true);
-		// allow abbreviations
-		cli.setAbbreviatedOptionsAllowed(true);
-		cli.setAbbreviatedSubcommandsAllowed(true);
-		// execute
-		int exitCode = cli.execute(args);
-		System.exit(exitCode);
-
-	}
-
-	public static void main(String[] args) {
-		// Some testing
-		if (Util.DoesCommandExist("adb")) {
-			System.out.println("adb exist");
-		} else {
-			System.out.println("adb doesn't exist");
-
-		}
-
-		// gui
-		// Application.launch(RealApp.class);
-		// cli app
-		cliInit(args);
-
-	}
+    }
 }
