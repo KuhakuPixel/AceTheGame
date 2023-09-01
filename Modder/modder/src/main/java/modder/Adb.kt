@@ -98,7 +98,7 @@ class Adb {
         } else out
     }
 
-    @Throws(IOException::class)
+    
     fun InstallApk(apkDirStr: String): Output {
         val apkDir = File(apkDirStr)
         Assert.AssertExistAndIsDirectory(apkDir)

@@ -12,7 +12,7 @@ import java.nio.file.Paths
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 
-class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnExit = TaskOnExit.clean) {
+class Patcher  constructor(apkFilePathStr: String, tempFolderTaskOnExit: TaskOnExit = TaskOnExit.clean) {
     var apkFilePathStr: String
     var decompiledApkDirStr: String
     val resource = Resource()
@@ -33,7 +33,6 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
 
     // TODO: find a way to cut down code duplication between this function and
     // GetEntrySmaliPath
-    @Throws(RuntimeException::class, IOException::class)
     fun GetSmaliFolderOfLaunchableActvity(): String {
 
         // find launchable activity
@@ -64,7 +63,6 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         return ""
     }
 
-    @Throws(RuntimeException::class, IOException::class)
     fun GetEntrySmaliPath(): String {
 
         // find launchable activity
@@ -128,7 +126,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
     }
 
 
-    @Throws(IOException::class)
+    
     fun IterateNativeLibArchDir(onIter: (arch: String, archLibFolder: File)->Unit) {
         // make sure to create directory for native libs
         val apkNativeLibDir = CreateNativeLibDir()
@@ -140,7 +138,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         }
     }
 
-    @Throws(IOException::class)
+    
     fun AddFileToNativeLibDir(srcFileStr: String) {
         val srcFile = File(srcFileStr)
         if (!srcFile.exists()) {
@@ -168,7 +166,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         }
     }
 
-    @Throws(IOException::class)
+    
     fun AddMemScannerLib() {
         // TODO: add test for apk that support one arch only
         IterateNativeLibArchDir { arch: String, archLibFolder: File ->
@@ -191,7 +189,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         }
     }
 
-    @Throws(IOException::class)
+    
     fun DoesNativeLibExist(libName: String): Boolean {
 
         // need to use wrapper to accsess variable
@@ -204,7 +202,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         return libExistInAllArch
     }
 
-    @Throws(IOException::class)
+    
     fun GetPackageNameOfLaunchableActivity(): String {
 
         // find launchable activity
@@ -220,7 +218,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         return launchableActivity!!.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray<String>()[0]
     }
 
-    @Throws(IOException::class)
+    
     fun GetPackageDirOfLaunchableActivity(): String {
         val packageName = GetPackageNameOfLaunchableActivity()
         val smaliBaseDir = GetSmaliFolderOfLaunchableActvity()
@@ -228,7 +226,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         return smaliCodePackageDir.absolutePath
     }
 
-    @Throws(IOException::class)
+    
     fun AddMemScannerSmaliCode() {
         // path to copy the smali constructor to
         val smaliCodePackageDir = GetPackageDirOfLaunchableActivity()
@@ -252,7 +250,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         System.out.printf("copying resource to %s\n", destDir)
     }
 
-    @Throws(IOException::class)
+    
     fun AddMemScanner() {
         AddMemScannerLib()
         AddMemScannerSmaliCode()
@@ -270,7 +268,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         return File(decompiledApkDirStr, ANDROID_MANIFEST_FILE_NAME)
     }
 
-    @Throws(IOException::class)
+    
     fun RemoveExtractNativeLibOptions() {
         val manifestFile = GetManifestFile()
         val manifestContent = Files.readString(manifestFile.toPath())
@@ -290,7 +288,6 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
     }
 
     companion object {
-        @JvmField
         val ARCHS = arrayOf("x86_64", "x86", "armeabi-v7a", "arm64-v8a")
         const val NATIVE_LIB_DIR_NAME = "lib"
         const val BASE_APK_FILE_NAME = "base.apk"
@@ -312,7 +309,6 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
      */
         // native lib
         const val MEM_SCANNER_LIB_NAME = "liblib_ACE.so"
-        @JvmField
         val MEM_SCANNER_LIB_RESOURCE_DIR = "/" + java.lang.String.join("/", "AceAndroidLib", "code_to_inject", "lib")
 
         // smali code
@@ -322,7 +318,7 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
         val MEM_SCANNER_SMALI_RESOURCE_DIR = File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).absolutePath
         val MEM_SCANNER_SMALI_CODE_ZIP_PATH = java.lang.String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)
         const val MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V"
-        @JvmStatic
+        
         fun LaunchableActivityToSmaliRelativePath(launchableActivity: String): String {
 
             // replace the '.' in launchableActivity class
@@ -333,8 +329,8 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
             return relativePath
         }
 
-        @JvmStatic
-        @Throws(IOException::class)
+        
+        
         fun MemScannerFindInjectionLineNum(launchableSmaliFile: String): Int {
             val entrySmaliPath = File(launchableSmaliFile).toPath()
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())
@@ -345,8 +341,8 @@ class Patcher @JvmOverloads constructor(apkFilePathStr: String, tempFolderTaskOn
             return -1
         }
 
-        @JvmStatic
-        @Throws(IOException::class)
+        
+        
         fun AddMemScannerConstructorSmaliCode(launchableSmaliFile: String): List<String> {
             val entrySmaliPath = File(launchableSmaliFile).toPath()
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())

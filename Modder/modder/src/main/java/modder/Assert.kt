@@ -3,7 +3,7 @@ package modder
 import java.io.*
 
 object Assert {
-    @Throws(IOException::class)
+    
     fun AssertExistAndIsDirectory(dir: File) {
         var errMsg = ""
         if (!dir.exists()) {
@@ -16,7 +16,7 @@ object Assert {
         }
     }
 
-    @Throws(IOException::class)
+    
     fun AssertExistAndIsFile(dir: File) {
         var errMsg = ""
         if (!dir.exists()) {

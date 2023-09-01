@@ -25,14 +25,14 @@ class Aapt {
             return output
         }
 
-        @Throws(IOException::class)
+        
         fun DumpBadging(apkPath: String): List<String> {
             Assert.AssertExistAndIsFile(File(apkPath))
             val apkPathArg = String.format("%s", apkPath)
             return RunCmd(Arrays.asList("dump", "badging", apkPathArg))
         }
 
-        @Throws(IOException::class)
+        
         fun GetLaunchableActivity(apkPath: String): String {
             var launchableActivity = ""
             val out = DumpBadging(apkPath)

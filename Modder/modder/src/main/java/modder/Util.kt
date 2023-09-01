@@ -19,7 +19,7 @@ class Util {
             return combined
         }
 
-        @JvmStatic
+        
         fun DoesCommandExist(command: String): Boolean {
 
             // try to run command with arguments --helps,

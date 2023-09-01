@@ -11,8 +11,7 @@ import java.nio.file.Path
 * after jvm exit
 */
 object TempManager {
-    @JvmOverloads
-    @Throws(IOException::class)
+    
     fun CreateTempDirectory(prefix: String, taskOnExit: TaskOnExit = TaskOnExit.clean): Path {
         val tempDir = Files.createTempDirectory(prefix)
         // make sure we have the absolute path

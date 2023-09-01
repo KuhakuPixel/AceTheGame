@@ -40,7 +40,7 @@ class ModderMainCmd {
     }
 
     @CommandLine.Command(name = "apkInfo", description = ["information about apk"])
-    @Throws(IOException::class)
+    
     fun ApkInfo(
             @CommandLine.Parameters(paramLabel = "apkPath", description = ["path to apk"]) apkPathStr: String
     ) {
@@ -82,7 +82,7 @@ class ModderMainCmd {
     }
 
     @CommandLine.Command(name = "Patch", description = ["recompile apks"])
-    @Throws(IOException::class)
+    
     fun Patch(
             @CommandLine.Parameters(paramLabel = "ApkFolderPath", description = ["Path to directory containing apks"]) apkDirStr: String
     ) {
@@ -178,7 +178,7 @@ class ModderMainCmd {
      * and put it in a folder with the same name as [package_name]
      */
     @CommandLine.Command(name = "install", description = ["install all apk in a folder"])
-    @Throws(IOException::class)
+    
     fun Install(
             @CommandLine.Parameters(paramLabel = "apkDir", description = ["Directory that contains apk"]) apkDirStr: String
     ) {
