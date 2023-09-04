@@ -6,31 +6,34 @@ package modder
 
 import picocli.CommandLine
 
-//
 class App {
-    fun cliInit(args: Array<String>) {
-        val cli = CommandLine(ModderMainCmd())
+    companion object {
+        fun cliInit(args: Array<String>) {
+            val cli = CommandLine(ModderMainCmd())
 
-        // ========== set some options =============
-        // https://picocli.info/
-        // allow case insensitive
-        cli.setSubcommandsCaseInsensitive(true)
-        cli.setOptionsCaseInsensitive(true)
-        // allow abbreviations
-        cli.setAbbreviatedOptionsAllowed(true)
-        cli.setAbbreviatedSubcommandsAllowed(true)
-        // execute
-        val exitCode = cli.execute(*args)
-        System.exit(exitCode)
-    }
-
-    fun main(args: Array<String>) {
-        // Some testing
-        if (Util.DoesCommandExist("adb")) {
-            println("adb exist")
-        } else {
-            println("adb doesn't exist")
+            // ========== set some options =============
+            // https://picocli.info/
+            // allow case insensitive
+            cli.setSubcommandsCaseInsensitive(true)
+            cli.setOptionsCaseInsensitive(true)
+            // allow abbreviations
+            cli.setAbbreviatedOptionsAllowed(true)
+            cli.setAbbreviatedSubcommandsAllowed(true)
+            // execute
+            val exitCode = cli.execute(*args)
+            System.exit(exitCode)
         }
-        cliInit(args)
+
+
+        fun main(args: Array<String>) {
+            // Some testing
+            if (Util.DoesCommandExist("adb")) {
+                println("adb exist")
+            } else {
+                println("adb doesn't exist")
+            }
+            cliInit(args)
+        }
     }
+
 }

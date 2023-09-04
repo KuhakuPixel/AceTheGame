@@ -9,9 +9,6 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
-    // gradle plugin for javafx lib
-    // https://stackoverflow.com/a/55889428/14073678
-    id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'org.jetbrains.kotlin.jvm' version '1.9.10'
 }
 
@@ -51,12 +48,6 @@ dependencies {
     implementation 'info.picocli:picocli:4.7.5'
 
 
-}
-
-javafx {
-    version = "14"
-    // https://github.com/openjfx/javafx-gradle-plugin
-    modules = ['javafx.controls']
 }
 
 application {
