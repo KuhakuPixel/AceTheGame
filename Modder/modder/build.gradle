@@ -9,9 +9,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
-    // gradle plugin for javafx lib
-    // https://stackoverflow.com/a/55889428/14073678
-    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
 }
 
 repositories {
@@ -36,9 +34,7 @@ dependencies {
     // Add file dependacy
     // https://stackoverflow.com/a/20956456/14073678
     implementation files("./lib/uber-apk-signer-1.3.0.jar")
-
     implementation files("./lib/apktool-cli-all_2.8.1.jar")
-
     // libs for io operations
     // https://stackoverflow.com/a/23678498/14073678
     // installation:
@@ -46,22 +42,23 @@ dependencies {
     implementation 'commons-io:commons-io:2.13.0'
     // for easy os detection
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // cli
+    implementation 'info.picocli:picocli:4.7.5'
 
 
-}
-
-javafx {
-    version = "14"
-    // https://github.com/openjfx/javafx-gradle-plugin
-    modules = ['javafx.controls']
 }
 
 application {
     // Define the main class for the application.
-    mainClass = 'modder.App'
+    mainClass = 'modder.Main'
 }
 
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(17)
 }
