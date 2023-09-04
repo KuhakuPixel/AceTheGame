@@ -37,9 +37,7 @@ dependencies {
     // Add file dependacy
     // https://stackoverflow.com/a/20956456/14073678
     implementation files("./lib/uber-apk-signer-1.3.0.jar")
-
     implementation files("./lib/apktool-cli-all_2.8.1.jar")
-
     // libs for io operations
     // https://stackoverflow.com/a/23678498/14073678
     // installation:
@@ -48,6 +46,9 @@ dependencies {
     // for easy os detection
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // cli
+    implementation 'info.picocli:picocli:4.7.5'
 
 
 }
