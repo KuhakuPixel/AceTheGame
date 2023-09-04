@@ -21,7 +21,7 @@ object Assert {
     fun AssertExistAndIsFile(dir: File) {
         var errMsg = ""
         if (!dir.exists()) {
-            errMsg = String.format("%s directory doesn't exist", dir.absolutePath)
+            errMsg = String.format("%s file doesn't exist", dir.absolutePath)
             throw IOException(errMsg)
         }
         if (!dir.isFile) {
