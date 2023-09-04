@@ -1,7 +1,6 @@
 package modder
 
 import net.lingala.zip4j.ZipFile
-import net.lingala.zip4j.exception.ZipException
 import org.apache.commons.lang3.StringUtils
 import java.io.File
 import java.io.IOException
@@ -238,14 +237,10 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnEx
         val destSmaliZipCode = File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME)
         resource.CopyResourceFile(MEM_SCANNER_SMALI_CODE_ZIP_PATH, destSmaliZipCode.absolutePath)
         val destDir = File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).absolutePath
-        try {
-            val zipFile = ZipFile(destSmaliZipCode.absolutePath)
-            zipFile.extractAll(destDir)
-            System.out.printf("extracted to %s\n", destDir)
-            zipFile.close()
-        } catch (e: ZipException) {
-            e.printStackTrace()
-        }
+        val zipFile = ZipFile(destSmaliZipCode.absolutePath)
+        zipFile.extractAll(destDir)
+        System.out.printf("extracted to %s\n", destDir)
+        zipFile.close()
         System.out.printf("copying resource to %s\n", destDir)
     }
 

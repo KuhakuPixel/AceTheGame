@@ -46,23 +46,17 @@ class Util {
             val procOutput: MutableList<String> = ArrayList()
             val procBuilder = ProcessBuilder(commands)
             procBuilder.redirectErrorStream(true)
-            try {
-                val proc = procBuilder.start()
-                val bufferedReader = BufferedReader(
-                        InputStreamReader(proc.inputStream))
-                var outLine: String?
-                // take all output
-                while (true) {
-                    outLine = bufferedReader.readLine()
-                    if (outLine == null) break
-                    procOutput.add(outLine)
-                }
-                return procOutput
-            } catch (e: IOException) {
-
-                // thrown when command doesn't exist
-                return procOutput
+            val proc = procBuilder.start()
+            val bufferedReader = BufferedReader(
+                    InputStreamReader(proc.inputStream))
+            var outLine: String?
+            // take all output
+            while (true) {
+                outLine = bufferedReader.readLine()
+                if (outLine == null) break
+                procOutput.add(outLine)
             }
+            return procOutput
         }
     }
 }

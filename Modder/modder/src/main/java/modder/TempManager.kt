@@ -2,7 +2,6 @@ package modder
 
 import org.apache.commons.io.FileUtils
 import java.io.File
-import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -30,12 +29,7 @@ class TempManager {
                 Runtime.getRuntime().addShutdownHook(
                         object : Thread() {
                             override fun run() {
-                                try {
-                                    FileUtils.deleteDirectory(File(tempPathStr))
-                                } catch (e: IOException) {
-                                    System.out.printf("Exception when cleaning up temp directory at %s\n",
-                                            tempPathStr)
-                                }
+                                FileUtils.deleteDirectory(File(tempPathStr))
                             }
                         }
                 )

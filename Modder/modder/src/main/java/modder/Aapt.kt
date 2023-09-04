@@ -3,10 +3,9 @@
  * */
 package modder
 
-import brut.common.BrutException
 import brut.util.AaptManager
 import org.apache.commons.lang3.StringUtils
-import java.io.*
+import java.io.File
 import java.util.*
 
 class Aapt {
@@ -15,12 +14,7 @@ class Aapt {
             var output: List<String> = ArrayList()
             val aaptFile: File
             // get aapt
-            aaptFile = try {
-                AaptManager.getAapt1()
-            } catch (e: BrutException) {
-                System.out.printf("%s\n", e.message)
-                return output
-            }
+            aaptFile = AaptManager.getAapt1()
             output = Util.RunCommand(aaptFile.absolutePath, args)
             return output
         }

@@ -5,7 +5,6 @@ import picocli.CommandLine
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
 import java.io.File
-import java.io.IOException
 import java.util.function.Consumer
 
 @CommandLine.Command(name = "Modder", subcommands = [CommandLine.HelpCommand::class], description = ["Utilities for hacking android apk"])
@@ -128,13 +127,8 @@ class ModderMainCmd {
         // then remove it and recreate an empty one
         val downloadFile = File(package_name)
         if (downloadFile.exists() && downloadFile.isDirectory) {
-            try {
-                System.out.printf("directory %s exist, removing it...\n", package_name)
-                FileUtils.deleteDirectory(downloadFile)
-            } catch (e: IOException) {
-                System.out.printf("Error while deleting directory \n")
-                println(e.message)
-            }
+            System.out.printf("directory %s exist, removing it...\n", package_name)
+            FileUtils.deleteDirectory(downloadFile)
         }
         // create dir for storing downloaded apk
         File(package_name).mkdirs()

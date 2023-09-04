@@ -1,7 +1,6 @@
 package modder
 
 import java.io.File
-import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -32,23 +31,18 @@ class Resource {
     companion object {
 
         fun GetFile(classLoader: ClassLoader, resourceFile: String): File {
-            return try {
-                // need to decode the path, because for some reason,
-                // getResource().getFile replace space with %20
-                // and it will cause File.exist() to fail
-                // what a mess
+            // need to decode the path, because for some reason,
+            // getResource().getFile replace space with %20
+            // and it will cause File.exist() to fail
+            // what a mess
 
-                // decoding the url seems to fix it
-                // https://stackoverflow.com/questions/31133361/how-to-get-file-from-resources-when-blank-space-is-in-path 
-                // https://stackoverflow.com/a/12125969/14073678
-                val filePath = URLDecoder.decode(
-                        classLoader.getResource(resourceFile).file,
-                        "UTF-8")
-                File(filePath)
-            } catch (e: UnsupportedEncodingException) {
-                System.out.printf("Warning: cannot get file of resource file %s\n %s", resourceFile, e.message)
-                File("")
-            }
+            // decoding the url seems to fix it
+            // https://stackoverflow.com/questions/31133361/how-to-get-file-from-resources-when-blank-space-is-in-path
+            // https://stackoverflow.com/a/12125969/14073678
+            val filePath = URLDecoder.decode(
+                    classLoader.getResource(resourceFile).file,
+                    "UTF-8")
+            return File(filePath)
         }
     }
 }
