@@ -49,7 +49,7 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnEx
         // the folder starting with smali
         // like smali, smali_classes2, smali_classes3 and ect
         val decompiledApkDir = File(decompiledApkDirStr)
-        val files = decompiledApkDir.listFiles()
+        val files = decompiledApkDir.listFiles()!!
         for (i in files.indices) {
             if (!files[i].isDirectory) continue
             val dirName = files[i].name
@@ -82,12 +82,13 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnEx
 
     fun GetNativeLibSupportedArch(): Array<String> {
         val apkNativeLibDir = File(decompiledApkDirStr, NATIVE_LIB_DIR_NAME)
-        return if (!apkNativeLibDir.exists()) arrayOf() else apkNativeLibDir.list { current, name -> File(current, name).isDirectory }
-        // check if the apk already have a native lib for some or allarchitecture
+        // check if the apk already have a native lib for some or all architecture
         // if the apk already has native lib for specific arch like "armeabi-v7a"
         // then we shouldn't add a new folder for another arch like arm-64
         // because the apk will choose the arm-64 one and it may not contains
         // the needed library from "armeabi-v7a"
+        if (!apkNativeLibDir.exists()) return arrayOf()
+        else return apkNativeLibDir.list { current, name -> File(current, name).isDirectory }!!
     }
 
     fun GetNativeLibSupportedArchCount(): Int {
@@ -111,7 +112,7 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnEx
         // then we shouldn't add a new folder for another arch like arm-64
         // because the apk will choose the arm-64 one and it may not contains
         // the needed library from "armeabi-v7a"
-        val archs = apkNativeLibDir.list { current, name -> File(current, name).isDirectory }
+        val archs = apkNativeLibDir.list { current, name -> File(current, name).isDirectory }!!
         // don't add new arch folder, just return
         if (archs.size > 0) return apkNativeLibDir.absolutePath
         // otherwise add native lib folder for each arch

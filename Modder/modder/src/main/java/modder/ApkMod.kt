@@ -24,7 +24,7 @@ class ApkMod {
 		 * collect all files in directory
 		 * and decompile each apk file
 		 */
-            val apkPathFiles = apkPath.listFiles()
+            val apkPathFiles: Array<File> = apkPath.listFiles()!!
             for (i in apkPathFiles.indices) {
                 if (apkPathFiles[i].isFile) {
                     // get name
@@ -74,7 +74,7 @@ class ApkMod {
             }
             // ==========================================================
             // by convention, only pickup folder that contains DECOMPILED_DIR_EXT
-            val files = decompiledFolder.listFiles()
+            val files: Array<File> = decompiledFolder.listFiles()!!
             val recompiledParentFolder = File(outDirName)
             for (i in files.indices) {
                 if (files[i].isFile) {

@@ -22,7 +22,7 @@ class Resource {
      */
 
     fun CopyResourceFile(resourceFile: String, destFile: String) {
-        val _in = javaClass.getResourceAsStream(resourceFile)
+        val _in = javaClass.getResourceAsStream(resourceFile)!!
         val outputPath = Paths.get(destFile)
         System.out.printf("Copying resources file %s to %s\n", resourceFile, destFile)
         Files.copy(_in, outputPath, StandardCopyOption.REPLACE_EXISTING)

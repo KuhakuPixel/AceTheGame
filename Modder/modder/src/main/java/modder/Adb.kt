@@ -106,7 +106,7 @@ class Adb {
         // use install-multiple to install one or more apk
         // https://android.stackexchange.com/questions/221204/how-to-install-xapk-apks-or-multiple-apks-via-adb
         command.add("install-multiple")
-        for (f in apkDir.listFiles()) {
+        for (f in apkDir.listFiles()!!) {
             // only collect file that has extension of *.apk
             if (f.absolutePath.endsWith(".apk")) command.add(f.absolutePath)
         }
