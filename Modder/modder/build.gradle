@@ -52,7 +52,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'modder.App'
+    mainClass = 'modder.Main'
 }
 
 tasks.named('test') {
