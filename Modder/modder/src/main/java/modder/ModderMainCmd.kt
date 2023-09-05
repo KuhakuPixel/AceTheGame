@@ -1,6 +1,7 @@
 package modder
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import picocli.CommandLine
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
@@ -180,5 +181,19 @@ class ModderMainCmd {
         val adb = Adb()
         val out = adb.InstallApk(apkDirStr)
         out.strings.forEach(Consumer { x: String -> println(x) })
+    }
+
+    @CommandLine.Command(name = "sign", description = ["sign an apk"])
+    fun Sign(
+            @CommandLine.Parameters(paramLabel = "ApkFilePath", description = ["Apk File Path"])
+            apkFilePaths: MutableList<File>
+    ) {
+        for (apkFile in apkFilePaths) {
+            if (FilenameUtils.getExtension(apkFile.absolutePath) == "apk") {
+                println("Signing " + apkFile.absolutePath)
+                Assert.AssertExistAndIsFile(apkFile)
+                ApkSigner.Sign(apkFile)
+            }
+        }
     }
 }
