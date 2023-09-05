@@ -10,6 +10,7 @@ internal class TestAapt {
     var classLoader = javaClass.classLoader
     var apk1_Path = GetFile(classLoader, "apk_example/app-debug.apk")
     var apk2_Path = GetFile(classLoader, "apk_example/with space/app-debug.apk")
+
     @Test
     fun RunBasicCmd() {
         var output: List<String> = ArrayList()
@@ -38,4 +39,13 @@ internal class TestAapt {
             Assertions.assertEquals("com.java.simpleapp.MainActivity", launchableActivity)
         }
     }
+
+    @Test
+    fun GetManifest() {
+        val manifest: String = Aapt.GetManifest(apk1_Path.absolutePath).joinToString(separator = "\n")
+        Assertions.assertTrue(manifest.contains("A: android:extractNativeLibs(0x010104ea)=(type 0x12)0x0"))
+        Assertions.assertTrue(manifest.contains("A: package=\"com.java.simpleapp\" (Raw: \"com.java.simpleapp\")"))
+
+    }
+
 }

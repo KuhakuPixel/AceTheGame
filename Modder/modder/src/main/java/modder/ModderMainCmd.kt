@@ -49,6 +49,15 @@ class ModderMainCmd {
         output.forEach(Consumer { x: String -> println(x) })
     }
 
+    @CommandLine.Command(name = "manifest", description = ["get  manifest of apk"])
+
+    fun Manifest(
+            @CommandLine.Parameters(paramLabel = "apkPath", description = ["path to apk"]) apkPathStr: String
+    ) {
+        val output:List<String> = Aapt.GetManifest(apkPathStr)
+        println(output.joinToString(separator = "\n"))
+    }
+
     /*
      *
      * for decompilation and recompilation output directory

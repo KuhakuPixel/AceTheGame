@@ -49,5 +49,11 @@ class Aapt {
             }
             return launchableActivity
         }
+
+        fun GetManifest(apkPath: String): List<String> {
+            // https://stackoverflow.com/a/28464940/14073678
+            val output: List<String> = RunCmd(Arrays.asList("d", "xmltree", apkPath, "AndroidManifest.xml"))
+            return output
+        }
     }
 }
