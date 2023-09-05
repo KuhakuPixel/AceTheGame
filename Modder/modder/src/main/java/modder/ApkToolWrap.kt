@@ -1,18 +1,21 @@
 package modder
 
-import brut.apktool.Main
-
 // apktool stuff 
 class ApkToolWrap {
     companion object {
-        fun Decompile(apkPathName: String, outDirName: String) {
-            val cmd = arrayOf("d", apkPathName, "--output", outDirName, "-f")
-            Main.main(cmd)
+        fun Decompile(apkPathName: String, outDirName: String, decodeResource: Boolean) {
+            val cmd = mutableListOf("d", apkPathName, "--output", outDirName, "--force")
+            // add --no-resource, because apktool by default decodes resource
+            if (!decodeResource)
+                cmd.add("--no-res")
+
+            brut.apktool.Main.main(cmd.toTypedArray())
         }
 
         fun Recompile(decompiledFolderStr: String, apkOutFileStr: String) {
             val cmd = arrayOf("b", decompiledFolderStr, "--output", apkOutFileStr)
-            Main.main(cmd)
+
+            brut.apktool.Main.main(cmd)
         }
     }
 }

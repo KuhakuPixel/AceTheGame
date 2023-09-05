@@ -54,7 +54,7 @@ class ModderMainCmd {
     fun Manifest(
             @CommandLine.Parameters(paramLabel = "apkPath", description = ["path to apk"]) apkPathStr: String
     ) {
-        val output:List<String> = Aapt.GetManifest(apkPathStr)
+        val output: List<String> = Aapt.GetManifest(apkPathStr)
         println(output.joinToString(separator = "\n"))
     }
 
@@ -107,7 +107,7 @@ class ModderMainCmd {
         val baseApkFile = File(patchedApkDir.absolutePath, Patcher.BASE_APK_FILE_NAME)
         Assert.AssertExistAndIsFile(baseApkFile)
         // ========== add patch ===========================
-        val patcher = Patcher(baseApkFile.absolutePath)
+        val patcher = Patcher(baseApkFile.absolutePath, decodeResource = true)
         patcher.AddMemScanner()
         // fix [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2] after recompile
         // https://github.com/iBotPeaches/Apktool/issues/1626
