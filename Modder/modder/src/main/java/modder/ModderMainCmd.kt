@@ -106,12 +106,31 @@ class ModderMainCmd {
         // get the base apk for patching
         val baseApkFile = File(patchedApkDir.absolutePath, Patcher.BASE_APK_FILE_NAME)
         Assert.AssertExistAndIsFile(baseApkFile)
+        // ============= check the existance of extractNativeLibs=false in AndroidManifest.xml =======
+        /*
+        * adding native libs to /libs folder with  [Patcher.AddMemScanner]
+        * will throw [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2]
+        * during install if extractNativeLibs == false
+        *
+        * so either remove it so it will be set to its default value (true)
+        * https://github.com/iBotPeaches/Apktool/issues/1626
+        * */
+        val extractNativeLibsOption: Boolean? = Aapt.GetManifestExtractNativeLibValue(apkPath = baseApkFile.absolutePath)
+        // by default set to false to make de-compilation and recompilation faster and less error prone
+        var decodeResource = false
+        if (extractNativeLibsOption == false) {
+            // need to decode resource to modify AndroidManifest.xml
+            decodeResource = true
+            println("extractNativeLibsOptions is set to false, attempting to remove them")
+        }
         // ========== add patch ===========================
-        val patcher = Patcher(baseApkFile.absolutePath, decodeResource = true)
+        val patcher = Patcher(baseApkFile.absolutePath, decodeResource = decodeResource)
+        if (extractNativeLibsOption == false) {
+            patcher.RemoveExtractNativeLibOptions()
+            println("extractNativeLibsOptions removed")
+        }
+        // add mem scanner
         patcher.AddMemScanner()
-        // fix [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2] after recompile
-        // https://github.com/iBotPeaches/Apktool/issues/1626
-        patcher.RemoveExtractNativeLibOptions()
         // ================== export ===================
         // String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
         val patchedApkPath = baseApkFile.absolutePath
