@@ -55,5 +55,33 @@ class Aapt {
             val output: List<String> = RunCmd(Arrays.asList("d", "xmltree", apkPath, "AndroidManifest.xml"))
             return output
         }
+
+        fun _GetManifestExtractNativeLibValue(line: String): Boolean {
+            /**
+            line will look like "android:extractNativeLibs(0x010104ea)=(type 0x12)0x0"
+             */
+            val rightVal: String = line.split("=")[1]
+            // remove the "(type 0x12)"
+            val value: String = rightVal.split(")")[1]
+            if (value == "0x0")
+                return false
+            else
+                return true
+
+        }
+
+        /**
+         * return null if android:extractNativeLibs doesn't exist
+         * */
+        fun GetManifestExtractNativeLibValue(apkPath: String): Boolean? {
+            val manifest: List<String> = GetManifest(apkPath)
+            for (line in manifest) {
+                if (line.contains("android:extractNativeLibs"))
+                    return _GetManifestExtractNativeLibValue(line = line)
+
+            }
+            return null;
+
+        }
     }
 }

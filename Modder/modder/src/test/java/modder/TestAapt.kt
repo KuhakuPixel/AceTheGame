@@ -48,4 +48,27 @@ internal class TestAapt {
 
     }
 
+    @Test
+    fun _GetManifestExtractNativeLibValue() {
+        Assertions.assertFalse(
+                Aapt._GetManifestExtractNativeLibValue(line = "A: android:extractNativeLibs(0x010104ea)=(type 0x12)0x0")
+        )
+
+        Assertions.assertFalse(
+                Aapt._GetManifestExtractNativeLibValue(line = "A: android:extractNativeLibs(0x010104ea)=(type 0x11)0x0")
+        )
+
+        Assertions.assertTrue(
+                Aapt._GetManifestExtractNativeLibValue(line = "A: android:extractNativeLibs(0x010104ea)=(type 0x12)0xffffffff")
+        )
+    }
+
+    @Test
+    fun GetManifestExtractNativeLibValue() {
+        // [apk1_Path]'s extractNativeLib has been set to true
+        Assertions.assertEquals(false, Aapt.GetManifestExtractNativeLibValue(apk1_Path.absolutePath))
+        // [apk2_Path] doesn't contain extractNativeLib
+        Assertions.assertEquals(null, Aapt.GetManifestExtractNativeLibValue(apk2_Path.absolutePath))
+    }
+
 }
