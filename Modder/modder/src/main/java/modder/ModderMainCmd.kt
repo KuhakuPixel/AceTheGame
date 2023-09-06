@@ -116,16 +116,16 @@ class ModderMainCmd {
         * https://github.com/iBotPeaches/Apktool/issues/1626
         * */
         val extractNativeLibsOption: Boolean? = Aapt.GetManifestExtractNativeLibValue(apkPath = baseApkFile.absolutePath)
-        // by default set to false to make de-compilation and recompilation faster and less error prone
-        var decodeResource = false
-        if (extractNativeLibsOption == false) {
-            // need to decode resource to modify AndroidManifest.xml
-            decodeResource = true
-            println("extractNativeLibsOptions is set to false, attempting to remove them")
-        }
         // ========== add patch ===========================
-        val patcher = Patcher(baseApkFile.absolutePath, decodeResource = decodeResource)
+        val patcher = Patcher(
+                baseApkFile.absolutePath,
+                // need to decode resource to modify AndroidManifest.xml
+                // when extractNativeLibsOption == false
+                // otherwise don't decode to make compilation recompilation faster
+                decodeResource = (extractNativeLibsOption == false),
+        )
         if (extractNativeLibsOption == false) {
+            println("extractNativeLibsOptions is set to false, attempting to remove them")
             patcher.RemoveExtractNativeLibOptions()
             println("extractNativeLibsOptions removed")
         }
