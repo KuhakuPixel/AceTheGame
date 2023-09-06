@@ -14,7 +14,7 @@ class Aapt {
             var output: List<String> = ArrayList()
             val aaptFile: File
             // get aapt
-            aaptFile = AaptManager.getAapt1()
+            aaptFile = AaptManager.getAapt2()
             output = Util.RunCommand(aaptFile.absolutePath, args)
             return output
         }
@@ -52,21 +52,16 @@ class Aapt {
 
         fun GetManifest(apkPath: String): List<String> {
             // https://stackoverflow.com/a/28464940/14073678
-            val output: List<String> = RunCmd(Arrays.asList("d", "xmltree", apkPath, "AndroidManifest.xml"))
+            val output: List<String> = RunCmd(Arrays.asList("d", "xmltree", apkPath,"--file", "AndroidManifest.xml"))
             return output
         }
 
         fun _GetManifestExtractNativeLibValue(line: String): Boolean {
             /**
-            line will look like "android:extractNativeLibs(0x010104ea)=(type 0x12)0x0"
+            line will look like "A: http://schemas.android.com/apk/res/android:extractNativeLibs(0x010104ea)=false"
              */
-            val rightVal: String = line.split("=")[1]
-            // remove the "(type 0x12)"
-            val value: String = rightVal.split(")")[1]
-            if (value == "0x0")
-                return false
-            else
-                return true
+            val value: String = line.split("=")[1]
+            return value.toBooleanStrict()
 
         }
 

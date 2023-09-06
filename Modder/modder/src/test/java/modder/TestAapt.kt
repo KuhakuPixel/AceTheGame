@@ -17,8 +17,8 @@ internal class TestAapt {
 
         // should contains basic info about aapt when run with --help
         output = Aapt.RunCmd(mutableListOf<String>("--help"))
-        Assertions.assertEquals(true, output.contains("Android Asset Packaging Tool"))
-        Assertions.assertEquals(true, output.contains("Usage:"))
+        Assertions.assertEquals(true, output.contains("Subcommands:"))
+        Assertions.assertEquals(true, output.contains("Options:"))
     }
 
     @Test
@@ -43,7 +43,7 @@ internal class TestAapt {
     @Test
     fun GetManifest() {
         val manifest: String = Aapt.GetManifest(apk1_Path.absolutePath).joinToString(separator = "\n")
-        Assertions.assertTrue(manifest.contains("A: android:extractNativeLibs(0x010104ea)=(type 0x12)0x0"))
+        Assertions.assertTrue(manifest.contains("A: http://schemas.android.com/apk/res/android:extractNativeLibs(0x010104ea)=false"))
         Assertions.assertTrue(manifest.contains("A: package=\"com.java.simpleapp\" (Raw: \"com.java.simpleapp\")"))
 
     }
@@ -51,15 +51,19 @@ internal class TestAapt {
     @Test
     fun _GetManifestExtractNativeLibValue() {
         Assertions.assertFalse(
-                Aapt._GetManifestExtractNativeLibValue(line = "A: android:extractNativeLibs(0x010104ea)=(type 0x12)0x0")
+                Aapt._GetManifestExtractNativeLibValue(line = "A: http://schemas.android.com/apk/res/android:extractNativeLibs(0x010104ea)=false")
         )
 
         Assertions.assertFalse(
-                Aapt._GetManifestExtractNativeLibValue(line = "A: android:extractNativeLibs(0x010104ea)=(type 0x11)0x0")
+                Aapt._GetManifestExtractNativeLibValue(line = "A: http://schemas.android.com/apk/res/android:extractNativeLibs(0x011114ea)=false")
         )
 
         Assertions.assertTrue(
-                Aapt._GetManifestExtractNativeLibValue(line = "A: android:extractNativeLibs(0x010104ea)=(type 0x12)0xffffffff")
+                Aapt._GetManifestExtractNativeLibValue(line = "A: http://schemas.android.com/apk/res/android:extractNativeLibs(0x011114ea)=true")
+        )
+
+        Assertions.assertTrue(
+                Aapt._GetManifestExtractNativeLibValue(line = "A: http://schemas.android.com/apk/res/android:extractNativeLibs(0x010104ea)=true")
         )
     }
 
