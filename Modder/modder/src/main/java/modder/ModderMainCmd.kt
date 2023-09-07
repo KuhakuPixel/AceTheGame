@@ -1,6 +1,7 @@
 package modder
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import picocli.CommandLine
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
@@ -46,6 +47,15 @@ class ModderMainCmd {
     ) {
         val output = Aapt.DumpBadging(apkPathStr)
         output.forEach(Consumer { x: String -> println(x) })
+    }
+
+    @CommandLine.Command(name = "manifest", description = ["get  manifest of apk"])
+
+    fun Manifest(
+            @CommandLine.Parameters(paramLabel = "apkPath", description = ["path to apk"]) apkPathStr: String
+    ) {
+        val output: List<String> = Aapt.GetManifest(apkPathStr)
+        println(output.joinToString(separator = "\n"))
     }
 
     /*
@@ -96,12 +106,31 @@ class ModderMainCmd {
         // get the base apk for patching
         val baseApkFile = File(patchedApkDir.absolutePath, Patcher.BASE_APK_FILE_NAME)
         Assert.AssertExistAndIsFile(baseApkFile)
+        // ============= check the existance of extractNativeLibs=false in AndroidManifest.xml =======
+        /*
+        * adding native libs to /libs folder with  [Patcher.AddMemScanner]
+        * will throw [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2]
+        * during install if extractNativeLibs == false
+        *
+        * so either remove it so it will be set to its default value (true)
+        * https://github.com/iBotPeaches/Apktool/issues/1626
+        * */
+        val extractNativeLibsOption: Boolean? = Aapt.GetManifestExtractNativeLibValue(apkPath = baseApkFile.absolutePath)
         // ========== add patch ===========================
-        val patcher = Patcher(baseApkFile.absolutePath)
+        val patcher = Patcher(
+                baseApkFile.absolutePath,
+                // need to decode resource to modify AndroidManifest.xml
+                // when extractNativeLibsOption == false
+                // otherwise don't decode to make compilation recompilation faster
+                decodeResource = (extractNativeLibsOption == false),
+        )
+        if (extractNativeLibsOption == false) {
+            println("extractNativeLibsOptions is set to false, attempting to remove them")
+            patcher.RemoveExtractNativeLibOptions()
+            println("extractNativeLibsOptions removed")
+        }
+        // add mem scanner
         patcher.AddMemScanner()
-        // fix [INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2] after recompile
-        // https://github.com/iBotPeaches/Apktool/issues/1626
-        patcher.RemoveExtractNativeLibOptions()
         // ================== export ===================
         // String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
         val patchedApkPath = baseApkFile.absolutePath
@@ -180,5 +209,19 @@ class ModderMainCmd {
         val adb = Adb()
         val out = adb.InstallApk(apkDirStr)
         out.strings.forEach(Consumer { x: String -> println(x) })
+    }
+
+    @CommandLine.Command(name = "sign", description = ["sign an apk"])
+    fun Sign(
+            @CommandLine.Parameters(paramLabel = "ApkFilePath", description = ["Apk File Path"])
+            apkFilePaths: MutableList<File>
+    ) {
+        for (apkFile in apkFilePaths) {
+            if (FilenameUtils.getExtension(apkFile.absolutePath) == "apk") {
+                println("Signing " + apkFile.absolutePath)
+                Assert.AssertExistAndIsFile(apkFile)
+                ApkSigner.Sign(apkFile)
+            }
+        }
     }
 }

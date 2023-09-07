@@ -14,7 +14,7 @@ class Aapt {
             var output: List<String> = ArrayList()
             val aaptFile: File
             // get aapt
-            aaptFile = AaptManager.getAapt1()
+            aaptFile = AaptManager.getAapt2()
             output = Util.RunCommand(aaptFile.absolutePath, args)
             return output
         }
@@ -48,6 +48,35 @@ class Aapt {
                 }
             }
             return launchableActivity
+        }
+
+        fun GetManifest(apkPath: String): List<String> {
+            // https://stackoverflow.com/a/28464940/14073678
+            val output: List<String> = RunCmd(Arrays.asList("d", "xmltree", apkPath,"--file", "AndroidManifest.xml"))
+            return output
+        }
+
+        fun _GetManifestExtractNativeLibValue(line: String): Boolean {
+            /**
+            line will look like "A: http://schemas.android.com/apk/res/android:extractNativeLibs(0x010104ea)=false"
+             */
+            val value: String = line.split("=")[1]
+            return value.toBooleanStrict()
+
+        }
+
+        /**
+         * return null if android:extractNativeLibs doesn't exist
+         * */
+        fun GetManifestExtractNativeLibValue(apkPath: String): Boolean? {
+            val manifest: List<String> = GetManifest(apkPath)
+            for (line in manifest) {
+                if (line.contains("android:extractNativeLibs"))
+                    return _GetManifestExtractNativeLibValue(line = line)
+
+            }
+            return null;
+
         }
     }
 }

@@ -37,7 +37,7 @@ class ApkMod {
                     System.out.printf("Putting decompilation at %s\n",
                             outFolder.toString())
                     System.out.printf("Decompiling %s\n", currentApkFileStr)
-                    ApkToolWrap.Decompile(currentApkFileStr, outFolder.toString())
+                    ApkToolWrap.Decompile(currentApkFileStr, outFolder.toString(), decodeResource = true)
                 }
             }
         }

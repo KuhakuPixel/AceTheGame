@@ -5,13 +5,18 @@ import org.apache.commons.lang3.StringUtils
 import java.io.File
 import java.io.IOException
 import java.io.PrintWriter
+import java.lang.IllegalStateException
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 
-class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnExit = TempManager.TaskOnExit.clean) {
+class Patcher(
+        apkFilePathStr: String,
+        tempFolderTaskOnExit: TempManager.TaskOnExit = TempManager.TaskOnExit.clean,
+        val decodeResource: Boolean,
+) {
     var apkFilePathStr: String
     var decompiledApkDirStr: String
     val resource = Resource()
@@ -27,7 +32,7 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnEx
         // https://stackoverflow.com/a/17552395/14073678
         decompiledApkDirStr = tempDir.toAbsolutePath().toString()
         // =============================== decompile the apk ===========
-        ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr)
+        ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr, decodeResource = this.decodeResource)
     }
 
     // TODO: find a way to cut down code duplication between this function and
@@ -265,6 +270,9 @@ class Patcher(apkFilePathStr: String, tempFolderTaskOnExit: TempManager.TaskOnEx
 
 
     fun RemoveExtractNativeLibOptions() {
+        if (!decodeResource) {
+            throw IllegalStateException("Cannot remove extract native lib options when [decodeResource] is false")
+        }
         val manifestFile = GetManifestFile()
         val manifestContent = Files.readString(manifestFile.toPath())
         // remove the options all toget

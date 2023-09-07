@@ -5,6 +5,7 @@ import modder.Patcher.Companion.LaunchableActivityToSmaliRelativePath
 import modder.Patcher.Companion.MemScannerFindInjectionLineNum
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
@@ -24,6 +25,7 @@ internal class TestPatcher {
     //
     val testLibFile = classLoader.getResource("test_file/lib_fakeLib.so").file
     val testLaunchableSmaliFile = classLoader.getResource("test_file/MainActivity.smali").file
+
     @Test
     fun LaunchableActivityToSmaliRelativePath() {
         var path = ""
@@ -40,7 +42,7 @@ internal class TestPatcher {
     @Throws(IOException::class)
     fun GetSmaliFolderOfLaunchableActvity() {
         //
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         val smaliFolder = patcher.GetSmaliFolderOfLaunchableActvity()
         // check the relative path because [GetEntrySmaliPath] will
         // return
@@ -60,17 +62,17 @@ internal class TestPatcher {
     fun GetNativeLibSupportedArchCount() {
         //
         run {
-            val patcher = Patcher(testApkPathStr)
+            val patcher = Patcher(testApkPathStr, decodeResource = false)
             Assertions.assertEquals(0, patcher.GetNativeLibSupportedArchCount())
         }
         run {
 
             // should support all arch
-            val patcher = Patcher(testApkWithNativeLibPathStr)
+            val patcher = Patcher(testApkWithNativeLibPathStr, decodeResource = false)
             Assertions.assertEquals(Patcher.ARCHS.size, patcher.GetNativeLibSupportedArchCount())
         }
         run {
-            val patcher = Patcher(testApkWithOneArchNativeLibPathStr)
+            val patcher = Patcher(testApkWithOneArchNativeLibPathStr, decodeResource = false)
             Assertions.assertEquals(1, patcher.GetNativeLibSupportedArchCount())
         }
     }
@@ -79,7 +81,7 @@ internal class TestPatcher {
     @Throws(IOException::class)
     fun GetEntrySmaliPath() {
         //
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         val smaliPath = patcher.GetEntrySmaliPath()
         // check the relative path because [GetEntrySmaliPath] will
         // return
@@ -98,7 +100,7 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun CreateNativeLibDir() {
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         val decompiledDirStr = patcher.GetDecompiledApkDirStr()
         val nativeLibDir = File(decompiledDirStr, Patcher.NATIVE_LIB_DIR_NAME)
         Assertions.assertEquals(false, nativeLibDir.exists())
@@ -115,7 +117,7 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun CreateNativeLibDir2() {
-        val patcher = Patcher(testApkWithOneArchNativeLibPathStr)
+        val patcher = Patcher(testApkWithOneArchNativeLibPathStr, decodeResource = false)
         Assertions.assertEquals(1, patcher.GetNativeLibSupportedArchCount())
         patcher.CreateNativeLibDir()
         // shouldn't try new arch because there is already
@@ -126,7 +128,7 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun DoesNativeLibExist() {
-        val patcher = Patcher(testApkWithNativeLibPathStr)
+        val patcher = Patcher(testApkWithNativeLibPathStr, decodeResource = false)
         Assertions.assertEquals(true, patcher.DoesNativeLibExist(NATIVE_LIB_TEST_NAME))
         Assertions.assertEquals(false, patcher.DoesNativeLibExist("lib_that_doesnt_exist.so"))
     }
@@ -134,7 +136,7 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun AddFileToNativeLibDir() {
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         val decompiledDirStr = patcher.GetDecompiledApkDirStr()
         val nativeLibDir = File(decompiledDirStr, Patcher.NATIVE_LIB_DIR_NAME)
         Assertions.assertEquals(false, nativeLibDir.exists())
@@ -151,23 +153,38 @@ internal class TestPatcher {
     }
 
     @Test
-    @Throws(IOException::class)
     fun RemoveExtractNativeLibOptions() {
-        val patcher = Patcher(testApkPathStr)
-        // initially contains extractNativeLib options
-        var manifestContent = Files.readString(patcher.GetManifestFile().toPath())
-        Assertions.assertEquals(true, manifestContent.contains("android:extractNativeLibs=\"false\""))
-        patcher.RemoveExtractNativeLibOptions()
-        // test
-        manifestContent = Files.readString(patcher.GetManifestFile().toPath())
-        Assertions.assertFalse(manifestContent.contains("android:extractNativeLibs=\"false\""))
-        Assertions.assertTrue(manifestContent.length > 0)
+        // exception thrown when we don't decode resource but attempt to modify
+        // manifest by using RemoveExtractNativeLibOptions
+        run {
+            try {
+                val patcher = Patcher(testApkPathStr, decodeResource = false)
+                // initially contains extractNativeLib options
+                patcher.RemoveExtractNativeLibOptions()
+                fail("exception not thrown when removingExtractNativeLib from manifest with [decodeResource]=false")
+            } catch (e: IllegalStateException) {
+                Assertions.assertTrue(true)
+            }
+        }
+
+        run {
+            val patcher = Patcher(testApkPathStr, decodeResource = true)
+            // initially contains extractNativeLib options
+            var manifestContent = Files.readString(patcher.GetManifestFile().toPath())
+            Assertions.assertEquals(true, manifestContent.contains("android:extractNativeLibs=\"false\""))
+            patcher.RemoveExtractNativeLibOptions()
+            // test
+            manifestContent = Files.readString(patcher.GetManifestFile().toPath())
+            Assertions.assertFalse(manifestContent.contains("android:extractNativeLibs=\"false\""))
+            Assertions.assertTrue(manifestContent.length > 0)
+        }
+
     }
 
     @Test
     @Throws(IOException::class)
     fun AddMemScannerLib() {
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
 
         // mem scanner lib shouldnt exist previously
         Assertions.assertEquals(false, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME))
@@ -180,7 +197,7 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun AddMemScannerLib2() {
-        val patcher = Patcher(testApkWithNativeLibPathStr)
+        val patcher = Patcher(testApkWithNativeLibPathStr, decodeResource = false)
         System.out.printf("the resource dir is: %s\n", Patcher.MEM_SCANNER_LIB_RESOURCE_DIR)
         // mem scanner lib shouldnt exist previously
         Assertions.assertEquals(false, patcher.DoesNativeLibExist(Patcher.MEM_SCANNER_LIB_NAME))
@@ -199,14 +216,14 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun GetPackageNameOfLaunchableActivity() {
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         Assertions.assertEquals("com", patcher.GetPackageNameOfLaunchableActivity())
     }
 
     @Test
     @Throws(IOException::class)
     fun GetPackageDirOfLaunchableActivity() {
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         val smaliCodePackageDir = patcher.GetPackageDirOfLaunchableActivity()
         System.out.printf("smali codepackagedir %s\n", smaliCodePackageDir)
         val expectedEndingPath = java.lang.String.join(File.separator, "smali_classes3", "com")
@@ -216,7 +233,7 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun AddMemScannerSmaliCode() {
-        val patcher = Patcher(testApkPathStr)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         val smaliCodePackageDir = patcher.GetPackageDirOfLaunchableActivity()
         val memScannerSmaliCodeDir = File(smaliCodePackageDir, Patcher.MEM_SCANNER_SMALI_DIR_NAME)
         Assertions.assertEquals(false, memScannerSmaliCodeDir.exists())
