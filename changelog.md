@@ -1,4 +1,19 @@
 # ChangeLog
+## [0.1.1]
+
+### Fixed
+- [Modder] installation fails when Apk's `AndroidManifests.xml` 's `extractNativeLib=false`
+- [Modder] patch fails with exception `can't find launchable activity` because of 
+           using `aapt1` instead of `aapt2`
+
+### Added
+- [APK] add default port when pressing `Connect to ACE's server`
+- [Modder] `sign` command to sign apk
+
+### Changed
+- [Modder] simplify `patch` command
+
+### Removed
 
 ## [0.1.0]
 
