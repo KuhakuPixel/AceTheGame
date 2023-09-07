@@ -32,10 +32,6 @@ fun onNextScanClicked(
     onBeforeScanStart()
     val statusPublisherPort = ace.getStatusPublisherPort()
     CompletableFuture.supplyAsync<Unit> {
-        // This simulates an expensive operation
-        Thread.sleep(1000)
-        "Hello, world!"
-
         // set the value type
         if (!scanOptions.initialScanDone) ace.SetNumType(scanOptions.numType)
         /**
