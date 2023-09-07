@@ -26,7 +26,8 @@ class OverlayInputDialog(
         )
     }
 
-    fun show(title: String, onConfirm: (input: String) -> Unit) {
+    fun show(title: String, defaultValue: String = "", onConfirm: (input: String) -> Unit) {
+        this.valueInput.value = defaultValue
         super.show(
             title = title,
             onConfirm = {

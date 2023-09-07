@@ -154,6 +154,7 @@ public class ACE {
             throw new AttachingInARowException("Cannot Attach without DeAttaching first");
     }
 
+    // TODO: add statusPublisherPort as parameter
     public synchronized void ConnectToACEServer(Integer port) throws IOException, InterruptedException {
         AssertNoAttachInARow();
         this.aceAttachClient = new ACEAttachClient(port);

@@ -208,7 +208,7 @@ after download, you should have folder called
 `online.limitless.appleknight.free`
 #### Attaching memory scanner
 ```
-./modder patch online.limitless.appleknight.free/ true
+./modder patch online.limitless.appleknight.free/ 
 ```
 this will take a while since it has to recompile,
 attach memory scanner, recompile and resign the apk

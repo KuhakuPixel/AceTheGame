@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kuhakupixel.atg.R
 import com.kuhakupixel.atg.backend.ACE
+import com.kuhakupixel.atg.backend.ACEPort
 import com.kuhakupixel.atg.backend.ProcInfo
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
@@ -252,6 +253,7 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
 
             OverlayInputDialog(overlayContext!!).show(
                 "Port: ",
+                defaultValue = ACEPort.defaultPort.toString(),
                 onConfirm = { input: String ->
                     val port = input.toInt()
                     if (ace.IsAttached())
