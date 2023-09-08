@@ -31,9 +31,9 @@ class Main {
         fun main(args: Array<String>) {
             // Some testing
             if (Util.DoesCommandExist("adb")) {
-                println("adb exist")
+                logger.info { "adb exist" }
             } else {
-                println("adb doesn't exist")
+                logger.error{"adb doesn't exist"}
             }
             cliInit(args)
         }

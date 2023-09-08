@@ -25,13 +25,8 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
 
     //
-    // implementation 'org.apktool:apktool-lib:2.6.1'
     implementation 'net.lingala.zip4j:zip4j:2.11.3'
     // auto signer
-    // TODO: add docker file for uber signer project
-    // for easier build in the future, because I can't build them
-    // probably  some missmatch of java version
-    // Add file dependacy
     // https://stackoverflow.com/a/20956456/14073678
     implementation files("./lib/uber-apk-signer-1.3.0.jar")
     implementation files("./lib/apktool-cli-all_2.8.1.jar")
@@ -46,6 +41,9 @@ dependencies {
 
     // cli
     implementation 'info.picocli:picocli:4.7.5'
+    // logging
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+    implementation 'io.github.oshai:kotlin-logging-jvm:5.0.0'
 
 
 }

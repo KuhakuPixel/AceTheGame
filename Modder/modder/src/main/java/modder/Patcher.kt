@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils
 import java.io.File
 import java.io.IOException
 import java.io.PrintWriter
-import java.lang.IllegalStateException
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -32,6 +31,7 @@ class Patcher(
         // https://stackoverflow.com/a/17552395/14073678
         decompiledApkDirStr = tempDir.toAbsolutePath().toString()
         // =============================== decompile the apk ===========
+        logger.info{"decompiled at ${decompiledApkDirStr}"}
         ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr, decodeResource = this.decodeResource)
     }
 
@@ -259,7 +259,12 @@ class Patcher(
         // server to the init function of smali launchable file
         val entrySmaliPathStr = GetEntrySmaliPath()
         val entrySmaliPath = Paths.get(entrySmaliPathStr)
+        println("using log4j")
+        logger.info { "entry smali file: ${entrySmaliPathStr}" }
         val modifiedSmaliCode = AddMemScannerConstructorSmaliCode(entrySmaliPathStr)
+        logger.info { "========== modified smali code ========================" }
+        logger.info { modifiedSmaliCode.joinToString(separator = "\n") }
+        logger.info { "==================================================" }
         // rewrite file
         Files.write(entrySmaliPath, modifiedSmaliCode)
     }
@@ -349,6 +354,7 @@ class Patcher(
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())
             val injectionLine = MemScannerFindInjectionLineNum(launchableSmaliFile)
             fileData.add(injectionLine + 1, MEM_SCANNER_CONSTRUCTOR_SMALI_CODE)
+            logger.info { "Injecting code at: ${launchableSmaliFile}:${injectionLine + 1} " }
             return fileData
         }
     }
