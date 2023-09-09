@@ -94,7 +94,11 @@ class ModderMainCmd {
     @CommandLine.Command(name = "Patch", description = ["recompile apks"])
 
     fun Patch(
-            @CommandLine.Parameters(paramLabel = "ApkFolderPath", description = ["Path to directory containing apks"]) apkDirStr: String
+            @CommandLine.Parameters(paramLabel = "ApkFolderPath", description = ["Path to directory containing apks"])
+            apkDirStr: String,
+
+            @CommandLine.Parameters(paramLabel = "cleanDecompiledOnExit",description = ["clean decompiled apk folder when program exits, default:\${DEFAULT-VALUE} "], defaultValue = "true")
+            cleanDecompiledOnExit: Boolean
     ) {
 
         // check if the directory exist
@@ -123,6 +127,7 @@ class ModderMainCmd {
                 // when extractNativeLibsOption == false
                 // otherwise don't decode to make compilation recompilation faster
                 decodeResource = (extractNativeLibsOption == false),
+                cleanDecompilationOnExit = cleanDecompiledOnExit,
         )
         if (extractNativeLibsOption == false) {
             println("extractNativeLibsOptions is set to false, attempting to remove them")

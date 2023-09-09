@@ -9,6 +9,7 @@ import org.junit.jupiter.api.fail
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
+import kotlin.io.path.Path
 
 internal class TestPatcher {
     //
@@ -96,6 +97,15 @@ internal class TestPatcher {
         val mainActivitySmaliFile = File(smaliPath)
         Assertions.assertEquals(true, mainActivitySmaliFile.exists())
     }
+
+    @Test
+    fun GetSmaliClassesCount() {
+
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
+        Assertions.assertEquals(4, patcher.GetSmaliClassesCount())
+
+    }
+
 
     @Test
     @Throws(IOException::class)
@@ -233,13 +243,17 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun AddMemScannerSmaliCode() {
-        val patcher = Patcher(testApkPathStr, decodeResource = false)
-        val smaliCodePackageDir = patcher.GetPackageDirOfLaunchableActivity()
-        val memScannerSmaliCodeDir = File(smaliCodePackageDir, Patcher.MEM_SCANNER_SMALI_DIR_NAME)
+        val patcher = Patcher(testApkPathStr, decodeResource = false, cleanDecompilationOnExit = false)
+        // new smali code should be at newly created smali classes
+        val memScannerSmaliCodeDir = Path(patcher.decompiledApkDirStr, "smali_classes5", "com", Patcher.MEM_SCANNER_SMALI_DIR_NAME).toFile()
         Assertions.assertEquals(false, memScannerSmaliCodeDir.exists())
         patcher.AddMemScannerSmaliCode()
         Assertions.assertEquals(true, memScannerSmaliCodeDir.exists())
         Assertions.assertEquals(true, memScannerSmaliCodeDir.isDirectory)
+        // make sure content is valid
+        val smaliCodeRootDir = File(memScannerSmaliCodeDir.absolutePath, "utils")
+        Assertions.assertEquals(true, smaliCodeRootDir.exists())
+        Assertions.assertEquals(true, smaliCodeRootDir.isDirectory())
     }
 
     @Test

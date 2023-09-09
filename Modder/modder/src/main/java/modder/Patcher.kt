@@ -5,16 +5,16 @@ import org.apache.commons.lang3.StringUtils
 import java.io.File
 import java.io.IOException
 import java.io.PrintWriter
-import java.lang.IllegalStateException
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.io.path.Path
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 
 class Patcher(
         apkFilePathStr: String,
-        tempFolderTaskOnExit: TempManager.TaskOnExit = TempManager.TaskOnExit.clean,
+        cleanDecompilationOnExit: Boolean = true,
         val decodeResource: Boolean,
 ) {
     var apkFilePathStr: String
@@ -27,11 +27,12 @@ class Patcher(
         Assert.AssertExistAndIsFile(apkFile)
         // make sure to get the absolute path
         this.apkFilePathStr = apkFile.absolutePath
-        val tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", tempFolderTaskOnExit)
+        val tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", cleanDecompilationOnExit)
         // make sure we have the absolute path
         // https://stackoverflow.com/a/17552395/14073678
         decompiledApkDirStr = tempDir.toAbsolutePath().toString()
         // =============================== decompile the apk ===========
+        logger.info { "decompiled at ${decompiledApkDirStr}" }
         ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr, decodeResource = this.decodeResource)
     }
 
@@ -230,24 +231,52 @@ class Patcher(
         return smaliCodePackageDir.absolutePath
     }
 
+    fun GetSmaliClassesCount(): Int {
+
+        var count: Int = 0
+        val files = File(decompiledApkDirStr).listFiles()!!
+        for (i in files.indices) {
+            // the first smali folder starts with "smali" and rest starts with  "smali_classes2"
+            // can't only check for startsWith("smali") because there are some folder like "smali_assets"
+            // that aren't part of the main dex class and will only mess up the [count]
+            if (files[i].name == "smali" || files[i].name.startsWith("smali_classes")) {
+                if (files[i].isDirectory)
+                    count++
+            }
+        }
+        return count
+
+    }
 
     fun AddMemScannerSmaliCode() {
-        // path to copy the smali constructor to
-        val smaliCodePackageDir = GetPackageDirOfLaunchableActivity()
 
-        // copy the zip code of smali constructor from resources
-        // unextract it in a temp folder and then copy to
-        // the apk
+        /**
+         * copy the zip code of smali constructor from resources
+         * to a temp folder and then extract to the apk
+         */
+
+        // copy zip to temp folder
         val tempDir: String = TempManager.CreateTempDirectory("TempSmalifolder").toString()
-        //
         val destSmaliZipCode = File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME)
         resource.CopyResourceFile(MEM_SCANNER_SMALI_CODE_ZIP_PATH, destSmaliZipCode.absolutePath)
-        val destDir = File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).absolutePath
-        val zipFile = ZipFile(destSmaliZipCode.absolutePath)
-        zipFile.extractAll(destDir)
-        System.out.printf("extracted to %s\n", destDir)
-        zipFile.close()
-        System.out.printf("copying resource to %s\n", destDir)
+
+        /**
+         * create new smali folder (new dex basically) to put our smali code
+         * can't just use existing smali folder in order to mitigate dex limitation of 65536 max method
+         * https://developer.android.com/build/multidex#:~:text=About%20the%2064K%20reference%20limit,-Android%20app%20(APK&text=The%20Dalvik%20Executable%20specification%20limits,methods%20in%20your%20own%20code.
+         * https://github.com/iBotPeaches/Apktool/issues/2496
+         * */
+        //
+        //
+        val apkSmaliClassCount = GetSmaliClassesCount()
+        val destRootDir = Path(decompiledApkDirStr, "smali_classes${apkSmaliClassCount + 1}", "com").toFile()
+        assert(destRootDir.mkdirs() == true)
+        val destDir = File(destRootDir, MEM_SCANNER_SMALI_DIR_NAME).absolutePath
+        ZipFile(destSmaliZipCode.absolutePath).use { zipFile: ZipFile ->
+            zipFile.extractAll(destDir)
+            zipFile.close()
+        }
+        logger.info { "extracted to ${destDir}" }
     }
 
 
@@ -259,7 +288,11 @@ class Patcher(
         // server to the init function of smali launchable file
         val entrySmaliPathStr = GetEntrySmaliPath()
         val entrySmaliPath = Paths.get(entrySmaliPathStr)
+        logger.info { "entry smali file: ${entrySmaliPathStr}" }
         val modifiedSmaliCode = AddMemScannerConstructorSmaliCode(entrySmaliPathStr)
+        //logger.info { "========== modified smali code ========================" }
+        //logger.info { modifiedSmaliCode.joinToString(separator = "\n") }
+        //logger.info { "==================================================" }
         // rewrite file
         Files.write(entrySmaliPath, modifiedSmaliCode)
     }
@@ -316,10 +349,13 @@ class Patcher(
 
         // smali code
         const val MEM_SCANNER_SMALI_DIR_NAME = "AceInjector"
+
+        // code to inject's path from resource
         val MEM_SCANNER_SMALI_BASE_DIR = "/" + java.lang.String.join("/", "AceAndroidLib", "code_to_inject", "smali", "com")
         const val MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip"
-        val MEM_SCANNER_SMALI_RESOURCE_DIR = File(MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME).absolutePath
         val MEM_SCANNER_SMALI_CODE_ZIP_PATH = java.lang.String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)
+
+        // smali code to start the service
         const val MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V"
 
         fun LaunchableActivityToSmaliRelativePath(launchableActivity: String): String {
@@ -349,6 +385,7 @@ class Patcher(
             val fileData = Files.readAllLines(entrySmaliPath, Charset.defaultCharset())
             val injectionLine = MemScannerFindInjectionLineNum(launchableSmaliFile)
             fileData.add(injectionLine + 1, MEM_SCANNER_CONSTRUCTOR_SMALI_CODE)
+            logger.info { "Injecting code at: ${launchableSmaliFile}:${injectionLine + 1} " }
             return fileData
         }
     }

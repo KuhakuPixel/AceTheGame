@@ -92,7 +92,7 @@ with tempfile.TemporaryDirectory() as TEMP_DECOMPILED_APK_DIR:
     # it will do it for us
     OUT_SMALI_DIR_ZIPPED_FILE = OUT_SMALI_DIR 
     shutil.make_archive(
-        base_name=OUT_SMALI_DIR_ZIPPED_FILE, format="zip", base_dir=GENERATED_SMALI_DIR
+        OUT_SMALI_DIR_ZIPPED_FILE, "zip", GENERATED_SMALI_DIR
     )
     print("Generated zipped smali at %s" % (OUT_SMALI_DIR_ZIPPED_FILE))
     print("Code for injection is generated at %s" % (OUT_CODE_FOR_INJECT_DIR))

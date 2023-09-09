@@ -13,7 +13,7 @@ import java.nio.file.Path
 class TempManager {
 
     companion object {
-        fun CreateTempDirectory(prefix: String, taskOnExit: TaskOnExit = TaskOnExit.clean): Path {
+        fun CreateTempDirectory(prefix: String, cleanOnExit: Boolean = true): Path {
             val tempDir = Files.createTempDirectory(prefix)
             // make sure we have the absolute path
             // https://stackoverflow.com/a/17552395/14073678
@@ -25,7 +25,7 @@ class TempManager {
             // the only solution seems to be deleting the temp folder
             // recursively on shutdown
             // https://stackoverflow.com/questions/11165253/deleting-a-directory-on-exit-in-java
-            if (taskOnExit == TaskOnExit.clean) {
+            if (cleanOnExit) {
                 Runtime.getRuntime().addShutdownHook(
                         object : Thread() {
                             override fun run() {
