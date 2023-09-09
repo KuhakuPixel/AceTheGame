@@ -230,6 +230,17 @@ class Patcher(
         return smaliCodePackageDir.absolutePath
     }
 
+    fun GetSmaliClassesCount(): Int {
+
+        var count:Int =0
+        val files = File(decompiledApkDirStr).listFiles()!!
+        for (i in files.indices) {
+            if (files[i].name.startsWith("smali") && files[i].isDirectory)
+                count++
+        }
+        return count
+
+    }
 
     fun AddMemScannerSmaliCode() {
 
@@ -323,10 +334,12 @@ class Patcher(
 
         // smali code
         const val MEM_SCANNER_SMALI_DIR_NAME = "AceInjector"
+
         // code to inject's path from resource
         val MEM_SCANNER_SMALI_BASE_DIR = "/" + java.lang.String.join("/", "AceAndroidLib", "code_to_inject", "smali", "com")
         const val MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip"
         val MEM_SCANNER_SMALI_CODE_ZIP_PATH = java.lang.String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)
+
         // smali code to start the service
         const val MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V"
 

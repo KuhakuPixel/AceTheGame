@@ -98,6 +98,15 @@ internal class TestPatcher {
     }
 
     @Test
+    fun GetSmaliClassesCount() {
+
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
+        Assertions.assertEquals(4, patcher.GetSmaliClassesCount())
+
+    }
+
+
+    @Test
     @Throws(IOException::class)
     fun CreateNativeLibDir() {
         val patcher = Patcher(testApkPathStr, decodeResource = false)
