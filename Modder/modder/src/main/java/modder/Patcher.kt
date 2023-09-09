@@ -8,6 +8,7 @@ import java.io.PrintWriter
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.io.path.Path
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
 // called MemScanner 
@@ -232,7 +233,7 @@ class Patcher(
 
     fun GetSmaliClassesCount(): Int {
 
-        var count:Int =0
+        var count: Int = 0
         val files = File(decompiledApkDirStr).listFiles()!!
         for (i in files.indices) {
             if (files[i].name.startsWith("smali") && files[i].isDirectory)
@@ -254,9 +255,18 @@ class Patcher(
         val destSmaliZipCode = File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME)
         resource.CopyResourceFile(MEM_SCANNER_SMALI_CODE_ZIP_PATH, destSmaliZipCode.absolutePath)
         // path to copy the smali code to
-        val smaliCodePackageDir = GetPackageDirOfLaunchableActivity()
+        val apkSmaliClassCount = GetSmaliClassesCount()
+        /**
+         * create new smali folder (new dex basically) to put our smali code
+         * can't just use existing smali folder in order to mitigate dex limitation of 65536 max method
+         * https://developer.android.com/build/multidex#:~:text=About%20the%2064K%20reference%20limit,-Android%20app%20(APK&text=The%20Dalvik%20Executable%20specification%20limits,methods%20in%20your%20own%20code.
+         * https://github.com/iBotPeaches/Apktool/issues/2496
+         * */
         //
-        val destDir = File(smaliCodePackageDir, MEM_SCANNER_SMALI_DIR_NAME).absolutePath
+        //
+        val destRootDir = Path(decompiledApkDirStr, "smali_classes${apkSmaliClassCount + 1}", "com").toFile()
+        assert(destRootDir.mkdirs() == true)
+        val destDir = File(destRootDir, MEM_SCANNER_SMALI_DIR_NAME).absolutePath
         ZipFile(destSmaliZipCode.absolutePath).use { zipFile: ZipFile ->
             zipFile.extractAll(destDir)
             zipFile.close()
