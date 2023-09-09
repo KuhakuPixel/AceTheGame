@@ -240,6 +240,10 @@ internal class TestPatcher {
         patcher.AddMemScannerSmaliCode()
         Assertions.assertEquals(true, memScannerSmaliCodeDir.exists())
         Assertions.assertEquals(true, memScannerSmaliCodeDir.isDirectory)
+        // make sure content is valid
+        val smaliCodeRootDir = File(memScannerSmaliCodeDir.absolutePath, "utils")
+        Assertions.assertEquals(true, smaliCodeRootDir.exists())
+        Assertions.assertEquals(true, smaliCodeRootDir.isDirectory())
     }
 
     @Test
