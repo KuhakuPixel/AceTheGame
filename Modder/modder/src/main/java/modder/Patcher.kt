@@ -236,8 +236,13 @@ class Patcher(
         var count: Int = 0
         val files = File(decompiledApkDirStr).listFiles()!!
         for (i in files.indices) {
-            if (files[i].name.startsWith("smali") && files[i].isDirectory)
-                count++
+            // the first smali folder starts with "smali" and rest starts with  "smali_classes2"
+            // can't only check for startsWith("smali") because there are some folder like "smali_assets"
+            // that aren't part of the main dex class and will only mess up the [count]
+            if (files[i].name == "smali" || files[i].name.startsWith("smali_classes")) {
+                if (files[i].isDirectory)
+                    count++
+            }
         }
         return count
 
@@ -254,8 +259,7 @@ class Patcher(
         val tempDir: String = TempManager.CreateTempDirectory("TempSmalifolder").toString()
         val destSmaliZipCode = File(tempDir, MEM_SCANNER_SMALI_ZIP_NAME)
         resource.CopyResourceFile(MEM_SCANNER_SMALI_CODE_ZIP_PATH, destSmaliZipCode.absolutePath)
-        // path to copy the smali code to
-        val apkSmaliClassCount = GetSmaliClassesCount()
+
         /**
          * create new smali folder (new dex basically) to put our smali code
          * can't just use existing smali folder in order to mitigate dex limitation of 65536 max method
@@ -264,6 +268,7 @@ class Patcher(
          * */
         //
         //
+        val apkSmaliClassCount = GetSmaliClassesCount()
         val destRootDir = Path(decompiledApkDirStr, "smali_classes${apkSmaliClassCount + 1}", "com").toFile()
         assert(destRootDir.mkdirs() == true)
         val destDir = File(destRootDir, MEM_SCANNER_SMALI_DIR_NAME).absolutePath
