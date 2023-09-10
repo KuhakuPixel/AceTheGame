@@ -19,14 +19,7 @@ object Cpu {
      * https://unix.stackexchange.com/questions/12453/how-to-determine-linux-kernel-architecture
      * */
     fun GetArch(): Arch? {
-        val proc: Process = Runtime.getRuntime().exec("uname -m")
-        val stdInput = BufferedReader(InputStreamReader(proc.getInputStream()))
-        // Read the output from the command
-        val out: ArrayList<String> = ArrayList<String>()
-        var s: String
-        while (stdInput.readLine().also { s = it } != null) {
-            out.add(s)
-        }
+        val out: List<String> = Cmd.RunCommand(listOf("uname", "-m"))
         assert(out.size === 1)
         //
         val arch_str: String = out.get(0)

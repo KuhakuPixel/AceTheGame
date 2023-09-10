@@ -10,17 +10,12 @@ object Root {
      * credits: https://stackoverflow.com/a/26654728/14073678
      * */
     fun sudo(cmd: List<String>): List<String> {
-        val res: MutableList<String> = mutableListOf()
+        var res: List<String> = listOf()
         try {
             val fullCmd: MutableList<String> = mutableListOf("su", "--command")
-            fullCmd.addAll(res)
+            fullCmd.addAll(cmd)
             //
-            val su: Process = Runtime.getRuntime().exec(fullCmd.toTypedArray())
-            val stdInput = BufferedReader(InputStreamReader(su.getInputStream()))
-            val stdError = BufferedReader(InputStreamReader(su.getErrorStream()))
-            var s: String
-            while (stdInput.readLine().also { s = it } != null) res.add(s)
-            while (stdError.readLine().also { s = it } != null) res.add(s)
+            res = Cmd.RunCommand(fullCmd)
         } catch (e: IOException) {
             e.printStackTrace()
         }

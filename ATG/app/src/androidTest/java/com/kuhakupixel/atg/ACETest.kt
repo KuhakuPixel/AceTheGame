@@ -362,7 +362,7 @@ class ACETest {
         val pid: Long = ProcUtil.GetPid(p)
         ace.Attach(pid)
         // shouldn't have any matches before scan
-        Assert.assertEquals(0 as Int, ace.GetMatchCount())
+        Assert.assertEquals(0 , ace.GetMatchCount())
         Assert.assertEquals(0, ace.ListMatches(maxMatchesCount).size)
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0")
         // get matches

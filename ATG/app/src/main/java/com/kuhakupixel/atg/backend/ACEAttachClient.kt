@@ -26,10 +26,18 @@ class ACEAttachClient(port: Int) : ACEBaseClient(), Closeable {
         socket.send(requestCmdStr.toByteArray(ZMQ.CHARSET), 0)
         val reply: ByteArray = socket.recv(0)
         val outStr = String(reply, ZMQ.CHARSET)
-        return if (StringUtils.isEmpty(outStr)) {
-            ArrayList<String>()
+        if (StringUtils.isEmpty(outStr)) {
+            return ArrayList<String>()
         } else {
-            outStr.split("\n")
+            val output: MutableList<String> = outStr.split("\n").toMutableList()
+            // need to remove last item if its empty
+            // because its gonna play badly with other functions in this project
+            // (happens when at last line it still contains "\n")
+            // https://stackoverflow.com/questions/48697300/difference-between-kotlin-and-java-string-split-with-regex
+            if (output[output.size - 1] == "")
+                output.removeAt(output.size - 1)
+            return output
+
         }
     }
 
