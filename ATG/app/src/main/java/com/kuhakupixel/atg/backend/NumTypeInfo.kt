@@ -1,8 +1,5 @@
 package com.kuhakupixel.atg.backend
 
-import kotlin.Throws
-import kotlin.jvm.Synchronized
-
 /**
  * Information about available scan type
  * its name and sizes

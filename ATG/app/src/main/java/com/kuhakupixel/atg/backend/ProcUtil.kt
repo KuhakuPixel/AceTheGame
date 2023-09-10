@@ -1,6 +1,5 @@
 package com.kuhakupixel.atg.backend
 
-import java.io.IOException
 import java.lang.reflect.Field
 
 object ProcUtil {

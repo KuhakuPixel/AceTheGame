@@ -3,7 +3,6 @@ package com.kuhakupixel.atg.backend
 import android.content.Context
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
-import java.io.IOException
 
 /**
  * to communicate with ACE's engine binary
