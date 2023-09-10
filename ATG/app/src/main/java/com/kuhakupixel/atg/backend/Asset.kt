@@ -11,7 +11,7 @@ object Asset {
     * https://stackoverflow.com/a/18753500/14073678
     * */
     @Throws(IOException::class)
-    fun CopyAssetToExecutableDir(context: Context, srcFileStr: String?): String {
+    fun CopyAssetToExecutableDir(context: Context, srcFileStr: String): String {
         val srcFile = File(srcFileStr)
         // get the directory where we can execute this file
         val assetManager: AssetManager = context.getAssets()

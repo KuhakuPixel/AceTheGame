@@ -170,7 +170,7 @@ class ACETest {
         val p: Process = ProcUtil.RunBusyProgram()
         val pid: Long = ProcUtil.GetPid(p)
         // start ACE server and connect to it
-        val ports: List<Integer> = Port.GetOpenPorts(2)
+        val ports: List<Int> = Port.GetOpenPorts(2)
         val serverThread: Thread = ACEServer.GetStarterThread(context, pid, ports[0], ports[1])
         serverThread.start()
 
@@ -197,7 +197,7 @@ class ACETest {
         run {
             val ace = ACE(context)
             // start ACE server and connect to it
-            val ports: List<Integer> = Port.GetOpenPorts(2)
+            val ports: List<Int> = Port.GetOpenPorts(2)
             val serverThread: Thread = ACEServer.GetStarterThread(context, pid, ports[0], ports[1])
             serverThread.start()
 
@@ -217,7 +217,7 @@ class ACETest {
         run {
             val ace = ACE(context)
             // start ACE server and connect to it
-            val ports: List<Integer> = Port.GetOpenPorts(2)
+            val ports: List<Int> = Port.GetOpenPorts(2)
             val serverThread: Thread = ACEServer.GetStarterThread(context, pid, ports[0], ports[1])
             serverThread.start()
             try {
@@ -333,7 +333,7 @@ class ACETest {
         val pid: Long = ProcUtil.GetPid(p)
         ace.Attach(pid)
         // shoudlnt have any matches before scan
-        Assert.assertEquals(0 as Integer, ace.GetMatchCount())
+        Assert.assertEquals(0 as Int, ace.GetMatchCount())
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0")
         // now we should have some matches
         Assert.assertTrue(ace.GetMatchCount() > 0)
@@ -347,7 +347,7 @@ class ACETest {
     fun ScanAndGetMatchesList() {
         // ============== init ==================
         // nothing special, just some random number
-        val maxMatchesCount: Integer = 2
+        val maxMatchesCount: Int = 2
         //
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -355,7 +355,7 @@ class ACETest {
         val pid: Long = ProcUtil.GetPid(p)
         ace.Attach(pid)
         // shouldn't have any matches before scan
-        Assert.assertEquals(0 as Integer, ace.GetMatchCount())
+        Assert.assertEquals(0 as Int, ace.GetMatchCount())
         Assert.assertEquals(0, ace.ListMatches(maxMatchesCount).size())
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0")
         // get matches
@@ -384,13 +384,13 @@ class ACETest {
         val pid: Long = ProcUtil.GetPid(p)
         ace.Attach(pid)
         // shoudlnt have any matches before scan
-        Assert.assertEquals(0 as Integer, ace.GetMatchCount())
+        Assert.assertEquals(0 as Int, ace.GetMatchCount())
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0")
         // now we should have some matches
         Assert.assertTrue(ace.GetMatchCount() > 0)
         ace.ResetMatches()
         // matches should be 0 now
-        Assert.assertEquals(0 as Integer, ace.GetMatchCount())
+        Assert.assertEquals(0 as Int, ace.GetMatchCount())
         // ====================
         ace.DeAttach()
     }

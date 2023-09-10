@@ -1,8 +1,12 @@
 package com.kuhakupixel.atg.backend
 
 import org.apache.commons.lang3.StringUtils
+import org.zeromq.SocketType
+import org.zeromq.ZContext
+import org.zeromq.ZMQ
+import java.io.Closeable
 
-class ACEAttachClient(port: Integer?) : ACEBaseClient(), Closeable {
+class ACEAttachClient(port: Int) : ACEBaseClient(), Closeable {
     private val context: ZContext = ZContext()
     private val socket: ZMQ.Socket
 
@@ -17,20 +21,19 @@ class ACEAttachClient(port: Integer?) : ACEBaseClient(), Closeable {
     }
 
     @Override
-    override fun SendCommand(requestCmd: Array<String?>?): List<String> {
-        val requestCmdStr: String = String.join(" ", requestCmd)
-        socket.send(requestCmdStr.getBytes(ZMQ.CHARSET), 0)
+    override fun SendCommand(requestCmd: Array<String>): List<String> {
+        val requestCmdStr: String = requestCmd.joinToString(separator = " ")
+        socket.send(requestCmdStr.toByteArray(ZMQ.CHARSET), 0)
         val reply: ByteArray = socket.recv(0)
         val outStr = String(reply, ZMQ.CHARSET)
         return if (StringUtils.isEmpty(outStr)) {
             ArrayList<String>()
         } else {
-            Arrays.asList(outStr.split("\n"))
+            outStr.split("\n")
         }
     }
 
-    @Override
-    fun close() {
+    override fun close() {
         context.close()
     }
 }

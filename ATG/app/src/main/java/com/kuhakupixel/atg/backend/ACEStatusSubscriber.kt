@@ -1,8 +1,12 @@
 package com.kuhakupixel.atg.backend
 
 import android.util.Log
+import com.google.gson.Gson
+import org.zeromq.ZContext
+import org.zeromq.ZMQ
+import java.io.Closeable
 
-class ACEStatusSubscriber(port: Integer?) : Closeable {
+class ACEStatusSubscriber(port: Int) : Closeable {
     var context: ZContext = ZContext()
     var subscriber: ZMQ.Socket = context.createSocket(SocketType.SUB)
     var gson: Gson = Gson()
@@ -23,14 +27,12 @@ class ACEStatusSubscriber(port: Integer?) : Closeable {
             val scanProgress = GetMsg()
             scanProgressData = gson.fromJson(scanProgress, ScanProgressData::class.java)
         } catch (e: Exception) {
-            Log.e("ATG", e.getMessage())
+            Log.e("ATG", e.stackTraceToString())
         }
         return scanProgressData
     }
 
-    @Override
-    @Throws(IOException::class)
-    fun close() {
+    override fun close() {
         context.close()
     }
 }

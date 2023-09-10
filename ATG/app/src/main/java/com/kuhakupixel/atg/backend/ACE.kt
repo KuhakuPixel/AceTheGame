@@ -1,6 +1,8 @@
 package com.kuhakupixel.atg.backend
 
 import android.content.Context
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
 import java.io.IOException
 
 /**
@@ -24,10 +26,6 @@ class ACE(context: Context) {
     inner class AttachingInARowException : RuntimeException {
         constructor() : super() {}
         constructor(msg: String?) : super(msg) {}
-    }
-
-    interface IActionOnType {
-        fun Action(self: ACE?)
     }
 
     enum class Operator {
@@ -77,9 +75,10 @@ class ACE(context: Context) {
     private val availableNumTypes: List<NumTypeInfo>
 
     //
-    private var statusPublisherPort: Integer? = null
+    private var statusPublisherPort: Int? = null
+
     @Synchronized
-    fun getStatusPublisherPort(): Integer? {
+    fun getStatusPublisherPort(): Int? {
         return statusPublisherPort
     }
 
@@ -107,7 +106,7 @@ class ACE(context: Context) {
     // TODO: add statusPublisherPort as parameter
     @Synchronized
     @Throws(IOException::class, InterruptedException::class)
-    fun ConnectToACEServer(port: Integer?) {
+    fun ConnectToACEServer(port: Int) {
         AssertNoAttachInARow()
         aceAttachClient = ACEAttachClient(port)
     }
@@ -117,13 +116,13 @@ class ACE(context: Context) {
      */
     @Synchronized
     @Throws(IOException::class, InterruptedException::class)
-    fun Attach(pid: Long?) {
+    fun Attach(pid: Long) {
         AssertNoAttachInARow()
         // start the server
-        val ports: List<Integer> = Port.GetOpenPorts(2)
+        val ports: List<Int> = Port.GetOpenPorts(2)
         statusPublisherPort = ports[1]
-        serverThread = ACEServer.GetStarterThread(context, pid, ports[0], statusPublisherPort)
-        serverThread.start()
+        serverThread = ACEServer.GetStarterThread(context, pid, ports[0], statusPublisherPort!!)
+        serverThread!!.start()
         ConnectToACEServer(ports[0])
     }
 
@@ -132,20 +131,20 @@ class ACE(context: Context) {
     fun DeAttach() {
         AssertAttached()
         // tell server to die
-        aceAttachClient.Request(arrayOf("stop"))
-        aceAttachClient.close()
+        aceAttachClient!!.Request(arrayOf("stop"))
+        aceAttachClient!!.close()
         aceAttachClient = null
         // only stop the server if we start one
         if (serverThread != null) {
             // wait for server's thread to finish
             // to make sure we are not attached anymore
-            serverThread.join()
+            serverThread!!.join()
         }
     }
 
     @Synchronized
-    fun GetNumTypeBitSize(numType: NumType): Integer? {
-        var bitSize: Integer? = null
+    fun GetNumTypeBitSize(numType: NumType): Int? {
+        var bitSize: Int? = null
         for (typeInfo in availableNumTypes) {
             if (typeInfo.GetName().equals(numType.toString())) bitSize = typeInfo.GetBitSize()
         }
@@ -154,27 +153,27 @@ class ACE(context: Context) {
 
     @Synchronized
     fun GetNumTypeAndBitSize(numType: NumType): String {
-        val bitSize: Integer? = GetNumTypeBitSize(numType)
+        val bitSize: Int? = GetNumTypeBitSize(numType)
         return String.format("%s (%d bit)", numType.toString(), bitSize)
     }
 
     // =============== this commands require attach ===================
     @Synchronized
-    fun CheaterCmd(cmd: Array<String>?): String {
+    fun CheaterCmd(cmd: Array<String>): String {
         AssertAttached()
-        return aceAttachClient.Request(cmd)
+        return aceAttachClient!!.Request(cmd)
     }
 
     @Synchronized
-    fun CheaterCmdAsList(cmd: Array<String>?): List<String> {
+    fun CheaterCmdAsList(cmd: Array<String>): List<String> {
         AssertAttached()
-        return aceAttachClient.RequestAsList(cmd)
+        return aceAttachClient!!.RequestAsList(cmd)
     }
 
     @Synchronized
     fun GetAttachedPid(): Long {
         val pidStr = CheaterCmd(arrayOf("pid"))
-        return Long.parseLong(pidStr)
+        return pidStr.toLong()
     }
 
     @Synchronized
@@ -196,55 +195,62 @@ class ACE(context: Context) {
      * after done, the type will be set to the previous one
      */
     @Synchronized
-    fun ActionOnType(numType: NumType, action: IActionOnType) {
+    fun ActionOnType(numType: NumType, action: () -> Unit) {
         val prevType = GetNumType()
         // set type first before writing
         if (prevType != numType) SetNumType(numType)
-        action.Action(this)
+        action()
         if (prevType != numType) SetNumType(prevType)
     }
 
     @Synchronized
-    fun ScanAgainstValue(operator: Operator?, numValStr: String) {
-        CheaterCmd(arrayOf("scan", operatorEnumToSymbolBiMap.get(operator), numValStr))
+    fun ScanAgainstValue(operator: Operator, numValStr: String) {
+        CheaterCmd(arrayOf("scan", operatorEnumToSymbolBiMap.get(operator)!!, numValStr))
     }
 
     @Synchronized
-    fun ScanWithoutValue(operator: Operator?) {
-        CheaterCmd(arrayOf("filter", operatorEnumToSymbolBiMap.get(operator)))
+    fun ScanWithoutValue(operator: Operator) {
+        CheaterCmd(arrayOf("filter", operatorEnumToSymbolBiMap.get(operator)!!))
     }
 
     @Synchronized
     fun WriteValueAtAddress(numType: NumType, address: String, value: String) {
-        ActionOnType(numType,
-                IActionOnType { self: ACE -> self.CheaterCmd(arrayOf("writeat", address, value)) }
-        )
+        ActionOnType(numType) {
+            this.CheaterCmd(arrayOf("writeat", address, value))
+        }
     }
 
     @Synchronized
     fun FreezeAtAddress(numType: NumType, address: String) {
-        ActionOnType(numType,
-                IActionOnType { self: ACE -> self.CheaterCmd(arrayOf("freeze at", address)) }
-        )
+        ActionOnType(numType) {
+            this.CheaterCmd(arrayOf("freeze at", address))
+        }
     }
 
     @Synchronized
     fun FreezeValueAtAddress(numType: NumType, address: String, value: String) {
-        ActionOnType(numType,
-                IActionOnType { self: ACE -> self.CheaterCmd(arrayOf("freeze at", address, "--value", value)) }
-        )
+        ActionOnType(numType) {
+            this.CheaterCmd(
+                arrayOf(
+                    "freeze at",
+                    address,
+                    "--value",
+                    value
+                )
+            )
+        }
     }
 
     @Synchronized
     fun UnFreezeAtAddress(numType: NumType, address: String) {
-        ActionOnType(numType,
-                IActionOnType { self: ACE -> self.CheaterCmd(arrayOf("unfreeze at", address)) }
-        )
+        ActionOnType(numType) {
+            this.CheaterCmd(arrayOf("unfreeze at", address))
+        }
     }
 
     @Synchronized
-    fun GetMatchCount(): Integer {
-        return Integer.parseInt(CheaterCmd(arrayOf<String>("matchcount")))
+    fun GetMatchCount(): Int {
+        return CheaterCmd(arrayOf<String>("matchcount")).toInt()
     }
 
     @Synchronized
@@ -253,17 +259,22 @@ class ACE(context: Context) {
     }
 
     @Synchronized
-    fun ListMatches(maxCount: Integer): List<MatchInfo> {
+    fun ListMatches(maxCount: Int): List<MatchInfo> {
         /**
          * get list of matches with list command
          * which will return a list of [address] - [prev value] one per each line
          */
-        val matches: List<MatchInfo> = ArrayList<MatchInfo>()
+        val matches: MutableList<MatchInfo> = mutableListOf<MatchInfo>()
         val matchesStr = CheaterCmdAsList(arrayOf("list", "--max-count", maxCount.toString()))
-        for (s in matchesStr) {
-            val splitted: Array<String> = s.split(" ")
+        for (s: String in matchesStr) {
+            val splitted: List<String> = s.split(" ")
             if (splitted.size != 2) {
-                throw IllegalArgumentException(String.format("unexpected Output when listing matches: \"%s\"", s))
+                throw IllegalArgumentException(
+                    String.format(
+                        "unexpected Output when listing matches: \"%s\"",
+                        s
+                    )
+                )
             }
             matches.add(MatchInfo(splitted[0], splitted[1]))
         }
@@ -272,18 +283,18 @@ class ACE(context: Context) {
 
     // =============== this commands don't require attach ===================
     @Synchronized
-    fun UtilCmdAsList(cmd: Array<String>?): List<String> {
+    fun UtilCmdAsList(cmd: Array<String>): List<String> {
         return aceUtilClient.RequestAsList(cmd)
     }
 
     @Synchronized
-    fun UtilCmd(cmd: Array<String>?): String {
+    fun UtilCmd(cmd: Array<String>): String {
         return aceUtilClient.Request(cmd)
     }
 
     @Synchronized
     fun ListRunningProc(): List<ProcInfo> {
-        val runningProcs: List<ProcInfo> = ArrayList<ProcInfo>()
+        val runningProcs: MutableList<ProcInfo> = mutableListOf()
         // use --reverse so newest process will be shown first
         val runningProcsInfoStr = UtilCmdAsList(arrayOf("ps", "ls", "--reverse"))
         // parse each string
@@ -296,8 +307,7 @@ class ACE(context: Context) {
     @Synchronized
     fun IsPidRunning(pid: Long): Boolean {
         val boolStr = UtilCmd(arrayOf("ps", "is_running", pid.toString()))
-        assert(boolStr.equals("true") || boolStr.equals("false"))
-        return Boolean.parseBoolean(boolStr)
+        return boolStr.toBooleanStrict()
     }
 
     /**
@@ -308,13 +318,13 @@ class ACE(context: Context) {
     </bit></type> */
     @Synchronized
     fun GetAvailableNumTypes(): List<NumTypeInfo> {
-        val numTypeInfos: List<NumTypeInfo> = ArrayList<NumTypeInfo>()
+        val numTypeInfos: MutableList<NumTypeInfo> = mutableListOf()
         val out = UtilCmdAsList(arrayOf("info", "type"))
         for (s in out) {
-            val splitted: Array<String> = s.split(" ")
+            val splitted: List<String> = s.split(" ")
             assert(2 == splitted.size)
             val typeStr = splitted[0]
-            val bitSize: Integer = Integer.parseInt(splitted[1])
+            val bitSize: Int = splitted[1].toInt()
             numTypeInfos.add(NumTypeInfo(typeStr, bitSize))
         }
         return numTypeInfos
@@ -327,9 +337,9 @@ class ACE(context: Context) {
         // <
         // >=
         // etc
-        val availableOperators: List<Operator> = ArrayList<Operator>()
+        val availableOperators: MutableList<Operator> = mutableListOf()
         val out = UtilCmdAsList(arrayOf("info", "operator"))
-        for (s in out) availableOperators.add(operatorEnumToSymbolBiMap.inverse().get(s))
+        for (s in out) availableOperators.add(operatorEnumToSymbolBiMap.inverse().get(s)!!)
         return availableOperators
     }
 
