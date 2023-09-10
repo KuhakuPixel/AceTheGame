@@ -1,6 +1,7 @@
 package com.kuhakupixel.atg.backend
 
 import android.content.Context
+import java.io.IOException
 
 /**
  * to communicate with ACE's engine binary
@@ -36,16 +37,16 @@ class ACE(context: Context) {
     enum class NumType {
         _int, _long, _short, _float, _byte;
 
-        @NonNull
+
         @Override
         override fun toString(): String {
-            return this.name().replace("_", "")
+            return this.name.replace("_", "")
         }
 
         companion object {
             fun fromString(s: String): NumType {
                 var s = s
-                if (s.charAt(0) !== '_') s = "_$s"
+                if (s[0] != '_') s = "_$s"
                 return valueOf(s)
             }
         }
