@@ -1,12 +1,13 @@
 package com.kuhakupixel.atg.backend
 
 import java.io.IOException
+import java.net.ServerSocket
 
 object Port {
-    @Throws(IOException::class)
+    
     fun GetOpenPorts(portCount: Int): List<Int> {
-        val sockets: List<ServerSocket> = ArrayList<ServerSocket>()
-        val openPorts: List<Int> = ArrayList<Int>()
+        val sockets: MutableList<ServerSocket> = mutableListOf()
+        val openPorts: MutableList<Int> = mutableListOf()
         for (i in 0 until portCount) {
             // if we pass 0, a port number will be automatically allocated
             // https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html#ServerSocket%28int%29
@@ -23,7 +24,7 @@ object Port {
         return openPorts
     }
 
-    @Throws(IOException::class)
+    
     fun GetOpenPort(): Int {
         return GetOpenPorts(1)[0]
     }

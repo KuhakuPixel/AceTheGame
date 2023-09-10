@@ -1,6 +1,16 @@
 package com.kuhakupixel.atg
 
 import android.content.Context
+import android.content.res.AssetManager
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.kuhakupixel.atg.backend.Asset
+import org.apache.commons.io.IOUtils
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
+import java.io.FileInputStream
+import java.io.InputStream
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -10,7 +20,7 @@ import android.content.Context
 @RunWith(AndroidJUnit4::class)
 class AssetTest {
     @Test
-    @Throws(IOException::class)
+    
     fun CopyAssetToExecutableDir() {
         //
         val pathBin = "bin/ACE/arm64-v8a/ACE"

@@ -10,7 +10,7 @@ abstract class ACEBaseClient {
      */
     abstract fun SendCommand(requestCmd: Array<String>): List<String>
 
-    @Throws(InvalidCommandException::class)
+    
     fun RequestAsList(requestCmd: Array<String>): List<String> {
         Log.i(
             "ATG",
@@ -26,13 +26,13 @@ abstract class ACEBaseClient {
         return out
     }
 
-    @Throws(InvalidCommandException::class)
+    
     fun Request(requestCmd: Array<String>): String {
         return RequestAsList(requestCmd).joinToString(separator = "\n")
     }
 
     companion object {
-        @Throws(InvalidCommandException::class)
+        
         fun AssertValidCommand(out: List<String>) {
             if (out.size > 0) {
                 if (out[0].equals("INVALID_COMMAND")) {

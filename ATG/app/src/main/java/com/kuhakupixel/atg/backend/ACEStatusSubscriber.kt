@@ -2,6 +2,7 @@ package com.kuhakupixel.atg.backend
 
 import android.util.Log
 import com.google.gson.Gson
+import org.zeromq.SocketType
 import org.zeromq.ZContext
 import org.zeromq.ZMQ
 import java.io.Closeable

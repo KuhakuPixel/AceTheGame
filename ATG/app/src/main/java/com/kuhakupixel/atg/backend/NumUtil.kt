@@ -1,9 +1,5 @@
 package com.kuhakupixel.atg.backend
 
-import kotlin.Throws
-import Shell.Result
-import kotlin.jvm.Synchronized
-
 object NumUtil {
     private const val HexStartFormat = "0x"
 
@@ -14,14 +10,14 @@ object NumUtil {
      */
     fun IsHex(s: String): Boolean {
         var s = s
-        s = s.toLowerCase()
-        if (s.startsWith(HexStartFormat)) s = s.substring(HexStartFormat.length())
-        return s.matches("-?[0-9a-fA-F]+")
+        s = s.lowercase()
+        if (s.startsWith(HexStartFormat)) s = s.substring(HexStartFormat.length)
+        return s.matches(Regex("-?[0-9a-fA-F]+"))
     }
 
-    fun IsNumeric(s: String?): Boolean {
+    fun IsNumeric(s: String): Boolean {
         return try {
-            Double.parseDouble(s)
+            s.toDouble()
             true
         } catch (e: NumberFormatException) {
             false

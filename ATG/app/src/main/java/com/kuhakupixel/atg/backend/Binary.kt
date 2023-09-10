@@ -6,13 +6,13 @@ import android.content.Context
 * class to get the binary included in ATG app
 * */
 object Binary {
-    val binaryNameToFileNameMap: Map<Type, String> = object : HashMap<Type?, String?>() {
+    val binaryNameToFileNameMap: HashMap<Type?, String?> = object : HashMap<Type?, String?>() {
         init {
             put(Type.utilClient, "util_client")
             put(Type.server, "ACE")
         }
     }
-    val cpuArchEnumToDirNameMap: Map<Cpu.Arch?, String> = object : HashMap<Cpu.Arch?, String?>() {
+    val cpuArchEnumToDirNameMap: HashMap<Cpu.Arch?, String?> = object : HashMap<Cpu.Arch?, String?>() {
         init {
             put(Cpu.Arch.x86, "x86")
             put(Cpu.Arch.x86_64, "x86_64")
@@ -21,7 +21,6 @@ object Binary {
         }
     }
 
-    @Throws(IOException::class)
     fun GetBinPath(context: Context, type: Type, arch: Cpu.Arch?): String {
         val archDirName = cpuArchEnumToDirNameMap[arch]
         val fileName = binaryNameToFileNameMap[type]
@@ -37,7 +36,6 @@ object Binary {
      * This function will copy the binary to a temporary directory
      * so multiple call to this is no good
      */
-    @Throws(IOException::class)
     fun GetBinPath(context: Context, type: Type): String {
         return GetBinPath(context, type, Cpu.GetArch())
     }

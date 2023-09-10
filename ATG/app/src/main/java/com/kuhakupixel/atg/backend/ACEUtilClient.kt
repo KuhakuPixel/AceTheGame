@@ -11,7 +11,9 @@ class ACEUtilClient(context: Context) : ACEBaseClient() {
 
     @Override
     override fun SendCommand(requestCmd: Array<String>): List<String> {
-        val cmdArr: Array<String> = ArrayUtils.addAll(arrayOf<String>(utilClientBinPath), requestCmd)
+        val cmdArr: MutableList<String> = mutableListOf()
+        cmdArr.add(utilClientBinPath)
+        cmdArr.addAll(requestCmd)
         // run command
         return Root.sudo(cmdArr)
     }

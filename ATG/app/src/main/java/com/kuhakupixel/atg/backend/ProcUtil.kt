@@ -1,6 +1,7 @@
 package com.kuhakupixel.atg.backend
 
 import java.io.IOException
+import java.lang.reflect.Field
 
 object ProcUtil {
     /*
@@ -11,8 +12,8 @@ object ProcUtil {
     fun GetPid(process: Process): Long {
         var pid: Long = -1
         try {
-            if (process.getClass().getName().equals("java.lang.UNIXProcess")) {
-                val f: Field = process.getClass().getDeclaredField("pid")
+            if (process.javaClass.getName().equals("java.lang.UNIXProcess")) {
+                val f: Field = process.javaClass.getDeclaredField("pid")
                 f.setAccessible(true)
                 pid = f.getLong(process)
                 f.setAccessible(false)
@@ -27,7 +28,7 @@ object ProcUtil {
      * this function is only for testing
      * return: created process
      */
-    @Throws(IOException::class)
+    
     fun RunBusyProgram(): Process {
 
         // command that do nothing and runs forever

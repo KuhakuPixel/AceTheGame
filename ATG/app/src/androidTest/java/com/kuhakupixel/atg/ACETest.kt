@@ -1,6 +1,19 @@
 package com.kuhakupixel.atg
 
 import android.content.Context
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.kuhakupixel.atg.backend.ACE
+import com.kuhakupixel.atg.backend.ACEBaseClient
+import com.kuhakupixel.atg.backend.ACEServer
+import com.kuhakupixel.atg.backend.NumTypeInfo
+import com.kuhakupixel.atg.backend.NumUtil
+import com.kuhakupixel.atg.backend.Port
+import com.kuhakupixel.atg.backend.ProcInfo
+import com.kuhakupixel.atg.backend.ProcUtil
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -10,7 +23,6 @@ import android.content.Context
 @RunWith(AndroidJUnit4::class)
 class ACETest {
     @Test
-    @Throws(IOException::class)
     fun NumTypeEnumStringConversion() {
         Assert.assertEquals("int", ACE.NumType._int.toString())
         Assert.assertEquals("byte", ACE.NumType._byte.toString())
@@ -21,16 +33,14 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class)
     fun ListRunningProcs() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
         val runningProcs: List<ProcInfo> = ace.ListRunningProc()
-        Assert.assertTrue(runningProcs.size() > 1)
+        Assert.assertTrue(runningProcs.size > 1)
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
     fun GetReply() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -45,14 +55,13 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
     fun InvalidCommandException() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
         val p: Process = ProcUtil.RunBusyProgram()
         val pid: Long = ProcUtil.GetPid(p)
         ace.Attach(pid)
-        val invalidCmd: List<String> = ArrayList<String>()
+        val invalidCmd: MutableList<String> = mutableListOf()
         invalidCmd.add("ThisCommandDoesntExist")
         invalidCmd.add("wifijif20")
         invalidCmd.add("Randommm")
@@ -64,7 +73,7 @@ class ACETest {
             try {
                 ace.CheaterCmd(arrayOf(s))
                 Assert.fail()
-            } catch (e: InvalidCommandException) {
+            } catch (e: ACEBaseClient.InvalidCommandException) {
                 Assert.assertTrue(true)
             }
         }
@@ -73,7 +82,7 @@ class ACETest {
             try {
                 ace.UtilCmd(arrayOf(s))
                 Assert.fail()
-            } catch (e: InvalidCommandException) {
+            } catch (e: ACEBaseClient.InvalidCommandException) {
                 Assert.assertTrue(true)
             }
         }
@@ -81,7 +90,6 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
     fun ValidCommand() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -92,14 +100,13 @@ class ACETest {
         try {
             ace.CheaterCmd(arrayOf("scan = 0"))
             Assert.assertTrue(true)
-        } catch (e: InvalidCommandException) {
+        } catch (e: ACEBaseClient.InvalidCommandException) {
             Assert.fail()
         }
         ace.DeAttach()
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
     fun SetNumType() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -115,7 +122,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun GetNumTypeBitSize() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -125,7 +132,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun AttachDeattach() {
         /*
          * test if we can attach and deattach multiple time reliably
@@ -148,7 +155,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun IsPidRunning() {
         /*
          * test if we can attach and deattach multiple time reliably
@@ -163,7 +170,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun ConnectToACEServer() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -188,7 +195,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun ExceptionWhenConnectToACEServer() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val p: Process = ProcUtil.RunBusyProgram()
@@ -236,7 +243,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun AttachInARowException() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -257,7 +264,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun DeAttachingWithoutAttachException() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -274,7 +281,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class)
+
     fun OperationRequiresAttach() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -291,7 +298,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class)
+
     fun GetAvailableNumTypes() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -299,18 +306,18 @@ class ACETest {
 
         // need to have at least 8, 16 and 32 bit number type
         Assert.assertTrue(
-                availableTypes.stream().anyMatch { o -> o.GetBitSize().equals(8) }
+            availableTypes.stream().anyMatch { o -> o.GetBitSize().equals(8) }
         )
         Assert.assertTrue(
-                availableTypes.stream().anyMatch { o -> o.GetBitSize().equals(16) }
+            availableTypes.stream().anyMatch { o -> o.GetBitSize().equals(16) }
         )
         Assert.assertTrue(
-                availableTypes.stream().anyMatch { o -> o.GetBitSize().equals(32) }
+            availableTypes.stream().anyMatch { o -> o.GetBitSize().equals(32) }
         )
     }
 
     @Test
-    @Throws(IOException::class)
+
     fun GetAvailableOperatorTypes() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -325,7 +332,7 @@ class ACETest {
 
     // TODO: add test for all number types :)
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun ScanAndGetMatches() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -343,7 +350,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun ScanAndGetMatchesList() {
         // ============== init ==================
         // nothing special, just some random number
@@ -356,7 +363,7 @@ class ACETest {
         ace.Attach(pid)
         // shouldn't have any matches before scan
         Assert.assertEquals(0 as Int, ace.GetMatchCount())
-        Assert.assertEquals(0, ace.ListMatches(maxMatchesCount).size())
+        Assert.assertEquals(0, ace.ListMatches(maxMatchesCount).size)
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0")
         // get matches
         val matches: List<ACE.MatchInfo> = ace.ListMatches(maxMatchesCount)
@@ -364,11 +371,11 @@ class ACETest {
         // but we can limit how many matches we get from the engine
         // for performance reason
         Assert.assertTrue(ace.GetMatchCount() > maxMatchesCount)
-        Assert.assertEquals(maxMatchesCount as Int, matches.size())
+        Assert.assertEquals(maxMatchesCount as Int, matches.size)
         for (matchInfo in matches) {
             // address must be hex and the previous value must be normal numeric
-            Assert.assertTrue(NumUtil.IsHex(matchInfo.getAddress()))
-            Assert.assertTrue(NumUtil.IsNumeric(matchInfo.getPrevValue()))
+            Assert.assertTrue(NumUtil.IsHex(matchInfo.address))
+            Assert.assertTrue(NumUtil.IsNumeric(matchInfo.prevValue))
         }
 
         // ====================
@@ -376,7 +383,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun ScanAndResetMatches() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -396,7 +403,7 @@ class ACETest {
     }
 
     @Test
-    @Throws(IOException::class, InterruptedException::class)
+
     fun ActionOnType() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
         val ace = ACE(context)
@@ -406,11 +413,11 @@ class ACETest {
         // ==========
         val defaultType: ACE.NumType = ACE.NumType._int
         for (numType in ACE.NumType.values()) {
-            ace.ActionOnType(numType
-            ) { self ->
+            ace.ActionOnType(numType)
+            {
                 // make sure type has been set, when we are running
                 // the callback
-                Assert.assertEquals(numType, self.GetNumType())
+                Assert.assertEquals(numType, ace.GetNumType())
             }
             // make sure type is reset
             Assert.assertEquals(defaultType, ace.GetNumType())

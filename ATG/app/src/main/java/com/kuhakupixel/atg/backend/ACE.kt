@@ -75,10 +75,10 @@ class ACE(context: Context) {
     private val availableNumTypes: List<NumTypeInfo>
 
     //
-    private var statusPublisherPort: Int? = null
+    private var statusPublisherPort: Int = -1
 
     @Synchronized
-    fun getStatusPublisherPort(): Int? {
+    fun getStatusPublisherPort(): Int {
         return statusPublisherPort
     }
 
@@ -105,7 +105,7 @@ class ACE(context: Context) {
 
     // TODO: add statusPublisherPort as parameter
     @Synchronized
-    @Throws(IOException::class, InterruptedException::class)
+    
     fun ConnectToACEServer(port: Int) {
         AssertNoAttachInARow()
         aceAttachClient = ACEAttachClient(port)
@@ -115,7 +115,7 @@ class ACE(context: Context) {
      * this will create an ACE's server that is attached to process [pid]
      */
     @Synchronized
-    @Throws(IOException::class, InterruptedException::class)
+    
     fun Attach(pid: Long) {
         AssertNoAttachInARow()
         // start the server
@@ -127,7 +127,6 @@ class ACE(context: Context) {
     }
 
     @Synchronized
-    @Throws(InterruptedException::class)
     fun DeAttach() {
         AssertAttached()
         // tell server to die

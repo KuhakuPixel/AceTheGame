@@ -1,6 +1,12 @@
 package com.kuhakupixel.atg.backend
 
 import android.content.Context
+import android.content.res.AssetManager
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 object Asset {
     /*
@@ -10,7 +16,6 @@ object Asset {
     * returns full path of the copied file
     * https://stackoverflow.com/a/18753500/14073678
     * */
-    @Throws(IOException::class)
     fun CopyAssetToExecutableDir(context: Context, srcFileStr: String): String {
         val srcFile = File(srcFileStr)
         // get the directory where we can execute this file

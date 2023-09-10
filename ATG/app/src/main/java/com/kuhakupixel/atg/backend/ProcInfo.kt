@@ -1,9 +1,5 @@
 package com.kuhakupixel.atg.backend
 
-import kotlin.Throws
-import Shell.Result
-import kotlin.jvm.Synchronized
-
 /*
  * info about process
  * */
@@ -16,7 +12,7 @@ class ProcInfo(pidAndNameStr: String) {
      *
      * */
     init {
-        val splitted: Array<String> = pidAndNameStr.split(" ", 2)
+        val splitted: List<String> = pidAndNameStr.split(" ", limit = 2)
         assert(2 == splitted.size)
         pidStr = splitted[0]
         name = splitted[1]
