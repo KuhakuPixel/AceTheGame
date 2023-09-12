@@ -12,7 +12,7 @@
 
   <h2><a href="https://github.com/KuhakuPixel/AceTheGame/issues"> Bug Report </a></h2>
 
-  <h2><a href="https://github.com/KuhakuPixel/AceTheGame/releases/latest"> Roadmap </a></h2>
+  <h2><a href="https://github.com/KuhakuPixel/AceTheGame/issues/60"> Roadmap </a></h2>
   <h2><a href="./contributing.md"> Contributing  </a></h2>
 
 </div>
