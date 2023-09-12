@@ -31,7 +31,6 @@ import com.kuhakupixel.atg.backend.ACE
 import com.kuhakupixel.atg.backend.ACE.MatchInfo
 import com.kuhakupixel.atg.backend.ACE.NumType
 import com.kuhakupixel.atg.backend.ACE.Operator
-import com.kuhakupixel.atg.backend.ACE.operatorEnumToSymbolBiMap
 import com.kuhakupixel.atg.ui.GlobalConf
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.atg.ui.util.NumberInputField
@@ -116,7 +115,7 @@ fun _MemoryMenu(
     if (scanTypeList.isEmpty()) {
         // init list
         for (op: Operator in Operator.values()) {
-            val displayStr: String = (operatorEnumToSymbolBiMap.get(op))!!
+            val displayStr: String = (ACE.operatorEnumToSymbolBiMap.get(op))!!
             scanTypeList.add(displayStr)
         }
         // init default
