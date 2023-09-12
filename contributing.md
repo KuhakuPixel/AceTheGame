@@ -1,4 +1,3 @@
-# Developer Guide
 
 ## Build instruction
 ### clone repo
