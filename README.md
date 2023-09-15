@@ -8,7 +8,7 @@
 
   <h2><a href="./installation_guide.md"> Installation Guide </a></h2>
 
-  <h2><a href="./tutorial.md"> Tutorial </a></h2>
+  <h2><a href="./tutorial/quick_start.md"> Quick Start </a></h2>
 
   <h2><a href="https://github.com/KuhakuPixel/AceTheGame/issues"> Bug Report </a></h2>
 

@@ -1,16 +1,88 @@
-this is only a brief tutorial about scanning,
+this is only a brief tutorial,
 for more in depth and real practice visit [here](./tutorial/)
 
 Notes: type command `-h` to list all available commands
 
-### Video Tutorial
+# Video Tutorial
 - [Apk](https://www.youtube.com/watch?v=UlGm1nFxRzA)
 
 - [CLI only](https://www.youtube.com/watch?v=UlGm1nFxRzA)
 
 - non rooted support (coming soon)
 
-### Rooted Device
+# Rooted
+## Apk
+
+used [shattered pixel dungeon apk](https://play.google.com/store/apps/details?id=com.shatteredpixel.shatteredpixeldungeon&hl=en&gl=US&pli=1)
+### Select running process
+click on the game name of interest
+
+![](./Apk/process_select.png)
+
+if your game isn't showing, make sure to click the refresh button `↻`
+
+### scanning for value
+
+![](./Apk/2.png)
+
+in this example, we are gonna try to have an infinite rocks
+
+put the of the rock `3` inside the `Scan for` input field
+and then press `Next Scan` to pick up all addresses that
+has value of 3
+
+
+![](./Apk/3.png)
+
+we have found `30840` address that has value of 3,
+
+
+![](./Apk/4.png)
+
+to find the rock's address we need to filter down all matches by increasing/decreasing its value then scan for that 
+increased/decreased value
+
+in this case, we are gonna throw away the rock by clicking on it
+to decrease its value to `2`
+
+![](./Apk/5.png)
+
+
+![](./Apk/6.png)
+
+![](./Apk/7.png)
+
+repeat the steps above as much as possible !
+
+now, we have narrowed down the address enough to  
+start editing its value :D, just click on the address
+and it will be added to the address table, where you can 
+start writting to its value
+
+
+![](./Apk/8.png)
+
+switching to the address table menu, we can click on the `value`
+cell to start editing its value
+
+![](./Apk/9.png)
+
+
+put any value that you wanted 
+
+![](./Apk/10.png)
+
+
+
+done :D
+
+(make sure to change the rock's value by throwing it once again
+to update its UI)
+
+![](./Apk/11.png)
+
+
+## CLI
 open up adb shell and go to the program location
 ```
 adb shell
@@ -38,7 +110,7 @@ to view the license of the software.
 
 (ACE) 
 ```
-#### list running process
+### list running process
 list running processes with
 ```
 ps ls
@@ -57,7 +129,7 @@ ps ls
 52889 brave
 54795 opensurge
 ```
-#### select running process
+### select running process
 lets say we want to attach to `opensurge
 ```
 (ACE) cheater 54795
@@ -71,7 +143,7 @@ set type to int
 ```
 
 
-#### Scanning for value
+### Scanning for value
 lets say in the game, there is a coin with value of `3`
 we gonna have to search for the address of that coin
 in order to have infinite coin
@@ -106,7 +178,7 @@ Done in: 0.021650 s
 repeat the steps above
 until you got 1-3 matches
 
-#### writting to matches
+### writting to matches
 now that you have the address of the coin which 
 can be seen by the list command
 ```
@@ -120,7 +192,7 @@ you can write any value you want to it by using
 and now you should have `999999` coin
 
 
-### Non-Rooted Device
+# Non-Rooted
 
 for this program to work on non rooted device
 you gonna need to patch the apk it self to add 
@@ -137,7 +209,7 @@ note: run ./modder --help for more info about available commands
 
 and we will be using [this game](https://play.google.com/store/apps/details?id=online.limitless.appleknight.free&hl=en&gl=US)
 
-#### Downloading apk
+## Downloading apk
 
 listing all installed apk
 ```
@@ -160,7 +232,7 @@ download it to your pc using
 
 after download, you should have folder called
 `online.limitless.appleknight.free`
-#### Attaching memory scanner
+## Attaching memory scanner
 ```
 ./modder patch online.limitless.appleknight.free/ 
 ```
@@ -174,7 +246,7 @@ it created `online.limitless.appleknight.free.patched`
 which is the folder that contains the patched apk
 
 
-#### Installing patched apk
+## Installing patched apk
 the syntax of installing apk is 
 
 - uninstall the previous apk on your android device
@@ -189,9 +261,23 @@ the syntax of installing apk is
   where `online.limitless.appleknight.free.patched` is directory
   of the patched apk
 
-#### scanning and editing memory 
-
+## scanning and editing memory 
 1. start the apk
+### Apk
+
+to attach an apk, you need to 
+connect to the memory scanning/editing server inside the apk
+using its default port (56666)
+
+click on `Connect to ACE server`
+![](./Apk/connect_to_ace_server_button.jpg)
+
+![](./Apk/connect_to_ace_server.jpg)
+
+after attached, all the functionality are similliar like 
+[above](#rooted)
+
+###
 2. run 
    ```
    adb shell
