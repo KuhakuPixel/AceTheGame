@@ -22,7 +22,7 @@
 - Memory scanner and editor for 
   android and linux
 
-- Non rooted support for android (still alpha)
+- Non rooted support for android via apk patching (still alpha)
 
 - Game Guardian open source alternative for android
 
