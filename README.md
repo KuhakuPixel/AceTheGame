@@ -35,11 +35,13 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
 ## Showcase
 ### Gui Apk
-![](./assets/showcase/ATG_1.png)
 
+![](./tutorial/Apk/process_select.png)
 
+![](./tutorial/Apk/4.png)
 
-![](./assets/showcase/ATG_2.png)
+![](./tutorial/Apk/9.png)
+
 
 ### infinite coin 
 
