@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en-US">
+
+<!-- bootstrap-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+
+<!-- for javascript utilities-->
+<script src="
+https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js
+"></script>
+<!-- for rendering markdown-->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="./script.js"></script>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>My test page</title>
+</head>
+
+<body data-bs-theme="dark">
+    <center style="margin: 10px;padding:10px">
+        <h1> Ace The Game </h1>
+        <image src="https://raw.githubusercontent.com/KuhakuPixel/AceTheGame/master/assets/icon.png" width="300"
+            height="300"></image>
+
+
+    </center>
+
+    <center>
+        <a class="btn btn-primary" role="button" id="latestApkDownloadLink">Download AceTheGame
+            <div id="releaseVersion"></div>
+        </a>
+
+
+    </center>
+    <center>
+        <a href="./changelog.html"> changelog</a>
+    </center>
+
+    <div style="margin:10px">
+        <h2>What is AceTheGame</h2>
+        <p> AceTheGame is an <b> Open Source </b>android apk for modifying game's value according to your will
+            (changing
+            your health, coin,
+            money and etc)</p>
+        <h2>Usage</h2>
+        <p> the video contains brief tutorial on apk usage and features</p>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/3TJ7i5eoTmU" title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        <h2>Forum</h2>
+        <p>
+            For questions, discussion, help and etc feel free to join the <a
+                href="https://discord.gg/8fJh9tPVXb">official discord
+                server</a>
+        </p>
+        <h2>Bug Reports</h2>
+        <p> If you found a bug in the program, report it <a
+                href="https://github.com/KuhakuPixel/AceTheGame/issues">here</a>
+        </p>
+        <h2> Open Source </h2>
+        <p>
+            Because it is open source, the development process and source code are transparants
+            so it respect your privacy and guaranteed to not have any shady features/backdoor
+
+        </p>
+        <p>
+            source code are available <a href="https://github.com/KuhakuPixel/AceTheGame"> here</a>
+        </p>
+    </div>
+
+    <script>
+        $.get('https://api.github.com/repos/kuhakupixel/acethegame/releases', function (data) {
+            // $('#result').attr('href', data.zipball_url);
+            console.log(data)
+            // get item
+            const latestReleaseJson = getLatestReleaseJson(data)
+            const releaseVersion = latestReleaseJson["tag_name"]
+            const downloadLink = getLatestApkDownloadLink(data)
+            // set to view
+            $("#latestApkDownloadLink").attr("href", downloadLink)
+            $("#releaseVersion").html(releaseVersion)
+        });
+    </script>
+</body>
+
+</html>
