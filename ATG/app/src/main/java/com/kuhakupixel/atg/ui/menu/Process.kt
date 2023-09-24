@@ -258,7 +258,7 @@ fun ProcessMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
                     val port = input.toInt()
                     if (ace.IsAttached())
                         ace.DeAttach()
-                    ace.ConnectToACEServer(port)
+                    ace.ConnectToACEServer(port,ACEPort.defaultStatusPublisherPort )
                     attachedStatusString.value = "${ace.GetAttachedPid()} - ACE's Engine Server"
                 },
             )
