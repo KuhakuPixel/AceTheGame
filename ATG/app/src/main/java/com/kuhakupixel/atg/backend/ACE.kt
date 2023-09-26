@@ -74,10 +74,10 @@ class ACE(context: Context) {
     private val availableNumTypes: List<NumTypeInfo>
 
     //
-    private var statusPublisherPort: Int = -1
+    private var statusPublisherPort: Int? = null
 
     @Synchronized
-    fun getStatusPublisherPort(): Int {
+    fun getStatusPublisherPort(): Int? {
         return statusPublisherPort
     }
 
