@@ -62,7 +62,7 @@ fun onNextScanClicked(
      * */
     thread {
         try {
-            val statusSubscriber = ACEStatusSubscriber(statusPublisherPort)
+            val statusSubscriber = ACEStatusSubscriber(statusPublisherPort!!)
             statusSubscriber.use { it: ACEStatusSubscriber ->
 
                 var scanProgressData: ScanProgressData =

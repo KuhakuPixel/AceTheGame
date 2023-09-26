@@ -181,12 +181,15 @@ class ACETest {
         val serverThread: Thread = ACEServer.GetStarterThread(context, pid, ports[0], ports[1])
         serverThread.start()
 
-        //
+        // not attached yet, and port hasn't been set
         Assert.assertEquals(false, ace.IsAttached())
-        //
-        ace.ConnectToACEServer(ports[0])
-        //
+        Assert.assertEquals(null, ace.getStatusPublisherPort())
+        // connect
+        ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
+
+        // attached and port has been set
         Assert.assertEquals(true, ace.IsAttached())
+        Assert.assertNotEquals(null, ace.getStatusPublisherPort())
         //
         ace.DeAttach()
         //
@@ -209,9 +212,9 @@ class ACETest {
             serverThread.start()
 
             //
-            ace.ConnectToACEServer(ports[0])
+            ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
             try {
-                ace.ConnectToACEServer(ports[0])
+                ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
                 Assert.fail()
             } catch (e: ACE.AttachingInARowException) {
                 Assert.assertTrue(true)
@@ -235,7 +238,7 @@ class ACETest {
             }
 
             // Connect to DeAttach and stop server
-            ace.ConnectToACEServer(ports[0])
+            ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
             ace.DeAttach()
             serverThread.join()
         }
@@ -362,7 +365,7 @@ class ACETest {
         val pid: Long = ProcUtil.GetPid(p)
         ace.Attach(pid)
         // shouldn't have any matches before scan
-        Assert.assertEquals(0 , ace.GetMatchCount())
+        Assert.assertEquals(0, ace.GetMatchCount())
         Assert.assertEquals(0, ace.ListMatches(maxMatchesCount).size)
         ace.ScanAgainstValue(ACE.Operator.notEqual, "0")
         // get matches
