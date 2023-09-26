@@ -184,7 +184,7 @@ class ACETest {
         //
         Assert.assertEquals(false, ace.IsAttached())
         //
-        ace.ConnectToACEServer(ports[0])
+        ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
         //
         Assert.assertEquals(true, ace.IsAttached())
         //
@@ -209,9 +209,9 @@ class ACETest {
             serverThread.start()
 
             //
-            ace.ConnectToACEServer(ports[0])
+            ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
             try {
-                ace.ConnectToACEServer(ports[0])
+                ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
                 Assert.fail()
             } catch (e: ACE.AttachingInARowException) {
                 Assert.assertTrue(true)
@@ -235,7 +235,7 @@ class ACETest {
             }
 
             // Connect to DeAttach and stop server
-            ace.ConnectToACEServer(ports[0])
+            ace.ConnectToACEServer(port = ports[0], publisherPort = ports[1])
             ace.DeAttach()
             serverThread.join()
         }
