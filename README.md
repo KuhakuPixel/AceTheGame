@@ -36,8 +36,6 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 ## Showcase
 ### Gui Apk
 
-![](./tutorial/Apk/process_select.png)
-
 ![](./assets/showcase/1.gif)
 
 ![](./assets/showcase/2.gif)
@@ -45,6 +43,8 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 ![](./assets/showcase/3.gif)
 
 ![](./assets/showcase/4.gif)
+
+![](./tutorial/Apk/process_select.png)
 
 
 ### infinite coin 
