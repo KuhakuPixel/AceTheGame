@@ -38,9 +38,13 @@ feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
 ![](./tutorial/Apk/process_select.png)
 
-![](./tutorial/Apk/4.png)
+![](./assets/showcase/1.gif)
 
-![](./tutorial/Apk/9.png)
+![](./assets/showcase/2.gif)
+
+![](./assets/showcase/3.gif)
+
+![](./assets/showcase/4.gif)
 
 
 ### infinite coin 
