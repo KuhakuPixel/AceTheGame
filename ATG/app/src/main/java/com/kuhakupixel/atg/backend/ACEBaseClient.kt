@@ -21,7 +21,7 @@ abstract class ACEBaseClient {
         AssertValidCommand(out)
         Log.i(
             "ATG",
-            "Output received from engine command: \"${requestCmd.joinToString(separator = " ")}\"",
+            "Output received from engine command: \"${out}\"",
         )
         return out
     }
