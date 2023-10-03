@@ -1,4 +1,27 @@
 # ChangeLog
+
+## [0.1.2]
+
+### Fixed
+
+- [Apk] empty progress bar on non rooted device
+
+- [Apk] apk crashing on `Ld Player`
+
+- [Modder] Patch error on some apk
+  because of adding smali code to a dex file that is already at its limit
+
+
+### Added
+
+### Changed
+- [ACE] region level's default value from `heap_stack_executable_bss` to `all_read_write`
+
+  (on some device like LdPlayer it isn't finding a match because it excludes important region in name 
+   of optimization, this fast scan feature is still experimental, so it shouldn't be used by default)
+
+### Removed
+
 ## [0.1.1]
 
 ### Fixed
