@@ -1,9 +1,5 @@
 package com.kuhakupixel.atg.backend
-
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStreamReader
-
 object Root {
     /*
      * Run [strings] as sudo
@@ -13,7 +9,18 @@ object Root {
         var res: List<String> = listOf()
         try {
             val fullCmd: MutableList<String> = mutableListOf("su", "--command")
-            fullCmd.addAll(cmd)
+            // add [cmd] as only one string because we want to pass it as one value
+            // to `--command` parameter. Runtime.getRuntime().exec() will surround each string
+            // with ("") that will cause [cmd] to be thought as different value from `--command`
+            // if we just append [fullCmd] and [cmd]
+
+            // example: if [cmd] is ["/usr/bin/echo", "hi"]
+            // if we only append [fullCmd] and [cmd]
+            // like [fullCmd] = ["su", "--command","/usr/bin/echo", "hi"]
+            // the value "hi" will be thought as part of [su] command instead of [/usr/bin/echo]
+            // the correct one should be
+            // [fullCmd] = ["su", "--command","/usr/bin/echo hi"]
+            fullCmd.add(cmd.joinToString(separator = " "))
             //
             res = Cmd.RunCommand(fullCmd)
         } catch (e: IOException) {
