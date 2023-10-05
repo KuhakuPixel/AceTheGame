@@ -44,8 +44,7 @@ import kotlin.math.min
 
 
 // ======================= drop down options =================
-private val scanTypeList: MutableList<String> = mutableListOf()
-private val valueTypeList: MutableList<String> = mutableListOf()
+private var defaultValueInitialized: Boolean = false
 
 // ==================== selected scan options ==============================
 private var scanInputVal: MutableState<String> = mutableStateOf("")
@@ -101,25 +100,12 @@ fun _MemoryMenu(
 ) {
     val ace: ACE = (globalConf?.getAce())!!
     // ==================================
-    // initialize display for num types including its bit size
-    if (valueTypeList.isEmpty()) {
-        // init list
-        for (numType: NumType in NumType.values()) {
-            val displayStr: String = ace.GetNumTypeAndBitSize(numType)
-            valueTypeList.add(displayStr)
-        }
+    // initialize default value for scanning options
+    if (!defaultValueInitialized) {
         // init default
         valueTypeSelectedOptionIdx.value = NumType.values().indexOf(ATGSettings.defaultNumType)
-    }
-    // initialize display for scan types
-    if (scanTypeList.isEmpty()) {
-        // init list
-        for (op: Operator in Operator.values()) {
-            val displayStr: String = (ACE.operatorEnumToSymbolBiMap.get(op))!!
-            scanTypeList.add(displayStr)
-        }
-        // init default
         scanTypeSelectedOptionIdx.value = Operator.values().indexOf(ATGSettings.defaultScanType)
+        defaultValueInitialized = true
     }
     val isAttached: Boolean = ace.IsAttached()
     valueTypeEnabled.value = isAttached && !initialScanDone.value
@@ -186,6 +172,7 @@ fun _MemoryMenu(
             )
             MatchesSetting(
                 modifier = matchesSettingModifier,
+                ace = ace,
                 //
                 scanTypeEnabled = scanTypeEnabled,
                 scanTypeSelectedOptionIdx = scanTypeSelectedOptionIdx,
@@ -326,6 +313,7 @@ private fun UpdateMatches(ace: ACE) {
 @Composable
 private fun MatchesSetting(
     modifier: Modifier = Modifier,
+    ace: ACE,
     //
     scanTypeEnabled: MutableState<Boolean>,
     scanTypeSelectedOptionIdx: MutableState<Int>,
@@ -388,7 +376,9 @@ private fun MatchesSetting(
             enabled = enabled,
             label = "Scan Type",
             expanded = expanded,
-            options = scanTypeList,
+            options = Operator.values().map { op: Operator ->
+                ACE.operatorEnumToSymbolBiMap[op]!!
+            },
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
                 OverlayChoicesDialog(overlayContext!!).show(
@@ -421,7 +411,9 @@ private fun MatchesSetting(
             enabled = enabled,
             label = "Value Type",
             expanded = expanded,
-            options = valueTypeList,
+            options = NumType.values().map { numType: NumType ->
+                ace.GetNumTypeAndBitSize(numType)
+            },
             selectedOptionIndex = selectedOptionIndex.value,
             onShowOptions = fun(options: List<String>) {
                 OverlayChoicesDialog(overlayContext!!).show(
