@@ -39,7 +39,6 @@ class ACE(context: Context) {
         override fun toString(): String {
             return this.name.replace("_", "")
         }
-
         companion object {
             fun fromString(s: String): NumType {
                 var s = s
@@ -47,6 +46,16 @@ class ACE(context: Context) {
                 return valueOf(s)
             }
         }
+    }
+
+    enum class RegionLevel {
+        heap_stack_executable,
+        heap_stack_executable_bss,
+        /*
+         * all region that has read and write permission
+         * */
+        all_read_write,
+        all,
     }
 
     inner class MatchInfo(var address: String, var prevValue: String)
@@ -187,6 +196,18 @@ class ACE(context: Context) {
         val typeStr = CheaterCmd(arrayOf("config", "type"))
         return NumType.fromString(typeStr)
     }
+
+    @Synchronized
+    fun SetRegionLevel(regionLevel: RegionLevel) {
+        CheaterCmd(arrayOf("config", "region_level", regionLevel.toString()))
+    }
+    @Synchronized
+    fun GetRegionLevel(): RegionLevel{
+        val regionLevelStr = CheaterCmd(arrayOf("config", "region_level"))
+        return RegionLevel.valueOf(regionLevelStr)
+
+    }
+
 
     /**
      * run code/function when type is set to [numType]
