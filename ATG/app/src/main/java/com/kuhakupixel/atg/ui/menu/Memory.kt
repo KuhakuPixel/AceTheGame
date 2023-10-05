@@ -2,11 +2,16 @@ package com.kuhakupixel.atg.ui.menu
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
@@ -51,12 +56,14 @@ private var scanInputVal: MutableState<String> = mutableStateOf("")
 
 private val scanTypeSelectedOptionIdx = mutableStateOf(0)
 private val valueTypeSelectedOptionIdx = mutableStateOf(0)
+private val regionLevelSelectedOptionIdx = mutableStateOf(0)
 
 // ================================================================
 private val initialScanDone: MutableState<Boolean> = mutableStateOf(false)
 private val isScanOnGoing: MutableState<Boolean> = mutableStateOf(false)
 
 private val valueTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
+private val regionLevelEnabled: MutableState<Boolean> = mutableStateOf(false)
 private val scanTypeEnabled: MutableState<Boolean> = mutableStateOf(false)
 
 // ===================================== current matches data =========================
@@ -72,7 +79,8 @@ fun getCurrentScanOption(): ScanOptions {
         inputVal = scanInputVal.value,
         numType = NumType.values()[valueTypeSelectedOptionIdx.value],
         scanType = Operator.values()[scanTypeSelectedOptionIdx.value],
-        initialScanDone = initialScanDone.value
+        initialScanDone = initialScanDone.value,
+        regionLevel = ACE.RegionLevel.values()[regionLevelSelectedOptionIdx.value]
     )
 }
 
@@ -105,10 +113,14 @@ fun _MemoryMenu(
         // init default
         valueTypeSelectedOptionIdx.value = NumType.values().indexOf(ATGSettings.defaultNumType)
         scanTypeSelectedOptionIdx.value = Operator.values().indexOf(ATGSettings.defaultScanType)
+        regionLevelSelectedOptionIdx.value =
+            ACE.RegionLevel.values().indexOf(ATGSettings.defaultRegionLevel)
+
         defaultValueInitialized = true
     }
     val isAttached: Boolean = ace.IsAttached()
     valueTypeEnabled.value = isAttached && !initialScanDone.value
+    regionLevelEnabled.value = isAttached && !initialScanDone.value
     scanTypeEnabled.value = isAttached
 
     // =================================
@@ -176,6 +188,10 @@ fun _MemoryMenu(
                 //
                 scanTypeEnabled = scanTypeEnabled,
                 scanTypeSelectedOptionIdx = scanTypeSelectedOptionIdx,
+
+                //
+                regionLevelEnabled = regionLevelEnabled,
+                regionLevelSelectedOptionIdx = regionLevelSelectedOptionIdx,
                 //
                 scanInputVal = scanInputVal,
                 // only allow to change Value type before any scan is done
@@ -318,6 +334,9 @@ private fun MatchesSetting(
     scanTypeEnabled: MutableState<Boolean>,
     scanTypeSelectedOptionIdx: MutableState<Int>,
     //
+    regionLevelEnabled: MutableState<Boolean>,
+    regionLevelSelectedOptionIdx: MutableState<Int>,
+    //
     scanInputVal: MutableState<String>,
     //
     valueTypeEnabled: MutableState<Boolean>,
@@ -332,17 +351,14 @@ private fun MatchesSetting(
 ) {
     @Composable
     fun ScanInputField(scanValue: MutableState<String>) {
-        Row() {
-            NumberInputField(
-                modifier = Modifier.weight(0.65f),
-                value = scanValue.value,
-                onValueChange = { value ->
-                    scanValue.value = value
-                },
-                label = "Scan For",
-                placeholder = "value ...",
-            )
-        }
+        NumberInputField(
+            value = scanValue.value,
+            onValueChange = { value ->
+                scanValue.value = value
+            },
+            label = "Scan For",
+            placeholder = "value ...",
+        )
     }
 
     @Composable
@@ -435,22 +451,75 @@ private fun MatchesSetting(
         )
     }
 
-    Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
+    @Composable
+    fun RegionLevelDropDown(
+        selectedOptionIndex: MutableState<Int>,
+        enabled: MutableState<Boolean>,
+        overlayContext: OverlayContext,
+    ) {
+        val expanded = remember { mutableStateOf(false) }
+        OverlayDropDown(
+            enabled = enabled,
+            label = "Region Level",
+            expanded = expanded,
+            options = ACE.RegionLevel.values().map { regionLevel: ACE.RegionLevel ->
+                regionLevel.toString()
+            },
+            selectedOptionIndex = selectedOptionIndex.value,
+            onShowOptions = fun(options: List<String>) {
+                OverlayChoicesDialog(overlayContext!!).show(
+                    title = "Value: ",
+                    choices = options,
+                    onConfirm = { index: Int, value: String ->
+                        selectedOptionIndex.value = index
+                    },
+                    onClose = {
+                        // after choice dialog is closed
+                        // we should also set expanded to false
+                        // so drop down will look closed
+                        expanded.value = false
 
-        ScanInputField(scanValue = scanInputVal)
-        ScanTypeDropDown(
-            scanTypeSelectedOptionIdx,
-            enabled = scanTypeEnabled,
-            overlayContext = overlayContext,
+                    },
+                    chosenIndex = selectedOptionIndex.value
+                )
+            }
         )
-        ValueTypeDropDown(
-            valueTypeSelectedOptionIdx,
-            // only allow to change type during initial scan
-            enabled = valueTypeEnabled,
-            overlayContext = overlayContext,
-        )
+    }
+
+    Column(modifier = modifier) {
+
+        Column(
+            modifier = Modifier
+                .padding(vertical = 5.dp)
+                .weight(0.8f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(7.dp)
+
+        ) {
+                ScanInputField(scanValue = scanInputVal)
+            ScanTypeDropDown(
+                scanTypeSelectedOptionIdx,
+                enabled = scanTypeEnabled,
+                overlayContext = overlayContext,
+            )
+            ValueTypeDropDown(
+                valueTypeSelectedOptionIdx,
+                // only allow to change type during initial scan
+                enabled = valueTypeEnabled,
+                overlayContext = overlayContext,
+            )
+
+            RegionLevelDropDown(
+                selectedOptionIndex = regionLevelSelectedOptionIdx,
+                enabled = regionLevelEnabled,
+                overlayContext = overlayContext,
+            )
+
+        }
         ScanButton(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.2f),
             nextScanEnabled = nextScanEnabled,
             // new scan can only be done if we have done at least one scan
             newScanEnabled = newScanEnabled,

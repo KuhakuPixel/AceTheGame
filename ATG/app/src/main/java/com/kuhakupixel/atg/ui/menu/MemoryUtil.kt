@@ -17,7 +17,8 @@ class ScanOptions(
     val inputVal: String,
     val numType: ACE.NumType,
     val scanType: ACE.Operator,
-    val initialScanDone: Boolean
+    val regionLevel: ACE.RegionLevel,
+    val initialScanDone: Boolean,
 ) {
 }
 
@@ -33,7 +34,10 @@ fun onNextScanClicked(
     val statusPublisherPort = ace.getStatusPublisherPort()
     CompletableFuture.supplyAsync<Unit> {
         // set the value type
-        if (!scanOptions.initialScanDone) ace.SetNumType(scanOptions.numType)
+        if (!scanOptions.initialScanDone) {
+            ace.SetNumType(scanOptions.numType)
+            ace.SetRegionLevel(scanOptions.regionLevel)
+        }
         /**
          * scan against a value if input value
          * is not empty
