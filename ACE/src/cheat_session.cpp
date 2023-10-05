@@ -389,12 +389,20 @@ cheat_session::_cheat_cmd(engine_module<T> *engine_module_ptr,
                       "current value: " +
                           region_level_current_value);
 
-  config_region_level_cmd->add_option("<VALUE>", cheat_args.region_level)
-      ->required()
-      ->transform(CLI::CheckedTransformer(Scan_Utils::str_to_E_region_level_map,
-                                          CLI::ignore_case));
-  config_region_level_cmd->callback(
-      [&]() { scanner->set_region_level(cheat_args.region_level); }
+  CLI::Option *config_region_level_opt =
+      config_region_level_cmd->add_option("<VALUE>", cheat_args.region_level)
+          ->transform(CLI::CheckedTransformer(
+              Scan_Utils::str_to_E_region_level_map, CLI::ignore_case));
+
+  config_region_level_cmd->callback([&]() {
+    //
+    if (config_region_level_opt->count() == 0) {
+
+      frontend::print("%s\n", region_level_current_value.c_str());
+    } else {
+      scanner->set_region_level(cheat_args.region_level);
+    }
+  }
 
   );
   // =============== endian ===============
