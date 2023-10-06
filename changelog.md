@@ -14,6 +14,9 @@
 
 ### Added
 
+- [Apk]: Region Level option (select which memory regions to scan) 
+- [Apk]: Scroll Bar for table
+
 ### Changed
 - [ACE] region level's default value from `heap_stack_executable_bss` to `all_read_write`
 
