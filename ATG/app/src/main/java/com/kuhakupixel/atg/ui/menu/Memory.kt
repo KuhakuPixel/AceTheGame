@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -45,6 +46,7 @@ import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayChoicesDialog
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import my.nanihadesuka.compose.ColumnScrollbar
 import kotlin.math.min
 
 
@@ -488,32 +490,38 @@ private fun MatchesSetting(
 
     Column(modifier = modifier) {
 
-        Column(
+        Box(
             modifier = Modifier
                 .padding(vertical = 5.dp)
                 .weight(0.8f)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(7.dp)
-
         ) {
-                ScanInputField(scanValue = scanInputVal)
-            ScanTypeDropDown(
-                scanTypeSelectedOptionIdx,
-                enabled = scanTypeEnabled,
-                overlayContext = overlayContext,
-            )
-            ValueTypeDropDown(
-                valueTypeSelectedOptionIdx,
-                // only allow to change type during initial scan
-                enabled = valueTypeEnabled,
-                overlayContext = overlayContext,
-            )
+            val columnState = rememberScrollState()
+            ColumnScrollbar(state = columnState, alwaysShowScrollBar = true) {
+                Column(
+                    modifier.verticalScroll(columnState),
+                    verticalArrangement = Arrangement.spacedBy(7.dp)
+                ) {
+                    ScanInputField(scanValue = scanInputVal)
+                    ScanTypeDropDown(
+                        scanTypeSelectedOptionIdx,
+                        enabled = scanTypeEnabled,
+                        overlayContext = overlayContext,
+                    )
+                    ValueTypeDropDown(
+                        valueTypeSelectedOptionIdx,
+                        // only allow to change type during initial scan
+                        enabled = valueTypeEnabled,
+                        overlayContext = overlayContext,
+                    )
 
-            RegionLevelDropDown(
-                selectedOptionIndex = regionLevelSelectedOptionIdx,
-                enabled = regionLevelEnabled,
-                overlayContext = overlayContext,
-            )
+                    RegionLevelDropDown(
+                        selectedOptionIndex = regionLevelSelectedOptionIdx,
+                        enabled = regionLevelEnabled,
+                        overlayContext = overlayContext,
+                    )
+                }
+
+            }
 
         }
         ScanButton(
