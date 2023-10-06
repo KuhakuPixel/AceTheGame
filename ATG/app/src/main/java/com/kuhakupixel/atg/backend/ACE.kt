@@ -149,7 +149,6 @@ class ACE(context: Context) {
         }
     }
 
-    @Synchronized
     fun GetNumTypeBitSize(numType: NumType): Int? {
         var bitSize: Int? = null
         for (typeInfo in availableNumTypes) {
@@ -158,7 +157,6 @@ class ACE(context: Context) {
         return bitSize
     }
 
-    @Synchronized
     fun GetNumTypeAndBitSize(numType: NumType): String {
         val bitSize: Int? = GetNumTypeBitSize(numType)
         return String.format("%s (%d bit)", numType.toString(), bitSize)
@@ -335,7 +333,6 @@ class ACE(context: Context) {
      * which will return list of "<type name> <bit size>"
      * like "int 32", "short 16" and ect
     </bit></type> */
-    @Synchronized
     fun GetAvailableNumTypes(): List<NumTypeInfo> {
         val numTypeInfos: MutableList<NumTypeInfo> = mutableListOf()
         val out = UtilCmdAsList(arrayOf("info", "type"))

@@ -37,6 +37,7 @@ fun onNextScanClicked(
         if (!scanOptions.initialScanDone) {
             ace.SetNumType(scanOptions.numType)
             ace.SetRegionLevel(scanOptions.regionLevel)
+
         }
         /**
          * scan against a value if input value
@@ -55,7 +56,7 @@ fun onNextScanClicked(
         }
 
         onScanDone()
-    }.exceptionally {e ->
+    }.exceptionally { e ->
         onScanError(e as Exception)
         onScanDone()
     }
