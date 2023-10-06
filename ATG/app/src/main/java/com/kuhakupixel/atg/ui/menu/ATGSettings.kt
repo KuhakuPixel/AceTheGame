@@ -19,6 +19,7 @@ class ATGSettings {
         val defaultScanType:Operator = Operator.equal;
         //
         val defaultNumType: ACE.NumType = ACE.NumType._int;
+        val defaultRegionLevel: ACE.RegionLevel = ACE.RegionLevel.all_read_write;
     }
 }
 

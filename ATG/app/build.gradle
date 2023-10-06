@@ -110,5 +110,9 @@ dependencies {
     def libsuVersion = '5.0.4'
     // The core module that provides APIs to a shell
     implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+    // for scrollbar
+    implementation 'com.github.KuhakuPixel:LazyColumnScrollbar:1.7.3'
+
+
 
 }

@@ -49,6 +49,17 @@ class ACE(context: Context) {
         }
     }
 
+    enum class RegionLevel {
+        heap_stack_executable,
+        heap_stack_executable_bss,
+
+        /*
+         * all region that has read and write permission
+         * */
+        all_read_write,
+        all,
+    }
+
     inner class MatchInfo(var address: String, var prevValue: String)
 
     /**
@@ -140,7 +151,6 @@ class ACE(context: Context) {
         }
     }
 
-    @Synchronized
     fun GetNumTypeBitSize(numType: NumType): Int? {
         var bitSize: Int? = null
         for (typeInfo in availableNumTypes) {
@@ -149,7 +159,6 @@ class ACE(context: Context) {
         return bitSize
     }
 
-    @Synchronized
     fun GetNumTypeAndBitSize(numType: NumType): String {
         val bitSize: Int? = GetNumTypeBitSize(numType)
         return String.format("%s (%d bit)", numType.toString(), bitSize)
@@ -187,6 +196,19 @@ class ACE(context: Context) {
         val typeStr = CheaterCmd(arrayOf("config", "type"))
         return NumType.fromString(typeStr)
     }
+
+    @Synchronized
+    fun SetRegionLevel(regionLevel: RegionLevel) {
+        CheaterCmd(arrayOf("config", "region_level", regionLevel.toString()))
+    }
+
+    @Synchronized
+    fun GetRegionLevel(): RegionLevel {
+        val regionLevelStr = CheaterCmd(arrayOf("config", "region_level"))
+        return RegionLevel.valueOf(regionLevelStr)
+
+    }
+
 
     /**
      * run code/function when type is set to [numType]
@@ -314,7 +336,6 @@ class ACE(context: Context) {
      * which will return list of "<type name> <bit size>"
      * like "int 32", "short 16" and ect
     </bit></type> */
-    @Synchronized
     fun GetAvailableNumTypes(): List<NumTypeInfo> {
         val numTypeInfos: MutableList<NumTypeInfo> = mutableListOf()
         val out = UtilCmdAsList(arrayOf("info", "type"))

@@ -122,6 +122,20 @@ class ACETest {
     }
 
     @Test
+    fun SetRegionLevel() {
+        val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
+        val ace = ACE(context)
+        val p: Process = ProcUtil.RunBusyProgram()
+        val pid: Long = ProcUtil.GetPid(p)
+        ace.Attach(pid)
+        for (regionLevel in ACE.RegionLevel.values()) {
+            ace.SetRegionLevel(regionLevel)
+            Assert.assertEquals(regionLevel, ace.GetRegionLevel())
+        }
+        ace.DeAttach()
+    }
+
+    @Test
 
     fun GetNumTypeBitSize() {
         val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()

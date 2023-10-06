@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import my.nanihadesuka.compose.LazyColumnScrollbar
 import kotlin.math.max
 
 @Composable
@@ -78,44 +80,50 @@ fun CreateTable(
             for (i in 0 until colNames.size)
                 TableCell(text = colNames[i], weight = colWeights[i])
         }
+        val lazyColumnState = rememberLazyListState()
         // items
-        LazyColumn() {
-            // items
-            items(itemCount) { rowIndex: Int ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        // when row is clicked
-                        .clickable {
-                            onRowClicked(rowIndex)
-                        },
-                ) {
+        LazyColumnScrollbar(listState = lazyColumnState) {
+            LazyColumn(state = lazyColumnState) {
+                // items
+                items(itemCount) { rowIndex: Int ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            // when row is clicked
+                            .clickable {
+                                onRowClicked(rowIndex)
+                            },
+                    ) {
 
-                    for (colIndex in 0 until colCount) {
-                        Box(
-                            modifier = GetCellModifier(colWeights[colIndex]).defaultMinSize(minHeight = rowMinHeight)
-                        ) {
-                            drawCell(
-                                rowIndex = rowIndex,
-                                colIndex = colIndex,
-                            )
+                        for (colIndex in 0 until colCount) {
+                            Box(
+                                modifier = GetCellModifier(colWeights[colIndex]).defaultMinSize(
+                                    minHeight = rowMinHeight
+                                )
+                            ) {
+                                drawCell(
+                                    rowIndex = rowIndex,
+                                    colIndex = colIndex,
+                                )
+                            }
                         }
                     }
                 }
-            }
-            // ============== show Empty Item ======================
-            var emptyItemShownCount: Int = max(0, minEmptyItemCount - itemCount)
-            items(emptyItemShownCount) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {}
-                ) {
-                    for (i in 0 until colCount)
-                        TableCell(text = "", weight = colWeights[i])
+                // ============== show Empty Item ======================
+                var emptyItemShownCount: Int = max(0, minEmptyItemCount - itemCount)
+                items(emptyItemShownCount) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {}
+                    ) {
+                        for (i in 0 until colCount)
+                            TableCell(text = "", weight = colWeights[i])
 
+                    }
                 }
             }
+
         }
     }
 }
