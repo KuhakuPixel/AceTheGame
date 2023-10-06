@@ -39,6 +39,7 @@ class ACE(context: Context) {
         override fun toString(): String {
             return this.name.replace("_", "")
         }
+
         companion object {
             fun fromString(s: String): NumType {
                 var s = s
@@ -51,6 +52,7 @@ class ACE(context: Context) {
     enum class RegionLevel {
         heap_stack_executable,
         heap_stack_executable_bss,
+
         /*
          * all region that has read and write permission
          * */
@@ -199,8 +201,9 @@ class ACE(context: Context) {
     fun SetRegionLevel(regionLevel: RegionLevel) {
         CheaterCmd(arrayOf("config", "region_level", regionLevel.toString()))
     }
+
     @Synchronized
-    fun GetRegionLevel(): RegionLevel{
+    fun GetRegionLevel(): RegionLevel {
         val regionLevelStr = CheaterCmd(arrayOf("config", "region_level"))
         return RegionLevel.valueOf(regionLevelStr)
 
