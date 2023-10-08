@@ -4,9 +4,9 @@ program to provide non-root support via patching
 
 ## Building
 ### requirements
-- python
-- apktool
-- gradle
+- [python](https://www.python.org/downloads/)
+- [apktool](https://apktool.org/docs/install/)
+- [gradle](https://gradle.org/install/)
 
 ### generating code to inject
 
