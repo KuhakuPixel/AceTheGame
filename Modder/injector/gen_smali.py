@@ -1,5 +1,3 @@
-#!/bin/python3
-
 # =====================================================
 """
 brief:
@@ -60,7 +58,7 @@ with tempfile.TemporaryDirectory() as TEMP_DECOMPILED_APK_DIR:
 
 
     print("Generating temporary apk")
-    subprocess.run(["./gradlew", "assembleDebug"], cwd=APK_SOURCE_ROOT_DIR)
+    subprocess.run(["gradle", "assembleDebug"], cwd=APK_SOURCE_ROOT_DIR, shell=True)
 
     # decode without resources and
     # put the smali results in smali folder
@@ -75,7 +73,8 @@ with tempfile.TemporaryDirectory() as TEMP_DECOMPILED_APK_DIR:
             "-f",
             "-o",
             "%s" % (TEMP_DECOMPILED_APK_DIR),
-        ]
+        ],
+        shell=True
     )
 
     # put the smali for injection
