@@ -1,7 +1,34 @@
 # Modder
 
-Gui for modding the apk
+program to provide non-root support via patching
 
+## Building
+### requirements
+- python
+- apktool
+- gradle
+
+### generating code to inject
+
+```sh
+cd injector
+python ./gen_smali.py
+cd ../
+```
+### Build
+
+```sh
+gradle build
+```
+the build's [location](https://docs.gradle.org/current/samples/sample_building_java_applications.html#bundle_the_application) 
+
+`./modder/build/distributions/modder.zip`
+
+## Running tests
+
+```sh
+gradle test
+```
 
 ## Project Structure
 build instruction is provided at the readme of each subproject. 
