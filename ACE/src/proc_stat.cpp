@@ -2,8 +2,12 @@
 #include "ACE/ace_type.hpp"
 #include "ACE/file_utils.hpp"
 #include "ACE/str_utils.hpp"
+#include <errno.h>
+#include <signal.h>
+#include <stdexcept>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 struct proc_info parse_proc_stat_line(std::string line) {
   /*
@@ -121,12 +125,18 @@ std::vector<struct proc_info> list_processes() {
 }
 
 bool proc_is_running(int pid) {
-  std::vector<struct proc_info> processes = list_processes();
-  for (size_t i = 0; i < processes.size(); i++) {
-    if (processes[i].pid == pid)
-      return true;
+  // reset errno
+  errno = 0;
+  // https://stackoverflow.com/questions/9152979/check-if-process-exists-given-its-pid
+  kill(pid, 0);
+  if (errno == 0)
+    return true;
+  else if (errno == ESRCH)
+    return false;
+  else {
+    throw std::runtime_error("[proc_is_running] unknown errno: " +
+                             std::string(strerror(errno)));
   }
-  return false;
 }
 
 std::string proc_get_pid_name(int pid) {
