@@ -13,7 +13,9 @@ class ApkToolWrap {
         }
 
         fun Recompile(decompiledFolderStr: String, apkOutFileStr: String) {
-            val cmd = arrayOf("b", decompiledFolderStr, "--output", apkOutFileStr)
+
+	    // https://github.com/iBotPeaches/Apktool/issues/1978
+            val cmd = arrayOf("b", decompiledFolderStr, "--output", apkOutFileStr, "--use-aapt2")
 
             brut.apktool.Main.main(cmd)
         }

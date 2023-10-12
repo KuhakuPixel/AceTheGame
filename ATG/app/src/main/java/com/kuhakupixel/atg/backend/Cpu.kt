@@ -11,6 +11,7 @@ object Cpu {
             put("i686", Arch.x86)
             put("x86_64", Arch.x86_64)
             put("aarch64", Arch.arm64)
+            put("armv8l", Arch.arm32)
         }
     }
 
