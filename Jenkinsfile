@@ -7,7 +7,7 @@ pipeline {
                 echo "Building"
                 sh '''
 			cd ACE
-			mkdir build && cd build
+			rm -rf build && mkdir build && cd build
 			cmake ../
 			make -j4
                 '''
