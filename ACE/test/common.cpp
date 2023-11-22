@@ -3,6 +3,7 @@
 
 TEST_CASE("TIME_ACTION", "[COMMON]") {
 
+  REQUIRE(1 == 2);
   int sum = 0;
   {
     double time_sec = -1;
