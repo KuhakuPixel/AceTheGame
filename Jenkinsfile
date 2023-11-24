@@ -28,6 +28,7 @@ pipeline {
                 echo "Building"
                 sh '''
 			cd Modder
+			./gradlew clean
 			./gradlew build -x test 
                 '''
             }
@@ -47,6 +48,7 @@ pipeline {
                 echo "Building"
                 sh '''
 			cd ATG
+			./gradlew clean
 			./gradlew assembleRelease
                 '''
             }
