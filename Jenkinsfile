@@ -27,7 +27,13 @@ pipeline {
             steps {
                 echo "Building"
                 sh '''
+
 			cd Modder
+			# generate code for injection
+			cd injector
+			python ./gen_smali.py
+			cd ../
+			# clean and build
 			./gradlew clean
 			./gradlew build -x test 
                 '''
