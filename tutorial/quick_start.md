@@ -1,5 +1,5 @@
 this is only a brief tutorial,
-for more in depth and real practice visit [here](./tutorial/)
+for more in depth and real practice visit [here](./README.md)
 
 Notes: type command `-h` to list all available commands
 
