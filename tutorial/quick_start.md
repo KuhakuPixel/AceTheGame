@@ -1,9 +1,13 @@
 # Notes: 
 
-- this is only a brief tutorial,
+- This is only a brief tutorial,
 for more in depth and real practice visit [here](./tutorial/)
 
-- type command `-h` to list all available commands
+- Type command `-h` to list all available commands
+
+- For rooted device, start from [here](#rooted)
+
+- For non-rooted device, start from [here](#non-rooted)
 
 # Video Tutorial
 - For [Apk](https://www.youtube.com/watch?v=UlGm1nFxRzA)
@@ -193,10 +197,10 @@ for more in depth and real practice visit [here](./tutorial/)
       and now you should have `999999` coin.
 
 
-# For Non-Rooted Phone
+# Non-Rooted
 
-For this program to work on non rooted device,
-you need to patch the apk it self first to add the `memory scanner and editor` feature inside the apk. 
+For this program to work on non-rooted device,
+you need to patch the apk itself first to add the `memory scanner and editor` feature inside the apk. 
 
 ### Steps:
 
