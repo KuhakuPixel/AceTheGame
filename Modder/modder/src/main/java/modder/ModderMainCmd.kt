@@ -72,8 +72,8 @@ class ModderMainCmd {
             @CommandLine.Option(names = ["-i", "--in-app-purchase"], description = ["unlock in app purchase"])
             addInAppPurchaseHack: Boolean = false,
 
-            @CommandLine.Parameters(paramLabel = "cleanDecompiledOnExit", description = ["clean decompiled apk folder when program exits, default:\${DEFAULT-VALUE} "], defaultValue = "true")
-            cleanDecompiledOnExit: Boolean
+            @CommandLine.Option(names = ["-c", "--keep-decompilation-folder"], description = ["don't clean decompilation folder (useful for debugging)"])
+            keepDecompilationFolder: Boolean
     ) {
 
         // check if the directory exist
@@ -99,10 +99,11 @@ class ModderMainCmd {
         val patcher = Patcher(
                 baseApkFile.absolutePath,
                 // need to decode resource to modify AndroidManifest.xml
-                // when extractNativeLibsOption == false
+                // when extractNativeLibsOption == false or when we are patching for in app purchase hack, because
+                // we need to add permission android.permission.QUERY_ALL_PACKAGES
                 // otherwise don't decode to make compilation recompilation faster
-                decodeResource = (extractNativeLibsOption == false),
-                cleanDecompilationOnExit = cleanDecompiledOnExit,
+                decodeResource = (extractNativeLibsOption == false) || addInAppPurchaseHack,
+                cleanDecompilationOnExit = !keepDecompilationFolder,
         )
 
         if (addMemEditor) {
