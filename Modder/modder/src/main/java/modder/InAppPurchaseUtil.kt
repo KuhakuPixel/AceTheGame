@@ -12,6 +12,8 @@ class InAppPurchaseUtil {
         val BILLING_HACK_PACKAGE_NAME: String = "\"org.billinghack\""
         val BILLING_HACK_SERVICE_TO_CONNECT_TO_NAME = "\"org.billinghack.BillingService.BIND\""
 
+        val PERMISSION_QUERY_ALL_PACKAGE: String = "android.permission.QUERY_ALL_PACKAGES"
+
         fun patchStringContent(content: String, redirectToLuckyPatcher: Boolean = false): String {
             // replace the string
             var newPackageName = ""
@@ -106,7 +108,7 @@ class InAppPurchaseUtil {
             // https://stackoverflow.com/questions/17316232/how-to-start-android-service-from-another-android-app
             // https://stackoverflow.com/questions/65629268/queryintentactivities-returning-empty-list-in-android-11
 
-            apktool.injectPermissionName("android.permission.QUERY_ALL_PACKAGES")
+            apktool.injectPermissionName(PERMISSION_QUERY_ALL_PACKAGE)
             return true
 
         }
