@@ -60,38 +60,6 @@ class ModderMainCmd {
         println(output.joinToString(separator = "\n"))
     }
 
-    /*
-     *
-     * for decompilation and recompilation output directory
-     * we have to pass the path to a File object first
-     * and then use toString, to make sure the path doesn't contain '/'
-     *
-     * if the output Folder from user contains '/'
-     * then the output will not be put in the same directory as
-     * apk folder or decompiled apk folder because
-     *
-     * ussualy an output for decompilation and recompilation are
-     * "[apkDir]+ApkMod.DECOMPILED_DIR_EXT" or
-     * "[decompiledApkDir]+ApkMod.RECOMPILED_DIR_EXT"
-     * so the output will be put inside [apkDir] or [decompiledApkDir]
-     * as .decompiled or .recompiled
-     *
-     */
-    @CommandLine.Command(name = "decompile", description = ["Decompile an apk"])
-    fun Decompile(
-            @CommandLine.Parameters(paramLabel = "ApkFilePath", description = ["Path to apk file or a directory containing apks"]) apkPathStr: String
-    ) {
-        val apkDir = File(apkPathStr)
-        ApkMod.Decompile(apkPathStr, apkDir.toString() + ApkMod.DECOMPILED_DIR_EXT)
-    }
-
-    @CommandLine.Command(name = "recompile", description = ["recompile apks"])
-    fun Recompile(
-            @CommandLine.Parameters(paramLabel = "decompiledFolder", description = ["Folder to decompiled apks"]) decompiledFolderStr: String
-    ) {
-        val decompiledApkDir = File(decompiledFolderStr)
-        ApkMod.Recompile(decompiledFolderStr, decompiledApkDir.toString() + ApkMod.RECOMPILED_DIR_EXT)
-    }
 
     @CommandLine.Command(name = "Patch", description = ["recompile apks"])
 

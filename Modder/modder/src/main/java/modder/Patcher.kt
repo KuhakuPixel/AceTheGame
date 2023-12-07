@@ -12,7 +12,7 @@ import java.nio.file.Paths
 import kotlin.io.path.Path
 
 // TODO: add a new class to Patcher for specific patch like adding a mem scanner
-// called MemScanner 
+// called MemScanner
 class Patcher(
         apkFilePathStr: String,
         cleanDecompilationOnExit: Boolean = true,
@@ -27,14 +27,15 @@ class Patcher(
         val apkFile = File(apkFilePathStr)
         Assert.AssertExistAndIsFile(apkFile)
         // make sure to get the absolute path
-        this.apkFilePathStr = apkFile.absolutePath
-        val tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", cleanDecompilationOnExit)
-        // make sure we have the absolute path
         // https://stackoverflow.com/a/17552395/14073678
+        this.apkFilePathStr = apkFile.absolutePath
         // =============================== decompile the apk ===========
         apktool = Apktool(
                 apkFile = apkFilePathStr,
-                decodeResource = decodeResource
+                decodeResource = decodeResource,
+                // TODO: temporary solution to clean up
+                // in the future should use Closeable.use {}
+                decompilationFolder = TempManager.CreateTempDirectory("ModderDecompiledApk", cleanDecompilationOnExit).toFile(),
         )
         logger.info { "decompiled at ${apktool.decompilationFolder}" }
     }
@@ -296,7 +297,7 @@ class Patcher(
 
     fun Export(exportPath: String) {
         val exportFile = File(exportPath)
-        ApkToolWrap.Recompile(apktool.decompilationFolder.toString(), exportFile.absolutePath)
+        apktool.export(apkOutFile = exportPath, signApk = false)
         System.out.printf("exported to %s\n", exportFile.absolutePath)
     }
 
