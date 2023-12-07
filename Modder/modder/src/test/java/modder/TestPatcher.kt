@@ -242,7 +242,7 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun AddMemScannerSmaliCode() {
-        val patcher = Patcher(testApkPathStr, decodeResource = false, cleanDecompilationOnExit = false)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         // new smali code should be at newly created smali classes
         val memScannerSmaliCodeDir = Path(patcher.apktool.decompilationFolder.toString(), "smali_classes5", "com", Patcher.MEM_SCANNER_SMALI_DIR_NAME).toFile()
         Assertions.assertEquals(false, memScannerSmaliCodeDir.exists())
