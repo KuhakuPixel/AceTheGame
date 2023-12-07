@@ -1,5 +1,6 @@
 package modder
 
+import apktool.kotlin.lib.Apktool
 import net.lingala.zip4j.ZipFile
 import org.apache.commons.lang3.StringUtils
 import java.io.File
@@ -18,8 +19,8 @@ class Patcher(
         val decodeResource: Boolean,
 ) {
     var apkFilePathStr: String
-    var decompiledApkDirStr: String
     val resource = Resource()
+    val apktool: Apktool
 
     // ===================
     init {
@@ -30,10 +31,12 @@ class Patcher(
         val tempDir = TempManager.CreateTempDirectory("ModderDecompiledApk", cleanDecompilationOnExit)
         // make sure we have the absolute path
         // https://stackoverflow.com/a/17552395/14073678
-        decompiledApkDirStr = tempDir.toAbsolutePath().toString()
         // =============================== decompile the apk ===========
-        logger.info { "decompiled at ${decompiledApkDirStr}" }
-        ApkToolWrap.Decompile(apkFilePathStr, decompiledApkDirStr, decodeResource = this.decodeResource)
+        apktool = Apktool(
+                apkFile = apkFilePathStr,
+                decodeResource = decodeResource
+        )
+        logger.info { "decompiled at ${apktool.decompilationFolder}" }
     }
 
     // TODO: find a way to cut down code duplication between this function and
@@ -54,7 +57,7 @@ class Patcher(
         // the smali classes in subPath will be contained in
         // the folder starting with smali
         // like smali, smali_classes2, smali_classes3 and ect
-        val decompiledApkDir = File(decompiledApkDirStr)
+        val decompiledApkDir = apktool.decompilationFolder!!
         val files = decompiledApkDir.listFiles()!!
         for (i in files.indices) {
             if (!files[i].isDirectory) continue
@@ -82,12 +85,8 @@ class Patcher(
         return if (StringUtils.isEmpty(basePathStr)) "" else File(basePathStr, relativeSmaliFilePath).absolutePath
     }
 
-    fun GetDecompiledApkDirStr(): String {
-        return decompiledApkDirStr
-    }
-
     fun GetNativeLibSupportedArch(): Array<String> {
-        val apkNativeLibDir = File(decompiledApkDirStr, NATIVE_LIB_DIR_NAME)
+        val apkNativeLibDir = File(apktool.decompilationFolder, NATIVE_LIB_DIR_NAME)
         // check if the apk already have a native lib for some or all architecture
         // if the apk already has native lib for specific arch like "armeabi-v7a"
         // then we shouldn't add a new folder for another arch like arm-64
@@ -109,7 +108,7 @@ class Patcher(
      */
     fun CreateNativeLibDir(): String {
         // check first if apk already has a native lib
-        val apkNativeLibDir = File(decompiledApkDirStr, NATIVE_LIB_DIR_NAME)
+        val apkNativeLibDir = File(apktool.decompilationFolder, NATIVE_LIB_DIR_NAME)
         // no native lib directory found, make one
         if (!apkNativeLibDir.exists()) apkNativeLibDir.mkdirs()
 
@@ -231,23 +230,6 @@ class Patcher(
         return smaliCodePackageDir.absolutePath
     }
 
-    fun GetSmaliClassesCount(): Int {
-
-        var count: Int = 0
-        val files = File(decompiledApkDirStr).listFiles()!!
-        for (i in files.indices) {
-            // the first smali folder starts with "smali" and rest starts with  "smali_classes2"
-            // can't only check for startsWith("smali") because there are some folder like "smali_assets"
-            // that aren't part of the main dex class and will only mess up the [count]
-            if (files[i].name == "smali" || files[i].name.startsWith("smali_classes")) {
-                if (files[i].isDirectory)
-                    count++
-            }
-        }
-        return count
-
-    }
-
     fun AddMemScannerSmaliCode() {
 
         /**
@@ -268,8 +250,8 @@ class Patcher(
          * */
         //
         //
-        val apkSmaliClassCount = GetSmaliClassesCount()
-        val destRootDir = Path(decompiledApkDirStr, "smali_classes${apkSmaliClassCount + 1}", "com").toFile()
+        val apkSmaliClassCount = apktool.GetSmaliClassesCount()
+        val destRootDir = Path(apktool.decompilationFolder!!.toString(), "smali_classes${apkSmaliClassCount + 1}", "com").toFile()
         assert(destRootDir.mkdirs() == true)
         val destDir = File(destRootDir, MEM_SCANNER_SMALI_DIR_NAME).absolutePath
         ZipFile(destSmaliZipCode.absolutePath).use { zipFile: ZipFile ->
@@ -297,16 +279,11 @@ class Patcher(
         Files.write(entrySmaliPath, modifiedSmaliCode)
     }
 
-    fun GetManifestFile(): File {
-        return File(decompiledApkDirStr, ANDROID_MANIFEST_FILE_NAME)
-    }
-
-
     fun RemoveExtractNativeLibOptions() {
         if (!decodeResource) {
             throw IllegalStateException("Cannot remove extract native lib options when [decodeResource] is false")
         }
-        val manifestFile = GetManifestFile()
+        val manifestFile = apktool.manifestFile
         val manifestContent = Files.readString(manifestFile.toPath())
         // remove the options all toget
         val newManifestContent = manifestContent.replace("android:extractNativeLibs=\"false\"", "")
@@ -319,7 +296,7 @@ class Patcher(
 
     fun Export(exportPath: String) {
         val exportFile = File(exportPath)
-        ApkToolWrap.Recompile(decompiledApkDirStr, exportFile.absolutePath)
+        ApkToolWrap.Recompile(apktool.decompilationFolder.toString(), exportFile.absolutePath)
         System.out.printf("exported to %s\n", exportFile.absolutePath)
     }
 

@@ -7,6 +7,7 @@ import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
 import java.io.File
 import java.util.function.Consumer
+import apktool.kotlin.lib.ApkSigner
 
 @CommandLine.Command(name = "Modder", subcommands = [CommandLine.HelpCommand::class], description = ["Utilities for hacking android apk"])
 class ModderMainCmd {
@@ -21,6 +22,7 @@ class ModderMainCmd {
 
     @CommandLine.Command(name = "listApk", description = ["List installed apks"])
     fun ListApk() {
+
         val adb = Adb()
         val out = adb.ListApk()
         if (out.error != Adb.Error.ok) {
@@ -144,7 +146,7 @@ class ModderMainCmd {
         // ============ sign all the apk in the directory ==========
         val files = patchedApkDir.listFiles()
         for (f in files) {
-            if (f.isFile) ApkSigner.Sign(f)
+            if (f.isFile) ApkSigner.sign(f)
         }
         System.out.printf("exported apk to %s\n", patchedApkPath)
     }
@@ -225,7 +227,7 @@ class ModderMainCmd {
             if (FilenameUtils.getExtension(apkFile.absolutePath) == "apk") {
                 println("Signing " + apkFile.absolutePath)
                 Assert.AssertExistAndIsFile(apkFile)
-                ApkSigner.Sign(apkFile)
+                ApkSigner.sign(apkFile)
             }
         }
     }

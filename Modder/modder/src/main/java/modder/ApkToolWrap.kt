@@ -13,7 +13,7 @@ class ApkToolWrap {
         }
 
         fun Recompile(decompiledFolderStr: String, apkOutFileStr: String) {
-            val cmd = arrayOf("b", decompiledFolderStr, "--output", apkOutFileStr)
+            val cmd = arrayOf("b", decompiledFolderStr, "--output", apkOutFileStr, "--use-aapt2")
 
             brut.apktool.Main.main(cmd)
         }
