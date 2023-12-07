@@ -1,5 +1,6 @@
 package modder
 
+import apktool.kotlin.lib.ApkSigner
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import picocli.CommandLine
@@ -7,7 +8,6 @@ import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
 import java.io.File
 import java.util.function.Consumer
-import apktool.kotlin.lib.ApkSigner
 
 @CommandLine.Command(name = "Modder", subcommands = [CommandLine.HelpCommand::class], description = ["Utilities for hacking android apk"])
 class ModderMainCmd {
@@ -67,7 +67,12 @@ class ModderMainCmd {
             @CommandLine.Parameters(paramLabel = "ApkFolderPath", description = ["Path to directory containing apks"])
             apkDirStr: String,
 
-            @CommandLine.Parameters(paramLabel = "cleanDecompiledOnExit",description = ["clean decompiled apk folder when program exits, default:\${DEFAULT-VALUE} "], defaultValue = "true")
+            @CommandLine.Option(names = ["-m", "--mem-editor"], description = ["enable memory scanning or editing for non rooted"])
+            addMemEditor: Boolean = false,
+            @CommandLine.Option(names = ["-i", "--in-app-purchase"], description = ["unlock in app purchase"])
+            addInAppPurchaseHack: Boolean = false,
+
+            @CommandLine.Parameters(paramLabel = "cleanDecompiledOnExit", description = ["clean decompiled apk folder when program exits, default:\${DEFAULT-VALUE} "], defaultValue = "true")
             cleanDecompiledOnExit: Boolean
     ) {
 
@@ -99,13 +104,19 @@ class ModderMainCmd {
                 decodeResource = (extractNativeLibsOption == false),
                 cleanDecompilationOnExit = cleanDecompiledOnExit,
         )
-        if (extractNativeLibsOption == false) {
-            println("extractNativeLibsOptions is set to false, attempting to remove them")
-            patcher.RemoveExtractNativeLibOptions()
-            println("extractNativeLibsOptions removed")
+
+        if (addMemEditor) {
+            if (extractNativeLibsOption == false) {
+                println("extractNativeLibsOptions is set to false, attempting to remove them")
+                patcher.RemoveExtractNativeLibOptions()
+                println("extractNativeLibsOptions removed")
+            }
+            // add mem scanner
+            patcher.AddMemScanner()
         }
-        // add mem scanner
-        patcher.AddMemScanner()
+        if (addInAppPurchaseHack) {
+            patcher.AddSupportForFreeInAppPurchases()
+        }
         // ================== export ===================
         // String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
         val patchedApkPath = baseApkFile.absolutePath
