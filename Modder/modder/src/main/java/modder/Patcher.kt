@@ -280,6 +280,10 @@ class Patcher(
         Files.write(entrySmaliPath, modifiedSmaliCode)
     }
 
+    fun AddSupportForFreeInAppPurchases() {
+        InAppPurchaseUtil.patchApk(apktool = apktool)
+    }
+
     fun RemoveExtractNativeLibOptions() {
         if (!decodeResource) {
             throw IllegalStateException("Cannot remove extract native lib options when [decodeResource] is false")
@@ -294,6 +298,7 @@ class Patcher(
         }
         PrintWriter(manifestFile.absolutePath).use { out -> out.println(newManifestContent) }
     }
+
 
     fun Export(exportPath: String) {
         val exportFile = File(exportPath)
