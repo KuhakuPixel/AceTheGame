@@ -31,7 +31,7 @@ for more in depth and real practice visit [here](https://github.com/KuhakuPixel/
       Then click on the name of the desired game
       > For example, in this case is `redpixeldungeon`
 
-      ![](./Apk/process_select.png)
+      <img src="./Apk/process_select.png" width="200">
 
       > Note: If the desired game doesn't appear, make sure to click the refresh button `↻`
 
@@ -41,53 +41,51 @@ for more in depth and real practice visit [here](https://github.com/KuhakuPixel/
 
       As you can see, the starting stones we have right now are 3
 
-      ![](./Apk/2.png)
+      <img src="./Apk/2.png" width="200">
 
       Open the ATG and move to the `Memory` tab 
       
       Put `3` inside the `Scan For` input field as we currently have 3 stones and then press `Next Scan` to retrieve all the addresses that has the value of 3
 
-
-      ![](./Apk/3.png)
+      <img src="./Apk/3.png" width="200">
 
       As you can see, we have found `30840` addresses which have a value of 3
 
-
-      ![](./Apk/4.png)
+      <img src="./Apk/4.png" width="200">
 
       Because the number of matching addresses is too large, we need to filter down the number of matching addresses by increasing/decreasing the stone value and scan for that increased/decreased value
 
       In this case, we are gonna throw away the rock to decrease its value to `2`
 
-      ![](./Apk/5.png)
+      <img src="./Apk/5.png" width="200">
 
       Repeat the step above by putting `2` (since we have reduced the stone value) inside the `Scan For` input field and press `Next Scan` to retrieve all the addresses that has the value of 2
 
-      ![](./Apk/6.png)
+      <img src="./Apk/6.png" width="200">
 
       As we can see, the number of matching addresses have reduced to 4
 
-      ![](./Apk/7.png)
+      <img src="./Apk/7.png" width="200">
 
       > Repeat the steps above as many times as possible if you think the number of matching addresses is still too large
 
       Now, we have narrowed down the address enough to start editing its value :D, just click on the remaining address and it will be added to the `Address Table` tab, where you can start editing its value to your desired value
 
-      ![](./Apk/8.png)
+      <img src="./Apk/8.png" width="200">
 
       Switch to the `address table` tab, so we can start editing its value by clicking on the `value` cell
 
-      ![](./Apk/9.png)
+      <img src="./Apk/9.png" width="200">
 
       Put any value that you wanted and press `Okay`
 
-      ![](./Apk/10.png)
+      <img src="./Apk/10.png" width="200">
 
       Done :D
 
       > Make sure to change the rock's value by throwing it once again to update its UI
 
-      ![](./Apk/11.png)
+      <img src="./Apk/11.png" width="200">
 
 
 - ## CLI
@@ -292,10 +290,12 @@ The syntax of installing apk is:
    To do this, simply press `Connect to ACE Server`
 
    Click on `Connect to ACE server`
-   ![](./Apk/connect_to_ace_server_button.jpg)
+
+   <img src="./Apk/connect_to_ace_server_button.jpg" width="200">
 
    And put `56666` in the input field
-   ![](./Apk/connect_to_ace_server.jpg)
+
+   <img src="./Apk/connect_to_ace_server.jpg" width="200">
 
    After attached, all the functionality are the same as [above](#rooted)
 
