@@ -13,8 +13,13 @@ plugins {
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+test {
+    dependsOn cleanTest
+    testLogging.showStandardStreams = true
 }
 
 dependencies {
@@ -24,12 +29,18 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
 
+    // include jar file for now because Apktool-Kotlin can't include jar file for now
+    //
+    implementation files("./lib/apktool-cli-all_2.9.0.jar")
+    implementation files("./lib/uber-apk-signer-1.3.0.jar")
+
     //
     implementation 'net.lingala.zip4j:zip4j:2.11.3'
-    // auto signer
-    // https://stackoverflow.com/a/20956456/14073678
-    implementation files("./lib/uber-apk-signer-1.3.0.jar")
-    implementation files("./lib/apktool-cli-all_2.8.1.jar")
+    // patcher and signer
+    implementation 'com.github.KuhakuPixel.Apktool-Kotlin:lib:76c917977c'
+
+
+
     // libs for io operations
     // https://stackoverflow.com/a/23678498/14073678
     // installation:
