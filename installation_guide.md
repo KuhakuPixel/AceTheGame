@@ -19,17 +19,11 @@ To Use ATG, download this on your phone/device:
 	> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
 
 - ### Non-Rooted
-	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit for first using **Modder** to add functionality inside the apk.
-	> For how to install **Modder** you can go [here](#Modder)
+	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit first by using **Modder** to add hacking features inside the app.
+	> For how to install **Modder** you can go [here](#modder)
 
 ## Modder
 
-
-## Apk 
-### ATG
-- ### Rooted
-	For rooted devices, you just need to download the above `Prerequisites` and you can use it straight away without needing to patch the apk :D
-	> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
 
 - ### Non-Rooted
 	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit for first to add the `memory scanner and editor` feature inside the apk
