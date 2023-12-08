@@ -82,8 +82,33 @@ This tutorial is for game memory scanning and modification.
    
       
 ## BillingHack
-- You just need to download `BillingHack.apk` and patch the game/apk, and then you can immediately use it :D
-   > Visit [here](https://github.com/vlenv/AceTheGame/blob/master/installation_guide.md) to see how to patch the apk
+For both rooted & non-rooted device, you need to patch the apk first. However the steps are the same as [above](#non-rooted)
+
+1. ### Patch the Game (.apk)
+   1. Find the apk package name by listing all the installed apk on your phone/device
+		```
+		./modder list
+		```
+	1. Download it to your pc so we can start patching the apk
+		```
+		./modder download [APK_PACKAGE_NAME]
+		```
+	1. After download, you should have a folder called `[APK_PACKAGE_NAME]` inside your current directory
+	
+	1. Start patching the apk
+		```
+		./modder patch -i [APK_PACKAGE_NAME] 
+		```
+	1. After it finishes, it should create a folder with the package name ending with `.patched` which is the folder that contains the patched apk
+		> For example: `[APK_PACKAGE_NAME].patched`
+	
+  	1. Uninstall the previous/original apk on your phone/device
+      
+	1. Install the patched apk on your phone/device
+		```
+		modder install [APK_PACKAGE_NAME].patched
+		```
+	1. After installation you can start interacting using our billinghack tool
 
 ## CLI
    Open up adb shell and go to the program location
