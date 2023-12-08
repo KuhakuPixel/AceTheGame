@@ -7,11 +7,12 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 ## Quick Navigation
 
 - For installing **ATG**, start from [here](#atg)
-- For installing **BillingHack**, start from [here](#billinghack) **(Coming Soon)**
+- For installing **BillingHack**, start from [here](#billinghack)
 - For setting up **Modder**, start from [here](#modder)
-- For setting up **CLI Scanner**, start from [here](#cli)
+- For setting up **ACE**, start from [here](#ace)
 
 ## ATG
+
 To Use ATG, download this on your phone/device:
 - **ATG** for memory scanning and editing: `ATG.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
   
@@ -24,7 +25,11 @@ To Use ATG, download this on your phone/device:
 	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit first by using **Modder** to add hacking features inside the app.
 	> For how to install **Modder** you can go [here](#modder)
 
-## BillingHack (COMING SOON)
+## BillingHack
+
+
+The `BillingHack.apk` apk allows you to automatically verify purchases made through modified or unapproved APKs, enabling you to make in-app purchases for free.
+install `BillingHack.apk [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
 
 ## Modder
 
@@ -50,10 +55,12 @@ look [here](https://www.java.com/en/download/help/path.html)
 on how to do that
 
 
-## CLI
+## ACE
+cli for memory scanning and editing 
+Install `ACERelease.zip`
 ### Installing memory scanner and editor to device
 
-Inside the `release` folder, the structure should look like 
+Inside the `ACERelease` folder, the structure should look like 
 ```
 
 	├── android
@@ -82,9 +89,7 @@ Inside the `release` folder, the structure should look like
 	│   ├── include
 	│   ├── lib
 	│   └── share
-	└── modder
-		├── bin
-		└── lib
+	
 
 ```
 Open the terminal and go to the directory
