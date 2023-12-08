@@ -24,7 +24,7 @@ To Use ATG, download this on your phone/device:
 	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit first by using **Modder** to add hacking features inside the app.
 	> For how to install **Modder** you can go [here](#modder)
 
-## BillingHack
+## BillingHack (COMING SOON)
 
 ## Modder
 
