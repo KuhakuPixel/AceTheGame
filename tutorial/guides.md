@@ -21,11 +21,11 @@ If you haven't done any installation, you need to download and install the tools
 ## ATG 
 This tutorial is for game memory scanning and modification.
 - ### Rooted
-1. ### Select Running Process
+1. #### Select Running Process
       Open the ATG apk and choose the name of the desired game you want to run this exploit for
       > Note: If the desired game doesn't appear, make sure to click the refresh button `↻`
 
-2. ### Scanning For Value
+2. #### Scanning For Value
 
       1. Open the ATG and move to the `Memory` tab 
       
@@ -39,7 +39,7 @@ This tutorial is for game memory scanning and modification.
       7. Change the item value by increase/decrease the value to update its UI
 
 - ### Non-Rooted
-1. ### Patch the Game (.apk)
+1. #### Patch the Game (.apk)
    1. Find the apk package name by listing all the installed apk on your phone/device
 		```
 		./modder list
@@ -66,7 +66,7 @@ This tutorial is for game memory scanning and modification.
 	1. Put `56666` in the input field to attach the patched apk to the tool and press `Okay`
 	1. After attached, you can start the exploit
  
-3. ### Scanning For Value
+3. #### Scanning For Value
 
       1. Open the ATG and move to the `Memory` tab 
       
