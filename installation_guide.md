@@ -13,7 +13,7 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 ## ATG
 To Use ATG, download this on your phone/device:
-- **ATG** for memory scanning and editing: `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
+- **ATG** for memory scanning and editing: `ATG.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
   
 - Install **ATG** and run it to verify that it has been installed properly.
 - ### Rooted
