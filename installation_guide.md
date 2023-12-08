@@ -1,9 +1,9 @@
 ## Notes
 - Type command `-h` to list all available commands
 
-- For ATG, start from [here](#atg)
-- For BillingHack, start from [here](#billinghack)
-- For CLI, start from [here](#cli)
+- For **ATG**, start from [here](#atg)
+- For **BillingHack**, start from [here](#billinghack)
+- For **CLI**, start from [here](#cli)
 
 ## Video Tutorial
 - For [Apk](https://www.youtube.com/watch?v=UlGm1nFxRzA)
@@ -23,16 +23,15 @@ For [CLI]:
 
 ## Apk 
 ### ATG
-- ## Rooted
-	For rooted devices, you just need to download the above `Prerequisites` and you can use it straight away without needing to patch apk :D
+- ### Rooted
+	For rooted devices, you just need to download the above `Prerequisites` and you can use it straight away without needing to patch the apk :D
 	> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
 
-- ## Non-Rooted
+- ### Non-Rooted
 	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit for first to add the `memory scanner and editor` feature inside the apk
 
 	### Notes:
 	1. There are extra files you need to download `release.zip` to patch the apk which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
-		> Latest release: v0.1.2
 
 	1. Unzip the `release.zip` and in the `release` folder, navigate to folder `./modder/bin`
 		> Command: `cd ./modder/bin`
