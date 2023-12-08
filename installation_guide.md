@@ -28,6 +28,24 @@ To Use ATG, download this on your phone/device:
 
 ## Modder
 
+Modder is used for: 
+- Hacking In App Purchases 
+
+- Enabling memory scanninng/editing support for non 
+  rooter is used for: the memory scanning/editing
+
+
+Install `ModderRelease.zip` from [here](https://github.com/KuhakuPixel/AceTheGame/releases/tag/0.1.2)
+
+### Registering Modder as command
+this is done so you can use `modder` directly in your terminal
+
+unzip `ModderRelease.zip`, and get the full path to 
+`modder/bin/`
+
+Then register the path to your enviroment variable
+look [here](https://www.java.com/en/download/help/path.html) 
+on how to do that
 
 
 ## CLI
