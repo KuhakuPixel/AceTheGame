@@ -9,7 +9,6 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 - For installing **BillingHack**, start from [here](#billinghack)
 - For setting up **Modder**, start from [here](#modder)
 - For setting up**CLI Scanner**, start from [here](#cli)
-- For Video Tutorial, start from [here](#VideoTutorial)
 
 ## Prerequisite
 For [Apk], download this on your phone/device:
