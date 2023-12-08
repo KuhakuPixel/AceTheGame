@@ -35,7 +35,7 @@ Modder is used for:
   rooter is used for: the memory scanning/editing
 
 
-Install `ModderRelease.zip` from [here](https://github.com/KuhakuPixel/AceTheGame/releases/tag/0.1.2)
+Install `ModderRelease.zip` from [here](https://github.com/KuhakuPixel/AceTheGame/releases/)
 
 ### Registering Modder as command
 this is done so you can use `modder` directly in your terminal
@@ -44,6 +44,8 @@ unzip `ModderRelease.zip`, and get the full path to
 `modder/bin/`
 
 Then register the path to your enviroment variable
+for example `/home/kuhakupixel/Desktop/proj/AceTheGame/ModderRelease/modder/bin/`
+
 look [here](https://www.java.com/en/download/help/path.html) 
 on how to do that
 
