@@ -9,7 +9,7 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 - Tutorial for using **ATG**, start from [here](#atg)
 - Tutorial for using **BillingHack**, start from [here](#billinghack) 
-- Tutorial for using **Modder**, start from [here](#modder)
+- Tutorial for patching apk using **Modder**, start from [here](#modder)
 - Tutorial for using **CLI Scanner**, start from [here](#cli)
 
 ## Notes: 
@@ -21,24 +21,31 @@ Before you start, you need to download the tools first:
 - ATG for memory scanning and editing (GUI): `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 - BillingHack to bypass in-app purchase: `BillingHack.apk` which can be downloaded from [here](links)
 
-## Apk
-### ATG
-   1. ### Select Running Process
+### ATG 
+This tutorial is for game memory scanning and modification.
+- ### Rooted
+	1. ### Select Running Process
       Open the ATG apk and choose the name of the desired game you want to run this exploit for
       > Note: If the desired game doesn't appear, make sure to click the refresh button `↻`
 
-   1. ### Scanning For Value
+   2. ### Scanning For Value
 
       1. Open the ATG and move to the `Memory` tab 
       
-      1. Put the current value of the item (coin, diamond, etc) you want to change inside the `Scan For` input field and press `Next Scan` to retrieve all the addresses that has that value
+      2. Put the current value of the item (coin, diamond, etc) you want to change inside the `Scan For` input field and press `Next Scan` to retrieve all the addresses that has that value
 
-      1. If the number of matching addresses is too large, filter down the number of matching addresses by increasing/decreasing the item value and scan for that increased/decreased value
+      3. If the number of matching addresses is too large, filter down the number of matching addresses by increasing/decreasing the item value and scan for that increased/decreased value
          > Repeat the steps above as many times as possible if you think the number of matching addresses is still too large
-      1. Click on the remaining address and it will be added to the `Address Table` tab, where you can start editing its value to your desired value
-      1. Switch to the `address table` tab and click on the `value` cell to edit its value
-      1. Put any value that you wanted and press `Okay`
-      1. Change the item value by increase/decrease the value to update its UI
+      4. Click on the remaining address and it will be added to the `Address Table` tab, where you can start editing its value to your desired value
+      5. Switch to the `address table` tab and click on the `value` cell to edit its value
+      6. Put any value that you wanted and press `Okay`
+      7. Change the item value by increase/decrease the value to update its UI
+
+- ### Non-Rooted
+	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit first by using **Modder** to add hacking features inside the app.
+	> For how to install **Modder** you can go [here](#modder)
+
+   
       
 ### BillingHack
 - You just need to download `BillingHack.apk` and patch the game/apk, and then you can immediately use it :D
