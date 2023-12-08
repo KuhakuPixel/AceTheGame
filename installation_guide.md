@@ -1,8 +1,8 @@
 ## Notes
 - Type command `-h` to list all available commands
 
-- For Apk, start from [here](#apk)
-
+- For ATG, start from [here](#atg)
+- For BillingHack, start from [here](#billinghack)
 - For CLI, start from [here](#cli)
 
 ## Video Tutorial
@@ -14,17 +14,18 @@
 
 ## Prerequisite
 For [Apk], download this on your phone/device:
-- The tools (ATG) `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
-   > Latest release: v0.1.2
+- **ATG** for memory scanning and editing: `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
+- **BillingHack** for bypass in-app purchase which can be downloaded from [here](link)
 - The game/apk you wish run this exploit for
 
 For [CLI]:
 - adb program installed and can be run through the command prompt [adb download](https://developer.android.com/studio/command-line/adb)
 
-## Apk
+## Apk 
+### ATG
 - ## Rooted
 	For rooted devices, you just need to download the above `Prerequisites` and you can use it straight away without needing to patch apk :D
-	> Jump straight to [Quick Start](https://github.com/vlenv/AceTheGame/blob/master/tutorial/quick_start.md) for more information on how to use this tool
+	> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
 
 - ## Non-Rooted
 	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit for first to add the `memory scanner and editor` feature inside the apk
@@ -33,7 +34,7 @@ For [CLI]:
 	1. There are extra files you need to download `release.zip` to patch the apk which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 		> Latest release: v0.1.2
 
-	1. Unzip the `release.zip` and in the `release` folder, navigate to folder `./modder/bin` by using command prompt (Windows) or terminal (Linux)
+	1. Unzip the `release.zip` and in the `release` folder, navigate to folder `./modder/bin`
 		> Command: `cd ./modder/bin`
 
 		```
@@ -41,6 +42,9 @@ For [CLI]:
 
 		While for Linux and Mac, run `./modder` as the first command in your pc
 		```
+		**Notes**:
+		Copy the path to your `environment variables` for easier use
+		> For example: [path]\release\modder\bin
 
 	1. For this installation guide, i'm gonna run the first command as `./modder` since i use Linux :D
 		> Note: run `./modder --help` for more info about available commands
@@ -62,12 +66,12 @@ For [CLI]:
 		```
 		./modder download [APK_PACKAGE_NAME]
 		```
-	1. After download, you should have a folder called `[APK_PACKAGE_NAME]` inside folder `./modder/bin`
+	1. After download, you should have a folder called `[APK_PACKAGE_NAME]` inside your current directory
 	
 	### Attaching memory scanner
 	1. Start patching the apk
 		```
-		./modder patch [APK_PACKAGE_NAME] 
+		./modder patch -m [APK_PACKAGE_NAME] 
 		```
 	1. After it finishes, it should create a folder with the package name ending with `.patched` which is the folder that contains the patched apk
 		> For example: `[APK_PACKAGE_NAME].patched`
@@ -83,8 +87,16 @@ For [CLI]:
 	1. Open ATG on your phone/device and click on `Connect to ACE Server`
 	1. Put `56666` in the input field to attach the patched apk to the tool and press `Okay`
 	1. After attached, you can start the exploit
-		> Jump straight to [Quick Start](https://github.com/vlenv/AceTheGame/blob/master/tutorial/quick_start.md) for more information on how to use this tool
+		> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
 
+### BillingHack
+- For both rooted & non-rooted device, you need to patch the apk first. However the steps are the same as [above](#non-rooted)
+
+- The difference is when you [patch](#attaching-memory-scanner) the apk, you use `-i` instead of `-m`
+	```
+	./modder patch -i [APK_PACKAGE_NAME] 
+	```
+- After you finished installing the patched apk back to your phone/device, you are good to go :D
 
 ## CLI
 ### Installing memory scanner and editor to device

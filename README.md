@@ -3,7 +3,7 @@
 <ul>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/releases/latest">Download</a><br></li>
   <li><a href="https://github.com/vlenv/AceTheGame/blob/master/installation_guide.md">Installation Guide</a><br></li>
-  <li><a href="https://github.com/vlenv/AceTheGame/blob/master/tutorial/quick_start.md">Quick Start</a><br></li>
+  <li><a href="https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md">Tutorial [Apk & CLI]</a><br></li>
   <li><a href="https://github.com/vlenv/AceTheGame/blob/master/tutorial/full_doc.md">Full Guide</a><br></li>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/blob/master/showcase.md">Showcase</a><br></li>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/issues">Bug Report</a><br></li>

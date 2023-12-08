@@ -3,12 +3,14 @@
 for more in depth and real practice visit [here](https://github.com/KuhakuPixel/AceTheGame/tree/master/tutorial)
 
 ## Prerequisite
-- Before you start, you need to download the tools (ATG) first `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
-   > Latest release: v0.1.2
+Before you start, you need to download the tools first:
+- ATG for memory scanning and editing (GUI): `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
+- BillingHack to bypass in-app purchase: `BillingHack.apk` which can be downloaded from [here](links)
 
 ## Apk
+### ATG
    1. ### Select Running Process
-      Open the ATG apk and choose name of the desired game you want to run this exploit for
+      Open the ATG apk and choose the name of the desired game you want to run this exploit for
       > Note: If the desired game doesn't appear, make sure to click the refresh button `↻`
 
    1. ### Scanning For Value
@@ -23,6 +25,10 @@ for more in depth and real practice visit [here](https://github.com/KuhakuPixel/
       1. Switch to the `address table` tab and click on the `value` cell to edit its value
       1. Put any value that you wanted and press `Okay`
       1. Change the item value by increase/decrease the value to update its UI
+      
+### BillingHack
+- You just need to download `BillingHack.apk` and patch the game/apk, and then you can immediately use it :D
+   > Visit [here](https://github.com/vlenv/AceTheGame/blob/master/installation_guide.md) to see how to patch the apk
 
 ## CLI
    Open up adb shell and go to the program location
