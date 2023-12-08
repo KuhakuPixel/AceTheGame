@@ -16,7 +16,7 @@ for more in depth and real practice visit [here](https://github.com/KuhakuPixel/
 - Non rooted support (coming soon)
 
 ## Requirement
-- Before you start, you need to download the tools (ATG) first `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
+- Before you start, you need to download the tools (ATG) first `ATG.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 
 ## ATG
 
