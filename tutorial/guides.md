@@ -14,10 +14,10 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 ## Notes: 
 - This is only a brief tutorial,
-for more in depth and real practice visit [here](https://github.com/KuhakuPixel/AceTheGame/tree/master/tutorial)
+for more in depth and real practice visit [here](/tutorial)
 
 ## Prerequisite
-If you haven't done any installation, you need to download and install the tools first by visiting [here](https://github.com/KuhakuPixel/AceTheGame/blob/master/installation_guide.md)
+If you haven't done any installation, you need to download and install the tools first by visiting [here](/installation_guide.md)
 
 ## ATG 
 This tutorial is for game memory scanning and modification.
