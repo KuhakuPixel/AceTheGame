@@ -1,94 +1,30 @@
-# Notes: 
-
+## Notes: 
 - This is only a brief tutorial,
 for more in depth and real practice visit [here](https://github.com/KuhakuPixel/AceTheGame/tree/master/tutorial)
 
-- Type command `-h` to list all available commands
-
-- For rooted device, start from [here](#rooted)
-
-- For non-rooted device, start from [here](#non-rooted)
-
-# Video Tutorial
-- For [Apk](https://www.youtube.com/watch?v=UlGm1nFxRzA)
-
-- For [CLI only](https://www.youtube.com/watch?v=UlGm1nFxRzA)
-
-- Non rooted support (coming soon)
-
-# Requirement
+## Prerequisite
 - Before you start, you need to download the tools (ATG) first `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
    > Latest release: v0.1.2
 
-# Rooted
-
-- ## Apk
-   For this guide, we use `shattered pixel dungeon apk` which can be downloaded from [here](https://play.google.com/store/apps/details?id=com.shatteredpixel.shatteredpixeldungeon&hl=en&gl=US&pli=1) or simply search this game from Play Store
-
+## Apk
    1. ### Select Running Process
-      First, open the ATG apk and the game you want to run this exploit for
-      
-      Then click on the name of the desired game
-      > For example, in this case is `redpixeldungeon`
-
-      <img src="./Apk/process_select.png" width="200">
-
+      Open the ATG apk and choose name of the desired game you want to run this exploit for
       > Note: If the desired game doesn't appear, make sure to click the refresh button `↻`
 
    1. ### Scanning For Value
 
-      For this example, we will try to have infinite stones in this game
-
-      As you can see, the starting stones we have right now are 3
-
-      <img src="./Apk/2.png" width="200">
-
-      Open the ATG and move to the `Memory` tab 
+      1. Open the ATG and move to the `Memory` tab 
       
-      Put `3` inside the `Scan For` input field as we currently have 3 stones and then press `Next Scan` to retrieve all the addresses that has the value of 3
+      1. Put the current value of the item (coin, diamond, etc) you want to change inside the `Scan For` input field and press `Next Scan` to retrieve all the addresses that has that value
 
-      <img src="./Apk/3.png" width="200">
+      1. If the number of matching addresses is too large, filter down the number of matching addresses by increasing/decreasing the item value and scan for that increased/decreased value
+         > Repeat the steps above as many times as possible if you think the number of matching addresses is still too large
+      1. Click on the remaining address and it will be added to the `Address Table` tab, where you can start editing its value to your desired value
+      1. Switch to the `address table` tab and click on the `value` cell to edit its value
+      1. Put any value that you wanted and press `Okay`
+      1. Change the item value by increase/decrease the value to update its UI
 
-      As you can see, we have found `30840` addresses which have a value of 3
-
-      <img src="./Apk/4.png" width="200">
-
-      Because the number of matching addresses is too large, we need to filter down the number of matching addresses by increasing/decreasing the stone value and scan for that increased/decreased value
-
-      In this case, we are gonna throw away the rock to decrease its value to `2`
-
-      <img src="./Apk/5.png" width="200">
-
-      Repeat the step above by putting `2` (since we have reduced the stone value) inside the `Scan For` input field and press `Next Scan` to retrieve all the addresses that has the value of 2
-
-      <img src="./Apk/6.png" width="200">
-
-      As we can see, the number of matching addresses have reduced to 4
-
-      <img src="./Apk/7.png" width="200">
-
-      > Repeat the steps above as many times as possible if you think the number of matching addresses is still too large
-
-      Now, we have narrowed down the address enough to start editing its value :D, just click on the remaining address and it will be added to the `Address Table` tab, where you can start editing its value to your desired value
-
-      <img src="./Apk/8.png" width="200">
-
-      Switch to the `address table` tab, so we can start editing its value by clicking on the `value` cell
-
-      <img src="./Apk/9.png" width="200">
-
-      Put any value that you wanted and press `Okay`
-
-      <img src="./Apk/10.png" width="200">
-
-      Done :D
-
-      > Make sure to change the rock's value by throwing it once again to update its UI
-
-      <img src="./Apk/11.png" width="200">
-
-
-- ## CLI
+## CLI
    Open up adb shell and go to the program location
    ```
    adb shell
@@ -139,7 +75,6 @@ for more in depth and real practice visit [here](https://github.com/KuhakuPixel/
       Lets say we want to attach to `opensurge`
       ```
       (ACE) cheater 54795
-
       ```
       Now you should be attached
       ```
@@ -195,149 +130,7 @@ for more in depth and real practice visit [here](https://github.com/KuhakuPixel/
       and now you should have `999999` coin
 
 
-# Non-Rooted
 
-For this program to work on non-rooted device, you need to **patch the apk** you wish to hack first to add the `memory scanner and editor` feature inside the apk
-
-### Notes:
-
-1. Before you start, you need to download `release.zip` to patch the apk which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
-   > Latest release: v0.1.2
-
-1. Unzip the `release.zip` and in the `release` folder, navigate to folder `./modder/bin` by using command prompt (Windows) or terminal (Linux)
-   > Command: `cd ./modder/bin`
-
-   ```
-   For Windows, run `modder.bat` as the first command
-
-   While for Linux and Mac, run `./modder` as the first command in your pc
-   ```
-
-1. In this tutorial, i'm gonna run the first command as `./modder` since i use Linux :D
-   > Note: run `./modder --help` for more info about available commands
-
-## Preparation
-1. Activate developer mode and USB debugging on your phone/device
-1. Connect your phone/device to your pc/laptop
-   > Note: you can use command `adb devices` to see if your device is successfully connected to your pc/laptop
-
-   > Having troubles? You can see the **guide** from [here](https://www.guru99.com/adb-connect.html)
-1. In this turtorial, we will be using [this game](https://play.google.com/store/apps/details?id=online.limitless.appleknight.free&hl=en&gl=US) or you may use another game of your choice, but make sure to **install the game** on your phone/device
-
-## Downloading the apk
-
-In order to patch the apk, we need to know the apk package name, so we need to find the package name first. We can achieve this by listing all the installed apk
-```
-./modder list
-```
-
-Find the apk you want to hack, lets say in this case its called `appleknight`
-
-```
-...
-305 online.limitless.appleknight.free
-...
-```
-
-Download it to your pc so we can start patching the apk by using:
-
-```
-./modder download online.limitless.appleknight.free
-```
-
-After download, you should have a folder called
-`online.limitless.appleknight.free` inside folder `./modder/bin`
-
-## Attaching memory scanner
-
-Since we have downloaded the apk we want to patch to our pc, we can start patching the apk
-
-```
-./modder patch online.limitless.appleknight.free/ 
-```
-
-This might take a while since it has to recompile, attach memory scanner, recompile again, and resign the apk
-
-After it is done, it should create a folder with a name ending with `.patched`
-
-In this case, it created `online.limitless.appleknight.free.patched` which is the folder that contains the patched apk
-
-
-## Installing patched apk
-
-Since we have finished patching the apk, we need to install it back to our phone/device. But first we need to make sure that we have uninstalled the original apk on our phone/device
-
-The syntax of installing apk is:
-
-1. Uninstall the previous/original apk on your android device
-1. Go to the folder of the patched apk in your terminal `online.limitless.appleknight.free.patched`
-   ```
-   cd online.limitless.appleknight.free.patched
-   ```
-
-   and run 
-
-   ```
-   modder install online.limitless.appleknight.free.patched
-   ```
-   where `online.limitless.appleknight.free.patched` is the directory/folder of the patched apk
-
-## Scanning and Editing Memory 
-1. ### Start the apk
-
-   To attach an apk to the tool, you need to connect to the memory scanning/editing server inside the apk using its default port (56666)
-
-   To do this, simply press `Connect to ACE Server`
-
-   Click on `Connect to ACE server`
-
-   <img src="./Apk/connect_to_ace_server_button.jpg" width="200">
-
-   And put `56666` in the input field
-
-   <img src="./Apk/connect_to_ace_server.jpg" width="200">
-
-   After attached, all the functionality are the same as [above](#rooted)
-
-1. ### run 
-   ```
-   adb shell
-   ```
-
-   ```
-   cd /data/local/tmp
-   ```
-1. ### Run the attach_client  
- 
-   ```
-   ./attach_client
-   ```
-   Which should output:
-   ```
-   Connecting to ACE engine server...
-   (Engine Server)
-   ```
-
-   Try to run `attached` command to see
-   if it has been connected to the apk
-   that we try to hack.
-   ```
-   (Engine Server) attached
-   
-   attached_ok
-   ```
-1. Scanning and editing memory on this step is similliar to the step of rooted device, in fact all the commands is the same as the program for rooted device
-   
-   To scan for value 5
-
-   ```
-   (Engine Server) scan = 5
-   ```
-   To write value `1000` to all matches's addresses
-
-   ```
-   (Engine Server) write 1000 
-   ```
 
    You can also use this as a library in your apk/project
 
