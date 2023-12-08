@@ -28,8 +28,8 @@ To Use ATG, download this on your phone/device:
 ## BillingHack
 
 
-The `BillingHack.apk` apk allows you to automatically verify purchases made through modified or unapproved APKs, enabling you to make in-app purchases for free.
-install `BillingHack.apk [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
+The `BillingHack.apk` apk allows you to automatically verify purchases made through patched APKs, enabling you to make in-app purchases for free.
+install `BillingHack.apk` [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
 
 ## Modder
 
