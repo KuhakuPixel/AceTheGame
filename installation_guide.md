@@ -24,7 +24,7 @@ For [CLI]:
 ## Apk
 - ## Rooted
 	For rooted devices, you just need to download the above `Prerequisites` and you can use it straight away without needing to patch apk :D
-	> Jump straight to [Quick Start](https://github.com/KuhakuPixel/AceTheGame/blob/master/tutorial/quick_start.md) for more information on how to use this tool
+	> Jump straight to [Quick Start](https://github.com/vlenv/AceTheGame/blob/master/tutorial/quick_start.md) for more information on how to use this tool
 
 - ## Non-Rooted
 	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit for first to add the `memory scanner and editor` feature inside the apk
@@ -83,7 +83,7 @@ For [CLI]:
 	1. Open ATG on your phone/device and click on `Connect to ACE Server`
 	1. Put `56666` in the input field to attach the patched apk to the tool and press `Okay`
 	1. After attached, you can start the exploit
-		> Jump straight to [Quick Start](https://github.com/KuhakuPixel/AceTheGame/blob/master/tutorial/quick_start.md) for more information on how to use this tool
+		> Jump straight to [Quick Start](https://github.com/vlenv/AceTheGame/blob/master/tutorial/quick_start.md) for more information on how to use this tool
 
 
 ## CLI
