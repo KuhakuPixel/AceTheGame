@@ -21,14 +21,14 @@ Before you start, you need to download the tools first:
 - ATG for memory scanning and editing (GUI): `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 - BillingHack to bypass in-app purchase: `BillingHack.apk` which can be downloaded from [here](links)
 
-### ATG 
+## ATG 
 This tutorial is for game memory scanning and modification.
 - ### Rooted
-	1. ### Select Running Process
+1. ### Select Running Process
       Open the ATG apk and choose the name of the desired game you want to run this exploit for
       > Note: If the desired game doesn't appear, make sure to click the refresh button `↻`
 
-   2. ### Scanning For Value
+2. ### Scanning For Value
 
       1. Open the ATG and move to the `Memory` tab 
       
@@ -42,8 +42,46 @@ This tutorial is for game memory scanning and modification.
       7. Change the item value by increase/decrease the value to update its UI
 
 - ### Non-Rooted
-	For this program to work on non-rooted device, you need to **patch the apk** you wish to run this exploit first by using **Modder** to add hacking features inside the app.
-	> For how to install **Modder** you can go [here](#modder)
+1. ### Patch the Game (.apk)
+   1. Find the apk package name by listing all the installed apk on your phone/device
+		```
+		./modder list
+		```
+	1. Download it to your pc so we can start patching the apk
+		```
+		./modder download [APK_PACKAGE_NAME]
+		```
+	1. After download, you should have a folder called `[APK_PACKAGE_NAME]` inside your current directory
+	
+	1. Start patching the apk
+		```
+		./modder patch -m [APK_PACKAGE_NAME] 
+		```
+	1. After it finishes, it should create a folder with the package name ending with `.patched` which is the folder that contains the patched apk
+		> For example: `[APK_PACKAGE_NAME].patched`
+	
+  	1. Uninstall the previous/original apk on your phone/device
+	1. Install the patched apk on your phone/device
+		```
+		modder install [APK_PACKAGE_NAME].patched
+		```
+	1. Open ATG on your phone/device and click on `Connect to ACE Server`
+	1. Put `56666` in the input field to attach the patched apk to the tool and press `Okay`
+	1. After attached, you can start the exploit
+		> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
+ 
+3. ### Scanning For Value
+
+      1. Open the ATG and move to the `Memory` tab 
+      
+      2. Put the current value of the item (coin, diamond, etc) you want to change inside the `Scan For` input field and press `Next Scan` to retrieve all the addresses that has that value
+
+      3. If the number of matching addresses is too large, filter down the number of matching addresses by increasing/decreasing the item value and scan for that increased/decreased value
+         > Repeat the steps above as many times as possible if you think the number of matching addresses is still too large
+      4. Click on the remaining address and it will be added to the `Address Table` tab, where you can start editing its value to your desired value
+      5. Switch to the `address table` tab and click on the `value` cell to edit its value
+      6. Put any value that you wanted and press `Okay`
+      7. Change the item value by increase/decrease the value to update its UI
 
    
       
