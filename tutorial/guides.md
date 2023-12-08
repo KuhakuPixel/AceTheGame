@@ -17,9 +17,7 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 for more in depth and real practice visit [here](https://github.com/KuhakuPixel/AceTheGame/tree/master/tutorial)
 
 ## Prerequisite
-Before you start, you need to download the tools first:
-- ATG for memory scanning and editing (GUI): `app-release.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
-- BillingHack to bypass in-app purchase: `BillingHack.apk` which can be downloaded from [here](links)
+If you haven't done any installation, you need to download and install the tools first by visiting [here](https://github.com/KuhakuPixel/AceTheGame/blob/master/installation_guide.md)
 
 ## ATG 
 This tutorial is for game memory scanning and modification.
@@ -68,7 +66,6 @@ This tutorial is for game memory scanning and modification.
 	1. Open ATG on your phone/device and click on `Connect to ACE Server`
 	1. Put `56666` in the input field to attach the patched apk to the tool and press `Okay`
 	1. After attached, you can start the exploit
-		> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
  
 3. ### Scanning For Value
 
