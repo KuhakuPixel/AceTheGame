@@ -9,7 +9,6 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 - Tutorial for using **ATG**, start from [here](#atg)
 - Tutorial for using **BillingHack**, start from [here](#billinghack) 
-- Tutorial for patching apk using **Modder**, start from [here](#modder)
 - Tutorial for using **CLI Scanner**, start from [here](#cli)
 
 ## Notes: 
@@ -82,7 +81,7 @@ This tutorial is for game memory scanning and modification.
 
    
       
-### BillingHack
+## BillingHack
 - You just need to download `BillingHack.apk` and patch the game/apk, and then you can immediately use it :D
    > Visit [here](https://github.com/vlenv/AceTheGame/blob/master/installation_guide.md) to see how to patch the apk
 
