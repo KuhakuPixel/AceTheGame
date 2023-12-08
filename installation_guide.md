@@ -1,16 +1,15 @@
-## Notes
-- Type command `-h` to list all available commands
+# **Installation Guide**
+Where all guide about installation and setup resides
 
-- For **ATG**, start from [here](#atg)
-- For **BillingHack**, start from [here](#billinghack)
-- For **CLI**, start from [here](#cli)
+You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 
-## Video Tutorial
-- For [Apk](https://www.youtube.com/watch?v=UlGm1nFxRzA)
+## Quick Navigation
 
-- For [CLI only](https://www.youtube.com/watch?v=UlGm1nFxRzA)
-
-- Non rooted support (coming soon)
+- For installing **ATG**, start from [here](#atg)
+- For installing **BillingHack**, start from [here](#billinghack)
+- For setting up **Modder**, start from [here](#modder)
+- For setting up**CLI Scanner**, start from [here](#cli)
+- For Video Tutorial, start from [here](#VideoTutorial)
 
 ## Prerequisite
 For [Apk], download this on your phone/device:
@@ -161,3 +160,11 @@ this binary will be used to scan and edit memory of the apk
 #### Optional:
 For alternative install directory that is available in android
 look [here](https://android.stackexchange.com/questions/45554/running-own-executable-on-android-shell)
+
+
+## Video Tutorial
+- For [Apk](https://www.youtube.com/watch?v=UlGm1nFxRzA)
+
+- For [CLI only](https://www.youtube.com/watch?v=UlGm1nFxRzA)
+
+- Non rooted support (coming soon)
