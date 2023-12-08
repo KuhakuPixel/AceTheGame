@@ -102,7 +102,7 @@ internal class TestPatcher {
     fun GetSmaliClassesCount() {
 
         val patcher = Patcher(testApkPathStr, decodeResource = false)
-        Assertions.assertEquals(4, patcher.GetSmaliClassesCount())
+        Assertions.assertEquals(4, patcher.apktool.GetSmaliClassesCount())
 
     }
 
@@ -111,7 +111,7 @@ internal class TestPatcher {
     @Throws(IOException::class)
     fun CreateNativeLibDir() {
         val patcher = Patcher(testApkPathStr, decodeResource = false)
-        val decompiledDirStr = patcher.GetDecompiledApkDirStr()
+        val decompiledDirStr = patcher.apktool.decompilationFolder.toString()
         val nativeLibDir = File(decompiledDirStr, Patcher.NATIVE_LIB_DIR_NAME)
         Assertions.assertEquals(false, nativeLibDir.exists())
         patcher.CreateNativeLibDir()
@@ -147,8 +147,7 @@ internal class TestPatcher {
     @Throws(IOException::class)
     fun AddFileToNativeLibDir() {
         val patcher = Patcher(testApkPathStr, decodeResource = false)
-        val decompiledDirStr = patcher.GetDecompiledApkDirStr()
-        val nativeLibDir = File(decompiledDirStr, Patcher.NATIVE_LIB_DIR_NAME)
+        val nativeLibDir = File(patcher.apktool.decompilationFolder, Patcher.NATIVE_LIB_DIR_NAME)
         Assertions.assertEquals(false, nativeLibDir.exists())
         patcher.AddFileToNativeLibDir(testLibFile)
         Assertions.assertEquals(true, nativeLibDir.exists())
@@ -180,11 +179,11 @@ internal class TestPatcher {
         run {
             val patcher = Patcher(testApkPathStr, decodeResource = true)
             // initially contains extractNativeLib options
-            var manifestContent = Files.readString(patcher.GetManifestFile().toPath())
+            var manifestContent = Files.readString(patcher.apktool.manifestFile.toPath())
             Assertions.assertEquals(true, manifestContent.contains("android:extractNativeLibs=\"false\""))
             patcher.RemoveExtractNativeLibOptions()
             // test
-            manifestContent = Files.readString(patcher.GetManifestFile().toPath())
+            manifestContent = Files.readString(patcher.apktool.manifestFile.toPath())
             Assertions.assertFalse(manifestContent.contains("android:extractNativeLibs=\"false\""))
             Assertions.assertTrue(manifestContent.length > 0)
         }
@@ -243,9 +242,9 @@ internal class TestPatcher {
     @Test
     @Throws(IOException::class)
     fun AddMemScannerSmaliCode() {
-        val patcher = Patcher(testApkPathStr, decodeResource = false, cleanDecompilationOnExit = false)
+        val patcher = Patcher(testApkPathStr, decodeResource = false)
         // new smali code should be at newly created smali classes
-        val memScannerSmaliCodeDir = Path(patcher.decompiledApkDirStr, "smali_classes5", "com", Patcher.MEM_SCANNER_SMALI_DIR_NAME).toFile()
+        val memScannerSmaliCodeDir = Path(patcher.apktool.decompilationFolder.toString(), "smali_classes5", "com", Patcher.MEM_SCANNER_SMALI_DIR_NAME).toFile()
         Assertions.assertEquals(false, memScannerSmaliCodeDir.exists())
         patcher.AddMemScannerSmaliCode()
         Assertions.assertEquals(true, memScannerSmaliCodeDir.exists())

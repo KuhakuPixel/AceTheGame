@@ -24,10 +24,10 @@ if __name__ == "__main__":
     mkdir_overwrite(RELEASE_DIR)
 
     ACE_release.make_release(
-        release_dir=RELEASE_DIR,
+        release_dir="ACERelease",
         android_toolchain_file=android_toolchain_file,
     )
 
     Modder_release.make_release(
-        release_dir=RELEASE_DIR,
+        release_dir="ModderRelease",
     )

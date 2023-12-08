@@ -38,12 +38,4 @@ class TempManager {
         }
 
     }
-
-    enum class TaskOnExit {
-        // no cleanup for temp folder
-        none,
-
-        // clean up temp folder created on exit
-        clean
-    }
 }

@@ -1,5 +1,6 @@
 package modder
 
+import apktool.kotlin.lib.ApkSigner
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import picocli.CommandLine
@@ -21,6 +22,7 @@ class ModderMainCmd {
 
     @CommandLine.Command(name = "listApk", description = ["List installed apks"])
     fun ListApk() {
+
         val adb = Adb()
         val out = adb.ListApk()
         if (out.error != Adb.Error.ok) {
@@ -58,38 +60,6 @@ class ModderMainCmd {
         println(output.joinToString(separator = "\n"))
     }
 
-    /*
-     *
-     * for decompilation and recompilation output directory
-     * we have to pass the path to a File object first
-     * and then use toString, to make sure the path doesn't contain '/'
-     *
-     * if the output Folder from user contains '/'
-     * then the output will not be put in the same directory as
-     * apk folder or decompiled apk folder because
-     *
-     * ussualy an output for decompilation and recompilation are
-     * "[apkDir]+ApkMod.DECOMPILED_DIR_EXT" or
-     * "[decompiledApkDir]+ApkMod.RECOMPILED_DIR_EXT"
-     * so the output will be put inside [apkDir] or [decompiledApkDir]
-     * as .decompiled or .recompiled
-     *
-     */
-    @CommandLine.Command(name = "decompile", description = ["Decompile an apk"])
-    fun Decompile(
-            @CommandLine.Parameters(paramLabel = "ApkFilePath", description = ["Path to apk file or a directory containing apks"]) apkPathStr: String
-    ) {
-        val apkDir = File(apkPathStr)
-        ApkMod.Decompile(apkPathStr, apkDir.toString() + ApkMod.DECOMPILED_DIR_EXT)
-    }
-
-    @CommandLine.Command(name = "recompile", description = ["recompile apks"])
-    fun Recompile(
-            @CommandLine.Parameters(paramLabel = "decompiledFolder", description = ["Folder to decompiled apks"]) decompiledFolderStr: String
-    ) {
-        val decompiledApkDir = File(decompiledFolderStr)
-        ApkMod.Recompile(decompiledFolderStr, decompiledApkDir.toString() + ApkMod.RECOMPILED_DIR_EXT)
-    }
 
     @CommandLine.Command(name = "Patch", description = ["recompile apks"])
 
@@ -97,8 +67,13 @@ class ModderMainCmd {
             @CommandLine.Parameters(paramLabel = "ApkFolderPath", description = ["Path to directory containing apks"])
             apkDirStr: String,
 
-            @CommandLine.Parameters(paramLabel = "cleanDecompiledOnExit",description = ["clean decompiled apk folder when program exits, default:\${DEFAULT-VALUE} "], defaultValue = "true")
-            cleanDecompiledOnExit: Boolean
+            @CommandLine.Option(names = ["-m", "--mem-editor"], description = ["enable memory scanning or editing for non rooted"])
+            addMemEditor: Boolean = false,
+            @CommandLine.Option(names = ["-i", "--in-app-purchase"], description = ["unlock in app purchase"])
+            addInAppPurchaseHack: Boolean = false,
+
+            @CommandLine.Option(names = ["-c", "--keep-decompilation-folder"], description = ["don't clean decompilation folder (useful for debugging)"])
+            keepDecompilationFolder: Boolean
     ) {
 
         // check if the directory exist
@@ -124,18 +99,25 @@ class ModderMainCmd {
         val patcher = Patcher(
                 baseApkFile.absolutePath,
                 // need to decode resource to modify AndroidManifest.xml
-                // when extractNativeLibsOption == false
+                // when extractNativeLibsOption == false or when we are patching for in app purchase hack, because
+                // we need to add permission android.permission.QUERY_ALL_PACKAGES
                 // otherwise don't decode to make compilation recompilation faster
-                decodeResource = (extractNativeLibsOption == false),
-                cleanDecompilationOnExit = cleanDecompiledOnExit,
+                decodeResource = (extractNativeLibsOption == false) || addInAppPurchaseHack,
+                cleanDecompilationOnExit = !keepDecompilationFolder,
         )
-        if (extractNativeLibsOption == false) {
-            println("extractNativeLibsOptions is set to false, attempting to remove them")
-            patcher.RemoveExtractNativeLibOptions()
-            println("extractNativeLibsOptions removed")
+
+        if (addMemEditor) {
+            if (extractNativeLibsOption == false) {
+                println("extractNativeLibsOptions is set to false, attempting to remove them")
+                patcher.RemoveExtractNativeLibOptions()
+                println("extractNativeLibsOptions removed")
+            }
+            // add mem scanner
+            patcher.AddMemScanner()
         }
-        // add mem scanner
-        patcher.AddMemScanner()
+        if (addInAppPurchaseHack) {
+            patcher.AddSupportForFreeInAppPurchases()
+        }
         // ================== export ===================
         // String patchedApkPath = baseApkFile.getAbsolutePath() + "-patched.apk";
         val patchedApkPath = baseApkFile.absolutePath
@@ -144,7 +126,7 @@ class ModderMainCmd {
         // ============ sign all the apk in the directory ==========
         val files = patchedApkDir.listFiles()
         for (f in files) {
-            if (f.isFile) ApkSigner.Sign(f)
+            if (f.isFile) ApkSigner.sign(f)
         }
         System.out.printf("exported apk to %s\n", patchedApkPath)
     }
@@ -225,7 +207,7 @@ class ModderMainCmd {
             if (FilenameUtils.getExtension(apkFile.absolutePath) == "apk") {
                 println("Signing " + apkFile.absolutePath)
                 Assert.AssertExistAndIsFile(apkFile)
-                ApkSigner.Sign(apkFile)
+                ApkSigner.sign(apkFile)
             }
         }
     }

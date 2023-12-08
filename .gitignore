@@ -13,3 +13,9 @@ __pycache__/
 # 
 build/
 release/
+*.apk
+*.zip
+ACERelease/
+ModderRelease/
+
+

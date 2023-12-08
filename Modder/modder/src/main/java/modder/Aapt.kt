@@ -3,11 +3,11 @@
  * */
 package modder
 
-import brut.util.AaptManager
 import org.apache.commons.lang3.StringUtils
 import java.io.File
 import java.util.*
 
+import apktool.kotlin.lib.AaptManager
 class Aapt {
     companion object {
         fun RunCmd(args: List<String>): List<String> {
