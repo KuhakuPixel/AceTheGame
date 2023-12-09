@@ -26,7 +26,6 @@
 - Memory value Freezing
 - Easy To Use GUI
 
-**Disclaimer!!!**: this program is still in **BETA** phase
 
 For further discussion, suggestion, and question
 feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
