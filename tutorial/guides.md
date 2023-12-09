@@ -45,17 +45,17 @@ This tutorial is for game memory scanning and modification.
    
    1. Find the apk package name by listing all the installed apk on your phone/device
 		```
-		./modder list
+		modder list
 		```
 	1. Download it to your pc so we can start patching the apk
 		```
-		./modder download [APK_PACKAGE_NAME]
+		modder download [APK_PACKAGE_NAME]
 		```
 	1. After download, you should have a folder called `[APK_PACKAGE_NAME]` inside your current directory
 	
 	1. Start patching the apk
 		```
-		./modder patch -m [APK_PACKAGE_NAME] 
+		modder patch -m [APK_PACKAGE_NAME] 
 		```
 	1. After it finishes, it should create a folder with the package name ending with `.patched` which is the folder that contains the patched apk
 		> For example: `[APK_PACKAGE_NAME].patched`
@@ -92,17 +92,17 @@ For both rooted & non-rooted device, you need to patch the apk first. However th
 1. ### Patch the Game (.apk)
    1. Find the apk package name by listing all the installed apk on your phone/device
 		```
-		./modder list
+		modder list
 		```
 	1. Download it to your pc so we can start patching the apk
 		```
-		./modder download [APK_PACKAGE_NAME]
+		modder download [APK_PACKAGE_NAME]
 		```
 	1. After download, you should have a folder called `[APK_PACKAGE_NAME]` inside your current directory
 	
 	1. Start patching the apk
 		```
-		./modder patch -i [APK_PACKAGE_NAME] 
+		modder patch -i [APK_PACKAGE_NAME] 
 		```
 	1. After it finishes, it should create a folder with the package name ending with `.patched` which is the folder that contains the patched apk
 		> For example: `[APK_PACKAGE_NAME].patched`
