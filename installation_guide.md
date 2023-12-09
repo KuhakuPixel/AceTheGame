@@ -6,17 +6,15 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 ## Quick Navigation
 
-- For installing **ATG**, start from [here](#atg)
+- For installing **Memory Scanner/Editor**, start from [here](<Memory Scanner/Editor>)
 - For installing **BillingHack**, start from [here](#billinghack)
 - For setting up **Modder**, start from [here](#modder)
 - For setting up **ACE**, start from [here](#ace)
 
-## ATG
+## Memory Scanner/Editor
 
-To Use ATG, download this on your phone/device:
-- **ATG** for memory scanning and editing: `ATG.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
+install `ATG.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
   
-- Install **ATG** and run it to verify that it has been installed properly.
 - ### Rooted
 	For rooted devices, you just need to download the above `Prerequisites` and you can use it straight away without needing to patch the game/application :D
 	> Jump straight to [Tutorial](https://github.com/vlenv/AceTheGame/blob/master/tutorial/guides.md) for more information on how to use this tool
