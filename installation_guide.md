@@ -6,12 +6,12 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 ## Quick Navigation
 
-- For installing **Memory Scanner/Editor**, start from [here](<Memory Scanner/Editor>)
+- For installing **Memory Scanner and Editor**, start from [here](#memory-scanner-and-editor)
 - For installing **BillingHack**, start from [here](#billinghack)
 - For setting up **Modder**, start from [here](#modder)
 - For setting up **ACE**, start from [here](#ace)
 
-## Memory Scanner/Editor
+## Memory Scanner and Editor
 
 install `ATG.apk` which can be downloaded from [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
   
