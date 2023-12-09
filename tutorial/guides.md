@@ -40,7 +40,9 @@ This tutorial is for game memory scanning and modification.
       7. Change the item value by increase/decrease the value to update its UI
 
 - ### Non-Rooted
+   [Video Tutorial](https://www.youtube.com/watch?v=jgueaHNaRSY)
 1. #### Patch the Game (.apk)
+   
    1. Find the apk package name by listing all the installed apk on your phone/device
 		```
 		./modder list
@@ -83,6 +85,8 @@ This tutorial is for game memory scanning and modification.
    
       
 ## BillingHack
+[Billing Hack Video Tutorial](https://drive.google.com/file/d/1RnVl0muxw89jicekBbJ5EgT6pGM8UwE2/view)
+
 For both rooted & non-rooted device, you need to patch the apk first. However the steps are the same as [above](#non-rooted)
 
 1. ### Patch the Game (.apk)
