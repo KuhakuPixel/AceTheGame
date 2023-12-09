@@ -116,7 +116,9 @@ For both rooted & non-rooted device, you need to patch the apk first. However th
 	1. After installation you can start interacting using our billinghack tool
 
 ## ACE
-   Open up adb shell and go to the program location
+   [Video Tutorial](https://www.youtube.com/watch?v=UlGm1nFxRzA)
+   
+   Open up adb shell and go thttps://www.youtube.com/watch?v=UlGm1nFxRzA&t=337so the program location
    ```
    adb shell
    cd /data/local/tmp
