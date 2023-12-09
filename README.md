@@ -3,8 +3,7 @@
 <ul>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/releases/latest">Download</a><br></li>
   <li><a href="./installation_guide.md">Installation Guide</a><br></li>
-  <li><a href="./tutorial/guides.md">Tutorial [Apk & CLI]</a><br></li>
-  <li><a href="./tutorial/full_doc.md">Full Guide</a><br></li>
+  <li><a href="./tutorial/guides.md">Tutorial </a><br></li>
   <li><a href="/showcase.md">Showcase</a><br></li>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/issues">Bug Report</a><br></li>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/issues/60">Roadmap</a><br></li>
