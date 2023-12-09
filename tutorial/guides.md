@@ -7,10 +7,9 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 ## Quick Navigation
 
-- Tutorial for using **Memory Scanner and Editor**, start from [here](#memory-scanner-and-editor)
-- Tutorial for using **BillingHack**, start from [here](#billinghack) 
-- Tutorial for using **CLI Scanner**, start from [here](#cli)
-
+- [Using Memory Scanner and Editor](#memory-scanner-and-editor)
+- [Using BillingHack](#billinghack)
+- [Using Memory Scanner and Editor (CLI)](#ace)
 ## Notes: 
 - This is only a brief tutorial,
 for more in depth and real practice visit [here](/tutorial)
@@ -111,7 +110,7 @@ For both rooted & non-rooted device, you need to patch the apk first. However th
 		```
 	1. After installation you can start interacting using our billinghack tool
 
-## CLI
+## ACE
    Open up adb shell and go to the program location
    ```
    adb shell
