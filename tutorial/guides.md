@@ -1,13 +1,13 @@
 # **Tutorial**
 <img width="200" height="200" src="/assets/icon.png" align="right">
 
-Tutorial of ATG, BillingHack, Modder 
+Tutorial of Memory Scanner/Editor, BillingHack, Modder 
 
 You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 
 ## Quick Navigation
 
-- Tutorial for using **ATG**, start from [here](#atg)
+- Tutorial for using **Memory Scanner and Editor**, start from [here](#memory-scanner-and-editor)
 - Tutorial for using **BillingHack**, start from [here](#billinghack) 
 - Tutorial for using **CLI Scanner**, start from [here](#cli)
 
@@ -18,8 +18,9 @@ for more in depth and real practice visit [here](/tutorial)
 ## Prerequisite
 If you haven't done any installation, you need to download and install the tools first by visiting [here](/installation_guide.md)
 
-## ATG 
+## Memory Scanner and Editor
 This tutorial is for game memory scanning and modification.
+
 - ### Rooted
 1. #### Select Running Process
       Open the ATG apk and choose the name of the desired game you want to run this exploit for
