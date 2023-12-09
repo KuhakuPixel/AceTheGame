@@ -6,10 +6,10 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 
 ## Quick Navigation
 
-- For installing **Memory Scanner and Editor**, start from [here](#memory-scanner-and-editor)
-- For installing **BillingHack**, start from [here](#billinghack)
-- For setting up **Modder**, start from [here](#modder)
-- For setting up **ACE**, start from [here](#ace)
+- [Install Memory Scanner and Editor](#memory-scanner-and-editor)
+- [Install BillingHack](#billinghack)
+- [Setup Modder](#modder)
+- [Setup Memory Scanner and Editor (CLI)](#ace)
 
 ## Memory Scanner and Editor
 
