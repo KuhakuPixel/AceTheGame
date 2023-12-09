@@ -37,7 +37,7 @@ Modder is used for:
 - Hacking In App Purchases 
 
 - Enabling memory scanninng/editing support for non 
-  rooter is used for: the memory scanning/editing
+  rooted device
 
 
 Install `ModderRelease.zip` from [here](https://github.com/KuhakuPixel/AceTheGame/releases/)
