@@ -33,6 +33,6 @@ For further discussion, suggestion, and question
 feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 | Memory Scanning/Editing    | In App Purchase Hack |
 | -------------------------- | -------------------- |
-|![](/assets/showcase/3.gif) |                      |
-|![](/assets/showcase/2.gif) |                      |
+|![](/assets/showcase/3.gif) | ![](/assets/showcase/tb1.gif) |
+|![](/assets/showcase/2.gif) | ![](/assets/showcase/tb1.gif) |
 
