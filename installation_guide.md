@@ -30,6 +30,8 @@ The `BillingHack.apk` apk allows you to automatically verify purchases made thro
 install `BillingHack.apk` [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest).
 
 ## Modder
+[Setup Modder video tutorial](https://www.youtube.com/watch?v=-azT0DM2fuc)
+
 
 Modder is used for: 
 - Hacking In App Purchases 
