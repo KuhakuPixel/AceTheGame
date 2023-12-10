@@ -22,7 +22,7 @@
 
 - Memory scanner and editor for Android and Linux platform
   
-  An intuitive Android tool featuring a user-friendly graphical interface. This feature  enables users to effortlessly manipulate various in-app memories like coins, items, and health. Additionally, it provides advanced capabilities for crafting hacks such as fly (by freezing y value) or teleportation.
+  This feature  enables users to effortlessly manipulate various in-app memories like coins, items, and health through graphical interface. Additionally, it provides advanced capabilities for crafting hacks such as fly (by freezing y value) or teleportation.
   
 - Non rooted support for android application (patching)
   
