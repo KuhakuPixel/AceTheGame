@@ -10,9 +10,7 @@ You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTh
 - [Using Memory Scanner and Editor](#memory-scanner-and-editor)
 - [Using BillingHack](#billinghack)
 - [Using Memory Scanner and Editor (CLI)](#ace)
-## Notes: 
-- This is only a brief tutorial,
-for more in depth and real practice visit [here](/tutorial)
+
 
 ## Prerequisite
 If you haven't done any installation, you need to download and install the tools first by visiting [here](/installation_guide.md)
@@ -85,7 +83,7 @@ This tutorial is for game memory scanning and modification.
    
       
 ## BillingHack
-[Billing Hack Video Tutorial](https://drive.google.com/file/d/1RnVl0muxw89jicekBbJ5EgT6pGM8UwE2/view)
+[Billing Hack Video Tutorial](https://www.youtube.com/watch?v=TFKISBKJVyk)
 
 For both rooted & non-rooted device, you need to patch the apk first. However the steps are the same as [above](#non-rooted)
 
@@ -118,7 +116,11 @@ For both rooted & non-rooted device, you need to patch the apk first. However th
 ## ACE
    [Video Tutorial](https://www.youtube.com/watch?v=UlGm1nFxRzA)
    
-   Open up adb shell and go thttps://www.youtube.com/watch?v=UlGm1nFxRzA&t=337so the program location
+   [more detailed tutorial](/tutorial)
+
+   Open up adb shell and go to the program location
+
+
    ```
    adb shell
    cd /data/local/tmp
