@@ -19,6 +19,12 @@ If you haven't done any installation, you need to download and install the tools
 This tutorial is for game memory scanning and modification.
 
 [Apk Usage Video tutorial](https://www.youtube.com/watch?v=3TJ7i5eoTmU)
+
+> If initial scan is slow try to change the Region Level from `all_read_write` to `heap_stack_executable_bss` in memory tab
+> using that option, it will only scan regions that it thinks important, so it should be faster
+
+> note that this is still experimental option and might not work on some devices
+
 - ### Rooted
 1. #### Select Running Process
       Open the ATG apk and choose the name of the desired game you want to run this exploit for
