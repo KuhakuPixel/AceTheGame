@@ -25,9 +25,9 @@
   
   This feature  enables users to effortlessly manipulate various in-app memories like coins, items, and health through graphical interface. Additionally, it provides advanced capabilities for crafting hacks such as fly (by freezing y value) or teleportation.
   
-- Non rooted support for android application (patching)
+- Non rooted support for android application
   
-  This work by installing the memory scanning/editing library into the apk itself, Then start a function which start a service to scan/edit its own memories Hence no root is needed
+  This support utilizes an ingenious method to bypass root requirements. By patching the apk, it integrates a memory scanning/editing library directly into the app itself. Subsequently, a function triggers a service that scans and modifies application's own memory, eliminating the need for root access.
 
 - Bypassing In-App Purchases (**BETA** version)
   
