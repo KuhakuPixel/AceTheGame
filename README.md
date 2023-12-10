@@ -31,9 +31,7 @@
 - Bypassing In-App Purchases (**BETA** version)
   
   bypassing in-app purchases by patching the APK, rerouting purchase requests to our dedicated APK (Billing-Hack), thereby granting users access to premium features without financial constraints.
-  
-- Memory value Freezing
-- Easy To Use GUI
+
 
 
 For further discussion, suggestion, and question
