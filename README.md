@@ -21,8 +21,17 @@
 **Features Include:**
 
 - Memory scanner and editor for Android and Linux platform
+  
+  An intuitive Android tool featuring a user-friendly graphical interface. This feature  enables users to effortlessly manipulate various in-app memories like coins, items, and health. Additionally, it provides advanced capabilities for crafting hacks such as fly (by freezing y value) or teleportation.
+  
 - Non rooted support for android application (patching)
+  
+  This work by installing the memory scanning/editing library into the apk itself, Then start a function which start a service to scan/edit its own memories Hence no root is needed
+
 - Bypassing In-App Purchases (**BETA** version)
+  
+  bypassing in-app purchases by patching the APK, rerouting purchase requests to our dedicated APK (Billing-Hack), thereby granting users access to premium features without financial constraints.
+  
 - Memory value Freezing
 - Easy To Use GUI
 
