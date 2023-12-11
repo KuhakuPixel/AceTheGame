@@ -7,7 +7,7 @@
   <li><a href="/showcase.md">Showcase</a><br></li>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/issues">Bug Report</a><br></li>
   <li><a href="https://github.com/KuhakuPixel/AceTheGame/issues/60">Roadmap</a><br></li>
-  <li><a href="./contributing.md">Contributing</a></li>
+  <li><a href="./contributing.md">Build and Contributing</a></li>
 </ul>
 
 <br>
