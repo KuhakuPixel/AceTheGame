@@ -27,7 +27,7 @@
   
 - Non rooted support for android application
   
-  This support utilizes an ingenious method to bypass root requirements. By patching the apk, it integrates a memory scanning/editing library directly into the app itself. Subsequently, a function triggers a service that scans and modifies application's own memory, eliminating the need for root access.
+  This support utilizes an ingenious method to bypass root requirements. By patching 5the apk, it integrates a memory scanning/editing library directly into the app itself. Subsequently, a function triggers a service that scans and modifies application's own memory, eliminating the need for root access.
 
 - Bypassing In-App Purchases (**BETA** version)
   
@@ -39,6 +39,6 @@ For further discussion, suggestion, and question
 feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 | Memory Scanning/Editing    | In App Purchase Hack                             |
 | -------------------------- | ------------------------------------------------ |
-|![](/assets/showcase/3.gif) | <img src="/assets/showcase/tb1.gif" width="200"> |
-|![](/assets/showcase/2.gif) | <img src="/assets/showcase/tb2.gif" width="200"> |
+|<img src="/assets/showcase/3.gif" width="550"> | <img src="/assets/showcase/tb1.gif" width="200"> |
+|<img src="/assets/showcase/2.gif" width="550">| <img src="/assets/showcase/tb2.gif" width="200"> |
 
