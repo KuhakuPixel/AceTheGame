@@ -27,7 +27,7 @@
   
 - Non rooted support for android application
   
-  This support utilizes an ingenious method to bypass root requirements. By patching 5the apk, it integrates a memory scanning/editing library directly into the app itself. Subsequently, a function triggers a service that scans and modifies application's own memory, eliminating the need for root access.
+  This support utilizes an ingenious method to bypass root requirements. By patching the apk, it integrates a memory scanning/editing library directly into the app itself. Subsequently, a function triggers a service that scans and modifies application's own memory, eliminating the need for root access.
 
 - Bypassing In-App Purchases (**BETA** version)
   
