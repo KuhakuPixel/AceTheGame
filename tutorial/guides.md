@@ -3,7 +3,7 @@
 
 Tutorial of Memory Scanner/Editor, BillingHack, Modder 
 
-You can download all versions of ATG [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
+download all of the programs [here](https://github.com/KuhakuPixel/AceTheGame/releases/latest)
 
 ## Quick Navigation
 
