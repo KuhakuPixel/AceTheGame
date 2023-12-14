@@ -188,7 +188,7 @@ class ModderMainCmd {
      * Download apk from device specified by [package_name]
      * and put it in a folder with the same name as [package_name]
      */
-    @CommandLine.Command(name = "install", description = ["install all apk in a folder"])
+    @CommandLine.Command(name = "push", description = ["install all apk in a folder"])
 
     fun Install(
             @CommandLine.Parameters(paramLabel = "apkDir", description = ["Directory that contains apk"]) apkDirStr: String
