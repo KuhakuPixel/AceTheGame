@@ -14,5 +14,5 @@ dependencyResolutionManagement {
 
     }
 }
-rootProject.name = "atg"
+rootProject.name = "ATG"
 include ':app'
