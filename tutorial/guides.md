@@ -117,7 +117,7 @@ For both rooted & non-rooted device, you need to patch the apk first. However th
 		```
 		modder install [APK_PACKAGE_NAME].patched
 		```
-	1. After installation you can start interacting using our billinghack tool
+	1. After installation, try to purchase some things to check if the hack works :)
 
 ## ACE
    [Video Tutorial](https://www.youtube.com/watch?v=UlGm1nFxRzA)
