@@ -2,6 +2,9 @@ package com.kuhakupixel.atg.backend
 
 import android.content.Context
 
+import com.google.common.collect.BiMap
+import com.google.common.collect.HashBiMap
+
 /*
 * class to get the binary included in ATG app
 * */
@@ -12,13 +15,13 @@ object Binary {
             put(Type.server, "ACE")
         }
     }
-    val cpuArchEnumToDirNameMap: HashMap<Cpu.Arch?, String?> = object : HashMap<Cpu.Arch?, String?>() {
-        init {
-            put(Cpu.Arch.x86, "x86")
-            put(Cpu.Arch.x86_64, "x86_64")
-            put(Cpu.Arch.arm32, "armeabi-v7a")
-            put(Cpu.Arch.arm64, "arm64-v8a")
-        }
+    val cpuArchEnumToDirNameMap: BiMap<Cpu.Arch, String> = HashBiMap.create()
+
+    init {
+        cpuArchEnumToDirNameMap.put(Cpu.Arch.x86, "x86")
+        cpuArchEnumToDirNameMap.put(Cpu.Arch.x86_64, "x86_64")
+        cpuArchEnumToDirNameMap.put(Cpu.Arch.arm32, "armeabi-v7a")
+        cpuArchEnumToDirNameMap.put(Cpu.Arch.arm64, "arm64-v8a")
     }
 
     fun GetBinPath(context: Context, type: Type, arch: Cpu.Arch?): String {
