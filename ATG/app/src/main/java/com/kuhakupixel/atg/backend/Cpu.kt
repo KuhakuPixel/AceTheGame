@@ -7,8 +7,7 @@ import java.io.InputStreamReader
 object Cpu {
 
     /*
-     * get cpu's architecture by using `uname -m` command
-     * https://unix.stackexchange.com/questions/12453/how-to-determine-linux-kernel-architecture
+     * get cpu's architecture by using `getprop` command
      * */
     fun GetArch(): Arch? {
 
