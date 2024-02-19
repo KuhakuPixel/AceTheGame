@@ -7,6 +7,12 @@ import com.google.common.collect.HashBiMap
 /**
  * to communicate with ACE's engine binary
  * sending input and getting output
+ *
+ * TODO: NEED TO BE THREAD SAFE
+ *       where to put the lock where its the most appropriate? in order to prevent data race
+ *       but still responsive (not locked out) when its needed in some case
+ *       ex: not freezing the apk when switching menu because of calling a synchronized function
+ *       that not need to be synchronized
  */
 class ACE(context: Context) {
     /**
@@ -62,13 +68,8 @@ class ACE(context: Context) {
 
     inner class MatchInfo(var address: String, var prevValue: String)
 
-    /**
-     * the running server thread
-     *
-     *
-     * if null means it isn't attached to anything
-     */
-    private var serverThread: Thread? = null
+    private val context: Context
+    private val availableNumTypes: List<NumTypeInfo>
 
     /**
      * used for use cases that are unrelated to a specific process
@@ -77,17 +78,24 @@ class ACE(context: Context) {
      */
     private val aceUtilClient: ACEUtilClient
 
+    private var statusPublisherPort: Int? = null
+
     /**
      * used when attached to process, to scan and edit its memory
      */
     private var aceAttachClient: ACEAttachClient? = null
-    private val context: Context
-    private val availableNumTypes: List<NumTypeInfo>
+
+    /**
+     * the running server thread
+     *
+     *
+     * if null means it isn't attached to anything
+     */
+    private var serverThread: Thread? = null
 
     //
-    private var statusPublisherPort: Int? = null
 
-    @Synchronized
+    
     fun getStatusPublisherPort(): Int? {
         return statusPublisherPort
     }
@@ -98,23 +106,17 @@ class ACE(context: Context) {
         availableNumTypes = GetAvailableNumTypes()
     }
 
-    @Synchronized
     fun IsAttached(): Boolean {
         return aceAttachClient != null
     }
 
-    @Synchronized
     private fun AssertAttached() {
         if (!IsAttached()) throw NoAttachException("Operation requires attaching to a process, but it hasn't been attached")
     }
 
-    @Synchronized
     private fun AssertNoAttachInARow() {
         if (IsAttached()) throw AttachingInARowException("Cannot Attach without DeAttaching first")
     }
-
-    // TODO: add statusPublisherPort as parameter
-    @Synchronized
 
     fun ConnectToACEServer(port: Int, publisherPort: Int) {
         AssertNoAttachInARow()
@@ -125,8 +127,7 @@ class ACE(context: Context) {
     /**
      * this will create an ACE's server that is attached to process [pid]
      */
-    @Synchronized
-
+    
     fun Attach(pid: Long) {
         AssertNoAttachInARow()
         // start the server
@@ -136,7 +137,7 @@ class ACE(context: Context) {
         ConnectToACEServer(ports[0], ports[1])
     }
 
-    @Synchronized
+    
     fun DeAttach() {
         AssertAttached()
         // tell server to die
@@ -165,25 +166,22 @@ class ACE(context: Context) {
     }
 
     // =============== this commands require attach ===================
-    @Synchronized
     fun CheaterCmd(cmd: Array<String>): String {
         AssertAttached()
         return aceAttachClient!!.Request(cmd)
     }
 
-    @Synchronized
     fun CheaterCmdAsList(cmd: Array<String>): List<String> {
         AssertAttached()
         return aceAttachClient!!.RequestAsList(cmd)
     }
 
-    @Synchronized
     fun GetAttachedPid(): Long {
         val pidStr = CheaterCmd(arrayOf("pid"))
         return pidStr.toLong()
     }
 
-    @Synchronized
+    
     fun SetNumType(type: NumType) {
         CheaterCmd(arrayOf("config", "type", type.toString()))
     }
@@ -191,18 +189,18 @@ class ACE(context: Context) {
     /**
      * get current type that ACE use
      */
-    @Synchronized
+    
     fun GetNumType(): NumType {
         val typeStr = CheaterCmd(arrayOf("config", "type"))
         return NumType.fromString(typeStr)
     }
 
-    @Synchronized
+    
     fun SetRegionLevel(regionLevel: RegionLevel) {
         CheaterCmd(arrayOf("config", "region_level", regionLevel.toString()))
     }
 
-    @Synchronized
+    
     fun GetRegionLevel(): RegionLevel {
         val regionLevelStr = CheaterCmd(arrayOf("config", "region_level"))
         return RegionLevel.valueOf(regionLevelStr)
@@ -214,7 +212,7 @@ class ACE(context: Context) {
      * run code/function when type is set to [numType]
      * after done, the type will be set to the previous one
      */
-    @Synchronized
+    
     fun ActionOnType(numType: NumType, action: () -> Unit) {
         val prevType = GetNumType()
         // set type first before writing
@@ -223,31 +221,31 @@ class ACE(context: Context) {
         if (prevType != numType) SetNumType(prevType)
     }
 
-    @Synchronized
+    
     fun ScanAgainstValue(operator: Operator, numValStr: String) {
         CheaterCmd(arrayOf("scan", operatorEnumToSymbolBiMap.get(operator)!!, numValStr))
     }
 
-    @Synchronized
+    
     fun ScanWithoutValue(operator: Operator) {
         CheaterCmd(arrayOf("filter", operatorEnumToSymbolBiMap.get(operator)!!))
     }
 
-    @Synchronized
+    
     fun WriteValueAtAddress(numType: NumType, address: String, value: String) {
         ActionOnType(numType) {
             this.CheaterCmd(arrayOf("writeat", address, value))
         }
     }
 
-    @Synchronized
+    
     fun FreezeAtAddress(numType: NumType, address: String) {
         ActionOnType(numType) {
             this.CheaterCmd(arrayOf("freeze at", address))
         }
     }
 
-    @Synchronized
+    
     fun FreezeValueAtAddress(numType: NumType, address: String, value: String) {
         ActionOnType(numType) {
             this.CheaterCmd(
@@ -261,24 +259,24 @@ class ACE(context: Context) {
         }
     }
 
-    @Synchronized
+    
     fun UnFreezeAtAddress(numType: NumType, address: String) {
         ActionOnType(numType) {
             this.CheaterCmd(arrayOf("unfreeze at", address))
         }
     }
 
-    @Synchronized
+    
     fun GetMatchCount(): Int {
         return CheaterCmd(arrayOf<String>("matchcount")).toInt()
     }
 
-    @Synchronized
+    
     fun ResetMatches() {
         CheaterCmd(arrayOf("reset"))
     }
 
-    @Synchronized
+    
     fun ListMatches(maxCount: Int): List<MatchInfo> {
         /**
          * get list of matches with list command
@@ -302,17 +300,17 @@ class ACE(context: Context) {
     }
 
     // =============== this commands don't require attach ===================
-    @Synchronized
+    
     fun UtilCmdAsList(cmd: Array<String>): List<String> {
         return aceUtilClient.RequestAsList(cmd)
     }
 
-    @Synchronized
+    
     fun UtilCmd(cmd: Array<String>): String {
         return aceUtilClient.Request(cmd)
     }
 
-    @Synchronized
+    
     fun ListRunningProc(): List<ProcInfo> {
         val runningProcs: MutableList<ProcInfo> = mutableListOf()
         // use --reverse so newest process will be shown first
@@ -324,7 +322,7 @@ class ACE(context: Context) {
         return runningProcs
     }
 
-    @Synchronized
+    
     fun IsPidRunning(pid: Long): Boolean {
         val boolStr = UtilCmd(arrayOf("ps", "is_running", pid.toString()))
         return boolStr.toBooleanStrict()
@@ -349,7 +347,7 @@ class ACE(context: Context) {
         return numTypeInfos
     }
 
-    @Synchronized
+    
     fun GetAvailableOperatorTypes(): List<Operator> {
         // the output will be a list of supported operators like
         // >

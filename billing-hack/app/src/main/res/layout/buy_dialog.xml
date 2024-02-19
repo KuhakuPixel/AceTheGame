@@ -9,29 +9,36 @@
     tools:context=".MainActivity"
     android:orientation="vertical"
     >
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AceTheGame"
-        android:textSize="25dp"
+        android:orientation="horizontal"
         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AceTheGame    "
+            android:textSize="25dp"
+            android:drawableRight="@drawable/icon"
+            >
 
-    </TextView>
+        </TextView>
 
+    </LinearLayout>
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Do you want to get this item for free? :)"
-        android:drawableBottom="@mipmap/ic_jeffkun"
+        android:text="Do you want to get this item for free :)"
+        android:layout_marginVertical="25dp"
         />
 
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
