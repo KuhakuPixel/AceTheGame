@@ -7,6 +7,12 @@ import com.google.common.collect.HashBiMap
 /**
  * to communicate with ACE's engine binary
  * sending input and getting output
+ *
+ * TODO: NEED TO BE THREAD SAFE
+ *       where to put the lock where its the most appropriate? in order to prevent data race
+ *       but still responsive (not locked out) when its needed in some case
+ *       ex: not freezing the apk when switching menu because of calling a synchronized function
+ *       that not need to be synchronized
  */
 class ACE(context: Context) {
     /**
