@@ -29,6 +29,11 @@ adb logcat -s "ACE", "ATG"
 it contains logging information like commands that `ATG` sent to `ACE`
 
 this can help debug bugs that involve communication between the two
+
+[crash log](https://stackoverflow.com/questions/3643395/how-to-get-android-crash-logs)
+```
+adb logcat --buffer=crash 
+```
 ## Making Release
 
 ### With Docker
