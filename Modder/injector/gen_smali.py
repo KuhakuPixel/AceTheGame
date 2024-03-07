@@ -59,7 +59,7 @@ with tempfile.TemporaryDirectory() as temp_decompiled_apk_dir:
     generated_native_lib_dir = os.path.join(temp_decompiled_apk_dir, "lib")
 
     print("Generating temporary apk")
-    subprocess.run("gradle assembleDebug", cwd=APK_SOURCE_ROOT_DIR, shell=True)
+    subprocess.run("./gradlew assembleDebug", cwd=APK_SOURCE_ROOT_DIR, shell=True)
 
     # decode without resources and
     # put the smali results in smali folder
