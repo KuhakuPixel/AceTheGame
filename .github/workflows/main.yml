@@ -29,7 +29,7 @@ jobs:
 
       # release
       - name: release build
-        working-directory: ./ACE
+        working-directory: ./ACE/build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ../ 
           make -j${nproc}
