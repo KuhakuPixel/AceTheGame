@@ -1,0 +1,22 @@
+name: ACE CI
+on: [push]
+
+jobs:
+  build_and_test_linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "install compiler and build tools"
+        run: sudo apt-get install build-essential
+
+      - name: building project
+        working-directory: ./ACE
+        run: |
+          mkdir build && cd build
+          cmake ../ && make -j${nproc}
+          
+
+      - name: running unit test
+        working-directory: ./ACE/build
+        run: ./test/test_ace -s
