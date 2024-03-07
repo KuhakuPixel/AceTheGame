@@ -12,12 +12,28 @@ jobs:
       - name: "install compiler and build tools"
         run: sudo apt-get install build-essential
 
-      - name: build
+      - name: create build directory
+        working-directory: ./ACE
+        run: mkdir build
+
+      # debug
+      - name: debug build
+        working-directory: ./ACE/build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Debug ../
+          make -j${nproc}
+
+      - name: debug unit test
+        working-directory: ./ACE/build
+        run: ./test/test_ace -s
+
+      # release
+      - name: release build
         working-directory: ./ACE
         run: |
-          mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug ../ && make -j${nproc}
+          cmake -DCMAKE_BUILD_TYPE=Release ../ 
+          make -j${nproc}
 
-      - name: running unit test
+      - name: release unit test
         working-directory: ./ACE/build
         run: ./test/test_ace -s
