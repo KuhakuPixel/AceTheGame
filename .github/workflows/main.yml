@@ -1,8 +1,8 @@
-name: ACE CI
+name: AceTheGame CI
 on: [push]
 
 jobs:
-  build_and_test_linux:
+  ACE:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -37,3 +37,27 @@ jobs:
       - name: release unit test
         working-directory: ./ACE/build
         run: ./test/test_ace -s
+
+  Modder:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: "install build dependecies"
+        run: sudo apt-get install openjdk-17-jdk-headless apktool gradle
+
+      - name: generating code for injection
+        working-directory: ./Modder/injector
+        run: python3 ./gen_smali.py
+
+      - name: build
+        working-directory: ./Modder
+        # only build no testing
+        run: gradle build -x test
+
+      - name: test
+        working-directory: ./Modder
+        # only build no testing
+        run: gradle test
