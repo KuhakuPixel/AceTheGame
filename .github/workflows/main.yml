@@ -6,16 +6,17 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: "true"
 
       - name: "install compiler and build tools"
         run: sudo apt-get install build-essential
 
-      - name: setup 
+      - name: setup
         working-directory: ./ACE
         run: |
           mkdir build && cd build
           cmake -DCMAKE_BUILD_TYPE=Debug ../ && make -j${nproc}
-          
 
       - name: running unit test
         working-directory: ./ACE/build
