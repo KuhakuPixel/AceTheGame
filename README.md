@@ -12,6 +12,7 @@
 
 <br>
 
+[![AceTheGame CI](https://github.com/KuhakuPixel/AceTheGame/actions/workflows/main.yml/badge.svg)](https://github.com/KuhakuPixel/AceTheGame/actions/workflows/main.yml)
 [![Github All Releases](https://img.shields.io/github/downloads/KuhakuPixel/AceTheGame/total.svg)]()
 
 ## Ace The Game
