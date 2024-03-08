@@ -77,7 +77,7 @@ jobs:
         working-directory: /usr/lib/jvm
         # find where java-17 is at /usr/lib/jvm then set JAVA_HOME to its path
         run: |
-          fdfind java-17 | xargs readlink -f | awk '{print "export JAVA_HOME="$1""}' >> ~/.bashrc && source ~/.bashrc
+          fdfind java-17 | xargs readlink -f | awk '{print "export JAVA_HOME="$1""}' >> ~/.bashrc && source ~/.bashrc && cat ~/.bashrc
           echo ${JAVA_HOME}
 
       - name: build
