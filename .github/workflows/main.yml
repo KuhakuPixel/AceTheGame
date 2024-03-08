@@ -81,6 +81,9 @@ jobs:
       - name: "install build tools"
         run: choco install apktool --version=2.5.0
 
+      - name: "install pkgconfig"
+        run: choco install pkgconfiglite
+
       - name: generating code for injection
         working-directory: ./Modder/injector
         run: python3 ./gen_smali.py
