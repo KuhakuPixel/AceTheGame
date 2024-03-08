@@ -76,7 +76,10 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu' 
-          java-version: '21'
+          java-version: '17'
+
+      - name: "install build tools"
+        run: choco install apktool --version=2.5.0
 
       - name: generating code for injection
         working-directory: ./Modder/injector
