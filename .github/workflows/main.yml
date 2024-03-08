@@ -88,3 +88,16 @@ jobs:
           echo $JAVA_HOME
           ./gradlew assembleDebug
       # TODO: run unit tests both pure unit tests and instrumented one
+
+
+  billing-hack:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: build
+        working-directory: ./billing-hack
+        # only build no testing
+        run: ./gradlew assembleDebug
