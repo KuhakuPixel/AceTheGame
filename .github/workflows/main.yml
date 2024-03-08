@@ -70,6 +70,9 @@ jobs:
         with:
           submodules: "true"
 
+      - name: "install build dependecies"
+        run: sudo apt-get install openjdk-17-jdk-headless
+
       - name: build
         working-directory: ./ATG
         # only build no testing
