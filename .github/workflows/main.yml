@@ -97,6 +97,17 @@ jobs:
         with:
           submodules: "true"
 
+      - name: "install build dependecies"
+        run: sudo apt-get install openjdk-17-jdk-headless fd-find
+
+      - name: "setup JAVA_HOME to java 17"
+        working-directory: /usr/lib/jvm
+        # find where java-17 is at /usr/lib/jvm then set JAVA_HOME to its path
+        # https://stackoverflow.com/questions/57968497/how-do-i-set-an-env-var-with-a-bash-expression-in-github-actions
+        run: |
+          fdfind java-17 | xargs readlink -f | awk '{print "JAVA_HOME="$1""}' >> $GITHUB_ENV
+          echo $JAVA_HOME
+
       - name: build
         working-directory: ./billing-hack
         # only build no testing
