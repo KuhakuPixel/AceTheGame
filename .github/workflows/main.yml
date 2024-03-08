@@ -64,7 +64,7 @@ jobs:
         run: ./gradlew test
 
   ATG:
-    runs-on: ubuntu-22.04
+    runs-on: openjdk:17-oracle
     steps:
       - uses: actions/checkout@v4
         with:
