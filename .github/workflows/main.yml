@@ -71,7 +71,12 @@ jobs:
           submodules: "true"
 
       - name: "install build dependecies"
-        run: sudo apt-get install openjdk-17-jdk-headless
+        run: sudo apt-get install openjdk-17-jdk-headless fd-find
+
+      - name: "setup JAVA_HOME to java 17"
+        working-directory: /usr/lib/jvm
+        # find where java-17 is at /usr/lib/jvm then set JAVA_HOME to its path
+        run: fdfind java-17 | xargs readlink -f | awk '{print "export JAVA_HOME="$1""}' >> ~/.bashrc && source ~/.bashrc
 
       - name: build
         working-directory: ./ATG
