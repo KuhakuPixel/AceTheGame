@@ -55,9 +55,9 @@ jobs:
       - name: build
         working-directory: ./Modder
         # only build no testing
-        run: gradle build -x test
+        run: ./gradlew build -x test
 
       - name: test
         working-directory: ./Modder
         # only build no testing
-        run: gradle test
+        run: ./gradlew test
