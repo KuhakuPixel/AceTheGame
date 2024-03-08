@@ -76,10 +76,14 @@ jobs:
       - name: "setup JAVA_HOME to java 17"
         working-directory: /usr/lib/jvm
         # find where java-17 is at /usr/lib/jvm then set JAVA_HOME to its path
-        run: fdfind java-17 | xargs readlink -f | awk '{print "export JAVA_HOME="$1""}' >> ~/.bashrc && source ~/.bashrc
+        run: |
+          fdfind java-17 | xargs readlink -f | awk '{print "export JAVA_HOME="$1""}' >> ~/.bashrc && source ~/.bashrc
+          echo ${JAVA_HOME}
 
       - name: build
         working-directory: ./ATG
         # only build no testing
-        run: ./gradlew assembleDebug
+        run: |
+          echo ${JAVA_HOME}
+          ./gradlew assembleDebug
       # TODO: run unit tests both pure unit tests and instrumented one
