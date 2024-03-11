@@ -1,0 +1,151 @@
+name: AceTheGame CI
+on: [push]
+
+jobs:
+  ACE:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: "install compiler and build tools"
+        run: sudo apt-get install build-essential
+
+      - name: create build directory
+        working-directory: ./ACE
+        run: mkdir build
+
+      # TODO: run unit tests on android emulator
+      # debug
+      - name: debug build
+        working-directory: ./ACE/build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Debug ../
+          make -j${nproc}
+
+      - name: debug unit test
+        working-directory: ./ACE/build
+        run: ./test/test_ace -s
+
+      # release
+      - name: release build
+        working-directory: ./ACE/build
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release ../ 
+          make -j${nproc}
+
+      - name: release unit test
+        working-directory: ./ACE/build
+        run: ./test/test_ace -s
+
+  Modder-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: "install build dependecies"
+        run: sudo apt-get install openjdk-17-jdk-headless apktool gradle
+
+      - name: generating code for injection
+        working-directory: ./Modder/injector
+        run: python3 ./gen_smali.py
+
+      - name: build
+        working-directory: ./Modder
+        # only build no testing
+        run: ./gradlew build -x test
+
+      - name: test
+        working-directory: ./Modder
+        # only build no testing
+        run: ./gradlew test
+  Modder-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' 
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' 
+          java-version: '17'
+
+      - name: "install build tools"
+        run: choco install apktool --version=2.5.0
+
+      - name: "install pkgconfig"
+        run: choco install pkgconfiglite
+
+      - name: generating code for injection
+        working-directory: ./Modder/injector
+        run: python3 ./gen_smali.py
+
+      - name: build
+        working-directory: ./Modder
+        # only build no testing
+        run: ./gradlew build -x test
+
+      - name: test
+        working-directory: ./Modder
+        # only build no testing
+        run: ./gradlew test
+
+  
+
+  ATG:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: "install build dependecies"
+        run: sudo apt-get install openjdk-17-jdk-headless fd-find
+
+      - name: "setup JAVA_HOME to java 17"
+        working-directory: /usr/lib/jvm
+        # find where java-17 is at /usr/lib/jvm then set JAVA_HOME to its path
+        # https://stackoverflow.com/questions/57968497/how-do-i-set-an-env-var-with-a-bash-expression-in-github-actions
+        run: |
+          fdfind java-17 | xargs readlink -f | awk '{print "JAVA_HOME="$1""}' >> $GITHUB_ENV
+          echo $JAVA_HOME
+
+      - name: build
+        working-directory: ./ATG
+        # only build no testing
+        run: |
+          echo $JAVA_HOME
+          ./gradlew assembleDebug
+      # TODO: run unit tests both pure unit tests and instrumented one
+
+
+  billing-hack:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: "install build dependecies"
+        run: sudo apt-get install openjdk-17-jdk-headless fd-find
+
+      - name: "setup JAVA_HOME to java 17"
+        working-directory: /usr/lib/jvm
+        # find where java-17 is at /usr/lib/jvm then set JAVA_HOME to its path
+        # https://stackoverflow.com/questions/57968497/how-do-i-set-an-env-var-with-a-bash-expression-in-github-actions
+        run: |
+          fdfind java-17 | xargs readlink -f | awk '{print "JAVA_HOME="$1""}' >> $GITHUB_ENV
+          echo $JAVA_HOME
+
+      - name: build
+        working-directory: ./billing-hack
+        # only build no testing
+        run: ./gradlew assembleDebug

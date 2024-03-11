@@ -26,15 +26,15 @@ import shutil
 import tempfile
 
 # ============================= paths ==================
-APK_SOURCE_ROOT_DIR = "./apk_source/hello-libs"
+APK_SOURCE_ROOT_DIR = os.path.join("apk_source", "hello-libs")
 APK_BUILT_OUTPUT_PATH = (
-    "apk_source/hello-libs/app/build/outputs/apk/debug/app-debug.apk"
+    os.path.join("apk_source", "hello-libs", "app","build","outputs","apk", "debug", "app-debug.apk")
 )
 
 OUT_CODE_FOR_INJECT_DIR = (
-    "../../Modder/modder/src/main/resources/AceAndroidLib/code_to_inject"
+    os.path.join("..", "..", "Modder","modder","src","main", "resources", "AceAndroidLib", "code_to_inject")
 )
-SMALI_RELATIVE_DIR = "smali/com/AceInjector"
+SMALI_RELATIVE_DIR = os.path.join("smali", "com", "AceInjector")
 
 OUT_SMALI_DIR = os.path.join(OUT_CODE_FOR_INJECT_DIR, SMALI_RELATIVE_DIR)
 OUT_SMALI_DIR_ZIPPED_FILE = OUT_SMALI_DIR
@@ -59,7 +59,12 @@ with tempfile.TemporaryDirectory() as temp_decompiled_apk_dir:
     generated_native_lib_dir = os.path.join(temp_decompiled_apk_dir, "lib")
 
     print("Generating temporary apk")
-    subprocess.run("gradle assembleDebug", cwd=APK_SOURCE_ROOT_DIR, shell=True)
+
+    
+    if os.name == "posix":
+        subprocess.run("./gradlew assembleDebug", cwd=APK_SOURCE_ROOT_DIR, shell=True)
+    else:
+        subprocess.run("gradlew assembleDebug", cwd=APK_SOURCE_ROOT_DIR, shell=True)
 
     # decode without resources and
     # put the smali results in smali folder
