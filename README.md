@@ -33,13 +33,18 @@
 - Bypassing In-App Purchases (**BETA** version)
   
   bypassing in-app purchases by patching the APK, rerouting purchase requests to our dedicated APK (Billing-Hack), thereby granting users access to premium features without financial constraints.
-
-
-
-For further discussion, suggestion, and question
-feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
+  
 | Memory Scanning/Editing    | In App Purchase Hack                             |
 | -------------------------- | ------------------------------------------------ |
 |<img src="/assets/showcase/3.gif" width="550"> | <img src="/assets/showcase/tb1.gif" width="200"> |
 |<img src="/assets/showcase/2.gif" width="550">| <img src="/assets/showcase/tb2.gif" width="200"> |
+
+## Blackhat Arsenal
+AceTheGame is featured at [Blackhat Arsenal](https://www.blackhat.com/asia-24/arsenal/schedule/#acethegame-37621)
+
+[Download our presentations slide](https://drive.google.com/drive/folders/1JXckZaaP_w0uQqddDlqaqLDsfij6jnir?usp=sharing)
+
+## Discussion
+For further discussion, suggestion, and question
+feel free to join [the discord server](https://discord.gg/8fJh9tPVXb)
 
