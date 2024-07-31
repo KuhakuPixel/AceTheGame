@@ -91,8 +91,7 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
                             title = "Edit All",
                             defaultValue = "999999999",
                             onConfirm = { input: String ->
-                                var i = 0
-                                while (i < savedAddresList.size) {
+                                for (i in savedAddresList.indices) {
                                     if (savedAddresList[i].isFreezed.value) {
                                         ace.UnFreezeAtAddress(
                                             savedAddresList[i].numType,
@@ -110,7 +109,6 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
                                             input
                                         )
                                     }
-                                    i++
                                 }
                             }
                         )
@@ -124,8 +122,7 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
                             title = "Freeze All",
                             defaultValue = "999999999",
                             onConfirm = { input: String ->
-                                var i = 0
-                                while (i < savedAddresList.size) {
+                                for (i in savedAddresList.indices) {
                                     if (savedAddresList[i].isFreezed.value) {
                                         ace.UnFreezeAtAddress(
                                             savedAddresList[i].numType,
@@ -142,8 +139,8 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
                                             savedAddresList[i].matchInfo.address,
                                             input
                                         )
+                                        savedAddresList[i].isFreezed.value = true
                                     }
-                                    i++
                                 }
                             }
                         )
