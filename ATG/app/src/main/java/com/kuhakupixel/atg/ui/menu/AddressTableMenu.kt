@@ -5,11 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -24,6 +27,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +38,7 @@ import com.kuhakupixel.atg.backend.ACEBaseClient
 import com.kuhakupixel.atg.ui.AddressOverlayDialog
 import com.kuhakupixel.atg.ui.EditAddressOverlayDialog
 import com.kuhakupixel.atg.ui.GlobalConf
+import com.kuhakupixel.atg.ui.OverlayInputDialog
 import com.kuhakupixel.atg.ui.util.CreateTable
 import com.kuhakupixel.libuberalles.overlay.OverlayContext
 import com.kuhakupixel.libuberalles.overlay.service.dialog.OverlayInfoDialog
@@ -60,21 +65,88 @@ fun AddressTableMenu(globalConf: GlobalConf?, overlayContext: OverlayContext?) {
             .padding(16.dp),
     ) {
         Column(
-            modifier = Modifier.weight(0.2f)
+            modifier = Modifier.weight(0.2f),
+            horizontalAlignment = Alignment.Start
         ) {
-            Button(
-                onClick = {
-                    OverlayInfoDialog(overlayContext!!).show(
-                        title = "Info Dialog",
-                        text = "Delete all addresses?",
-                        onConfirm = {
-                            savedAddresList.clear()
-                        },
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween
+            ) {
+                Button(
+                    onClick = {
+                        OverlayInfoDialog(overlayContext!!).show(
+                            title = "Info Dialog",
+                            text = "Delete all addresses?",
+                            onConfirm = {
+                                savedAddresList.clear()
+                            },
+                        )
 
-                }) {
+                    }) {
 
-                Icon(Icons.Filled.Delete, "Delete All Matches")
+                    Icon(Icons.Filled.Delete, "Delete All Matches")
+                }
+                Button(
+                    onClick = {
+                        OverlayInputDialog(overlayContext!!).show(
+                            title = "Edit All",
+                            defaultValue = "999999999",
+                            onConfirm = { input: String ->
+                                for (i in savedAddresList.indices) {
+                                    if (savedAddresList[i].isFreezed.value) {
+                                        ace.UnFreezeAtAddress(
+                                            savedAddresList[i].numType,
+                                            savedAddresList[i].matchInfo.address
+                                        )
+                                        ace.FreezeValueAtAddress(
+                                            savedAddresList[i].numType,
+                                            savedAddresList[i].matchInfo.address,
+                                            input
+                                        )
+                                    } else {
+                                        ace.WriteValueAtAddress(
+                                            savedAddresList[i].numType,
+                                            savedAddresList[i].matchInfo.address,
+                                            input
+                                        )
+                                    }
+                                }
+                            }
+                        )
+                    }) {
+
+                    Icon(Icons.Filled.Edit, "Edit All Matches")
+                }
+                Button(
+                    onClick = {
+                        OverlayInputDialog(overlayContext!!).show(
+                            title = "Freeze All",
+                            defaultValue = "999999999",
+                            onConfirm = { input: String ->
+                                for (i in savedAddresList.indices) {
+                                    if (savedAddresList[i].isFreezed.value) {
+                                        ace.UnFreezeAtAddress(
+                                            savedAddresList[i].numType,
+                                            savedAddresList[i].matchInfo.address
+                                        )
+                                        ace.FreezeValueAtAddress(
+                                            savedAddresList[i].numType,
+                                            savedAddresList[i].matchInfo.address,
+                                            input
+                                        )
+                                    } else {
+                                        ace.FreezeValueAtAddress(
+                                            savedAddresList[i].numType,
+                                            savedAddresList[i].matchInfo.address,
+                                            input
+                                        )
+                                        savedAddresList[i].isFreezed.value = true
+                                    }
+                                }
+                            }
+                        )
+                    }) {
+                    Icon(Icons.Filled.CheckCircle, "Freeze All Matches")
+                }
             }
         }
         SavedAddressesTable(
