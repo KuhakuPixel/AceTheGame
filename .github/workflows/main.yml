@@ -9,6 +9,8 @@ jobs:
         with:
           submodules: "true"
 
+      - name: "apt update"
+        run: sudo apt-get update
       - name: "install compiler and build tools"
         run: sudo apt-get install build-essential
 
@@ -137,6 +139,9 @@ jobs:
         with:
           submodules: "true"
 
+          
+      - name: "apt update"
+        run: sudo apt-get update
       - name: "install build dependecies"
         run: sudo apt-get install openjdk-17-jdk-headless fd-find
 
