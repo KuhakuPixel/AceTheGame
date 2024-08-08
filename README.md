@@ -12,6 +12,7 @@
 
 <br>
 
+[![Black Hat Arsenal](./assets/blackhat_asia_2024.svg)](https://www.blackhat.com/asia-24/arsenal/schedule/#acethegame-37621)
 [![AceTheGame CI](https://github.com/KuhakuPixel/AceTheGame/actions/workflows/main.yml/badge.svg)](https://github.com/KuhakuPixel/AceTheGame/actions/workflows/main.yml)
 [![Github All Releases](https://img.shields.io/github/downloads/KuhakuPixel/AceTheGame/total.svg)]()
 
