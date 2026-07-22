@@ -7,14 +7,13 @@ import org.apache.commons.lang3.StringUtils
 import java.io.File
 import java.util.*
 
-import apktool.kotlin.lib.AaptManager
 class Aapt {
     companion object {
         fun RunCmd(args: List<String>): List<String> {
             var output: List<String> = ArrayList()
             val aaptFile: File
-            // get aapt
-            aaptFile = AaptManager.getAapt2()
+            // get aapt directly from apktool's AaptManager
+            aaptFile = brut.androlib.res.AaptManager.getBinaryFile()
             output = Util.RunCommand(aaptFile.absolutePath, args)
             return output
         }

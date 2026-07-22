@@ -1,6 +1,5 @@
 package modder
 
-import org.apache.commons.io.FileUtils
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -13,6 +12,18 @@ import java.nio.file.Path
 class TempManager {
 
     companion object {
+        private fun deleteRecursively(file: File) {
+            if (file.isDirectory) {
+                val children = file.listFiles()
+                if (children != null) {
+                    for (child in children) {
+                        deleteRecursively(child)
+                    }
+                }
+            }
+            file.delete()
+        }
+
         fun CreateTempDirectory(prefix: String, cleanOnExit: Boolean = true): Path {
             val tempDir = Files.createTempDirectory(prefix)
             // make sure we have the absolute path
@@ -29,7 +40,7 @@ class TempManager {
                 Runtime.getRuntime().addShutdownHook(
                         object : Thread() {
                             override fun run() {
-                                FileUtils.deleteDirectory(File(tempPathStr))
+                                deleteRecursively(File(tempPathStr))
                             }
                         }
                 )

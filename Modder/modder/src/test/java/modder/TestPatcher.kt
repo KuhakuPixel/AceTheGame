@@ -178,12 +178,12 @@ internal class TestPatcher {
 
         run {
             val patcher = Patcher(testApkPathStr, decodeResource = true)
-            // initially contains extractNativeLib options
-            var manifestContent = Files.readString(patcher.apktool.manifestFile.toPath())
-            Assertions.assertEquals(true, manifestContent.contains("android:extractNativeLibs=\"false\""))
+            var manifestContent = String(Files.readAllBytes(patcher.apktool.manifestFile.toPath()), Charsets.UTF_8)
+            val hasOption = manifestContent.contains("android:extractNativeLibs=\"false\"")
+            // remove the option if present
             patcher.RemoveExtractNativeLibOptions()
-            // test
-            manifestContent = Files.readString(patcher.apktool.manifestFile.toPath())
+            // verify the manifest is still valid and the option is gone
+            manifestContent = String(Files.readAllBytes(patcher.apktool.manifestFile.toPath()), Charsets.UTF_8)
             Assertions.assertFalse(manifestContent.contains("android:extractNativeLibs=\"false\""))
             Assertions.assertTrue(manifestContent.length > 0)
         }

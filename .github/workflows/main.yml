@@ -41,6 +41,12 @@ jobs:
         working-directory: ./ACE/build
         run: ./test/test_ace -s
 
+      - name: upload ACE artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ACERelease
+          path: ACE/build/
+
   Modder-linux:
     runs-on: ubuntu-22.04
     steps:
@@ -65,6 +71,19 @@ jobs:
         working-directory: ./Modder
         # only build no testing
         run: ./gradlew test
+
+      - name: upload Modder artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ModderRelease
+          path: Modder/modder/build/distributions/
+
+      - name: upload Modder injection resources
+        uses: actions/upload-artifact@v4
+        with:
+          name: ModderCodeToInject
+          path: Modder/modder/src/main/resources/AceAndroidLib/code_to_inject/
+
   Modder-windows:
     runs-on: windows-2022
     steps:
@@ -131,6 +150,12 @@ jobs:
           ./gradlew assembleDebug
       # TODO: run unit tests both pure unit tests and instrumented one
 
+      - name: upload ATG artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ATG.apk
+          path: ATG/app/build/outputs/apk/debug/app-debug.apk
+
 
   billing-hack:
     runs-on: ubuntu-22.04
@@ -157,3 +182,9 @@ jobs:
         working-directory: ./billing-hack
         # only build no testing
         run: ./gradlew assembleDebug
+
+      - name: upload billing-hack artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: BillingHack.apk
+          path: billing-hack/app/build/outputs/apk/debug/app-debug.apk

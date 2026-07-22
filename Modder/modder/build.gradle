@@ -31,7 +31,7 @@ dependencies {
 
     // include jar file for now because Apktool-Kotlin can't include jar file for now
     //
-    implementation files("./lib/apktool-cli-all_2.9.0.jar")
+    implementation files("./lib/apktool-cli-all_3.0.2.jar")
     implementation files("./lib/uber-apk-signer-1.3.0.jar")
 
     //
@@ -42,10 +42,9 @@ dependencies {
 
 
     // libs for io operations
-    // https://stackoverflow.com/a/23678498/14073678
-    // installation:
-    // https://stackoverflow.com/a/31496709/14073678
-    implementation 'commons-io:commons-io:2.13.0'
+    // commons-io: FileUtils is NOT in the apktool fat jar, so we need the separate dependency.
+    // The force below ensures the standalone version wins over the partial bundle in the fat jar.
+    implementation 'commons-io:commons-io:2.21.0'
     // for easy os detection
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -70,4 +69,26 @@ tasks.named('test') {
 }
 kotlin {
     jvmToolchain(17)
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'commons-io:commons-io:2.21.0'
+    }
+}
+
+tasks.register('copyToolJars', Copy) {
+    from files("./lib/apktool-cli-all_3.0.2.jar", "./lib/uber-apk-signer-1.3.0.jar")
+    into "$buildDir/resources/main/tools"
+}
+
+processResources.dependsOn copyToolJars
+
+tasks.named('installDist') {
+    doLast {
+        copy {
+            from files("./lib/apktool-cli-all_3.0.2.jar", "./lib/uber-apk-signer-1.3.0.jar")
+            into "${destinationDir}/lib"
+        }
+    }
 }

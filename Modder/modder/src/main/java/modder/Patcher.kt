@@ -33,6 +33,7 @@ class Patcher(
         apktool = Apktool(
                 apkFile = apkFilePathStr,
                 decodeResource = decodeResource,
+                useAapt2 = false,
                 // TODO: temporary solution to clean up
                 // in the future should use Closeable.use {}
                 decompilationFolder = TempManager.CreateTempDirectory("ModderDecompiledApk", cleanDecompilationOnExit).toFile(),
@@ -289,7 +290,7 @@ class Patcher(
             throw IllegalStateException("Cannot remove extract native lib options when [decodeResource] is false")
         }
         val manifestFile = apktool.manifestFile
-        val manifestContent = Files.readString(manifestFile.toPath())
+        val manifestContent = String(Files.readAllBytes(manifestFile.toPath()), Charsets.UTF_8)
         // remove the options all toget
         val newManifestContent = manifestContent.replace("android:extractNativeLibs=\"false\"", "")
         // warning if nothing is removed
@@ -302,8 +303,104 @@ class Patcher(
 
     fun Export(exportPath: String) {
         val exportFile = File(exportPath)
-        apktool.export(apkOutFile = exportPath, signApk = false)
-        System.out.printf("exported to %s\n", exportFile.absolutePath)
+        val decompiledDir = apktool.decompilationFolder!!
+
+        var success = false
+        var attempts = 0
+        val maxAttempts = 5
+
+        val javaBin = File(System.getProperty("java.home"), "bin/java").absolutePath
+        val apktoolJar = ToolJarResolver.resolve().apktoolJar
+
+        while (!success && attempts < maxAttempts) {
+            attempts++
+            val cmd = listOf(
+                javaBin, "-jar", apktoolJar,
+                "b", decompiledDir.absolutePath,
+                "--output", exportPath
+            )
+
+            logger.info { "Rebuild attempt $attempts: ${cmd.joinToString(" ")}" }
+
+            val process = ProcessBuilder(cmd)
+                .redirectErrorStream(false)
+                .start()
+
+            val stdout = process.inputStream.bufferedReader().readText()
+            val stderr = process.errorStream.bufferedReader().readText()
+            val exitCode = process.waitFor()
+            val combinedOutput = stdout + stderr
+
+            if (combinedOutput.contains("Unsigned short value out of range: 65536") ||
+                combinedOutput.contains("Could not smali folder")) {
+                logger.warn { "DEX 64K limit, attempt $attempts/$maxAttempts" }
+                val smaliFolder = parseSmaliFolderFromError(combinedOutput, decompiledDir)
+                if (smaliFolder != null) {
+                    logger.info { "Splitting oversized smali folder: ${smaliFolder.name}" }
+                    SplitOversizedSmaliFolder(smaliFolder)
+                } else {
+                    logger.error { combinedOutput }
+                    throw IOException("Failed to rebuild APK: DEX 64K limit")
+                }
+            } else if (exitCode != 0) {
+                logger.error { "Rebuild failed (exit $exitCode): $combinedOutput" }
+                throw IOException("Failed to rebuild APK (exit code $exitCode)")
+            } else {
+                success = true
+            }
+        }
+
+        if (!success) {
+            throw IOException("Failed to rebuild APK after $maxAttempts attempts")
+        }
+        logger.info { "Exported to ${exportFile.absolutePath}" }
+    }
+
+    private fun parseSmaliFolderFromError(errMsg: String, decompiledDir: File): File? {
+        // Try to find smali_classesN pattern in the error
+        val regex = Regex("""smali_classes\d+""")
+        val match = regex.find(errMsg)
+        if (match != null) {
+            val folderName = match.value
+            val folder = File(decompiledDir, folderName)
+            if (folder.exists()) return folder
+        }
+        // If we can't parse the folder name, find the largest smali folder
+        val smaliFolders = decompiledDir.listFiles()
+            ?.filter { it.isDirectory && (it.name == "smali" || it.name.startsWith("smali_classes")) }
+            ?.sortedByDescending { it.walkTopDown().filter { f -> f.isFile && f.name.endsWith(".smali") }.count() }
+        return smaliFolders?.firstOrNull()
+    }
+
+    fun SplitOversizedSmaliFolder(smaliFolder: File) {
+        val smaliFiles = smaliFolder.walkTopDown()
+            .filter { it.isFile && it.name.endsWith(".smali") }
+            .toList()
+
+        if (smaliFiles.isEmpty()) return
+
+        // Find the next available smali_classes index
+        val decompiledDir = smaliFolder.parentFile!!
+        val existingFolders = decompiledDir.listFiles()
+            ?.filter { it.isDirectory && (it.name == "smali" || it.name.startsWith("smali_classes")) }
+            ?.map { it.name } ?: emptyList()
+        val maxIndex = existingFolders.mapNotNull { name ->
+            if (name == "smali") 1
+            else Regex("""smali_classes(\d+)""").find(name)?.groupValues?.get(1)?.toIntOrNull()
+        }.maxOrNull() ?: 1
+
+        val newFolder = File(decompiledDir, "smali_classes${maxIndex + 1}")
+        println("Creating split folder: ${newFolder.name} with ${smaliFiles.size / 2} files")
+
+        // Split files: move second half to new folder, preserving subdirectory structure
+        val splitPoint = smaliFiles.size / 2
+        for (i in splitPoint until smaliFiles.size) {
+            val smaliFile = smaliFiles[i]
+            val relativePath = smaliFolder.toPath().relativize(smaliFile.toPath()).toString()
+            val destFile = File(newFolder, relativePath)
+            destFile.parentFile.mkdirs()
+            smaliFile.renameTo(destFile)
+        }
     }
 
     companion object {
@@ -338,8 +435,17 @@ class Patcher(
         const val MEM_SCANNER_SMALI_ZIP_NAME = MEM_SCANNER_SMALI_DIR_NAME + ".zip"
         val MEM_SCANNER_SMALI_CODE_ZIP_PATH = java.lang.String.join("/", MEM_SCANNER_SMALI_BASE_DIR, MEM_SCANNER_SMALI_ZIP_NAME)
 
-        // smali code to start the service
-        const val MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = "invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V"
+        // smali code to start the service (wrapped in try-catch to prevent crash on failure)
+        val MEM_SCANNER_CONSTRUCTOR_SMALI_CODE = """
+            :try_start_0
+            invoke-static {}, Lcom/AceInjector/utils/Injector;->Init()V
+            :try_end_0
+            .catchall {:try_start_0 .. :try_end_0} :catch_0
+            goto :goto_0
+            :catch_0
+            move-exception v0
+            :goto_0
+        """.trimIndent()
 
         fun LaunchableActivityToSmaliRelativePath(launchableActivity: String): String {
 
